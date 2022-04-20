@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Map.Resource;
+import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
 
@@ -20,12 +22,13 @@ public class Game {
 //    }
 
     public void generateMap(){
-        //Tile[][] tiles = new Tile[20][20];
         Random random = new Random();
         int centersParameter = 1;//TODO for graphics
         for(int i=0;i<20;i++){
             for(int j=0;j<20;j++){
                 tiles[i][j] = new Tile();
+                tiles[i][j].setIndexInMapI(i);
+                tiles[i][j].setIndexInMapJ(j);
                 tiles[i][j].setCenterY(j * centersParameter);
                 tiles[i][j].setCenterX(i * centersParameter * 2 + centersParameter * (j % 2));
                 if(i<1 || j<1 || i>18 || j>18){
@@ -64,6 +67,7 @@ public class Game {
     }
 
     private void completeMap(Tile[][] tiles){
+        this.map = new ArrayList<>();
         for(int i=0;i<20;i++){
             for(int j=0;j<20;j++){
                 if(tiles[i][j].getType() == null){
@@ -85,8 +89,84 @@ public class Game {
                     }
                     tiles[i][j].setType(getType(maxValueIndex));
                 }
-                this.map = new ArrayList<>();
                 map.add(tiles[i][j]);
+            }
+        }
+        //TODO add river
+        addResource();
+    }
+
+    private void addResource(){
+        Random random = new Random();
+        int key;
+        for(int i=0;i<20;i++){
+            for(int j=0;j<20;j++){
+                key = random.nextInt(100);
+                if(tiles[i][j].getFeature() == TerrainFeature.FOREST){
+                    if(key<10) tiles[i][j].setResource(Resource.BANANA);
+                    else if(key<20) tiles[i][j].setResource(Resource.COLOR);
+                    else if(key<30) tiles[i][j].setResource(Resource.JEWELERY);
+                }else if(tiles[i][j].getFeature() == TerrainFeature.JUNGLE){
+                    if(key<10) tiles[i][j].setResource(Resource.DEER);
+                    else if(key<20) tiles[i][j].setResource(Resource.COLOR);
+                    else if(key<30) tiles[i][j].setResource(Resource.FUR);
+                    else if(key<40) tiles[i][j].setResource(Resource.SILK);
+                } else if(tiles[i][j].getFeature() == TerrainFeature.SWAMP){
+                    if(key<20) tiles[i][j].setResource(Resource.SUGAR);
+                } else if(tiles[i][j].getFeature() == TerrainFeature.DELTA){
+                    if(key<10) tiles[i][j].setResource(Resource.WHEAT);
+                    else if(key<20) tiles[i][j].setResource(Resource.SUGAR);
+                } else if(tiles[i][j].getType() == TerrainType.GRASS){
+                    if(key<10) tiles[i][j].setResource(Resource.COW);
+                    else if(key<20) tiles[i][j].setResource(Resource.SHEEP);
+                    else if(key<30) tiles[i][j].setResource(Resource.COTTON);
+                    else if(key<40) tiles[i][j].setResource(Resource.GOLD);
+                    else if(key<50) tiles[i][j].setResource(Resource.MARBLE);
+                    else if(key<60) tiles[i][j].setResource(Resource.COAL);
+                    else if(key<70) tiles[i][j].setResource(Resource.HORSE);
+                    else if(key<80) tiles[i][j].setResource(Resource.IRON);
+                    else if(key<90) tiles[i][j].setResource(Resource.JEWELERY);
+                } else if(tiles[i][j].getType() == TerrainType.PLAIN){
+                    if(key<5) tiles[i][j].setResource(Resource.SHEEP);
+                    else if(key<10) tiles[i][j].setResource(Resource.WHEAT);
+                    else if(key<15) tiles[i][j].setResource(Resource.COTTON);
+                    else if(key<20) tiles[i][j].setResource(Resource.JEWELERY);
+                    else if(key<25) tiles[i][j].setResource(Resource.GOLD);
+                    else if(key<30) tiles[i][j].setResource(Resource.BOKHOOR);
+                    else if(key<35) tiles[i][j].setResource(Resource.TUSK);
+                    else if(key<40) tiles[i][j].setResource(Resource.MARBLE);
+                    else if(key<45) tiles[i][j].setResource(Resource.COAL);
+                    else if(key<50) tiles[i][j].setResource(Resource.HORSE);
+                    else if(key<55) tiles[i][j].setResource(Resource.IRON);
+                } else if(tiles[i][j].getType() == TerrainType.TUNDRA){
+                    if(key<10) tiles[i][j].setResource(Resource.DEER);
+                    else if(key<20) tiles[i][j].setResource(Resource.FUR);
+                    else if(key<30) tiles[i][j].setResource(Resource.JEWELERY);
+                    else if(key<40) tiles[i][j].setResource(Resource.MARBLE);
+                    else if(key<50) tiles[i][j].setResource(Resource.SILVER);
+                    else if(key<60) tiles[i][j].setResource(Resource.HORSE);
+                    else if(key<70) tiles[i][j].setResource(Resource.IRON);
+                } else if(tiles[i][j].getType() == TerrainType.HILL){
+                    if(key<10) tiles[i][j].setResource(Resource.DEER);
+                    else if(key<20) tiles[i][j].setResource(Resource.SHEEP);
+                    else if(key<30) tiles[i][j].setResource(Resource.JEWELERY);
+                    else if(key<40) tiles[i][j].setResource(Resource.GOLD);
+                    else if(key<50) tiles[i][j].setResource(Resource.MARBLE);
+                    else if(key<60) tiles[i][j].setResource(Resource.SILVER);
+                    else if(key<70) tiles[i][j].setResource(Resource.COAL);
+                    else if(key<80) tiles[i][j].setResource(Resource.IRON);
+                }else if(tiles[i][j].getType() == TerrainType.DESERT){
+                    if(key<10) tiles[i][j].setResource(Resource.SHEEP);
+                    else if(key<20) tiles[i][j].setResource(Resource.COTTON);
+                    else if(key<30) tiles[i][j].setResource(Resource.JEWELERY);
+                    else if(key<40) tiles[i][j].setResource(Resource.GOLD);
+                    else if(key<50) tiles[i][j].setResource(Resource.BOKHOOR);
+                    else if(key<60) tiles[i][j].setResource(Resource.MARBLE);
+                    else if(key<70) tiles[i][j].setResource(Resource.SILVER);
+                    else if(key<80) tiles[i][j].setResource(Resource.IRON);
+                } else if(tiles[i][j].getType() == TerrainType.SNOW){
+                    if(key<10) tiles[i][j].setResource(Resource.IRON);
+                }
             }
         }
     }
@@ -115,6 +195,19 @@ public class Game {
     private void generateGroup(int i,int j,Tile[][] tiles, TerrainType type, int probability,Random random,int probabilityDecrement){
         tiles[i][j].setType(type);
         int key = random.nextInt(100);
+        if(key < 50){
+            if(type == TerrainType.GRASS){
+                tiles[i][j].setFeature(TerrainFeature.FOREST);
+                if(key<5) tiles[i][j].setFeature(TerrainFeature.SWAMP);
+            }else if(type == TerrainType.PLAIN){
+                tiles[i][j].setFeature(TerrainFeature.JUNGLE);
+                if(key<5) tiles[i][j].setFeature(TerrainFeature.SWAMP);
+            }else if(type == TerrainType.SNOW){
+                tiles[i][j].setFeature(TerrainFeature.ICE);
+            }else if(type == TerrainType.DESERT && key<20){
+                tiles[i][j].setFeature(TerrainFeature.OASIS);
+            }
+        }
         if(checkIAndJ(i-1,j)&&(probability > key) && tiles[i-1][j].getType() == null){
             generateGroup(i-1,j,tiles,type,probability - probabilityDecrement,random,probabilityDecrement);
         }

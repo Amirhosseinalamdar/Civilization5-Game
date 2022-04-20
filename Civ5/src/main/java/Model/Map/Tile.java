@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Tile {
     private TerrainType type;
     private TerrainFeature feature;
+    private Resource resource;
     private int foodPerTurn;
     private int goldPerTurn;
     private int productionPerTurn;
@@ -23,7 +24,16 @@ public class Tile {
     private ArrayList<River> rivers;
     private int centerX; // vertical
     private int CenterY; // horizontal
+    private int indexInMapI;
+    private int indexInMapJ;
 
+    public void setIndexInMapI(int indexInMapI) {
+        this.indexInMapI = indexInMapI;
+    }
+
+    public void setIndexInMapJ(int indexInMapJ) {
+        this.indexInMapJ = indexInMapJ;
+    }
 
     public void setCenterX(int centerX) {
         this.centerX = centerX;
@@ -47,5 +57,21 @@ public class Tile {
 
     public TerrainType getType() {
         return type;
+    }
+
+    public void initializeTile(){
+
+    }
+
+    public void setFeature(TerrainFeature feature) {
+        this.feature = feature;
+    }
+
+    public TerrainFeature getFeature() {
+        return feature;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 }
