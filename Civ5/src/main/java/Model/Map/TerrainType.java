@@ -1,5 +1,26 @@
 package Model.Map;
 
 public enum TerrainType {
-    DESERT, GRASS, HILL, MOUNTAIN, OCEAN, PLAIN, SNOW, TUNDRA
+    DESERT(0,0,0,-0.33,1),
+    GRASS(2,0,0,-0.33,1),
+    HILL(0,0,2,0.25,2),
+    MOUNTAIN(0,0,0,0,1000),
+    OCEAN(0,0,0,0,1000),
+    PLAIN(0,1,1,-0.33,1),
+    SNOW(0,0,0,-0.33,1),
+    TUNDRA(0,1,0,-0.33,1);
+
+    private int gold;
+    private int food;
+    private int production;
+    private double battleEffect;
+    private int movementCost;
+
+    TerrainType(int gold, int food,int production,double battleEffect,int movementCost) {
+        this.gold = gold;
+        this.food = food;
+        this.production = production;
+        this.movementCost = movementCost;
+    }
+
 }

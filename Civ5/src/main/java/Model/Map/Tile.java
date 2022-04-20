@@ -21,5 +21,31 @@ public class Tile {
     //private boolean isCity;
     private City city; // age null bashe city nis
     private ArrayList<River> rivers;
+    private int centerX; // vertical
+    private int CenterY; // horizontal
 
+
+    public void setCenterX(int centerX) {
+        this.centerX = centerX;
+    }
+
+    public void setCenterY(int centerY) {
+        CenterY = centerY;
+    }
+
+    public int getCenterX() {
+        return centerX;
+    }
+
+    public int getCenterY() {
+        return CenterY;
+    }
+
+    public void setType(TerrainType type) {
+        this.type = type;
+    }
+
+    public TerrainType getType() {
+        return type;
+    }
 }
