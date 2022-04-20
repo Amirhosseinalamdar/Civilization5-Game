@@ -10,5 +10,27 @@ public class User {
     private boolean isLoggedIn;
     private int score;
 
+    public String getUsername() {
+        return username;
+    }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public Civilization getCivilization() {
+        return civilization;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public int getScore() {
+        return score;
+    }
 }

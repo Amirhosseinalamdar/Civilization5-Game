@@ -13,6 +13,51 @@ public class Civilization {
     private int totalGold;
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
+
+    public int getTotalGold() {
+        return totalGold;
+    }
+
+    public ArrayList<City> getCities() {
+        return cities;
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units;
+    }
+
+    public ArrayList<TileStatus> getTileVisionStatuses() {
+        return tileVisionStatuses;
+    }
+
+    public HashMap<Technology, Integer> getTurnsUntilNewTechnologies() {
+        return turnsUntilNewTechnologies;
+    }
+
+    public Technology getInProgressTech() {
+        return inProgressTech;
+    }
+
+    public ArrayList<Improvement> getReachedImprovements() {
+        return reachedImprovements;
+    }
+
+    public ArrayList<City> getBuiltCities() {
+        return builtCities;
+    }
+
+    public int getScience() {
+        return science;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public HashMap<Resource, Boolean> getIsLuxuryResourceReached() {
+        return isLuxuryResourceReached;
+    }
+
     private ArrayList<TileStatus> tileVisionStatuses;//change name +vision
     private HashMap<Technology, Integer> turnsUntilNewTechnologies;
     private Technology inProgressTech;

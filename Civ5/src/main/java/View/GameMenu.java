@@ -9,9 +9,7 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 
 
 public class GameMenu {
