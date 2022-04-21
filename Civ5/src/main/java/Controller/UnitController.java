@@ -1,22 +1,55 @@
 package Controller;
 
 import Model.Civilization;
+import Model.Game;
 import Model.Map.City;
 import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import View.GameMenu;
 
 public class UnitController{
     private static Civilization civilization;
+    private static Unit unit;
 
     public static void changeCivilization(Civilization civilization){
         UnitController.civilization = civilization;
     }
 
-    public static void handleUnitOption(Unit unit){
-        unit.setStatus(GameMenu.showUnitOptions(unit));
+    public static void handleUnitOption (Unit unit) {
+        UnitController.unit = unit;
+        unit.setStatus(chooseUnitOption());
         //TODO switch case and call the related func
+        if (unit.getStatus().equals(UnitStatus.ACTIVE)) {
+            GameMenu.showUnitMoveOptions(unit);
+            String[] args = GameMenu.nextCommand().split(" ");
+            int centerX = Integer.parseInt(args[0]), centerY = Integer.parseInt(args[1]);
+            if (isTileAvailable(centerX, centerY))
+                return;
+            GameMenu.unavailableTile();
+        }
+    }
+
+    private static boolean isTileAvailable (int centerX, int centerY) {
+        if (unit instanceof Military) {
+            if (Game.getTiles()[centerX][centerY].getMilitary() == null) {
+                Game.getTiles()[centerX][centerY].setMilitary((Military) unit);
+                return true;
+            }
+        }
+        else if (Game.getTiles()[centerX][centerY].getCivilian() == null) {
+            Game.getTiles()[centerX][centerY].setCivilian(unit);
+            return true;
+        }
+        return false;
+    }
+
+    private static UnitStatus chooseUnitOption() {
+        GameMenu.showUnitOptions(unit);
+        String decision = GameMenu.nextCommand();
+        if (decision.equals("move")) return UnitStatus.ACTIVE;
+        throw new RuntimeException();
     }
 
     private static void moveUnit(Unit unit, Tile target){

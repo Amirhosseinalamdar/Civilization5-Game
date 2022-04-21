@@ -13,20 +13,22 @@ import java.util.Scanner;
 
 
 public class GameMenu {
-    Scanner scanner;
-//    public void startGame (String command) {
-//        Game game = new Game(command);
-//        GameController gameController = new GameController();
-//        while (true) {
-//            //command = scanner.nextLine();
-//            //if (command == exit) return;
-//            gameController.doTurn(game, command);
-//        }
-//    }
+    static Scanner scanner;
+    public void startGame (String command) {
+        Game game = new Game(command);
+        while (true) {
+            command = scanner.nextLine();
+            if (command.equals("next turn")) {
+                GameController.updateGame(game);
+                return;
+            }
+            GameController.doTurn(game, command);
+        }
+    }
 
     public static String nextCommand(){
-        //return scanner.nextLine();
-        return null;
+        return scanner.nextLine();
+        //return null;
     }
 
 
@@ -35,8 +37,16 @@ public class GameMenu {
         return null;
     }
 
-    public static UnitStatus showUnitOptions (Unit unit) {
-        return null;
+    public static void showUnitOptions (Unit unit) {
+        System.out.println("one option for now... please enter \"move\"");
+    }
+
+    public static void showUnitMoveOptions (Unit unit) {
+
+    }
+
+    public static void unavailableTile () {
+        System.out.println("Tile is unavailable");
     }
 
     public static void showBanner(City city) {
@@ -138,8 +148,8 @@ public class GameMenu {
 
     }
 
-    public static void showMap(Game game){
-        for(int j=0;j<10;j++){
+    public static void showMap() {
+        for(int j=0;j<10;j++) {
             System.out.print("   _____        ");
         }
         System.out.print('\n');
@@ -155,19 +165,19 @@ public class GameMenu {
                     if(i==122 && j==0) System.out.print("          \\_____");
                     else if(i==122) System.out.print("/         \\_____");
                     else{
-                        System.out.print("/    "+getTypeFirstChar(game.getTiles()[(i-2)/6][2*j].getType())+"    \\_____");//9 wh
+                        System.out.print("/    "+getTypeFirstChar(Game.getTiles()[(i-2)/6][2*j].getType())+"    \\_____");//9 wh
                     }
                 }else if(i%6==3){
                     System.out.print("\\         /     ");
                 }else if(i%6==4){
                     System.out.print(" \\       /      ");
                 }else{
-                    System.out.print("  \\_____/    "+getTypeFirstChar(game.getTiles()[(i-5)/6][2*j+1].getType())+"  ");//7 wh
+                    System.out.print("  \\_____/    "+getTypeFirstChar(Game.getTiles()[(i-5)/6][2*j+1].getType())+"  ");//7 wh
                 }
             }
-            if(i%6==3 && i>2) System.out.print("\\");
-            else if(i%6==4 && i>2) System.out.print(" \\");
-            else if(i%6==5 && i>2) System.out.print("  \\");
+            if(i%6==3) System.out.print("\\");
+            else if(i%6==4) System.out.print(" \\");
+            else if(i%6==5) System.out.print("  \\");
             else if(i%6==0 && i>2) System.out.print("  /");
             else if(i%6==1 && i>2) System.out.print(" /");
             else if(i%6==2 && i>2) System.out.print("/");

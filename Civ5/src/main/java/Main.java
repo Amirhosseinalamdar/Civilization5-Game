@@ -6,8 +6,7 @@ public class Main {
     public static void main(String[] args) {
         Unit unit = new Unit();
         Military military = new Military();
-        Game game = new Game();
-        game.generateMap();
-        GameMenu.showMap(game);
+        Game.generateMap();
+        GameMenu.showMap();
     }
 }

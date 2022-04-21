@@ -13,6 +13,43 @@ public class Unit {
     protected int MP;
     protected int health;
     protected int cost;
+
+    public UnitType getType() {
+        return type;
+    }
+
+    public Tile getTile() {
+        return tile;
+    }
+
+    public ArrayList<Tile> getZonesOfControl() {
+        return zonesOfControl;
+    }
+
+    public Civilization getCivilization() {
+        return civilization;
+    }
+
+    public int getMP() {
+        return MP;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public UnitStatus getStatus() {
+        return status;
+    }
+
+    public int getMaintenance() {
+        return maintenance;
+    }
+
     protected UnitStatus status;
     protected int maintenance;
 
