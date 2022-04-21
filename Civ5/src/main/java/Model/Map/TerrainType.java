@@ -23,4 +23,23 @@ public enum TerrainType {
         this.movementCost = movementCost;
     }
 
+    public int getGold() {
+        return gold;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public int getProduction() {
+        return production;
+    }
+
+    public double getBattleEffect() {
+        return battleEffect;
+    }
+
+    public int getMovementCost() {
+        return movementCost;
+    }
 }

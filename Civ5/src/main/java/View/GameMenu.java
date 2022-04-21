@@ -156,14 +156,16 @@ public class GameMenu {
                     if(i==122 && j==0) System.out.print("          \\_____");
                     else if(i==122) System.out.print("/         \\_____");
                     else{
-                        System.out.print("/    "+getTypeFirstChar(game.getTiles()[(i-2)/6][2*j].getType())+"    \\_____");//9 wh
+                        System.out.print("/   "+getTypeFirstChar(game.getTiles()[(i-2)/6][2*j].getType())+","+
+                                getFeatureFirstChar(game.getTiles()[(i-2)/6][2*j].getFeature())+"   \\_____");//9 wh
                     }
                 }else if(i%6==3){
                     System.out.print("\\         /     ");
                 }else if(i%6==4){
                     System.out.print(" \\       /      ");
                 }else{
-                    System.out.print("  \\_____/    "+getTypeFirstChar(game.getTiles()[(i-5)/6][2*j+1].getType())+"  ");//7 wh
+                    System.out.print("  \\_____/   "+getTypeFirstChar(game.getTiles()[(i-5)/6][2*j+1].getType())+","+
+                            getFeatureFirstChar(game.getTiles()[(i-2)/6][2*j+1].getFeature())+" ");//7 wh
                 }
             }
             if(i%6==3 && i>2) System.out.print("\\");
@@ -185,5 +187,14 @@ public class GameMenu {
         else if(type == TerrainType.DESERT) return 'D';
         else if(type == TerrainType.OCEAN) return '#';
         else return 'P';
+    }
+    private static char getFeatureFirstChar(TerrainFeature feature){
+        if(feature == TerrainFeature.SWAMP) return 'S';
+        else if(feature == TerrainFeature.FOREST) return 'F';
+        else if(feature == TerrainFeature.JUNGLE) return 'J';
+        else if(feature == TerrainFeature.ICE) return 'I';
+        else if(feature == TerrainFeature.OASIS) return 'O';
+        else if(feature == TerrainFeature.DELTA) return 'D';
+        else return ' ';
     }
 }

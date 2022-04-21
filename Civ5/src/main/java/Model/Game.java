@@ -89,7 +89,10 @@ public class Game {
                     }
                     tiles[i][j].setType(getType(maxValueIndex));
                 }
+                if(tiles[i][j].getFeature() == null) tiles[i][j].setFeature(TerrainFeature.NONE);
+                if(tiles[i][j].getResource() == null) tiles[i][j].setResource(Resource.NONE);
                 map.add(tiles[i][j]);
+                tiles[i][j].initializeTile(tiles[i][j].getType(),tiles[i][j].getFeature());
             }
         }
         //TODO add river
@@ -195,7 +198,7 @@ public class Game {
     private void generateGroup(int i,int j,Tile[][] tiles, TerrainType type, int probability,Random random,int probabilityDecrement){
         tiles[i][j].setType(type);
         int key = random.nextInt(100);
-        if(key < 50){
+        if(key < 50 && tiles[i][j].getFeature() == null){
             if(type == TerrainType.GRASS){
                 tiles[i][j].setFeature(TerrainFeature.FOREST);
                 if(key<5) tiles[i][j].setFeature(TerrainFeature.SWAMP);

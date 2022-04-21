@@ -59,8 +59,12 @@ public class Tile {
         return type;
     }
 
-    public void initializeTile(){
-
+    public void initializeTile(TerrainType type,TerrainFeature feature){//first time init
+        this.goldPerTurn = type.getGold() + feature.getGold();
+        this.foodPerTurn = type.getFood() + feature.getFood();
+        this.productionPerTurn = type.getProduction() +feature.getProduction();
+        this.combatEffect = type.getBattleEffect() + feature.getBattleEffect();
+        this.movementCost = type.getMovementCost()+feature.getMovementCost();
     }
 
     public void setFeature(TerrainFeature feature) {
@@ -73,5 +77,9 @@ public class Tile {
 
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public Resource getResource() {
+        return resource;
     }
 }
