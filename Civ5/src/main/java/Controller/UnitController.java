@@ -49,18 +49,59 @@ public class UnitController{
 
     private static void moveUnit (int destCenterX, int destCenterY) {
         ArrayList <Route> routes = new ArrayList<>();
-
+        generateFirstRoutes(routes, unit.getTile());
+        Route chosenRoute = null;
+        for (Route route : routes) {
+            Tile lastTile = route.tiles.get(route.tiles.size() - 1);
+            if (lastTile.equals(Game.getTiles()[destCenterX][destCenterY])) {
+                chosenRoute = route;
+                break;
+            }
+            for (Tile neighborTile : getTileNeighbors(lastTile)) {
+                if (! isTileWalkable(neighborTile)) continue;
+                boolean isRouteRepetitive = false;
+                for (Tile previous : route.tiles) {
+                    if (previous.equals(lastTile)) break;
+                    if (areNeighbors(neighborTile, previous)) {
+                        isRouteRepetitive = true;
+                        break;
+                    }
+                }
+                if (isRouteRepetitive) continue;
+                Route child = new Route(route);
+                child.tiles.add(neighborTile);
+                routes.add(child);
+            }
+            routes.remove(route);
+        }
+        unit.setRoute(chosenRoute);
     }
 
-    private static void generateRoute (ArrayList <Route> routes, Tile startingTile) {
-//        if (startingTile.getCenterX())
+    private static boolean areNeighbors (Tile first, Tile second) {
+        if (Math.abs(first.getCenterX() - second.getCenterX()) > 2) return false;
+        return Math.abs(first.getCenterY() - second.getCenterY()) <= 1;
+    }
+
+    private static boolean isTileWalkable (Tile tile) {
+        return true; //TODO... check tile features, then judge
+    }
+
+    private static void generateFirstRoutes (ArrayList <Route> routes, Tile startingTile) {
+        int centerX = startingTile.getCenterX(), centerY = startingTile.getCenterY();
+        for (int i = centerX - 2; i <= centerX + 2; i += 2) {
+            if (i < 0 || i > 19) continue;
+            for (int j = centerY - 1; j <= centerY + 1; j++) {
+                if (j < 0 || j > 19 || (j == centerY && i == centerX)) continue;
+                routes.get(routes.size() - 1).tiles.add(Game.getTiles()[i][j]);
+            }
+        }
+    }
+
+    private static ArrayList <Tile> getTileNeighbors (Tile tile) {
+        return new ArrayList<>();
     }
 
     private static ArrayList <Tile> findBestRoute (int myX, int myY, int destX, int destY) {
-        return null;
-    }
-
-    private static ArrayList <Tile> findTileNeighbors (int centerX, int centerY) {
         return null;
     }
 

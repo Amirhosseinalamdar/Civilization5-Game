@@ -1,6 +1,7 @@
 package Model.UnitPackage;
 
 import Model.Civilization;
+import Model.Map.Route;
 import Model.Map.Tile;
 
 import java.util.ArrayList;
@@ -14,7 +15,11 @@ public class Unit {
     protected int movesInTurn;
     protected int health;
     protected int cost;
-    protected
+    protected Route route;
+
+    public void setRoute (Route route) {
+        this.route = route;
+    }
     public int getMovesInTurn() {
         return movesInTurn;
     }
