@@ -72,7 +72,16 @@ public class Tile {
     private ArrayList<River> rivers;
     private int centerX; // vertical
     private int centerY; // horizontal
+    private int indexInMapI;
+    private int indexInMapJ;
 
+    public int getIndexInMapI() {
+        return indexInMapI;
+    }
+
+    public int getIndexInMapJ() {
+        return indexInMapJ;
+    }
 
     public void setCenterX(int centerX) {
         this.centerX = centerX;

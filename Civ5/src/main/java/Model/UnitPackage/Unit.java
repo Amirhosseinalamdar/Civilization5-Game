@@ -11,8 +11,13 @@ public class Unit {
     protected ArrayList<Tile> zonesOfControl;
     protected Civilization civilization;
     protected int MP;
+    protected int movesInTurn;
     protected int health;
     protected int cost;
+    protected
+    public int getMovesInTurn() {
+        return movesInTurn;
+    }
 
     public UnitType getType() {
         return type;
@@ -66,6 +71,10 @@ public class Unit {
 
     public void setStatus(UnitStatus status) {
         this.status = status;
+    }
+
+    public void doMove() {
+        movesInTurn++;
     }
 
     //    public void changeStatus (UnitStatus status) { ------> to controller

@@ -41,8 +41,9 @@ public class GameMenu {
         System.out.println("one option for now... please enter \"move\"");
     }
 
-    public static void showUnitMoveOptions (Unit unit) {
 
+    public static void notEnoughMoves() {
+        System.out.println("not enough moves");
     }
 
     public static void unavailableTile () {
