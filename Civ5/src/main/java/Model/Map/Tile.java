@@ -2,6 +2,7 @@ package Model.Map;
 
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
 import de.scravy.pair.Pair;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Tile {
     private int CenterY; // horizontal
     private int indexInMapI;
     private int indexInMapJ;
+
+
 
     public void setIndexInMapI(int indexInMapI) {
         this.indexInMapI = indexInMapI;
@@ -81,5 +84,21 @@ public class Tile {
 
     public Resource getResource() {
         return resource;
+    }
+
+    public Military getMilitary() {
+        return military;
+    }
+
+    public Unit getCivilian() {
+        return civilian;
+    }
+
+    public void setCivilian(Unit civilian) {
+        this.civilian = civilian;
+    }
+
+    public void setMilitary(Military military) {
+        this.military = military;
     }
 }

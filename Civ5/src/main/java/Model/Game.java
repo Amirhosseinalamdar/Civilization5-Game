@@ -4,6 +4,7 @@ import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
+import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
 import java.util.Random;
