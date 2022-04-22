@@ -11,11 +11,11 @@ public class LoginMenu {
         while (true) {
             Matcher matcher;
             command = scanner.nextLine();
-            if (Commands.getMatcher(command, Commands.EXITMENU) != null) {
+            if (Commands.getMatcher(command, Commands.EXIT_MENU) != null) {
                 scanner.close();
                 return 1;
             }
-            if (Commands.getMatcher(command, Commands.CURRENTMENU) != null) {
+            if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Login Menu");
             } else if ((matcher = Commands.getMatcher(command, Commands.REGISTER1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.REGISTER2)) != null ||
