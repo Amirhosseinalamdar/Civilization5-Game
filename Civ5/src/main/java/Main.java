@@ -8,6 +8,7 @@ public class Main {
         Military military = new Military();
         Game game = new Game();
         game.generateMap();
+        System.out.println("hile erfun");
         GameMenu.showMap(game);
     }
 }
