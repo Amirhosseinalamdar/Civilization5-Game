@@ -1,12 +1,12 @@
 import Model.Game;
 import Model.UnitPackage.*;
 import View.GameMenu;
+import View.MainMenu;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Unit unit = new Unit();
-        Military military = new Military();
-        Game.generateMap();
-        GameMenu.showMap();
+        System.out.println("hi");
     }
 }

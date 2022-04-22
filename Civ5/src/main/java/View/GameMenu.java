@@ -14,15 +14,14 @@ import java.util.Scanner;
 
 public class GameMenu {
     static Scanner scanner;
-    public void startGame (String command) {
-        Game game = new Game(command);
-        while (true) {
-            command = scanner.nextLine();
-            if (command.equals("next turn")) {
-                GameController.updateGame(game);
-                return;
-            }
-            GameController.doTurn(game, command);
+    public static void setScanner (Scanner sc) {
+        scanner = sc;
+    }
+    public static void startGame () {
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            if (command.equals("next turn")) GameController.updateGame();
+            else GameController.doTurn(command);
         }
     }
 
@@ -195,5 +194,13 @@ public class GameMenu {
         else if(type == TerrainType.DESERT) return 'D';
         else if(type == TerrainType.OCEAN) return '#';
         else return 'P';
+    }
+
+    public static void notYourUnit() {
+        System.out.println("this is not your unit");
+    }
+
+    public static void invalidChosenUnit() {
+        System.out.println("no unit exists in chosen pos");
     }
 }

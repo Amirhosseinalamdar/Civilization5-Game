@@ -3,7 +3,8 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
-import Model.Map.Route;
+import Model.Map.Path;
+import Model.Map.TerrainType;
 import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
@@ -11,6 +12,8 @@ import Model.UnitPackage.UnitStatus;
 import View.GameMenu;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UnitController{
     private static Civilization civilization;
@@ -20,19 +23,41 @@ public class UnitController{
         UnitController.civilization = civilization;
     }
 
-    public static void handleUnitOption (Unit unit) {
+    public static void setUnit (Unit unit) {
         UnitController.unit = unit;
-        unit.setStatus(chooseUnitOption());
+    }
+
+    public static void handleUnitOption() {
+        Matcher matcher = getUnitDecision();
+        unit.setStatus(matcher);
         //TODO switch case and call the related func
-        if (unit.getStatus().equals(UnitStatus.ACTIVE)) {
-            String[] args = GameMenu.nextCommand().split(" ");
-            int destCenterX = Integer.parseInt(args[0]), destCenterY = Integer.parseInt(args[1]);
+        if (unit.getStatus().equals(UnitStatus.MOVE)) {
+            int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
                 moveUnit(destCenterX, destCenterY);
                 return;
             }
             GameMenu.unavailableTile();
         }
+        if (unit.getStatus().equals(UnitStatus.SLEEP)) {
+
+        }
+    }
+
+    private static Matcher getUnitDecision() {
+        String command = GameMenu.nextCommand();
+        String regex;
+
+        regex = "^move to (?<x>\\d+) (?<y>\\d+)$";
+        if (command.matches(regex))
+            return Pattern.compile(regex).matcher(command);
+        regex = "^attack (?<x>\\d+) (?<y>\\d+)$";
+        if (command.matches(regex))
+            return Pattern.compile(regex).matcher(command);
+        regex = "^build (?<improvement>\\S+)";
+        if (command.matches(regex))
+            return Pattern.compile(regex).matcher(command);
+        return Pattern.compile(command).matcher(command);
     }
 
     private static boolean isTileEmpty (int centerX, int centerY) {
@@ -48,33 +73,41 @@ public class UnitController{
     }
 
     private static void moveUnit (int destCenterX, int destCenterY) {
-        ArrayList <Route> routes = new ArrayList<>();
-        generateFirstRoutes(routes, unit.getTile());
-        Route chosenRoute = null;
-        for (Route route : routes) {
-            Tile lastTile = route.tiles.get(route.tiles.size() - 1);
+        ArrayList <Path> paths = new ArrayList<>();
+        generateFirstRoutes(paths, unit.getTile());
+        Path chosenPath = null;
+        for (Path path : paths) {
+            Tile lastTile = path.tiles.get(path.tiles.size() - 1);
             if (lastTile.equals(Game.getTiles()[destCenterX][destCenterY])) {
-                chosenRoute = route;
+                chosenPath = path;
                 break;
             }
             for (Tile neighborTile : getTileNeighbors(lastTile)) {
                 if (! isTileWalkable(neighborTile)) continue;
                 boolean isRouteRepetitive = false;
-                for (Tile previous : route.tiles) {
-                    if (previous.equals(lastTile)) break;
-                    if (areNeighbors(neighborTile, previous)) {
+                for (Tile oneOfPreviousTiles : path.tiles) {
+                    if (oneOfPreviousTiles.equals(lastTile)) break;
+                    if (areNeighbors(neighborTile, oneOfPreviousTiles)) {
                         isRouteRepetitive = true;
                         break;
                     }
                 }
                 if (isRouteRepetitive) continue;
-                Route child = new Route(route);
+                Path child = new Path(path);
                 child.tiles.add(neighborTile);
-                routes.add(child);
+                paths.add(child);
             }
-            routes.remove(route);
+            paths.remove(path);
         }
-        unit.setRoute(chosenRoute);
+        if (chosenPath == null) return;
+        chosenPath.tiles.remove(unit.getTile()); //remove current tile from path
+        while (unit.getMovesInTurn() < unit.getMP()) {
+            unit.setTile(chosenPath.tiles.get(0));
+            if (unit instanceof Military) chosenPath.tiles.get(0).setMilitary((Military) unit);
+            else chosenPath.tiles.get(0).setCivilian(unit);
+            unit.calcMovesTo(chosenPath.tiles.get(0));
+            chosenPath.tiles.remove(0);
+        }
     }
 
     private static boolean areNeighbors (Tile first, Tile second) {
@@ -83,22 +116,31 @@ public class UnitController{
     }
 
     private static boolean isTileWalkable (Tile tile) {
-        return true; //TODO... check tile features, then judge
+        return !tile.getType().equals(TerrainType.OCEAN) &&
+                !tile.getType().equals(TerrainType.MOUNTAIN);
     }
 
-    private static void generateFirstRoutes (ArrayList <Route> routes, Tile startingTile) {
+    private static void generateFirstRoutes (ArrayList <Path> paths, Tile startingTile) {
         int centerX = startingTile.getCenterX(), centerY = startingTile.getCenterY();
         for (int i = centerX - 2; i <= centerX + 2; i += 2) {
             if (i < 0 || i > 19) continue;
             for (int j = centerY - 1; j <= centerY + 1; j++) {
                 if (j < 0 || j > 19 || (j == centerY && i == centerX)) continue;
-                routes.get(routes.size() - 1).tiles.add(Game.getTiles()[i][j]);
+                paths.get(paths.size() - 1).tiles.add(Game.getTiles()[i][j]);
             }
         }
     }
 
     private static ArrayList <Tile> getTileNeighbors (Tile tile) {
-        return new ArrayList<>();
+        ArrayList <Tile> neighbors = new ArrayList<>();
+        for (int i = tile.getCenterX() - 2; i <= tile.getCenterX() + 2; i += 2) {
+            if (i < 0 || i > 19) continue;
+            for (int j = tile.getCenterY() - 1; j <= tile.getCenterY() + 1; j++) {
+                if (j < 0 || j > 19) continue;
+                neighbors.add(Game.getTiles()[i][j]);
+            }
+        }
+        return neighbors;
     }
 
     private static ArrayList <Tile> findBestRoute (int myX, int myY, int destX, int destY) {
