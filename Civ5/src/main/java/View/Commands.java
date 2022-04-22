@@ -1,5 +1,8 @@
 package View;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +16,7 @@ public enum Commands {
     LOGIN1("^user login (--username|-u) (?<username>\\S+) (--password|-p) (?<password>\\S+)$"),
     LOGIN2("^user login (--password|-p) (?<password>\\S+) (--username|-u) (?<username>\\S+)$"),
     LOGOUT("^user logout$"),
-//    STARTGAME("^play game (--player1|-p1) (?<username>\\S+) (?<moves>\\d+)$"),
+    STARTGAME("^play game ((--player|-p)\\d+ \\S+)+$"),
     ENTERMENU("^menu enter (?<menuName>Login Menu|Main Menu|Game Menu|Profile Menu)$"),
     EXITMENU("^menu exit$"),
     CURRENTMENU("^menu show-current$");
@@ -23,6 +26,23 @@ public enum Commands {
 
     Commands(String regex) {
         this.regex = regex;
+    }
+
+    public static ArrayList<String> getUsernames(String command) {
+        HashMap<Integer, String> players = new HashMap<>();
+        String[] strings = command.split("-");
+        for (String string : strings) {
+            if (string.startsWith("-player")) {
+                players.put(Integer.parseInt(string.substring(7, 8)), string.substring(9));
+            }else {
+                players.put(Integer.parseInt(string.substring(1, 2)), string.substring(3));
+            }
+        }
+        ArrayList<String> usernames = new ArrayList<>();
+        for (Map.Entry<Integer, String> e : players.entrySet()) {
+            usernames.set(e.getKey() - 1, e.getValue());
+        }
+        return usernames;
     }
 
     public static Matcher getMatcher(String input, Commands command) {
