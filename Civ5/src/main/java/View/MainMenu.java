@@ -1,21 +1,48 @@
 package View;
 
+import Controller.UserController;
+import Model.Game;
 import Model.User;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class MainMenu {
 
-    public void run () {
-        LoginMenu loginMenu = new LoginMenu();
-        GameMenu gameMenu = new GameMenu();
-        ProfileMenu profileMenu = new ProfileMenu();
-        User loggedInUser = loginMenu.handleRegistrationsAndLoggingIn();
+    public static void run() {
+        String command;
+        ArrayList<User> players = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        if (LoginMenu.run(scanner) == 1) return;
         while (true) {
-            //if (command == profile)
-                profileMenu.run();
-            //if (command == play) {
-            // gameMenu.startGame(command);
-            //if (command == logout)
-                loginMenu.handleRegistrationsAndLoggingIn();
+            Matcher matcher;
+            command = scanner.nextLine();
+            if (Commands.getMatcher(command, Commands.EXITMENU) != null) {
+                if (LoginMenu.run(scanner) == 1) break;
+            }
+            if (Commands.getMatcher(command, Commands.CURRENTMENU) != null) {
+                System.out.println("Main Menu");
+            } else if (Commands.getMatcher(command, Commands.LOGOUT) != null) {
+                System.out.println(UserController.logUserOut());
+                if (LoginMenu.run(scanner) == 1) break;
+            } else if ((matcher = Commands.getMatcher(command, Commands.ENTERMENU)) != null) {
+                if (matcher.group("menuName").equals("Profile Menu")) {
+                    System.out.println("entered Profile menu!");
+                    ProfileMenu.run();
+                }
+                else if (matcher.group("menuName").equals("Game Menu")) System.out.println("use \"play game\" command");
+                else if (matcher.group("menuName").equals("Login Menu")) System.out.println("use \"logout\" command");
+                else System.out.println("menu navigation is not possible");
+            } else if (Commands.getMatcher(command, Commands.STARTGAME) != null) {
+                if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
+                    System.out.println("game started");
+                    //TODO START THE GAME
+                }
+                System.out.println("some usernames aren't valid");
+            } else {
+                System.out.println("invalid command");
+            }
         }
     }
 }
