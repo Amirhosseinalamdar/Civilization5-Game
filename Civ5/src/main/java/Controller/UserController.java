@@ -67,4 +67,35 @@ public class UserController {
         }
         return null;
     }
+
+    private static boolean isNicknameExist(String nickname) {
+        for (User allUser : allUsers) {
+            if (allUser.getNickname().equals(nickname)) return true;
+        }
+        return false;
+    }
+
+    public static String changeNickname(Matcher matcher) {
+        String newNickname = matcher.group("nickname");
+        String output;
+        if (isNicknameExist(newNickname)) output = "user with nickname " + newNickname + " already exists";
+        else {
+            output = "nickname changed successfully!";
+            loggedInUser.setNickname(newNickname);
+        }
+        return output;
+    }
+
+    public static String changePassword(Matcher matcher) {
+        String currentPassword = matcher.group("currentPassword");
+        String newPassword = matcher.group("newPassword");
+        String output;
+        if (!loggedInUser.getPassword().equals(currentPassword)) output = "current password is invalid";
+        else if (loggedInUser.getPassword().equals(newPassword)) output = "please enter a new password";
+        else {
+            output = "password changed successfully!";
+            loggedInUser.setPassword(newPassword);
+        }
+        return output;
+    }
 }

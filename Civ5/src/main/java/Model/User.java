@@ -16,6 +16,14 @@ public class User {
         this.score = score;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -32,11 +40,11 @@ public class User {
         return civilization;
     }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
     public int getScore() {
         return score;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 }
