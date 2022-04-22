@@ -153,7 +153,7 @@ public class GameMenu {
     public static final String RESET = "\u001B[0m";
     public static final String BLUE = "\u001B[44m";
 
-    public static void showMap(Game game){//TODO check if units are in correct tile
+    public static void showMap(){//TODO check if units are in correct tile
         for(int j=0;j<10;j++){
             System.out.print("   _____        ");
         }
@@ -166,20 +166,20 @@ public class GameMenu {
                         System.out.print("     \\"+BLUE+"         "+RESET+"/");
                     }
                     else {
-                        showXAndY(i/6,2*j,true,game);
+                        showXAndY(i/6,2*j,true);
                     }
                 }else if(i%6==1){
                     if(i==121){
                         if(j==0) System.out.print("  ");
                         System.out.print("       \\");
                         System.out.print(BLUE);
-                        showUnitAndMilitary((i-1)/6-1,2*j+1,false,game);
+                        showUnitAndMilitary((i-1)/6-1,2*j+1,false);
                         System.out.print(RESET);
                         System.out.print("/");
 
                     }
                     else{
-                        showResource((i-1)/6,2*j,true,game);
+                        showResource((i-1)/6,2*j,true);
                     }
                 }else if(i%6==2){
                     if(i==122){
@@ -187,32 +187,32 @@ public class GameMenu {
                         System.out.print("         \\"+BLUE+"_____"+RESET+"/");
                     }
                     else{
-                        System.out.print("/"+game.getTiles()[(i-2)/6][j*2].getType().getColor()
-                                +"   "+getTypeFirstChar(game.getTiles()[(i-2)/6][2*j].getType())+","+
-                                getFeatureFirstChar(game.getTiles()[(i-2)/6][2*j].getFeature())+"   "+RESET);//9 wh
+                        System.out.print("/"+Game.getTiles()[(i-2)/6][j*2].getType().getColor()
+                                +"   "+getTypeFirstChar(Game.getTiles()[(i-2)/6][2*j].getType())+","+
+                                getFeatureFirstChar(Game.getTiles()[(i-2)/6][2*j].getFeature())+"   "+RESET);//9 wh
                         int I=(i-2)/6;
                         int J= j*2;
-                        if(I>0) System.out.print("\\"+game.getTiles()[I-1][J+1].getType().getColor()+"_____"+RESET);
+                        if(I>0) System.out.print("\\"+Game.getTiles()[I-1][J+1].getType().getColor()+"_____"+RESET);
                         else System.out.print("\\_____");
                     }
                 }else if(i%6==3){
-                    showXAndY((i-3)/6,2*j+1,false,game);
+                    showXAndY((i-3)/6,2*j+1,false);
                     //System.out.print("\\         /     ");
                 }else if(i%6==4){
-                    showResource((i-4)/6,j*2+1,false,game);
+                    showResource((i-4)/6,j*2+1,false);
                 }else{
                     int I = (i-5)/6;
                     int J = (2*j+1);
                     if(j==0) System.out.print("  ");
-                    System.out.print("\\"+game.getTiles()[I][J-1].getType().getColor()+"_____"+RESET+"/"+
-                            game.getTiles()[I][J].getType().getColor()+"   "
-                            +getTypeFirstChar(game.getTiles()[(i-5)/6][2*j+1].getType())+","+
-                            getFeatureFirstChar(game.getTiles()[(i-5)/6][2*j+1].getFeature())+"   "+RESET);//7 wh
+                    System.out.print("\\"+Game.getTiles()[I][J-1].getType().getColor()+"_____"+RESET+"/"+
+                            Game.getTiles()[I][J].getType().getColor()+"   "
+                            +getTypeFirstChar(Game.getTiles()[(i-5)/6][2*j+1].getType())+","+
+                            getFeatureFirstChar(Game.getTiles()[(i-5)/6][2*j+1].getFeature())+"   "+RESET);//7 wh
                 }
             }
-            if(i%6==3 && i>2) System.out.print("\\");
-            else if(i%6==4 && i>2) System.out.print(" \\");
-            else if(i%6==5 && i>2) System.out.print("\\");
+            if(i%6==3) System.out.print("\\");
+            else if(i%6==4) System.out.print(" \\");
+            else if(i%6==5) System.out.print("\\");
             else if(i%6==0 && i>2 && i!=120) System.out.print("/");
             else if(i%6==1 && i>2 && i!=121) System.out.print("/");
             else if(i%6==2 && i>2 && i!=122) System.out.print("/");
@@ -239,83 +239,79 @@ public class GameMenu {
         else if(feature == TerrainFeature.DELTA) return 'D';
         else return ' ';
     }
-    private static void showResource(int i,int j,boolean isEven,Game game){
+    private static void showResource(int i,int j,boolean isEven){
         if(isEven){
-            String output = " /       \\      ";
             if(j/2 == 0) System.out.print(" ");
-            System.out.print("/"+game.getTiles()[i][j].getType().getColor());
-            if(game.getTiles()[i][j].getResource() != Resource.JEWELERY &&
-                    game.getTiles()[i][j].getResource() != Resource.NONE) {
-                System.out.print(game.getTiles()[i][j].getResource());
-                for(int k=0;k<7-game.getTiles()[i][j].getResource().toString().length();k++)
+            System.out.print("/"+Game.getTiles()[i][j].getType().getColor());
+            if(Game.getTiles()[i][j].getResource() != Resource.JEWELERY &&
+                    Game.getTiles()[i][j].getResource() != Resource.NONE) {
+                System.out.print(Game.getTiles()[i][j].getResource());
+                for(int k=0;k<7-Game.getTiles()[i][j].getResource().toString().length();k++)
                     System.out.print(' ');
                 System.out.print(RESET+"\\");
-            }else if(game.getTiles()[i][j].getResource() == Resource.NONE){
+            }else if(Game.getTiles()[i][j].getResource() == Resource.NONE){
                 System.out.print("       "+RESET+"\\");
             } else{
                 System.out.print("JEWEL  "+RESET+"\\");
             }
-            if(i>0) showUnitAndMilitary(i-1,j+1,false,game);
+            if(i>0) showUnitAndMilitary(i-1,j+1,false);
             else System.out.print("       ");
-        }else{
-            String output =" \\       /      ";
+        } else{
             if((j-1)/2 == 0) System.out.print(" ");
-            if(j>0) showUnitAndMilitary(i,j-1,true,game);
-            System.out.print(game.getTiles()[i][j].getType().getColor());
-            if(game.getTiles()[i][j].getResource() != Resource.JEWELERY &&
-                    game.getTiles()[i][j].getResource() != Resource.NONE) {
-                System.out.print(game.getTiles()[i][j].getResource());
-                for(int k=0;k<6-game.getTiles()[i][j].getResource().toString().length();k++)
+            if(j>0) showUnitAndMilitary(i,j-1,true);
+            System.out.print(Game.getTiles()[i][j].getType().getColor());
+            if(Game.getTiles()[i][j].getResource() != Resource.JEWELERY &&
+                    Game.getTiles()[i][j].getResource() != Resource.NONE) {
+                System.out.print(Game.getTiles()[i][j].getResource());
+                for(int k=0;k<6-Game.getTiles()[i][j].getResource().toString().length();k++)
                     System.out.print(' ');
-            }else if(game.getTiles()[i][j].getResource() == Resource.NONE){
+            }else if(Game.getTiles()[i][j].getResource() == Resource.NONE){
                 System.out.print("      ");
             } else{
                 System.out.print("JEWEL ");
             }
-            if((j-1)/2 != 9 && game.getTiles()[i][j].getResource()!=Resource.BOKHOOR) System.out.print(" ");
+            if((j-1)/2 != 9 && Game.getTiles()[i][j].getResource()!=Resource.BOKHOOR) System.out.print(" ");
             System.out.print(RESET);
         }
     }
 
-    private static void showXAndY(int i,int j,boolean isEven,Game game){
+    private static void showXAndY(int i,int j,boolean isEven){
         if(isEven){
-            String output = "  /     \\       ";
             if(j==0) System.out.print("  ");
-            System.out.print("/"+game.getTiles()[i][j].getType().getColor());
-            String loc =game.getTiles()[i][j].getCenterX()+","+game.getTiles()[i][j].getCenterY();
+            System.out.print("/"+Game.getTiles()[i][j].getType().getColor());
+            String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             System.out.print(loc);
             for(int k=0;k<5-loc.length();k++) System.out.print(' ');
             System.out.print(RESET+"\\");
-            if(i>0)System.out.print(game.getTiles()[i-1][j+1].getType().getColor()+"         "+RESET);
+            if(i>0)System.out.print(Game.getTiles()[i-1][j+1].getType().getColor()+"         "+RESET);
             else System.out.print("         ");
         }else {
-            String output ="\\         /     ";
-            System.out.print("\\"+game.getTiles()[i][j-1].getType().getColor()+"         "+RESET+"/");
-            System.out.print(game.getTiles()[i][j].getType().getColor());
-            String loc =game.getTiles()[i][j].getCenterX()+","+game.getTiles()[i][j].getCenterY();
+            System.out.print("\\"+Game.getTiles()[i][j-1].getType().getColor()+"         "+RESET+"/");
+            System.out.print(Game.getTiles()[i][j].getType().getColor());
+            String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             System.out.print(loc);
             for(int k=0;k<5-loc.length();k++) System.out.print(' ');
             System.out.print(RESET);
         }
     }
 
-    private static void showUnitAndMilitary(int i,int j,boolean isEven,Game game){
+    private static void showUnitAndMilitary(int i,int j,boolean isEven){
         if(isEven){
-            System.out.print("\\"+game.getTiles()[i][j].getType().getColor());
+            System.out.print("\\"+Game.getTiles()[i][j].getType().getColor());
             String output1,output2;
-            if(game.getTiles()[i][j].getMilitary() == null) output1 ="   ";
-            else output1 = game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
-            if(game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
-            else output2 = game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
+            if(Game.getTiles()[i][j].getMilitary() == null) output1 ="   ";
+            else output1 = Game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
+            if(Game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
+            else output2 = Game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
             System.out.print(output1+","+output2);
             System.out.print(RESET+"/");
         } else{
             String output1,output2;
-            if(game.getTiles()[i][j].getCivilian() == null) output1 ="   ";
-            else output1 = game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
-            if(game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
-            else output2 = game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
-            System.out.print(game.getTiles()[i][j].getType().getColor()+output1+","+output2+RESET);
+            if(Game.getTiles()[i][j].getCivilian() == null) output1 ="   ";
+            else output1 = Game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
+            if(Game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
+            else output2 = Game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
+            System.out.print(Game.getTiles()[i][j].getType().getColor()+output1+","+output2+RESET);
         }
     }
 

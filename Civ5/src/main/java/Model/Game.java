@@ -39,7 +39,8 @@ public class Game {
     }
 
     public static void generateMap(){
-        //Tile[][] tiles = new Tile[20][20];
+        map = new ArrayList<>();
+//        Tile[][] tiles = new Tile[20][20];
         Random random = new Random();
         int centersParameter = 1;//TODO for graphics
         for(int i=0;i<20;i++){
@@ -49,7 +50,7 @@ public class Game {
                 tiles[i][j].setIndexInMapJ(j);
                 tiles[i][j].setCenterY(j * centersParameter);
                 tiles[i][j].setCenterX(i * centersParameter * 2 + centersParameter * (j % 2));
-                if(i<1 || j<1 || i>18 || j>18){
+                if(i<1 || j<1 || i>18 || j>18) {
                     tiles[i][j].setType(TerrainType.OCEAN);
                 } else if((i<2 || j<2 || i>17 || j>17) && random.nextInt(2) == 0) {
                     tiles[i][j].setType(TerrainType.OCEAN);
