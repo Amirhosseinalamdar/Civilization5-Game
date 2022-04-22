@@ -24,11 +24,65 @@ public class Tile {
     private City city; // age null bashe city nis
     private ArrayList<River> rivers;
     private int centerX; // vertical
-    private int CenterY; // horizontal
+    private int centerY; // horizontal
     private int indexInMapI;
     private int indexInMapJ;
 
 
+
+    public int getFoodPerTurn() {
+        return foodPerTurn;
+    }
+
+    public int getGoldPerTurn() {
+        return goldPerTurn;
+    }
+
+    public int getProductionPerTurn() {
+        return productionPerTurn;
+    }
+
+    public int getMovementCost() {
+        return movementCost;
+    }
+
+    public double getCombatEffect() {
+        return combatEffect;
+    }
+
+    public Military getMilitary() {
+        return military;
+    }
+
+    public Unit getCivilian() {
+        return civilian;
+    }
+
+    public Pair<Improvement, Integer> getImprovementInProgress() {
+        return improvementInProgress;
+    }
+
+    public boolean isRaided() {
+        return isRaided;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public ArrayList<River> getRivers() {
+        return rivers;
+    }
+
+
+
+    public int getIndexInMapI() {
+        return indexInMapI;
+    }
+
+    public int getIndexInMapJ() {
+        return indexInMapJ;
+    }
 
     public void setIndexInMapI(int indexInMapI) {
         this.indexInMapI = indexInMapI;
@@ -43,7 +97,7 @@ public class Tile {
     }
 
     public void setCenterY(int centerY) {
-        CenterY = centerY;
+        this.centerY = centerY;
     }
 
     public int getCenterX() {
@@ -51,7 +105,15 @@ public class Tile {
     }
 
     public int getCenterY() {
-        return CenterY;
+        return centerY;
+    }
+
+    public void setMilitary (Military military) {
+        this.military = military;
+    }
+
+    public void setCivilian (Unit civilian) {
+        this.civilian = civilian;
     }
 
     public void setType(TerrainType type) {
@@ -86,19 +148,5 @@ public class Tile {
         return resource;
     }
 
-    public Military getMilitary() {
-        return military;
-    }
 
-    public Unit getCivilian() {
-        return civilian;
-    }
-
-    public void setCivilian(Unit civilian) {
-        this.civilian = civilian;
-    }
-
-    public void setMilitary(Military military) {
-        this.military = military;
-    }
 }

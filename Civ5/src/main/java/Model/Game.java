@@ -10,19 +10,36 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    private ArrayList <User> players;
-    private int turn;
-    private int time;
-    private ArrayList <Tile> map;//20*20
-    private Tile[][] tiles = new Tile[20][20];
+    private static ArrayList <User> players;
+    private static int turn;
+    private static int time;
+    private static ArrayList <Tile> map;//20*20
+    private static Tile[][] tiles = new Tile[20][20];
 
-//    public Game (String playerList) {
+    public static ArrayList<User> getPlayers() {
+        return players;
+    }
+
+    public static int getTurn() {
+        return turn;
+    }
+
+    public static int getTime() {
+        return time;
+    }
+
+    public static ArrayList<Tile> getMap() {
+        return map;
+    }
+
+    public Game (String playerList) {
 //        set players from string
 //        set other fields
 //        generateMap();
-//    }
+    }
 
-    public void generateMap(){
+    public static void generateMap(){
+        //Tile[][] tiles = new Tile[20][20];
         Random random = new Random();
         int centersParameter = 1;//TODO for graphics
         for(int i=0;i<20;i++){
@@ -41,25 +58,23 @@ public class Game {
         }
         for(int i=0;i<20;i++){
             for(int j=0;j<20;j++){
-                if(tiles[i][j].getType() != null) continue;
-                else {
-                    TerrainType type = getType(random.nextInt(7));
-                    int probabilityDecrement= setProbabilityDecrement(type);
-                    int probability = setProbability(type);
-                    generateGroup(i,j,tiles,type,probability,random,probabilityDecrement);
-                }
+                if (tiles[i][j].getType() != null) continue;
+                TerrainType type = getType(random.nextInt(7));
+                int probabilityDecrement= setProbabilityDecrement(type);
+                int probability = setProbability(type);
+                generateGroup(i,j,tiles,type,probability,random,probabilityDecrement);
             }
         }
         completeMap(tiles);
     }
-    private int setProbability(TerrainType type){
+    private static int setProbability(TerrainType type){
         if(type == TerrainType.MOUNTAIN) return 50;
         else if(type == TerrainType.HILL) return 30;
         else if(type == TerrainType.SNOW) return 70;
         else if(type == TerrainType.TUNDRA) return 70;
         return 90;
     }
-    private int setProbabilityDecrement(TerrainType type){
+    private static int setProbabilityDecrement(TerrainType type){
         if(type == TerrainType.MOUNTAIN) return 40;
         else if(type == TerrainType.HILL) return 70;
         else if(type == TerrainType.SNOW) return 30;
@@ -67,8 +82,7 @@ public class Game {
         return 10;
     }
 
-    private void completeMap(Tile[][] tiles){
-        this.map = new ArrayList<>();
+    private static void completeMap(Tile[][] tiles){
         for(int i=0;i<20;i++){
             for(int j=0;j<20;j++){
                 if(tiles[i][j].getType() == null){
@@ -100,7 +114,7 @@ public class Game {
         addResource();
     }
 
-    private void addResource(){
+    private static void addResource(){
         Random random = new Random();
         int key;
         for(int i=0;i<20;i++){
@@ -177,7 +191,7 @@ public class Game {
 
 //check kardane i va j dar v1 niaz nis chon ta 2 laye ocean e va goftim type null bashe unja
 
-    private void addCounter(int[] counter, TerrainType type){
+    private static void addCounter(int[] counter, TerrainType type){
         if(type == TerrainType.DESERT) counter[0]++;
         else if(type == TerrainType.GRASS) counter[1]++;
         else if(type == TerrainType.HILL) counter[2]++;
@@ -187,7 +201,7 @@ public class Game {
         else if(type == TerrainType.SNOW) counter[6]++;
     }
 
-    private TerrainType getType(int key){
+    private static TerrainType getType(int key){
         if(key == 0) return TerrainType.DESERT;
         else if(key == 1) return TerrainType.GRASS;
         else if(key == 2) return TerrainType.HILL;
@@ -196,7 +210,7 @@ public class Game {
         else if(key == 5) return TerrainType.TUNDRA;
         else return TerrainType.SNOW;
     }
-    private void generateGroup(int i,int j,Tile[][] tiles, TerrainType type, int probability,Random random,int probabilityDecrement){
+    private static void generateGroup(int i,int j,Tile[][] tiles, TerrainType type, int probability,Random random,int probabilityDecrement){
         tiles[i][j].setType(type);
         int key = random.nextInt(100);
         if(key < 50 && tiles[i][j].getFeature() == null){
@@ -245,11 +259,11 @@ public class Game {
         }
     }
 
-    private boolean checkIAndJ(int i,int j){
+    private static boolean checkIAndJ(int i,int j){
         return i <= 19 && i >= 0 && j <= 19 && j >= 0;
     }
 
-    public Tile[][] getTiles() {
+    public static Tile[][] getTiles() {
         return tiles;
     }
 }

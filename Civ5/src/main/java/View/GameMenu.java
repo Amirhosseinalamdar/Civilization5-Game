@@ -15,20 +15,21 @@ import java.util.Scanner;
 
 
 public class GameMenu {
-    Scanner scanner;
-//    public void startGame (String command) {
-//        Game game = new Game(command);
-//        GameController gameController = new GameController();
-//        while (true) {
-//            //command = scanner.nextLine();
-//            //if (command == exit) return;
-//            gameController.doTurn(game, command);
-//        }
-//    }
+    static Scanner scanner;
+    public static void setScanner (Scanner sc) {
+        scanner = sc;
+    }
+    public static void startGame () {
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            if (command.equals("next turn")) GameController.updateGame();
+            else GameController.doTurn(command);
+        }
+    }
 
     public static String nextCommand(){
-        //return scanner.nextLine();
-        return null;
+        return scanner.nextLine();
+        //return null;
     }
 
 
@@ -37,8 +38,17 @@ public class GameMenu {
         return null;
     }
 
-    public static UnitStatus showUnitOptions (Unit unit) {
-        return null;
+    public static void showUnitOptions (Unit unit) {
+        System.out.println("one option for now... please enter \"move\"");
+    }
+
+
+    public static void notEnoughMoves() {
+        System.out.println("not enough moves");
+    }
+
+    public static void unavailableTile () {
+        System.out.println("Tile is unavailable");
     }
 
     public static void showBanner(City city) {
@@ -307,5 +317,13 @@ public class GameMenu {
             else output2 = game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
             System.out.print(game.getTiles()[i][j].getType().getColor()+output1+","+output2+RESET);
         }
+    }
+
+    public static void notYourUnit() {
+        System.out.println("this is not your unit");
+    }
+
+    public static void invalidChosenUnit() {
+        System.out.println("no unit exists in chosen pos");
     }
 }

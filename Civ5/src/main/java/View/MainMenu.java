@@ -6,7 +6,6 @@ public class MainMenu {
 
     public void run () {
         LoginMenu loginMenu = new LoginMenu();
-        GameMenu gameMenu = new GameMenu();
         ProfileMenu profileMenu = new ProfileMenu();
         User loggedInUser = loginMenu.handleRegistrationsAndLoggingIn();
         while (true) {
