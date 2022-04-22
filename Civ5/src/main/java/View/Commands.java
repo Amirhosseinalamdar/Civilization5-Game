@@ -16,10 +16,18 @@ public enum Commands {
     LOGIN1("^user login (--username|-u) (?<username>\\S+) (--password|-p) (?<password>\\S+)$"),
     LOGIN2("^user login (--password|-p) (?<password>\\S+) (--username|-u) (?<username>\\S+)$"),
     LOGOUT("^user logout$"),
-    STARTGAME("^play game ((--player|-p)\\d+ \\S+)+$"),
-    ENTERMENU("^menu enter (?<menuName>Login Menu|Main Menu|Game Menu|Profile Menu)$"),
-    EXITMENU("^menu exit$"),
-    CURRENTMENU("^menu show-current$");
+    START_GAME("^play game ((--player|-p)\\d+ \\S+)+$"),
+    ENTER_MENU("^menu enter (?<menuName>Login Menu|Main Menu|Game Menu|Profile Menu)$"),
+    EXIT_MENU("^menu exit$"),
+    CURRENT_MENU("^menu show-current$"),
+    CHANGE_NICKNAME("^profile change (--nickname|-n) (?<nickname>\\S+)$"),
+    CHANGE_PASSWORD1("^profile change (--password|-p) (--current|-c) (?<currentPassword>\\S+) (--new|-n) (?<newPassword>\\S+)$"),
+    CHANGE_PASSWORD2("^profile change (--password|-p) (--new|-n) (?<newPassword>\\S+) (--current|-c) (?<currentPassword>\\S+)$"),
+    CHANGE_PASSWORD3("^profile change (--current|-c) (?<currentPassword>\\S+) (--password|-p) (--new|-n) (?<newPassword>\\S+)$"),
+    CHANGE_PASSWORD4("^profile change (--current|-c) (?<currentPassword>\\S+) (--new|-n) (?<newPassword>\\S+) (--password|-p)$"),
+    CHANGE_PASSWORD5("^profile change (--new|-n) (?<newPassword>\\S+) (--password|-p) (--current|-c) (?<currentPassword>\\S+)$"),
+    CHANGE_PASSWORD6("^profile change (--new|-n) (?<newPassword>\\S+) (--current|-c) (?<currentPassword>\\S+) (--password|-p)$");
+
 
 
     private String regex;
