@@ -8,18 +8,19 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import Model.User;
 
 import javax.sound.midi.Soundbank;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class GameMenu {
     static Scanner scanner;
-    public static void setScanner (Scanner sc) {
-        scanner = sc;
-    }
-    public static void startGame () {
+    public static void startGame (ArrayList <User> players) {
+        Game.generateGame(players);
+        scanner = MainMenu.scanner;
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();

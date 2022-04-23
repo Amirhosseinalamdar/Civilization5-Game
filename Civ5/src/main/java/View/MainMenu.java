@@ -10,10 +10,12 @@ import java.util.regex.Matcher;
 
 public class MainMenu {
 
+
+    public static Scanner scanner = new Scanner(System.in);
+
     public static void run() {
         String command;
         ArrayList<User> players;
-        Scanner scanner = new Scanner(System.in);
         if (LoginMenu.run(scanner) == 1) return;
         while (true) {
             Matcher matcher;
@@ -36,10 +38,9 @@ public class MainMenu {
                 else System.out.println("menu navigation is not possible");
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
-                    players.add(0, UserController.getLoggedInUser());
                     System.out.println("game started");
-                    Game.generateGame(players);
                     //TODO navigate to game menu
+                    GameMenu.startGame(players);
                 } else System.out.println("some usernames aren't valid");
             } else {
                 System.out.println("invalid command");

@@ -20,6 +20,17 @@ public class Civilization {
     private ArrayList<City> builtCities;
     private int science;
     private int happiness;
+
+    public Civilization() {
+        cities = new ArrayList<>();
+        units = new ArrayList<>();
+    }
+
+    public void createCityOnTile (Tile tile) {
+        City city = new City(this, tile);
+        cities.add(city);
+    }
+
     private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
     public int getTotalGold() {
         return totalGold;

@@ -43,6 +43,16 @@ public class Game {
         turn = 0;
         time = 1;
         generateMap();
+        ArrayList <Tile> tiles = new ArrayList<>(Game.getMap());
+        for (User player : players) {
+            player.newCivilization();
+            int random = (int)Math.floor(Math.random() * (tiles.size() + 1));
+            player.getCivilization().createCityOnTile(tiles.get(random));
+            tiles.remove(random);
+            Tile myTile = player.getCivilization().getCities().get(0).getTiles().get(0);
+            System.out.println("i am " + player.getUsername() + ", my capital is on " +
+                    myTile.getCenterX() + ", " + myTile.getCenterY());
+        }
     }
 
     public static void generateMap(){
