@@ -37,7 +37,6 @@ public class MainMenu {
                 else System.out.println("menu navigation is not possible");
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
-                    players.add(0, UserController.getLoggedInUser());
                     System.out.println("game started");
                     Game.generateGame(players);
                     //TODO navigate to game menu

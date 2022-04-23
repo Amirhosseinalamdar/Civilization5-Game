@@ -12,7 +12,7 @@ public class ProfileMenu {
             Matcher matcher;
             command = scanner.nextLine();
             if (Commands.getMatcher(command, Commands.EXIT_MENU) != null) break;
-            if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
+            else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Profile Menu");
             } else if ((matcher = Commands.getMatcher(command, Commands.CHANGE_PASSWORD1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.CHANGE_PASSWORD2)) != null ||
