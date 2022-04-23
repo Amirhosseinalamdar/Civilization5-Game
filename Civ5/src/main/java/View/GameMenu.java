@@ -322,4 +322,44 @@ public class GameMenu {
     public static void invalidChosenUnit() {
         System.out.println("no unit exists in chosen pos");
     }
+
+    public static void invalidChosenCity() {
+        System.out.println("no city exists in chosen pos");
+    }
+
+    public static void siegeNotPrepared() {
+        System.out.println("you have to prepare the siege unit first");
+    }
+
+    public static void cantMakeGarrison() {
+        System.out.println("can't make garrison, no city available");
+    }
+
+    public static void unitIsNotSiege() {
+        System.out.println("chosen unit is not siege");
+    }
+
+    public static void siegeAlreadyPrepared() {
+        System.out.println("this unit is already prepared");
+    }
+
+    public static void invalidChosenTile() {
+        System.out.println("no tile exists in chosen tile");
+    }
+
+    public static void unitIsCivilianError() {
+        System.out.println("error: this unit is civilian");
+    }
+
+    public static void unitIsMilitaryError() {
+        System.out.println("error: this unit is military");
+    }
+
+    public static void unitHasFullHealth() {
+        System.out.println("unit's health is already full");
+    }
+
+    public static void unitIsNotWorker() {
+        System.out.println("this unit is not worker");
+    }
 }

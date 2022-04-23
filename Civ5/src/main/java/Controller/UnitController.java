@@ -9,7 +9,9 @@ import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
+import Model.UnitPackage.UnitType;
 import View.GameMenu;
+import sun.security.krb5.internal.PAData;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -39,25 +41,113 @@ public class UnitController{
             }
             GameMenu.unavailableTile();
         }
-        if (unit.getStatus().equals(UnitStatus.SLEEP)) {
-
-        }
     }
 
     private static Matcher getUnitDecision() {
-        String command = GameMenu.nextCommand();
         String regex;
 
-        regex = "^move to (?<x>\\d+) (?<y>\\d+)$";
-        if (command.matches(regex))
-            return Pattern.compile(regex).matcher(command);
-        regex = "^attack (?<x>\\d+) (?<y>\\d+)$";
-        if (command.matches(regex))
-            return Pattern.compile(regex).matcher(command);
-        regex = "^build (?<improvement>\\S+)";
-        if (command.matches(regex))
-            return Pattern.compile(regex).matcher(command);
-        return Pattern.compile(command).matcher(command);
+        while (true) {
+            String command = GameMenu.nextCommand();
+            regex = "^move to (?<x>\\d+) (?<y>\\d+)$";
+            if (command.matches(regex)) {
+                Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (! GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
+                    return Pattern.compile(regex).matcher(command);
+                else
+                    GameMenu.invalidChosenTile();
+            }
+
+            if (command.equals("sleep"))
+                return Pattern.compile("sleep").matcher(command);
+
+            if (command.equals("wake") && unit.getStatus().equals(UnitStatus.SLEEP))
+                return Pattern.compile("wake").matcher(command);
+
+            if (command.equals("delete"))
+                return Pattern.compile("delete").matcher(command);
+
+            regex = "^attack (?<x>\\d+) (?<y>\\d+)$";
+            if (command.matches(regex)) {
+                Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (!matcher.find()) throw new RuntimeException();
+                int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+                if (!(unit instanceof Military))
+                    GameMenu.unitIsCivilianError();
+                else if (GameController.invalidPos(x, y))
+                    GameMenu.invalidChosenTile();
+                else if (!unit.isSiege() || unit.getStatus().equals(UnitStatus.SIEGEPREP))
+                    return Pattern.compile(regex).matcher(command);
+                else
+                    GameMenu.siegeNotPrepared();
+            }
+
+            if (command.equals("alert") || command.equals("fortify")) {
+                if (unit instanceof Military)
+                    return Pattern.compile(command).matcher(command);
+                else
+                    GameMenu.unitIsCivilianError();
+            }
+
+            if (command.equals("fortify heal")) {
+                if (unit instanceof Military) {
+                    if (unit.getHealth() < Unit.MAX_HEALTH)
+                        return Pattern.compile(command).matcher(command);
+                    else
+                        GameMenu.unitHasFullHealth();
+                }
+                else
+                    GameMenu.unitIsCivilianError();
+            }
+
+            if (command.equals("garrison")) {
+                if (unit instanceof Military) {
+                    if (militaryIsInCityTiles())
+                        return Pattern.compile(command).matcher(command);
+                    else
+                        GameMenu.cantMakeGarrison();
+                }
+                else
+                    GameMenu.unitIsCivilianError();
+            }
+
+            if (command.equals("setup ranged")) {
+                if (unit instanceof Military) {
+                    if (unit.isSiege())
+                        return Pattern.compile(command).matcher(command);
+                    else
+                        GameMenu.unitIsNotSiege();
+                }
+                else
+                    GameMenu.unitIsCivilianError();
+            }
+
+            regex = "^build (?<improvement>\\S+)";
+            if (command.matches(regex)) {
+                if (unit.getType().equals(UnitType.WORKER))
+                    return Pattern.compile(regex).matcher(command); //TODO check validation of improvements in future
+                else
+                    GameMenu.unitIsNotWorker();
+            }
+
+            regex = "^remove (?<resource>(jungle|route))$";
+            if (command.matches(regex)) {
+                if (unit.getType().equals(UnitType.WORKER))
+                    return Pattern.compile(regex).matcher(command);
+                else
+                    GameMenu.unitIsNotWorker();
+            }
+
+            if (command.equals("repair")) {
+                if (unit.getType().equals(UnitType.WORKER))
+                    return Pattern.compile(command).matcher(command);
+                else
+                    GameMenu.unitIsNotWorker();
+            }
+        }
+    }
+
+    private static boolean militaryIsInCityTiles() {
+        return true;
     }
 
     private static boolean isTileEmpty (int centerX, int centerY) {

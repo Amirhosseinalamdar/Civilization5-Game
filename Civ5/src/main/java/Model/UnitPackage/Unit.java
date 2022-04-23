@@ -15,6 +15,7 @@ public class Unit {
     protected int movesInTurn;
     protected int health;
     protected int cost;
+    public static int MAX_HEALTH;
     protected int busyTurns; //holds number of turns that the unit is busy
 
     public void setType(UnitType type) {
@@ -126,5 +127,10 @@ public class Unit {
     //    public void changeStatus (UnitStatus status) { ------> to controller
 //        this.status = status;
 //    }
+
+    public boolean isSiege() {
+        return this.type.equals(UnitType.CATAPULT) || this.type.equals(UnitType.CANNON) ||
+                this.type.equals(UnitType.TREBUCHET) || this.type.equals(UnitType.ARTILLERY);
+    }
     
 }
