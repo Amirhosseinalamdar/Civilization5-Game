@@ -1,13 +1,10 @@
-import Model.Game;
-import Model.UnitPackage.*;
-import View.GameMenu;
+import Controller.UserController;
+import View.MainMenu;
 
 public class Main {
     public static void main(String[] args) {
-        Unit unit = new Unit();
-        Military military = new Military();
-        Game game = new Game();
-        game.generateMap();
-        GameMenu.showMap(game);
+        UserController.readDataFromJson();
+        MainMenu.run();
+        UserController.writeDataToJson();
     }
 }

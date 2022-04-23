@@ -13,9 +13,10 @@ public class Game {
     private ArrayList <Tile> map;//20*20
     private Tile[][] tiles = new Tile[20][20];
 
-//    public Game (String playerList) {
-//        set players from string
-//        set other fields
+//    public Game (ArrayList<User> users) {
+//        players = users;
+//        time = 1;
+//        turn = 0;
 //        generateMap();
 //    }
 
