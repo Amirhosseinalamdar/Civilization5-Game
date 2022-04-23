@@ -1,12 +1,19 @@
 package Controller;
 
 import Model.User;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class UserController {
-    private static ArrayList<User> allUsers = new ArrayList<>();
+    private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
     public static String registerUser(Matcher matcher) {
@@ -14,13 +21,16 @@ public class UserController {
         String nickname = matcher.group("nickname");
         String password = matcher.group("password");
         String output = "";
-        for (User allUser : allUsers) {
-            if (allUser.getUsername().equals(username)) {
-                output = "user with username " + username + " already exists";
-                break;
-            } else if (allUser.getNickname().equals(nickname)) {
-                output = "user with nickname " + nickname + " already exists";
-                break;
+        if (allUsers == null) allUsers = new ArrayList<>();
+        else {
+            for (User allUser : allUsers) {
+                if (allUser.getUsername().equals(username)) {
+                    output = "user with username " + username + " already exists";
+                    break;
+                } else if (allUser.getNickname().equals(nickname)) {
+                    output = "user with nickname " + nickname + " already exists";
+                    break;
+                }
             }
         }
         if (output.isEmpty()) {
@@ -97,5 +107,24 @@ public class UserController {
             loggedInUser.setPassword(newPassword);
         }
         return output;
+    }
+
+    public static void readDataFromJson() {
+        try {
+            String json = new String(Files.readAllBytes(Paths.get("json.json")));
+            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>(){}.getType());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeDataToJson() {
+        try {
+            FileWriter fileWriter = new FileWriter("json.json");
+            fileWriter.write(new Gson().toJson(allUsers));
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

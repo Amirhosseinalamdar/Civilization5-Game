@@ -1,0 +1,16 @@
+[
+  {
+    "username": "ehsan",
+    "password": "1087",
+    "nickname": "ehsanino",
+    "isLoggedIn": false,
+    "score": 0
+  },
+  {
+    "username": "hesi",
+    "password": "chosi",
+    "nickname": "esi",
+    "isLoggedIn": false,
+    "score": 0
+  }
+]
