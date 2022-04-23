@@ -19,7 +19,8 @@ public enum Resource {
     MARBLE(0,0,2,Improvement.STONE_MINE),
     SILK(0,0,2,Improvement.SEEDING_AND_WORKING),
     SILVER(0,0,2,Improvement.MINE),
-    SUGAR(0,0,2,Improvement.SEEDING_AND_WORKING);
+    SUGAR(0,0,2,Improvement.SEEDING_AND_WORKING),
+    NONE(0,0,0,Improvement.NONE);
 
     private int food;
     private int production;
