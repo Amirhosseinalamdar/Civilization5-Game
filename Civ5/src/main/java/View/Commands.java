@@ -1,6 +1,7 @@
 package View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,6 +40,7 @@ public enum Commands {
     public static ArrayList<String> getUsernames(String command) {
         HashMap<Integer, String> players = new HashMap<>();
         String[] strings = command.split("-");
+        strings = Arrays.copyOfRange(strings, 1, strings.length);
         for (String string : strings) {
             if (string.startsWith("-player")) {
                 players.put(Integer.parseInt(string.substring(7, 8)), string.substring(9));
@@ -48,7 +50,7 @@ public enum Commands {
         }
         ArrayList<String> usernames = new ArrayList<>();
         for (Map.Entry<Integer, String> e : players.entrySet()) {
-            usernames.set(e.getKey() - 1, e.getValue());
+            usernames.add(e.getKey() - 1, e.getValue());
         }
         return usernames;
     }

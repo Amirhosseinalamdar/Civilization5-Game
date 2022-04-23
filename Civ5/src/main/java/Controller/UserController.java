@@ -16,6 +16,10 @@ public class UserController {
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public static String registerUser(Matcher matcher) {
         String username = matcher.group("username");
         String nickname = matcher.group("nickname");

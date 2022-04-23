@@ -1,6 +1,7 @@
 package View;
 
 import Controller.UserController;
+import Model.Game;
 import Model.User;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class MainMenu {
 
     public static void run() {
         String command;
-        ArrayList<User> players = new ArrayList<>();
+        ArrayList<User> players;
         Scanner scanner = new Scanner(System.in);
         if (LoginMenu.run(scanner) == 1) return;
         while (true) {
@@ -29,16 +30,17 @@ public class MainMenu {
                 if (matcher.group("menuName").equals("Profile Menu")) {
                     System.out.println("entered Profile menu!");
                     ProfileMenu.run(scanner);
-                }
-                else if (matcher.group("menuName").equals("Game Menu")) System.out.println("use \"play game\" command");
+                } else if (matcher.group("menuName").equals("Game Menu"))
+                    System.out.println("use \"play game\" command");
                 else if (matcher.group("menuName").equals("Login Menu")) System.out.println("use \"logout\" command");
                 else System.out.println("menu navigation is not possible");
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
+                    players.add(0, UserController.getLoggedInUser());
                     System.out.println("game started");
-                    //TODO START THE GAME
-                }
-                System.out.println("some usernames aren't valid");
+                    Game.generateGame(players);
+                    //TODO navigate to game menu
+                } else System.out.println("some usernames aren't valid");
             } else {
                 System.out.println("invalid command");
             }
