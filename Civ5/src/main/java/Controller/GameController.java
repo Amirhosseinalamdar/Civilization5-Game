@@ -12,7 +12,12 @@ import java.util.regex.Pattern;
 public class GameController {
     private static Civilization civilization;
 
+    public static Civilization getCivilization() {
+        return civilization;
+    }
+
     public static void doTurn (String command) {
+        changeMyCivilization();
         String regex = "^unit (?<unitType>(combat|noncombat)) (?<x>\\d+) (?<y>\\d+)$";
         if (command.matches(regex)) {
             Matcher matcher = Pattern.compile(regex).matcher(command);
@@ -84,6 +89,7 @@ public class GameController {
     }
 
     public static void updateGame () {
+        Game.nextTurn();
         changeMyCivilization();
         changeControllersCivilization();
     }

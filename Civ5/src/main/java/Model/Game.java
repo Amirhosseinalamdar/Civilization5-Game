@@ -32,6 +32,11 @@ public class Game {
         return map;
     }
 
+    public static void nextTurn() {
+        turn++;
+        turn %= players.size();
+    }
+
     public Game (String playerList) {
 //        set players from string
 //        set other fields
@@ -46,7 +51,7 @@ public class Game {
         ArrayList <Tile> tiles = new ArrayList<>(Game.getMap());
         for (User player : players) {
             player.newCivilization();
-            int random = (int)Math.floor(Math.random() * (tiles.size() + 1));
+            int random = (int)Math.floor(Math.random() * (tiles.size()));
             player.getCivilization().createCityOnTile(tiles.get(random));
             tiles.remove(random);
             Tile myTile = player.getCivilization().getCities().get(0).getTiles().get(0);

@@ -21,11 +21,13 @@ public class GameMenu {
     public static void startGame (ArrayList <User> players) {
         Game.generateGame(players);
         scanner = MainMenu.scanner;
-        while (scanner.hasNextLine()) {
+        do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
             else GameController.doTurn(command);
-        }
+            System.out.println("civ == null? : " + (GameController.getCivilization() == null));
+            System.out.println("my capital's x = " + GameController.getCivilization().getCities().get(0).getTiles().get(0).getCenterX());
+        } while (scanner.hasNextLine());
     }
 
     public static String nextCommand(){
