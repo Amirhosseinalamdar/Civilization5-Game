@@ -1,10 +1,10 @@
-import Model.Game;
-import Model.UnitPackage.*;
-import View.GameMenu;
+import Controller.UserController;
+import View.MainMenu;
 
 public class Main {
     public static void main(String[] args) {
-        Game.generateMap();
-        GameMenu.showMap();
+        UserController.readDataFromJson();
+        MainMenu.run();
+        UserController.writeDataToJson();
     }
 }
