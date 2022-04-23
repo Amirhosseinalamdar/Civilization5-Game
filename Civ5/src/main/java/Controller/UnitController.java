@@ -6,6 +6,7 @@ import Model.Map.City;
 import Model.Map.Path;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
+import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
@@ -31,7 +32,7 @@ public class UnitController{
 
     public static void handleUnitOption() {
         Matcher matcher = getUnitDecision();
-        unit.setStatus(matcher);
+        unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
@@ -41,9 +42,13 @@ public class UnitController{
             }
             GameMenu.unavailableTile();
         }
+        else if (unit.getStatus().equals(UnitStatus.HAS_PATH))
+            continuePath();
     }
 
     private static Matcher getUnitDecision() {
+        if (unit.getPath().tiles.size() > 0) return Pattern.compile("has path").matcher("has path");
+
         String regex;
 
         while (true) {
@@ -51,6 +56,7 @@ public class UnitController{
             regex = "^move to (?<x>\\d+) (?<y>\\d+)$";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (! matcher.find()) throw new RuntimeException();
                 if (! GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
                     return Pattern.compile(regex).matcher(command);
                 else
@@ -123,6 +129,8 @@ public class UnitController{
 
             regex = "^build (?<improvement>\\S+)";
             if (command.matches(regex)) {
+                Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command); //TODO check validation of improvements in future
                 else
@@ -131,6 +139,8 @@ public class UnitController{
 
             regex = "^remove (?<resource>(jungle|route))$";
             if (command.matches(regex)) {
+                Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command);
                 else
@@ -143,6 +153,9 @@ public class UnitController{
                 else
                     GameMenu.unitIsNotWorker();
             }
+
+            if (command.equals("do nothing"))
+                return Pattern.compile(command).matcher(command);
         }
     }
 
@@ -155,23 +168,13 @@ public class UnitController{
         else return Game.getTiles()[centerX][centerY].getCivilian() == null;
     }
 
-    private static UnitStatus chooseUnitOption() {
-        GameMenu.showUnitOptions(unit);
-        String decision = GameMenu.nextCommand();
-        if (decision.equals("move")) return UnitStatus.ACTIVE;
-        throw new RuntimeException();
-    }
-
     private static void moveUnit (int destCenterX, int destCenterY) {
         ArrayList <Path> paths = new ArrayList<>();
-        generateFirstRoutes(paths, unit.getTile());
+        generateFirstPaths(paths, unit.getTile());
         Path chosenPath = null;
         for (Path path : paths) {
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
-            if (lastTile.equals(Game.getTiles()[destCenterX][destCenterY])) {
-                chosenPath = path;
-                break;
-            }
+            boolean foundBestPath = false;
             for (Tile neighborTile : getTileNeighbors(lastTile)) {
                 if (! isTileWalkable(neighborTile)) continue;
                 boolean isRouteRepetitive = false;
@@ -185,18 +188,51 @@ public class UnitController{
                 if (isRouteRepetitive) continue;
                 Path child = new Path(path);
                 child.tiles.add(neighborTile);
+                if (neighborTile.equals(Game.getTiles()[destCenterX][destCenterY])) {
+                    chosenPath = child;
+                    foundBestPath = true;
+                    break;
+                }
                 paths.add(child);
             }
+            if (foundBestPath) break;
             paths.remove(path);
         }
         if (chosenPath == null) return;
         chosenPath.tiles.remove(unit.getTile()); //remove current tile from path
-        while (unit.getMovesInTurn() < unit.getMP()) {
-            unit.setTile(chosenPath.tiles.get(0));
+        unit.setMovesInTurn(0);
+        while (unit.getMovesInTurn() < unit.getMP() && chosenPath.tiles.size() > 0) {
             if (unit instanceof Military) chosenPath.tiles.get(0).setMilitary((Military) unit);
             else chosenPath.tiles.get(0).setCivilian(unit);
+            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
             unit.calcMovesTo(chosenPath.tiles.get(0));
+            unit.setTile(chosenPath.tiles.get(0));
+            changeTileStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
+        }
+        if (chosenPath.tiles.size() > 0) unit.setPath(chosenPath);
+    }
+
+    private static void continuePath() {
+        Path chosenPath = unit.getPath();
+        while (unit.getMovesInTurn() < unit.getMP() && chosenPath.tiles.size() > 0) {
+            if (unit instanceof Military) chosenPath.tiles.get(0).setMilitary((Military) unit);
+            else chosenPath.tiles.get(0).setCivilian(unit);
+            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
+            unit.calcMovesTo(chosenPath.tiles.get(0));
+            unit.setTile(chosenPath.tiles.get(0));
+            changeTileStatus(unit.getTile(), TileStatus.CLEAR);
+            chosenPath.tiles.remove(0);
+        }
+    }
+
+    private static void changeTileStatus (Tile tile, TileStatus newStatus) {
+        for (int i = tile.getCenterX() - 2; i <= tile.getCenterX() + 2; i += 2) {
+            if (i < 0 || i > 19) continue;
+            for (int j = tile.getCenterY() - 1; j <= tile.getCenterY() + 1; j++) {
+                if (j < 0 || j > 19) continue;
+                civilization.getTileVisionStatuses()[i][j] = newStatus;
+            }
         }
     }
 
@@ -210,7 +246,7 @@ public class UnitController{
                 !tile.getType().equals(TerrainType.MOUNTAIN);
     }
 
-    private static void generateFirstRoutes (ArrayList <Path> paths, Tile startingTile) {
+    private static void generateFirstPaths (ArrayList <Path> paths, Tile startingTile) {
         int centerX = startingTile.getCenterX(), centerY = startingTile.getCenterY();
         for (int i = centerX - 2; i <= centerX + 2; i += 2) {
             if (i < 0 || i > 19) continue;
@@ -231,10 +267,6 @@ public class UnitController{
             }
         }
         return neighbors;
-    }
-
-    private static ArrayList <Tile> findBestRoute (int myX, int myY, int destX, int destY) {
-        return null;
     }
 
     private static void sleepUnit(){

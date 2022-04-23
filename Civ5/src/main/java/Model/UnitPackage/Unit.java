@@ -1,10 +1,10 @@
 package Model.UnitPackage;
 
 import Model.Civilization;
+import Model.Map.Path;
 import Model.Map.Tile;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 
 public class Unit {
     protected UnitType type ;
@@ -16,7 +16,15 @@ public class Unit {
     protected int health;
     protected int cost;
     public static int MAX_HEALTH;
-    protected int busyTurns; //holds number of turns that the unit is busy
+    protected Path path;
+
+    public void setPath (Path path) {
+        this.path = path;
+    }
+
+    public Path getPath() {
+        return this.path;
+    }
 
     public void setType(UnitType type) {
         this.type = type;
@@ -108,16 +116,18 @@ public class Unit {
         //this.civilization.units.add(this);
     }
 
-    public void setStatus(Matcher matcher) {
-        if (matcher.toString().equals("sleep")) this.status = UnitStatus.SLEEP;
-        else if (matcher.toString().equals("found city")) this.status = UnitStatus.FOUNDCITY;
-        else if (matcher.toString().equals("cancel mission")) this.status = UnitStatus.ACTIVE; //should it be?
-        else if (matcher.toString().equals("wake")) this.status = UnitStatus.ACTIVE;
-        else if (matcher.toString().equals("delete")) this.kill();
-        else if (matcher.toString().equals("repair")) this.status = UnitStatus.HEAL;
-        else if (matcher.toString().startsWith("build")) this.status = UnitStatus.BUILD;
-        else if (matcher.toString().startsWith("move")) this.status = UnitStatus.MOVE;
-        else if (matcher.toString().startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
+    public void setStatus(String string) {
+        if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
+        else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
+        else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
+        else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION; //should it be?
+        else if (string.equals("wake")) this.status = UnitStatus.WAKE;
+        else if (string.equals("delete")) this.kill();
+        else if (string.equals("repair")) this.status = UnitStatus.HEAL;
+        else if (string.startsWith("build")) this.status = UnitStatus.BUILD;
+        else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
+        else if (string.startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
+        else if (string.equals("do nothing")) this.status = UnitStatus.DO_NOTHING;
     }
 
     public void calcMovesTo (Tile dest) {

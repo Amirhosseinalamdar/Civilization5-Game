@@ -13,7 +13,14 @@ public class Civilization {
     private int totalGold;
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
-
+    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
+    private HashMap<Technology, Integer> turnsUntilNewTechnologies;
+    private Technology inProgressTech;
+    private ArrayList<Improvement> reachedImprovements;
+    private ArrayList<City> builtCities;
+    private int science;
+    private int happiness;
+    private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
     public int getTotalGold() {
         return totalGold;
     }
@@ -26,7 +33,7 @@ public class Civilization {
         return units;
     }
 
-    public ArrayList<TileStatus> getTileVisionStatuses() {
+    public TileStatus[][] getTileVisionStatuses() {
         return tileVisionStatuses;
     }
 
@@ -58,20 +65,7 @@ public class Civilization {
         return isLuxuryResourceReached;
     }
 
-    private ArrayList<TileStatus> tileVisionStatuses;//change name +vision
-    private HashMap<Technology, Integer> turnsUntilNewTechnologies;
-    private Technology inProgressTech;
-    private ArrayList<Improvement> reachedImprovements;
-    private ArrayList<City> builtCities;
-    private int science;
-    private int happiness;
-    private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
-
     public void increaseTotalGold() {
         //TODO add cities gold per turn to tatal gold
     }
-
-
-
-
 }

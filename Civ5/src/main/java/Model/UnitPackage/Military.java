@@ -12,11 +12,11 @@ public class Military extends Unit{
     private int XP;
 
     @Override
-    public void setStatus(Matcher matcher) {
-        if (matcher.toString().equals("alert")) this.status = UnitStatus.ALERT;
-        else if (matcher.toString().equals("fortify")) this.status = UnitStatus.FORTIFY;
-        else if (matcher.toString().equals("garrison")) this.status = UnitStatus.FORTIFY;
-        else if (matcher.toString().equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
+    public void setStatus(String string) {
+        if (string.equals("alert")) this.status = UnitStatus.ALERT;
+        else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
+        else if (string.equals("garrison")) this.status = UnitStatus.FORTIFY;
+        else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
     }
 
     public void create(){
