@@ -30,6 +30,8 @@ public class LoginMenu {
                 output = UserController.logUserIn(matcher);
                 System.out.println(output);
                 if (output.equals("user logged in successfully!")) return 0;
+            } else if (Commands.getMatcher(command, Commands.ENTER_MENU) != null) {
+                System.out.println("please login first");
             } else {
                 System.out.println("invalid command");
             }

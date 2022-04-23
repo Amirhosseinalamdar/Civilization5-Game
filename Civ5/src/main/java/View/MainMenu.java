@@ -19,9 +19,9 @@ public class MainMenu {
             Matcher matcher;
             command = scanner.nextLine();
             if (Commands.getMatcher(command, Commands.EXIT_MENU) != null) {
+                System.out.println(UserController.logUserOut());
                 if (LoginMenu.run(scanner) == 1) break;
-            }
-            if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
+            } else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Main Menu");
             } else if (Commands.getMatcher(command, Commands.LOGOUT) != null) {
                 System.out.println(UserController.logUserOut());
@@ -32,7 +32,8 @@ public class MainMenu {
                     ProfileMenu.run(scanner);
                 } else if (matcher.group("menuName").equals("Game Menu"))
                     System.out.println("use \"play game\" command");
-                else if (matcher.group("menuName").equals("Login Menu")) System.out.println("use \"logout\" command");
+                else if (matcher.group("menuName").equals("Login Menu"))
+                    System.out.println("use \"logout\" or \"exit menu\" command");
                 else System.out.println("menu navigation is not possible");
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
