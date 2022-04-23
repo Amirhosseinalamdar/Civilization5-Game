@@ -38,7 +38,7 @@ public class Game {
 //        generateMap();
     }
 
-    public static void generateMap(){
+    public static void generateMap() {
         map = new ArrayList<>();
 //        Tile[][] tiles = new Tile[20][20];
         Random random = new Random();
