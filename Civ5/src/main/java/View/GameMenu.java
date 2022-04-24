@@ -25,8 +25,6 @@ public class GameMenu {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
             else GameController.doTurn(command);
-            System.out.println("civ == null? : " + (GameController.getCivilization() == null));
-            System.out.println("my capital's x = " + GameController.getCivilization().getCities().get(0).getTiles().get(0).getCenterX());
         } while (scanner.hasNextLine());
     }
 
@@ -310,7 +308,7 @@ public class GameMenu {
             System.out.print(RESET+"/");
         } else{
             String output1,output2;
-            if(Game.getTiles()[i][j].getCivilian() == null) output1 ="   ";
+            if(Game.getTiles()[i][j].getMilitary() == null) output1 ="   ";
             else output1 = Game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
             if(Game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
             else output2 = Game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);

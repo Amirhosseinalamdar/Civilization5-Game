@@ -17,7 +17,11 @@ public class GameController {
     }
 
     public static void doTurn (String command) {
-        changeMyCivilization();
+        checkMyCivilization();
+        for (Unit unit : civilization.getUnits()) {
+            UnitController.setUnit(unit);
+            UnitController.doRemainingMissions();
+        }
         String regex = "^unit (?<unitType>(combat|noncombat)) (?<x>\\d+) (?<y>\\d+)$";
         if (command.matches(regex)) {
             Matcher matcher = Pattern.compile(regex).matcher(command);
@@ -26,12 +30,15 @@ public class GameController {
                 if (chosenUnit == null) return;
                 UnitController.setUnit(chosenUnit);
                 UnitController.handleUnitOption();
+                GameMenu.showMap();
             }
         }
+        else System.out.println("game controller, invalid command");
     }
 
     private static Unit getUnitFromCommand (Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+        System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
         if (invalidPos(x, y)) {
             GameMenu.invalidChosenUnit();
             return null;
@@ -78,11 +85,12 @@ public class GameController {
         return x > 19 || x < 0 || y > 19 || y < 0;
     }
 
-    private static void changeMyCivilization () {
+    private static void checkMyCivilization () {
         civilization = Game.getPlayers().get(Game.getTurn()).getCivilization();
+        checkControllersCivilization();
     }
 
-    private static void changeControllersCivilization(){
+    private static void checkControllersCivilization(){
         UnitController.changeCivilization(civilization);
         CivilizationController.changeCivilization(civilization);
         CityController.changeCivilization(civilization);
@@ -90,8 +98,8 @@ public class GameController {
 
     public static void updateGame () {
         Game.nextTurn();
-        changeMyCivilization();
-        changeControllersCivilization();
+        checkMyCivilization();
+        checkControllersCivilization();
     }
 
 }

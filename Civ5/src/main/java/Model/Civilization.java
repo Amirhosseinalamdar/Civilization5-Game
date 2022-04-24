@@ -4,7 +4,9 @@ import Model.Map.City;
 import Model.Map.Improvement;
 import Model.Map.Resource;
 import Model.Map.Tile;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +28,18 @@ public class Civilization {
         units = new ArrayList<>();
     }
 
-    public void createCityOnTile (Tile tile) {
-        City city = new City(this, tile);
-        cities.add(city);
+    public void createSettlerAndWarriorOnTile (Tile tile) {
+        Unit settler = new Unit(UnitType.SETTLER);
+        settler.setCivilization(this);
+        this.units.add(settler);
+        settler.setTile(tile);
+        tile.setCivilian(settler);
+
+        Military warrior = new Military(UnitType.WARRIOR);
+        warrior.setCivilization(this);
+        this.units.add(warrior);
+        warrior.setTile(tile);
+        tile.setMilitary(warrior);
     }
 
     private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct

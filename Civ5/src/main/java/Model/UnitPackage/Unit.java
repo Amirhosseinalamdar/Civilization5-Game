@@ -18,6 +18,13 @@ public class Unit {
     public static int MAX_HEALTH;
     protected Path path;
 
+    public Unit (UnitType unitType) {
+        this.type = unitType;
+        this.status = UnitStatus.ACTIVE;
+        this.path = new Path(null);
+        this.MP = 2; //TODO... temporary
+    }
+
     public void setPath (Path path) {
         this.path = path;
     }
@@ -128,6 +135,7 @@ public class Unit {
         else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
         else if (string.startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
         else if (string.equals("do nothing")) this.status = UnitStatus.DO_NOTHING;
+        else if (string.equals("active")) this.status = UnitStatus.ACTIVE;
     }
 
     public void calcMovesTo (Tile dest) {
