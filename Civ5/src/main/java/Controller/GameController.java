@@ -4,6 +4,7 @@ import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
 import Model.UnitPackage.Unit;
+import Model.User;
 import View.Commands;
 import View.GameMenu;
 
@@ -17,12 +18,18 @@ public class GameController {
         return civilization;
     }
 
-    public static void doTurn(String command) {
+    public static void setCivilizationAndDoMissions() {
         checkMyCivilization();
         for (Unit unit : civilization.getUnits()) {
+            System.out.println("im here modafaka");
             UnitController.setUnit(unit);
+            System.out.println("myStat = " + unit.getStatus().toString());
+            System.out.println("myPos = " + unit.getTile().getIndexInMapI() + ", " + unit.getTile().getIndexInMapJ());
             UnitController.doRemainingMissions();
         }
+    }
+
+    public static void doTurn(String command) {
         Matcher matcher;
         if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
@@ -98,11 +105,16 @@ public class GameController {
     }
 
     public static void updateGame() {
-        for (Unit unit : Game.getPlayers().get(Game.getTurn()).getCivilization().getUnits())
-            unit.setMovesInTurn(0);
+        for (User player : Game.getPlayers())
+            for (Unit unit : player.getCivilization().getUnits())
+                unit.setMovesInTurn(0);
         Game.nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
+    }
+
+    public static boolean gameIsOver() {
+        return false;
     }
 
 }

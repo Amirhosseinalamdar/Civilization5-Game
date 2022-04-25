@@ -188,6 +188,7 @@ public class UnitController{
 
     private static void continuePath() {
         Tile destTile = unit.getPath().tiles.get(unit.getPath().tiles.size() - 1);
+        System.out.println("my dest is saved as " + destTile.getIndexInMapI() + ", " + destTile.getIndexInMapJ());
         Path chosenPath = findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ());
         if (chosenPath == null) {
             unit.setStatus("active");
@@ -200,6 +201,9 @@ public class UnitController{
     private static Path findBestPath (int destIndexI, int destIndexJ) {
         ArrayList <Path> paths = new ArrayList<>();
         generateFirstPaths(paths, unit.getTile());
+        for (Path path : paths)
+            if (path.tiles.get(0).equals(Game.getTiles()[destIndexI][destIndexJ]))
+                return path;
         while (paths.size() > 0) {
             System.out.println("first loop");
             Path path = paths.get(0);
@@ -217,8 +221,11 @@ public class UnitController{
                 if (isRouteRepetitive) continue;
                 Path child = new Path(path);
                 child.tiles.add(neighborTile);
-                if (neighborTile.equals(Game.getTiles()[destIndexI][destIndexJ]))
+                if (neighborTile.equals(Game.getTiles()[destIndexI][destIndexJ])) {
+                    for (Tile tile : child.tiles)
+                        System.out.println(tile.getIndexInMapI() + ", " + tile.getIndexInMapJ());
                     return child;
+                }
                 paths.add(child);
             }
             paths.remove(path);
@@ -237,12 +244,14 @@ public class UnitController{
                 chosenPath.tiles.get(0).setCivilian(unit);
                 unit.getTile().setCivilian(null);
             }
-            //changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
+            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
             unit.calcMovesTo(chosenPath.tiles.get(0));
             unit.setTile(chosenPath.tiles.get(0));
-            changeTileStatus(unit.getTile(), TileStatus.CLEAR);
+            //changeTileStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
         }
+        if (chosenPath.tiles.size() > 0) unit.setStatus("has path");
+        else unit.setStatus("active");
     }
 
     private static void changeTileStatus (Tile tile, TileStatus newStatus) {
@@ -314,7 +323,10 @@ public class UnitController{
     }
 
     public static void doRemainingMissions() {
-        if (unit.getStatus().equals(UnitStatus.HAS_PATH)) continuePath();
+        if (unit.getStatus().equals(UnitStatus.HAS_PATH)) {
+            System.out.println("im on tile " + unit.getTile().getIndexInMapI() + ", " + unit.getTile().getIndexInMapJ());
+            continuePath();
+        }
     }
 
     private static void sleepUnit(){
