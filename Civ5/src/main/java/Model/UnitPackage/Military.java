@@ -14,6 +14,7 @@ public class Military extends Unit{
     public Military (UnitType militaryType) {
         super(militaryType);
     }
+
     @Override
     public void setStatus(String string) {
         super.setStatus(string);

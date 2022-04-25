@@ -28,15 +28,16 @@ public class Civilization {
         units = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
-                tileVisionStatuses[i][j] = TileStatus.FOGGY;
+                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
-        Unit settler = new Unit(UnitType.SETTLER);
-        settler.setCivilization(this);
-        this.units.add(settler);
-        settler.setTile(tile);
-        tile.setCivilian(settler);
+//        UnitType tmp = UnitType.SETTLER;
+//        Unit settler = new Unit(tmp);
+//        settler.setCivilization(this);
+//        this.units.add(settler);
+//        settler.setTile(tile);
+//        tile.setCivilian(settler);
 
         Military warrior = new Military(UnitType.WARRIOR);
         warrior.setCivilization(this);
