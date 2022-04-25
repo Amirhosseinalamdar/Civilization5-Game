@@ -159,6 +159,7 @@ public class GameMenu {
     public static void showMap(Civilization civilization){//TODO check if units are in correct tile
                                                             //TODO fogy and ... added but not tested
         for (Unit unit : civilization.getUnits()) {
+            civilization.getTileVisionStatuses()[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = TileStatus.CLEAR;
             for (Tile tileNeighbor : UnitController.getTileNeighbors(unit.getTile()))
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
