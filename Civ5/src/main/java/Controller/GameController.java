@@ -9,7 +9,6 @@ import View.Commands;
 import View.GameMenu;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GameController {
     private static Civilization civilization;
@@ -21,10 +20,7 @@ public class GameController {
     public static void setCivilizationAndDoMissions() {
         checkMyCivilization();
         for (Unit unit : civilization.getUnits()) {
-            System.out.println("im here modafaka");
             UnitController.setUnit(unit);
-            System.out.println("myStat = " + unit.getStatus().toString());
-            System.out.println("myPos = " + unit.getTile().getIndexInMapI() + ", " + unit.getTile().getIndexInMapJ());
             UnitController.doRemainingMissions();
         }
     }
