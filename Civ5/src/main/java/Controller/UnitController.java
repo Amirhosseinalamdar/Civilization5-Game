@@ -173,6 +173,10 @@ public class UnitController{
         System.out.println("dest = " + destCenterX + ", " + destCenterY);
         int destIndexI = destCenterX, destIndexJ = destCenterY;
         //if (destIndexJ % 2 == 0) destIndexI /= 2;
+        if (!isTileWalkable(Game.getTiles()[destIndexI][destIndexJ])) {
+            System.out.println("can't walk on that tile"); //TODO... non walkable unit
+            return;
+        }
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
         if (chosenPath == null) return;
