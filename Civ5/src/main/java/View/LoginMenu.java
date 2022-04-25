@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 public class LoginMenu {
     public static int run(Scanner scanner) {
         String command;
+        String output;
         while (true) {
             Matcher matcher;
             command = scanner.nextLine();
@@ -15,7 +16,7 @@ public class LoginMenu {
                 scanner.close();
                 return 1;
             }
-            if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
+            else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Login Menu");
             } else if ((matcher = Commands.getMatcher(command, Commands.REGISTER1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.REGISTER2)) != null ||
@@ -26,8 +27,11 @@ public class LoginMenu {
                 System.out.println(UserController.registerUser(matcher));
             } else if ((matcher = Commands.getMatcher(command, Commands.LOGIN1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.LOGIN2)) != null) {
-                System.out.println(UserController.logUserIn(matcher));
-                return 0;
+                output = UserController.logUserIn(matcher);
+                System.out.println(output);
+                if (output.equals("user logged in successfully!")) return 0;
+            } else if (Commands.getMatcher(command, Commands.ENTER_MENU) != null) {
+                System.out.println("please login first");
             } else {
                 System.out.println("invalid command");
             }

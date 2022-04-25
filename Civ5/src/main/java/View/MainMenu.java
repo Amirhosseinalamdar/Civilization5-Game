@@ -10,20 +10,18 @@ import java.util.regex.Matcher;
 
 public class MainMenu {
 
-
-    public static Scanner scanner = new Scanner(System.in);
-
     public static void run() {
         String command;
         ArrayList<User> players;
+        Scanner scanner = new Scanner(System.in);
         if (LoginMenu.run(scanner) == 1) return;
         while (true) {
             Matcher matcher;
             command = scanner.nextLine();
             if (Commands.getMatcher(command, Commands.EXIT_MENU) != null) {
+                System.out.println(UserController.logUserOut());
                 if (LoginMenu.run(scanner) == 1) break;
-            }
-            if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
+            } else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Main Menu");
             } else if (Commands.getMatcher(command, Commands.LOGOUT) != null) {
                 System.out.println(UserController.logUserOut());
@@ -34,13 +32,13 @@ public class MainMenu {
                     ProfileMenu.run(scanner);
                 } else if (matcher.group("menuName").equals("Game Menu"))
                     System.out.println("use \"play game\" command");
-                else if (matcher.group("menuName").equals("Login Menu")) System.out.println("use \"logout\" command");
+                else if (matcher.group("menuName").equals("Login Menu"))
+                    System.out.println("use \"logout\" or \"exit menu\" command");
                 else System.out.println("menu navigation is not possible");
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
                     System.out.println("game started");
-                    //TODO navigate to game menu
-                    GameMenu.startGame(players);
+                    GameMenu.startGame(players, scanner);
                 } else System.out.println("some usernames aren't valid");
             } else {
                 System.out.println("invalid command");

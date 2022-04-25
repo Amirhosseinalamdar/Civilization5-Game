@@ -19,9 +19,9 @@ import java.util.Scanner;
 
 public class GameMenu {
     static Scanner scanner;
-    public static void startGame (ArrayList <User> players) {
+    public static void startGame (ArrayList <User> players, Scanner scanner) {
         Game.generateGame(players);
-        scanner = MainMenu.scanner;
+        GameMenu.scanner = scanner;
         do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
