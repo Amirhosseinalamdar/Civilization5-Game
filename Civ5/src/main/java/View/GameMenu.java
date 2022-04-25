@@ -210,7 +210,7 @@ public class GameMenu {
                         }else{
                             System.out.print("/         ");
                         }
-                        if(I>0) System.out.print("\\"+Game.getTiles()[I-1][J+1].getTypeForCiv(civilization,I,J).getColor()+"_____"+RESET);
+                        if(I>0) System.out.print("\\"+Game.getTiles()[I-1][J+1].getTypeForCiv(civilization,I-1,J+1).getColor()+"_____"+RESET);
                         else System.out.print("\\_____");
                     }
                 }else if(i%6==3){
@@ -222,14 +222,14 @@ public class GameMenu {
                     int I = (i-5)/6;
                     int J = (2*j+1);
                     if(j==0) System.out.print("  ");
-                    if(civilization.getTileVisionStatuses()[I][J-1] != TileStatus.FOGGY) {
-                        System.out.print("\\" + Game.getTiles()[I][J - 1].getTypeForCiv(civilization, I, J-1).getColor() + "_____" + RESET + "/" +
-                                Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor() + "   "
+                    if(civilization.getTileVisionStatuses()[I][J-1] != TileStatus.FOGGY)
+                        System.out.print("\\" + Game.getTiles()[I][J - 1].getTypeForCiv(civilization, I, J-1).getColor() + "_____" + RESET + "/");
+                    else System.out.print("\\_____/");
+                    if(civilization.getTileVisionStatuses()[I][J] != TileStatus.FOGGY)
+                        System.out.print(Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor() + "   "
                                 + getTypeFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getTypeForCiv(civilization, I, J)) + "," +
                                 getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()) + "   " + RESET);//7 wh
-                    }else{
-                        System.out.print("\\_____/         ");
-                    }
+                    else System.out.print("         ");
                 }
             }
             if(i%6==3) System.out.print("\\");
@@ -325,7 +325,7 @@ public class GameMenu {
             if(i>0)System.out.print(Game.getTiles()[i-1][j+1].getTypeForCiv(civilization,i,j).getColor()+"         "+RESET);
             else System.out.print("         ");
         }else {
-            System.out.print("\\"+Game.getTiles()[i][j-1].getTypeForCiv(civilization,i,j).getColor()+"         "+RESET+"/");
+            System.out.print("\\"+Game.getTiles()[i][j-1].getTypeForCiv(civilization,i,j-1).getColor()+"         "+RESET+"/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization,i,j).getColor());
             String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             System.out.print(loc);

@@ -27,9 +27,9 @@ public enum Commands {
     CHANGE_PASSWORD3("^profile change (--current|-c) (?<currentPassword>\\S+) (--password|-p) (--new|-n) (?<newPassword>\\S+)$"),
     CHANGE_PASSWORD4("^profile change (--current|-c) (?<currentPassword>\\S+) (--new|-n) (?<newPassword>\\S+) (--password|-p)$"),
     CHANGE_PASSWORD5("^profile change (--new|-n) (?<newPassword>\\S+) (--password|-p) (--current|-c) (?<currentPassword>\\S+)$"),
-    CHANGE_PASSWORD6("^profile change (--new|-n) (?<newPassword>\\S+) (--current|-c) (?<currentPassword>\\S+) (--password|-p)$");
-
-
+    CHANGE_PASSWORD6("^profile change (--new|-n) (?<newPassword>\\S+) (--current|-c) (?<currentPassword>\\S+) (--password|-p)$"),
+    CHOOSE_UNIT1("^unit (--coordinates|-c) (?<x>\\d+) (?<y>\\d+) (--type|-t) (?<unitType>(combat|noncombat))$"),
+    CHOOSE_UNIT2("^unit (--type|-t) (?<unitType>(combat|noncombat)) (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$");
 
     private String regex;
 

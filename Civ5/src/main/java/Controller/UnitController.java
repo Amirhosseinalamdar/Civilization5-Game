@@ -54,7 +54,7 @@ public class UnitController{
 
         while (true) {
             String command = GameMenu.nextCommand();
-            regex = "move to (?<x>\\d+) (?<y>\\d+)";
+            regex = "move to (--cordinates|-c) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (! matcher.find()) throw new RuntimeException();
