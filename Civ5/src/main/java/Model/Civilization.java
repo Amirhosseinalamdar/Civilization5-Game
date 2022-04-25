@@ -42,6 +42,10 @@ public class Civilization {
         tile.setMilitary(warrior);
     }
 
+    public void setTileVisionStatuses(int i,int j,TileStatus type) {
+        this.tileVisionStatuses[i][j] = type;
+    }
+
     private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
     public int getTotalGold() {
         return totalGold;

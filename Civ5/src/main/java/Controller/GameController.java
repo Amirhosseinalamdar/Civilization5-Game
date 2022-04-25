@@ -30,7 +30,7 @@ public class GameController {
                 if (chosenUnit == null) return;
                 UnitController.setUnit(chosenUnit);
                 UnitController.handleUnitOption();
-                GameMenu.showMap();
+                GameMenu.showMap(civilization);
             }
         }
         else System.out.println("game controller, invalid command");
@@ -39,6 +39,7 @@ public class GameController {
     private static Unit getUnitFromCommand (Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
         System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
+        GameMenu.showMap(civilization);
         if (invalidPos(x, y)) {
             GameMenu.invalidChosenUnit();
             return null;
