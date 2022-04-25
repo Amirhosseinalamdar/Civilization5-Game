@@ -8,23 +8,24 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import Model.User;
 
 import javax.sound.midi.Soundbank;
 import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class GameMenu {
     static Scanner scanner;
-    public static void setScanner (Scanner sc) {
-        scanner = sc;
-    }
-    public static void startGame () {
-        while (scanner.hasNextLine()) {
+    public static void startGame (ArrayList <User> players) {
+        Game.generateGame(players);
+        scanner = MainMenu.scanner;
+        do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
             else GameController.doTurn(command);
-        }
+        } while (scanner.hasNextLine());
     }
 
     public static String nextCommand(){
@@ -307,7 +308,7 @@ public class GameMenu {
             System.out.print(RESET+"/");
         } else{
             String output1,output2;
-            if(Game.getTiles()[i][j].getCivilian() == null) output1 ="   ";
+            if(Game.getTiles()[i][j].getMilitary() == null) output1 ="   ";
             else output1 = Game.getTiles()[i][j].getMilitary().getType().toString().substring(0,3);
             if(Game.getTiles()[i][j].getCivilian() == null) output2 = "   ";
             else output2 = Game.getTiles()[i][j].getCivilian().getType().toString().substring(0,3);
@@ -321,5 +322,45 @@ public class GameMenu {
 
     public static void invalidChosenUnit() {
         System.out.println("no unit exists in chosen pos");
+    }
+
+    public static void invalidChosenCity() {
+        System.out.println("no city exists in chosen pos");
+    }
+
+    public static void siegeNotPrepared() {
+        System.out.println("you have to prepare the siege unit first");
+    }
+
+    public static void cantMakeGarrison() {
+        System.out.println("can't make garrison, no city available");
+    }
+
+    public static void unitIsNotSiege() {
+        System.out.println("chosen unit is not siege");
+    }
+
+    public static void siegeAlreadyPrepared() {
+        System.out.println("this unit is already prepared");
+    }
+
+    public static void invalidChosenTile() {
+        System.out.println("no tile exists in chosen tile");
+    }
+
+    public static void unitIsCivilianError() {
+        System.out.println("error: this unit is civilian");
+    }
+
+    public static void unitIsMilitaryError() {
+        System.out.println("error: this unit is military");
+    }
+
+    public static void unitHasFullHealth() {
+        System.out.println("unit's health is already full");
+    }
+
+    public static void unitIsNotWorker() {
+        System.out.println("this unit is not worker");
     }
 }

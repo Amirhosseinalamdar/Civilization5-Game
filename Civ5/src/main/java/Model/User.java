@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
-
 public class User {
     private String username;
     private String password;
@@ -9,6 +7,26 @@ public class User {
     private Civilization civilization;
     private boolean isLoggedIn;
     private int score;
+
+    public User(String username, String password, String nickname, boolean isLoggedIn, int score) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.isLoggedIn = isLoggedIn;
+        this.score = score;
+    }
+
+    public void newCivilization() {
+        this.civilization = new Civilization();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public String getUsername() {
         return username;
@@ -26,11 +44,11 @@ public class User {
         return civilization;
     }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
     public int getScore() {
         return score;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 }
