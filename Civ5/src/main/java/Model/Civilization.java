@@ -32,12 +32,12 @@ public class Civilization {
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
-//        UnitType tmp = UnitType.SETTLER;
-//        Unit settler = new Unit(tmp);
-//        settler.setCivilization(this);
-//        this.units.add(settler);
-//        settler.setTile(tile);
-//        tile.setCivilian(settler);
+        UnitType tmp = UnitType.SETTLER;
+        Unit settler = new Unit(tmp);
+        settler.setCivilization(this);
+        this.units.add(settler);
+        settler.setTile(tile);
+        tile.setCivilian(settler);
 
         Military warrior = new Military(UnitType.WARRIOR);
         warrior.setCivilization(this);
