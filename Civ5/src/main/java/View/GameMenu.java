@@ -322,7 +322,7 @@ public class GameMenu {
             System.out.print(loc);
             for(int k=0;k<5-loc.length();k++) System.out.print(' ');
             System.out.print(RESET+"\\");
-            if(i>0)System.out.print(Game.getTiles()[i-1][j+1].getTypeForCiv(civilization,i,j).getColor()+"         "+RESET);
+            if(i>0)System.out.print(Game.getTiles()[i-1][j+1].getTypeForCiv(civilization,i-1,j+1).getColor()+"         "+RESET);
             else System.out.print("         ");
         }else {
             System.out.print("\\"+Game.getTiles()[i][j-1].getTypeForCiv(civilization,i,j-1).getColor()+"         "+RESET+"/");
