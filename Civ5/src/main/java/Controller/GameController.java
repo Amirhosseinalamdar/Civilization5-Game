@@ -28,6 +28,10 @@ public class GameController {
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
+            if (chosenUnit.getMovesInTurn() >= chosenUnit.getMP()) {
+                System.out.println("no moves remaining"); //TODO... take it to view :)
+                return;
+            }
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
             GameMenu.showMap(civilization);
@@ -94,6 +98,8 @@ public class GameController {
     }
 
     public static void updateGame() {
+        for (Unit unit : Game.getPlayers().get(Game.getTurn()).getCivilization().getUnits())
+            unit.setMovesInTurn(0);
         Game.nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
