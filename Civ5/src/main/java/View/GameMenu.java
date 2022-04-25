@@ -1,6 +1,7 @@
 package View;
 
 import Controller.GameController;
+import Controller.UnitController;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
@@ -25,7 +26,10 @@ public class GameMenu {
         do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
-            else GameController.doTurn(command);
+            else {
+                GameController.setCivilizationAndDoMissions();
+                GameController.doTurn(command);
+            }
         } while (scanner.hasNextLine());
     }
 
@@ -157,6 +161,11 @@ public class GameMenu {
 
     public static void showMap(Civilization civilization){//TODO check if units are in correct tile
                                                             //TODO fogy and ... added but not tested
+        for (Unit unit : civilization.getUnits()) {
+            civilization.getTileVisionStatuses()[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = TileStatus.CLEAR;
+            for (Tile tileNeighbor : UnitController.getTileNeighbors(unit.getTile()))
+                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+        }
         for(int j=0;j<10;j++){
             System.out.print("   _____        ");
         }

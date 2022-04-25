@@ -33,7 +33,6 @@ public class UnitController{
         Matcher matcher = getUnitDecision();
         unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
-        System.out.println("status = " + unit.getStatus().toString());
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
             if (! matcher.find()) throw new RuntimeException();
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
@@ -54,7 +53,7 @@ public class UnitController{
 
         while (true) {
             String command = GameMenu.nextCommand();
-            regex = "move to (--cordinates|-c) (?<x>\\d+) (?<y>\\d+)";
+            regex = "move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (! matcher.find()) throw new RuntimeException();
@@ -170,16 +169,18 @@ public class UnitController{
     }
 
     private static void moveUnit (int destCenterX, int destCenterY) {
-        System.out.println("dest = " + destCenterX + ", " + destCenterY);
         int destIndexI = destCenterX, destIndexJ = destCenterY;
         //if (destIndexJ % 2 == 0) destIndexI /= 2;
+        if (!isTileWalkable(Game.getTiles()[destIndexI][destIndexJ], unit)) {
+            System.out.println("can't walk on that tile"); //TODO... non walkable unit
+            return;
+        }
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
         if (chosenPath == null) return;
         moveOnPath(chosenPath);
 
         if (chosenPath.tiles.size() > 0) unit.setPath(chosenPath);
-        System.out.println("the end");
     }
 
     private static void continuePath() {
@@ -196,12 +197,14 @@ public class UnitController{
     private static Path findBestPath (int destIndexI, int destIndexJ) {
         ArrayList <Path> paths = new ArrayList<>();
         generateFirstPaths(paths, unit.getTile());
+        for (Path path : paths)
+            if (path.tiles.get(0).equals(Game.getTiles()[destIndexI][destIndexJ]))
+                return path;
         while (paths.size() > 0) {
-            System.out.println("first loop");
             Path path = paths.get(0);
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
             for (Tile neighborTile : getTileNeighbors(lastTile)) {
-                if (! isTileWalkable(neighborTile)) continue;
+                if (! isTileWalkable(neighborTile, unit)) continue;
                 boolean isRouteRepetitive = false;
                 for (Tile oneOfPreviousTiles : path.tiles) {
                     if (oneOfPreviousTiles.equals(lastTile)) break;
@@ -224,7 +227,6 @@ public class UnitController{
 
     public static void moveOnPath (Path chosenPath) {
         while (unit.getMovesInTurn() < unit.getMP() && chosenPath.tiles.size() > 0) {
-            System.out.println("second loop");
             if (unit instanceof Military) {
                 chosenPath.tiles.get(0).setMilitary((Military) unit);
                 unit.getTile().setMilitary(null);
@@ -233,12 +235,14 @@ public class UnitController{
                 chosenPath.tiles.get(0).setCivilian(unit);
                 unit.getTile().setCivilian(null);
             }
-            //changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
+            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
             unit.calcMovesTo(chosenPath.tiles.get(0));
             unit.setTile(chosenPath.tiles.get(0));
-            changeTileStatus(unit.getTile(), TileStatus.CLEAR);
+            //changeTileStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
         }
+        if (chosenPath.tiles.size() > 0) unit.setStatus("has path");
+        else unit.setStatus("active");
     }
 
     private static void changeTileStatus (Tile tile, TileStatus newStatus) {
@@ -252,7 +256,11 @@ public class UnitController{
         return Math.abs(first.getCenterY() - second.getCenterY()) <= 1;
     }
 
-    public static boolean isTileWalkable (Tile tile) {
+    public static boolean isTileWalkable (Tile tile, Unit unit) {
+        if (unit != null) {
+            if (unit instanceof Military && tile.getMilitary() != null) return false;
+            if (!(unit instanceof Military) && tile.getCivilian() != null) return false;
+        }
         return !tile.getType().equals(TerrainType.OCEAN) &&
                 !tile.getType().equals(TerrainType.MOUNTAIN);
     }
@@ -310,7 +318,8 @@ public class UnitController{
     }
 
     public static void doRemainingMissions() {
-        if (unit.getStatus().equals(UnitStatus.HAS_PATH)) continuePath();
+        if (unit.getStatus().equals(UnitStatus.HAS_PATH))
+            continuePath();
     }
 
     private static void sleepUnit(){

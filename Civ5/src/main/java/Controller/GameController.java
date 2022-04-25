@@ -4,11 +4,11 @@ import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
 import Model.UnitPackage.Unit;
+import Model.User;
 import View.Commands;
 import View.GameMenu;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GameController {
     private static Civilization civilization;
@@ -17,17 +17,24 @@ public class GameController {
         return civilization;
     }
 
-    public static void doTurn(String command) {
+    public static void setCivilizationAndDoMissions() {
         checkMyCivilization();
         for (Unit unit : civilization.getUnits()) {
             UnitController.setUnit(unit);
             UnitController.doRemainingMissions();
         }
+    }
+
+    public static void doTurn(String command) {
         Matcher matcher;
         if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
+            if (chosenUnit.getMovesInTurn() >= chosenUnit.getMP()) {
+                System.out.println("no moves remaining"); //TODO... take it to view :)
+                return;
+            }
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
             GameMenu.showMap(civilization);
@@ -94,9 +101,16 @@ public class GameController {
     }
 
     public static void updateGame() {
+        for (User player : Game.getPlayers())
+            for (Unit unit : player.getCivilization().getUnits())
+                unit.setMovesInTurn(0);
         Game.nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
+    }
+
+    public static boolean gameIsOver() {
+        return false;
     }
 
 }
