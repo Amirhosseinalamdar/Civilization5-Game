@@ -285,7 +285,7 @@ public class UnitController{
         }
     }
 
-    private static ArrayList <Tile> getTileNeighbors (Tile startingTile) {
+    public static ArrayList <Tile> getTileNeighbors (Tile startingTile) {
         ArrayList <Tile> neighbors = new ArrayList<>();
         int indexI = startingTile.getIndexInMapI(), indexJ = startingTile.getIndexInMapJ();
 

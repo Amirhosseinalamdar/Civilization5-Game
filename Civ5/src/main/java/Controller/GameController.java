@@ -39,7 +39,6 @@ public class GameController {
     private static Unit getUnitFromCommand (Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
         System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
-        GameMenu.showMap(civilization);
         if (invalidPos(x, y)) {
             GameMenu.invalidChosenUnit();
             return null;

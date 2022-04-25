@@ -9,6 +9,7 @@ import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class Game {
@@ -58,7 +59,15 @@ public class Game {
             Tile warriorTile = player.getCivilization().getUnits().get(1).getTile();
             System.out.println("my second unit is on " +
                     warriorTile.getIndexInMapI() + ", " + warriorTile.getIndexInMapJ());
+            makeFirstTilesVisible(player.getCivilization(), settlerTile, warriorTile);
         }
+    }
+
+    private static void makeFirstTilesVisible (Civilization civilization, Tile settlerTile, Tile warriorTile) {
+        ArrayList <Tile> visibleTiles = UnitController.getTileNeighbors(settlerTile);
+        visibleTiles.addAll(UnitController.getTileNeighbors(warriorTile));
+        for (Tile tile : visibleTiles)
+            civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }
 
     public static void generateMap(){

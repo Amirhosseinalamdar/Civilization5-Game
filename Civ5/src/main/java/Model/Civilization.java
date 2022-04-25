@@ -26,6 +26,9 @@ public class Civilization {
     public Civilization() {
         cities = new ArrayList<>();
         units = new ArrayList<>();
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                tileVisionStatuses[i][j] = TileStatus.FOGGY;
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
@@ -92,6 +95,6 @@ public class Civilization {
     }
 
     public void increaseTotalGold() {
-        //TODO add cities gold per turn to tatal gold
+        //TODO add cities gold per turn to total gold
     }
 }
