@@ -11,12 +11,16 @@ public class Military extends Unit{
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
     private int XP;
 
+    public Military (UnitType militaryType) {
+        super(militaryType);
+    }
     @Override
-    public void setStatus(Matcher matcher) {
-        if (matcher.toString().equals("alert")) this.status = UnitStatus.ALERT;
-        else if (matcher.toString().equals("fortify")) this.status = UnitStatus.FORTIFY;
-        else if (matcher.toString().equals("garrison")) this.status = UnitStatus.FORTIFY;
-        else if (matcher.toString().equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
+    public void setStatus(String string) {
+        super.setStatus(string);
+        if (string.equals("alert")) this.status = UnitStatus.ALERT;
+        else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
+        else if (string.equals("garrison")) this.status = UnitStatus.FORTIFY;
+        else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
     }
 
     public void create(){

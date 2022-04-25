@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
@@ -7,6 +8,8 @@ import Model.Map.Tile;
 import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class Game {
@@ -32,10 +35,9 @@ public class Game {
         return map;
     }
 
-    public Game (String playerList) {
-//        set players from string
-//        set other fields
-//        generateMap();
+    public static void nextTurn() {
+        turn++;
+        turn %= players.size();
     }
 
     public static void generateGame(ArrayList<User> users) {
@@ -43,11 +45,33 @@ public class Game {
         turn = 0;
         time = 1;
         generateMap();
+        for (User player : players) {
+            player.newCivilization();
+            int randomX, randomY;
+            do {
+                randomX = (int)Math.floor(Math.random() * 20);
+                randomY = (int)Math.floor(Math.random() * 20);
+            } while (! UnitController.isTileWalkable(tiles[randomX][randomY]));
+            player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
+            Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
+            System.out.println("i am " + player.getUsername() + ", my first unit is on " +
+                    settlerTile.getIndexInMapI() + ", " + settlerTile.getIndexInMapJ());
+            Tile warriorTile = player.getCivilization().getUnits().get(1).getTile();
+            System.out.println("my second unit is on " +
+                    warriorTile.getIndexInMapI() + ", " + warriorTile.getIndexInMapJ());
+            makeFirstTilesVisible(player.getCivilization(), settlerTile, warriorTile);
+        }
+    }
+
+    private static void makeFirstTilesVisible (Civilization civilization, Tile settlerTile, Tile warriorTile) {
+        ArrayList <Tile> visibleTiles = UnitController.getTileNeighbors(settlerTile);
+        visibleTiles.addAll(UnitController.getTileNeighbors(warriorTile));
+        for (Tile tile : visibleTiles)
+            civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }
 
     public static void generateMap(){
         map = new ArrayList<>();
-//        Tile[][] tiles = new Tile[20][20];
         Random random = new Random();
         int centersParameter = 1;//TODO for graphics
         for(int i=0;i<20;i++){

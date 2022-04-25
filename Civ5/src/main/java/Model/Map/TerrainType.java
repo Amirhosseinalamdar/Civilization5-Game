@@ -8,7 +8,8 @@ public enum TerrainType {
     OCEAN(0,0,0,0,1000,"\u001B[44m"),
     PLAIN(0,1,1,-0.33,1,"\u001B[46m"),
     SNOW(0,0,0,-0.33,1,"\u001B[47m"),
-    TUNDRA(0,1,0,-0.33,1,"\u001B[45m");
+    TUNDRA(0,1,0,-0.33,1,"\u001B[45m"),
+    FOGGY(0,0,0,0,0,"\u001B[0m");
 
     private int gold;
     private int food;

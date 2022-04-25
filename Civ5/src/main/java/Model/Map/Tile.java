@@ -1,5 +1,7 @@
 package Model.Map;
 
+import Model.Civilization;
+import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
@@ -74,7 +76,9 @@ public class Tile {
         return rivers;
     }
 
-
+    public TerrainType getType() {
+        return type;
+    }
 
     public int getIndexInMapI() {
         return indexInMapI;
@@ -120,7 +124,8 @@ public class Tile {
         this.type = type;
     }
 
-    public TerrainType getType() {
+    public TerrainType getTypeForCiv(Civilization civilization,int i,int j) {
+        if(civilization.getTileVisionStatuses()[i][j] == TileStatus.FOGGY) return TerrainType.FOGGY;
         return type;
     }
 

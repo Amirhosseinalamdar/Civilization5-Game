@@ -38,8 +38,7 @@ public class MainMenu {
             } else if (Commands.getMatcher(command, Commands.START_GAME) != null) {
                 if ((players = UserController.startGame(Commands.getUsernames(command))) != null) {
                     System.out.println("game started");
-                    Game.generateGame(players);
-                    //TODO navigate to game menu
+                    GameMenu.startGame(players, scanner);
                 } else System.out.println("some usernames aren't valid");
             } else {
                 System.out.println("invalid command");
