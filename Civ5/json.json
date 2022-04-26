@@ -12,5 +12,19 @@
     "nickname": "esi",
     "isLoggedIn": false,
     "score": 0
+  },
+  {
+    "username": "ali",
+    "password": "ali",
+    "nickname": "ali",
+    "isLoggedIn": false,
+    "score": 0
+  },
+  {
+    "username": "hasan",
+    "password": "hasan",
+    "nickname": "hasan",
+    "isLoggedIn": false,
+    "score": 0
   }
 ]
