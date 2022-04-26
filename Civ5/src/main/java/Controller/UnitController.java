@@ -14,6 +14,7 @@ import Model.UnitPackage.UnitType;
 import View.GameMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -252,8 +253,10 @@ public class UnitController{
     }
 
     private static boolean areNeighbors (Tile first, Tile second) {
-        if (Math.abs(first.getCenterX() - second.getCenterX()) > 2) return false;
-        return Math.abs(first.getCenterY() - second.getCenterY()) <= 1;
+        ArrayList <Tile> neighborsOfFirst = getTileNeighbors(first);
+        for (Tile tile : neighborsOfFirst)
+            if (tile.equals(second)) return true;
+        return false;
     }
 
     public static boolean isTileWalkable (Tile tile, Unit unit) {
@@ -291,6 +294,8 @@ public class UnitController{
             path.tiles.add(Game.getTiles()[indexI][j]);
             paths.add(path);
         }
+
+        paths.removeIf(path -> !isTileWalkable(path.tiles.get(0), unit));
     }
 
     public static ArrayList <Tile> getTileNeighbors (Tile startingTile) {
