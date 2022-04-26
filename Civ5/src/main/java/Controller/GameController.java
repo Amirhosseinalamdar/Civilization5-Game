@@ -38,7 +38,15 @@ public class GameController {
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
             GameMenu.showMap(civilization);
-        } else System.out.println("game controller, invalid command");
+        }
+        else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
+            City chosenCity = getCityFromCommand(matcher);
+            if (chosenCity == null) return;
+            CityController.setCity(chosenCity);
+            CityController.handleCityOption();
+        }
+        else System.out.println("game controller, invalid command");
     }
 
     private static Unit getUnitFromCommand(Matcher matcher) {
@@ -72,18 +80,26 @@ public class GameController {
         return null;
     }
 
-//    private static City getCityFromCommand (Matcher matcher) {
-//        int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-//        if (invalidPos(x, y)) {
-//            GameMenu.invalidChosenCity();
-//            return null;
-//        }
-//        if (Game.getTiles()[x][y].getCity() == null) {
-//            GameMenu.invalidChosenCity();
-//            return null;
-//        }
-//        return Game.getTiles()[x][y].getCity();
-//    }
+    private static City getCityFromCommand (Matcher matcher) {
+        try {
+            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+            if (invalidPos(x, y)) {
+                GameMenu.invalidChosenCity();
+                return null;
+            }
+            if (Game.getTiles()[x][y].getCity() == null) {
+                GameMenu.invalidChosenCity();
+                return null;
+            }
+            return Game.getTiles()[x][y].getCity();
+        }
+        catch (IllegalArgumentException i) {
+            for (City city : civilization.getCities())
+                if (city.getName().equals(matcher.group("name"))) return city;
+            GameMenu.invalidChosenCity();
+            return null;
+        }
+    }
 
     public static boolean invalidPos(int x, int y) {
         return x > 19 || x < 0 || y > 19 || y < 0;

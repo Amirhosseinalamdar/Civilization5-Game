@@ -6,11 +6,20 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 public class CityController {
     private static Civilization civilization;
+    private static City city;
 
     public static void changeCivilization(Civilization civilization){
         CityController.civilization = civilization;
     }
 
+
+    public static void setCity (City city) {
+        CityController.city = city;
+    }
+
+    public static void handleCityOption() {
+
+    }
     private void expandCity(City city) {
 
     }
