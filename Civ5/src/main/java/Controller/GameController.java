@@ -84,11 +84,11 @@ public class GameController {
         try {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (invalidPos(x, y)) {
-                GameMenu.invalidChosenCity();
+                GameMenu.invalidPosForCity();
                 return null;
             }
             if (Game.getTiles()[x][y].getCity() == null) {
-                GameMenu.invalidChosenCity();
+                GameMenu.invalidPosForCity();
                 return null;
             }
             return Game.getTiles()[x][y].getCity();
@@ -96,7 +96,7 @@ public class GameController {
         catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())
                 if (city.getName().equals(matcher.group("name"))) return city;
-            GameMenu.invalidChosenCity();
+            GameMenu.invalidNameForCity();
             return null;
         }
     }

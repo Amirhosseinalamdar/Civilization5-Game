@@ -375,8 +375,12 @@ public class GameMenu {
         System.out.println("no unit exists in chosen pos");
     }
 
-    public static void invalidChosenCity() {
+    public static void invalidPosForCity() {
         System.out.println("no city exists in chosen pos");
+    }
+
+    public static void invalidNameForCity() {
+        System.out.println("no city exists with this name");
     }
 
     public static void siegeNotPrepared() {
