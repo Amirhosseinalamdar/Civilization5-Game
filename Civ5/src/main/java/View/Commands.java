@@ -17,7 +17,7 @@ public enum Commands {
     LOGIN1("^user login (--username|-u) (?<username>\\S+) (--password|-p) (?<password>\\S+)$"),
     LOGIN2("^user login (--password|-p) (?<password>\\S+) (--username|-u) (?<username>\\S+)$"),
     LOGOUT("^user logout$"),
-    START_GAME("^play game ((--player|-p)\\d+ \\S+)+$"),
+    START_GAME("^play game( (--player|-p)\\d+ \\S+)+$"),
     ENTER_MENU("^menu enter (?<menuName>Login Menu|Main Menu|Game Menu|Profile Menu)$"),
     EXIT_MENU("^menu exit$"),
     CURRENT_MENU("^menu show-current$"),
@@ -29,7 +29,9 @@ public enum Commands {
     CHANGE_PASSWORD5("^profile change (--new|-n) (?<newPassword>\\S+) (--password|-p) (--current|-c) (?<currentPassword>\\S+)$"),
     CHANGE_PASSWORD6("^profile change (--new|-n) (?<newPassword>\\S+) (--current|-c) (?<currentPassword>\\S+) (--password|-p)$"),
     CHOOSE_UNIT1("^unit (--coordinates|-c) (?<x>\\d+) (?<y>\\d+) (--type|-t) (?<unitType>(combat|noncombat))$"),
-    CHOOSE_UNIT2("^unit (--type|-t) (?<unitType>(combat|noncombat)) (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$");
+    CHOOSE_UNIT2("^unit (--type|-t) (?<unitType>(combat|noncombat)) (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$"),
+    CHOOSE_CITY1("^city (--name|-n) (?<name>\\S+)$"),
+    CHOOSE_CITY2("^city (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$");
 
     private String regex;
 
@@ -42,9 +44,9 @@ public enum Commands {
         String[] strings = command.split("-");
         strings = Arrays.copyOfRange(strings, 1, strings.length);
         for (String string : strings) {
-            if (string.startsWith("-player")) {
-                players.put(Integer.parseInt(string.substring(7, 8)), string.substring(9));
-            }else {
+            if (string.startsWith("player")) {
+                players.put(Integer.parseInt(string.substring(6, 7)), string.substring(8));
+            }else if (string.startsWith("p")){
                 players.put(Integer.parseInt(string.substring(1, 2)), string.substring(3));
             }
         }

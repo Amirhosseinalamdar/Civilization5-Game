@@ -23,7 +23,10 @@ public class GameMenu {
         do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
-            else GameController.doTurn(command);
+            else {
+                GameController.setCivilizationAndDoMissions();
+                GameController.doTurn(command);
+            }
         } while (scanner.hasNextLine());
     }
 
@@ -98,19 +101,19 @@ public class GameMenu {
 
 //info part ===============================
 
-    private static void researchInfo(){
+    private static void researchInfo() {
 
     }
 
-    private static void unitsInfo(){
+    private static void unitsInfo() {
 
     }
 
-    private static void cityInfo(){
+    private static void cityInfo() {
 
     }
 
-    private static void diplomacyInfo(){
+    private static void diplomacyInfo() {
 
     }
 
@@ -393,8 +396,12 @@ public class GameMenu {
         System.out.println("no unit exists in chosen pos");
     }
 
-    public static void invalidChosenCity() {
+    public static void invalidPosForCity() {
         System.out.println("no city exists in chosen pos");
+    }
+
+    public static void invalidNameForCity() {
+        System.out.println("no city exists with this name");
     }
 
     public static void siegeNotPrepared() {
@@ -431,5 +438,9 @@ public class GameMenu {
 
     public static void unitIsNotWorker() {
         System.out.println("this unit is not worker");
+    }
+
+    public static void unitIsNotSettler() {
+        System.out.println("this unit is not settler");
     }
 }

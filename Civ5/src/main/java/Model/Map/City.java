@@ -22,6 +22,11 @@ public class City {
     private int combatStrength;
     private int rangedCombatStrength;
     private CityStatus cityStatus;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
 
 
     public City (Civilization civilization, Tile tile) {
