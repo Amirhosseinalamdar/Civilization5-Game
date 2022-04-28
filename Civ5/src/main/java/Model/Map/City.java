@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class City {
+    private CityName name;
     private ArrayList <Tile> tiles;
     private Civilization civilization;
     private int storedFood;
@@ -22,11 +23,17 @@ public class City {
     private int rangedCombatStrength;
     private CityStatus cityStatus;
 
+
     public City (Civilization civilization, Tile tile) {
         tiles = new ArrayList<>();
         tiles.add(tile);
         this.civilization = civilization;
         this.citizens = new ArrayList<>();
+
+    }
+
+    public CityName getName() {
+        return name;
     }
 
     public void updateStoredFood(){

@@ -38,8 +38,10 @@ public class UnitController{
             if (! matcher.find()) throw new RuntimeException();
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
-                if (unit.getMovesInTurn() < unit.getMP()) moveUnit(destCenterX, destCenterY);
-                else System.out.println("not enough moves"); //TODO... take it to view :)
+                if (unit.getMovesInTurn() < unit.getMP()) {
+                    moveUnit(destCenterX, destCenterY);
+                    //GameMenu.showMap(civilization);
+                }else System.out.println("not enough moves"); //TODO... take it to view :)
                 return;
             }
             GameMenu.unavailableTile();
