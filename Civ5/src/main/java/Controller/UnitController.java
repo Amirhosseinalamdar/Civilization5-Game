@@ -62,11 +62,11 @@ public class UnitController{
             regex = "move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (! matcher.find()) throw new RuntimeException();
-                if (! GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
+                if (!matcher.find()) throw new RuntimeException();
+                if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
                     return Pattern.compile(regex).matcher(command);
                 else
-                    GameMenu.invalidChosenTile();
+                    GameMenu.indexOutOfArray();
             }
 
             if (command.equals("sleep"))
@@ -86,7 +86,7 @@ public class UnitController{
                 if (!(unit instanceof Military))
                     GameMenu.unitIsCivilianError();
                 else if (GameController.invalidPos(x, y))
-                    GameMenu.invalidChosenTile();
+                    GameMenu.indexOutOfArray();
                 else if (!unit.isSiege() || unit.getStatus().equals(UnitStatus.SIEGEPREP))
                     return Pattern.compile(regex).matcher(command);
                 else
@@ -272,7 +272,7 @@ public class UnitController{
             civilization.getTileVisionStatuses()[neighbor.getIndexInMapI()][neighbor.getIndexInMapJ()] = newStatus;
     }
 
-    private static boolean areNeighbors (Tile first, Tile second) {
+    public static boolean areNeighbors (Tile first, Tile second) {
         ArrayList <Tile> neighborsOfFirst = getTileNeighbors(first);
         for (Tile tile : neighborsOfFirst)
             if (tile.equals(second)) return true;

@@ -22,7 +22,7 @@ public class Unit {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
-        this.MP = 2; //TODO... temporary
+        this.MP = unitType.getMP(); //TODO... temporary
     }
 
     public void setPath (Path path) {

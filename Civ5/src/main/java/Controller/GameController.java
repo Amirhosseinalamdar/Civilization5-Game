@@ -49,7 +49,7 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
         System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
         if (invalidPos(x, y)) {
-            GameMenu.invalidChosenUnit();
+            GameMenu.indexOutOfArray();
             return null;
         }
         if (matcher.group("unitType").equals("combat")) {
@@ -80,7 +80,7 @@ public class GameController {
         try {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (invalidPos(x, y)) {
-                GameMenu.invalidPosForCity();
+                GameMenu.indexOutOfArray();
                 return null;
             }
             if (Game.getTiles()[x][y].getCity() == null) {

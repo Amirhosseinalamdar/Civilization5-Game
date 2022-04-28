@@ -24,6 +24,9 @@ public class Civilization {
     private int happiness;
     private CivSymbol civColor;
 
+    public void setTotalGold(int totalGold) {
+        this.totalGold = totalGold;
+    }
 
     public Civilization() {
         cities = new ArrayList<>();

@@ -400,6 +400,10 @@ public class GameMenu {
         System.out.println("no city exists in chosen pos");
     }
 
+    public static void indexOutOfArray() {
+        System.out.println("chosen x or chosen y are out of array");
+    }
+
     public static void invalidNameForCity() {
         System.out.println("no city exists with this name");
     }
@@ -450,5 +454,17 @@ public class GameMenu {
 
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
+    }
+
+    public static void cityAlreadyHasTile() {
+        System.out.println("city already has this tile");
+    }
+
+    public static void unreachableTileForCity() {
+        System.out.println("can't purchase tile : it's not near the city");
+    }
+
+    public static void notEnoughGoldForTilePurchase() {
+        System.out.println("can't purchase tile : not enough gold");
     }
 }
