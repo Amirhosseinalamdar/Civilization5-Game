@@ -38,6 +38,10 @@ public class City {
 
         this.civilization = civilization;
         civilization.addCity(this);
+        int goldSum = 0;
+        for (Tile tile : tiles) goldSum += tile.getGoldPerTurn();
+        System.out.println("now my gold = " + goldSum);
+        civilization.setTotalGold(goldSum);
 
         this.citizens = new ArrayList<>();
         this.name = name;

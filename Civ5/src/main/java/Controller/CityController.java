@@ -26,7 +26,6 @@ public class CityController {
 
     public static void handleCityOption() {
         Matcher matcher = getCityDecision();
-        if (!matcher.find()) throw new RuntimeException();
 
         if (matcher.pattern().toString().startsWith("create")) {
 
@@ -47,6 +46,7 @@ public class CityController {
             regex = "create (-u|--unit) (?<unitName>\\S+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (!matcher.find()) throw new RuntimeException();
                 if (unitIsValid(matcher.group("unitName")))
                     return matcher;
                 GameMenu.invalidUnitType();
@@ -54,6 +54,7 @@ public class CityController {
             regex = "purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
+                if (!matcher.find()) throw new RuntimeException();
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
                                                 Integer.parseInt(matcher.group("y"))))
                     return matcher;
@@ -77,17 +78,19 @@ public class CityController {
     }
 
     private static boolean tileIsPurchasable (Tile targetTile) {
+        boolean isNeighbor = false;
         for (Tile tile : city.getTiles()) {
             if (tile.equals(targetTile)) {
                 GameMenu.cityAlreadyHasTile();
                 return false;
             }
             if (!UnitController.areNeighbors(tile, targetTile)) {
-                GameMenu.unreachableTileForCity();
-                return false;
+                isNeighbor = true;
+                break;
             }
         }
-        return true;
+        if (!isNeighbor) GameMenu.unreachableTileForCity();
+        return isNeighbor;
     }
 
     private static void purchaseTile (Tile targetTile) {
