@@ -24,6 +24,12 @@ public class Military extends Unit{
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
     }
 
+    @Override
+    public void kill() {
+        tile.setMilitary(null);
+        civilization.getUnits().remove(this);
+    }
+
     public void create(){
         //this.tile.setMilitary(this);
 //        this.civilization.units.add(this);

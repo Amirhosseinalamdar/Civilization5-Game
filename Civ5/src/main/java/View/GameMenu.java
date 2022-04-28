@@ -24,7 +24,7 @@ public class GameMenu {
             String command = scanner.nextLine();
             if (command.equals("next turn")) GameController.updateGame();
             else {
-                GameController.setCivilizationAndDoMissions();
+                GameController.setCivilization();
                 GameController.doTurn(command);
             }
         } while (scanner.hasNextLine());

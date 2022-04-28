@@ -17,12 +17,8 @@ public class GameController {
         return civilization;
     }
 
-    public static void setCivilizationAndDoMissions() {
+    public static void setCivilization() {
         checkMyCivilization();
-        for (Unit unit : civilization.getUnits()) {
-            UnitController.setUnit(unit);
-            UnitController.doRemainingMissions();
-        }
     }
 
     public static void doTurn(String command) {
@@ -118,8 +114,11 @@ public class GameController {
 
     public static void updateGame() {
         for (User player : Game.getPlayers())
-            for (Unit unit : player.getCivilization().getUnits())
+            for (Unit unit : player.getCivilization().getUnits()) {
                 unit.setMovesInTurn(0);
+                UnitController.setUnit(unit);
+                UnitController.doRemainingMissions();
+            }
         Game.nextTurn();
         checkMyCivilization();
         checkControllersCivilization();

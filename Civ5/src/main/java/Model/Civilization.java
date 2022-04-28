@@ -47,8 +47,8 @@ public class Civilization {
 
      }
 
-    public CivSymbol getCivColor() {
-        return civColor;
+    public String getCivColor() {
+        return civColor.getSymbol();
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {

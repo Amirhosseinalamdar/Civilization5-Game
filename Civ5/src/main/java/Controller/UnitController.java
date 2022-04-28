@@ -2,10 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Game;
-import Model.Map.City;
-import Model.Map.Path;
-import Model.Map.TerrainType;
-import Model.Map.Tile;
+import Model.Map.*;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
@@ -44,7 +41,7 @@ public class UnitController{
             }
             GameMenu.unavailableTile();
         }
-        else if (unit.getStatus().equals(UnitStatus.BUILD)) {
+        else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
                 if (unit.getMovesInTurn() < unit.getMP()) foundCity();
                 else GameMenu.notEnoughMoves();
@@ -189,7 +186,7 @@ public class UnitController{
         beginningTiles.addAll(getTileNeighbors(unit.getTile()));
         for (Tile tile : beginningTiles)
             if (tile.getCity() != null) return false;
-        return true;
+        return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
     private static void moveUnit (int destCenterX, int destCenterY) {
@@ -390,6 +387,7 @@ public class UnitController{
         System.out.println("please choose name: "); //TODO... move it to menu :)
         String cityName = GameMenu.nextCommand();
         new City(civilization, unit.getTile(), cityName);
+        unit.kill();
     }
 
     private static void abortMission(){
