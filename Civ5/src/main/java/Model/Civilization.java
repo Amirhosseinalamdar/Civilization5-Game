@@ -46,6 +46,10 @@ public class Civilization {
         tile.setMilitary(warrior);
     }
 
+    public void addCity (City city) {
+        this.cities.add(city);
+    }
+
     public void setTileVisionStatuses(int i,int j,TileStatus type) {
         this.tileVisionStatuses[i][j] = type;
     }

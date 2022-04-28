@@ -51,7 +51,7 @@ public class GameMenu {
 
 
     public static void notEnoughMoves() {
-        System.out.println("not enough moves");
+        System.out.println("unit doesn't have enough moves");
     }
 
     public static void unavailableTile () {
@@ -392,5 +392,13 @@ public class GameMenu {
 
     public static void unitIsNotSettler() {
         System.out.println("this unit is not settler");
+    }
+
+    public static void invalidUnitType() {
+        System.out.println("unit type is invalid");
+    }
+
+    public static void cantFoundCityHere() {
+        System.out.println("can't found city here");
     }
 }

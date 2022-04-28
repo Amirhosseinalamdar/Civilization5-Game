@@ -1,5 +1,6 @@
 package Model.Map;
 
+import Controller.UnitController;
 import Model.Civilization;
 import Model.UnitPackage.UnitType;
 
@@ -21,17 +22,25 @@ public class City {
     private int combatStrength;
     private int rangedCombatStrength;
     private CityStatus cityStatus;
-    private String name;
+    private final String name;
 
     public String getName() {
         return name;
     }
 
-    public City (Civilization civilization, Tile tile) {
+    public City (Civilization civilization, Tile centerTile, String name) {
         tiles = new ArrayList<>();
-        tiles.add(tile);
+        tiles.add(centerTile);
+        tiles.addAll(UnitController.getTileNeighbors(centerTile));
+
+        for (Tile tile : tiles)
+            tile.setCity(this);
+
         this.civilization = civilization;
+        civilization.addCity(this);
+
         this.citizens = new ArrayList<>();
+        this.name = name;
     }
 
     public void updateStoredFood(){

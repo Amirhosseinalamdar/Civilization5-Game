@@ -72,6 +72,9 @@ public class Tile {
         return city;
     }
 
+    public void setCity (City city) {
+        this.city = city;
+    }
     public ArrayList<River> getRivers() {
         return rivers;
     }
