@@ -418,4 +418,8 @@ public class GameMenu {
     public static void unitIsNotWorker() {
         System.out.println("this unit is not worker");
     }
+
+    public static void unitIsNotSettler() {
+        System.out.println("this unit is not settler");
+    }
 }

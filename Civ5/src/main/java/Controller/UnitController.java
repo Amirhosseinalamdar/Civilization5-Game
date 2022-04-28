@@ -32,10 +32,10 @@ public class UnitController{
 
     public static void handleUnitOption() {
         Matcher matcher = getUnitDecision();
+        if (! matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
-            if (! matcher.find()) throw new RuntimeException();
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
                 if (unit.getMovesInTurn() < unit.getMP()) moveUnit(destCenterX, destCenterY);
@@ -43,6 +43,9 @@ public class UnitController{
                 return;
             }
             GameMenu.unavailableTile();
+        }
+        else if (unit.getStatus().equals(UnitStatus.BUILD)) {
+
         }
         else System.out.println("unit controller, invalid command");
     }
@@ -134,8 +137,7 @@ public class UnitController{
                 if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command); //TODO check validation of improvements in future
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             regex = "remove (?<resource>(jungle|route))";
@@ -144,19 +146,24 @@ public class UnitController{
                 if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command);
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             if (command.equals("repair")) {
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(command).matcher(command);
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             if (command.equals("do nothing"))
                 return Pattern.compile(command).matcher(command);
+
+            if (command.equals("build city")) {
+                if (unit.getType().equals(UnitType.SETTLER))
+                    return Pattern.compile(command).matcher(command);
+                else
+                    GameMenu.unitIsNotSettler();
+            }
         }
     }
 

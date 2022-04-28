@@ -4,6 +4,9 @@ import Model.Civilization;
 import Model.Map.City;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+
+import java.util.regex.Matcher;
+
 public class CityController {
     private static Civilization civilization;
     private static City city;
@@ -18,7 +21,11 @@ public class CityController {
     }
 
     public static void handleCityOption() {
+        Matcher matcher = getCityDecision();
+    }
 
+    public static Matcher getCityDecision() {
+        return null;
     }
     private void expandCity(City city) {
 
