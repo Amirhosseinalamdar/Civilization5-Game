@@ -22,6 +22,8 @@ public class Civilization {
     private ArrayList<City> builtCities;
     private int science;
     private int happiness;
+    private CivSymbol civColor;
+
 
     public Civilization() {
         cities = new ArrayList<>();
@@ -29,6 +31,24 @@ public class Civilization {
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        this.civColor = initCivSymbol();
+    }
+
+    private CivSymbol initCivSymbol(){
+        if(!CivSymbol.WHITE.isTaken()) return CivSymbol.WHITE;
+        else if(!CivSymbol.PURPLE.isTaken()) return CivSymbol.PURPLE;
+        else if(!CivSymbol.BLUE.isTaken()) return CivSymbol.BLUE;
+        else if(!CivSymbol.RED.isTaken()) return CivSymbol.RED;
+        else if(!CivSymbol.BLACK.isTaken()) return CivSymbol.BLACK;
+        else {
+            System.out.println("not enough symbols");
+            return null;
+        }
+
+     }
+
+    public CivSymbol getCivColor() {
+        return civColor;
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
