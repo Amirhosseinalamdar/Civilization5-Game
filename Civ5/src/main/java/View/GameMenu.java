@@ -105,19 +105,19 @@ public class GameMenu {
 
 //info part ===============================
 
-    private static void researchInfo(){
+    private static void researchInfo() {
 
     }
 
-    private static void unitsInfo(){
+    private static void unitsInfo() {
 
     }
 
-    private static void cityInfo(){
+    private static void cityInfo() {
 
     }
 
-    private static void diplomacyInfo(){
+    private static void diplomacyInfo() {
 
     }
 
