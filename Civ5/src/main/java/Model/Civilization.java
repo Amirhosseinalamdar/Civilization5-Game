@@ -22,17 +22,41 @@ public class Civilization {
     private ArrayList<City> builtCities;
     private int science;
     private int happiness;
+    private CivSymbol civColor;
+
+    public void setTotalGold(int totalGold) {
+        this.totalGold = totalGold;
+    }
 
     public Civilization() {
         cities = new ArrayList<>();
         units = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
-                tileVisionStatuses[i][j] = TileStatus.FOGGY;
+                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        this.civColor = initCivSymbol();
+    }
+
+    private CivSymbol initCivSymbol(){
+        if(!CivSymbol.WHITE.isTaken()) return CivSymbol.WHITE;
+        else if(!CivSymbol.PURPLE.isTaken()) return CivSymbol.PURPLE;
+        else if(!CivSymbol.BLUE.isTaken()) return CivSymbol.BLUE;
+        else if(!CivSymbol.RED.isTaken()) return CivSymbol.RED;
+        else if(!CivSymbol.BLACK.isTaken()) return CivSymbol.BLACK;
+        else {
+            System.out.println("not enough symbols");
+            return null;
+        }
+
+     }
+
+    public String getCivColor() {
+        return civColor.getSymbol();
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
-        Unit settler = new Unit(UnitType.SETTLER);
+        UnitType tmp = UnitType.SETTLER;
+        Unit settler = new Unit(tmp);
         settler.setCivilization(this);
         this.units.add(settler);
         settler.setTile(tile);
@@ -43,6 +67,10 @@ public class Civilization {
         this.units.add(warrior);
         warrior.setTile(tile);
         tile.setMilitary(warrior);
+    }
+
+    public void addCity (City city) {
+        this.cities.add(city);
     }
 
     public void setTileVisionStatuses(int i,int j,TileStatus type) {

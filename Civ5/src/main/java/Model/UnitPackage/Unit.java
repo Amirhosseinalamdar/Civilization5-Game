@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Unit {
     protected UnitType type ;
     protected Tile tile;
-    protected ArrayList<Tile> zonesOfControl;
+    protected ArrayList <Tile> zonesOfControl;
     protected Civilization civilization;
     protected int MP;
     protected int movesInTurn;
@@ -22,7 +22,7 @@ public class Unit {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
-        this.MP = 2; //TODO... temporary
+        this.MP = unitType.getMP(); //TODO... temporary
     }
 
     public void setPath (Path path) {
@@ -112,8 +112,10 @@ public class Unit {
     protected UnitStatus status;
     protected int maintenance;
 
-    public void kill(){
-        //TODO remove from everywhere
+    public void kill() {
+        tile.setCivilian(null);
+        civilization.getUnits().remove(this);
+        path = null;
     }
 
     //TODO change civilization -> controller

@@ -2,10 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Game;
-import Model.Map.City;
-import Model.Map.Path;
-import Model.Map.TerrainType;
-import Model.Map.Tile;
+import Model.Map.*;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
@@ -14,6 +11,7 @@ import Model.UnitPackage.UnitType;
 import View.GameMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,17 +29,25 @@ public class UnitController{
 
     public static void handleUnitOption() {
         Matcher matcher = getUnitDecision();
+        if (! matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
-            if (! matcher.find()) throw new RuntimeException();
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
                 if (unit.getMovesInTurn() < unit.getMP()) moveUnit(destCenterX, destCenterY);
-                else System.out.println("not enough moves"); //TODO... take it to view :)
+                else GameMenu.notEnoughMoves(); //TODO... take it to view :)
                 return;
             }
             GameMenu.unavailableTile();
+        }
+        else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
+            if (canFoundCityHere()) {
+                if (unit.getMovesInTurn() < unit.getMP()) foundCity();
+                else GameMenu.notEnoughMoves();
+                return;
+            }
+            GameMenu.cantFoundCityHere();
         }
         else System.out.println("unit controller, invalid command");
     }
@@ -56,11 +62,11 @@ public class UnitController{
             regex = "move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (! matcher.find()) throw new RuntimeException();
-                if (! GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
+                if (!matcher.find()) throw new RuntimeException();
+                if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
                     return Pattern.compile(regex).matcher(command);
                 else
-                    GameMenu.invalidChosenTile();
+                    GameMenu.indexOutOfArray();
             }
 
             if (command.equals("sleep"))
@@ -80,7 +86,7 @@ public class UnitController{
                 if (!(unit instanceof Military))
                     GameMenu.unitIsCivilianError();
                 else if (GameController.invalidPos(x, y))
-                    GameMenu.invalidChosenTile();
+                    GameMenu.indexOutOfArray();
                 else if (!unit.isSiege() || unit.getStatus().equals(UnitStatus.SIEGEPREP))
                     return Pattern.compile(regex).matcher(command);
                 else
@@ -127,14 +133,13 @@ public class UnitController{
                     GameMenu.unitIsCivilianError();
             }
 
-            regex = "build (?<improvement>\\S+)";
+            regex = "build improvement (-t|--type) (?<improvement>\\S+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command); //TODO check validation of improvements in future
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             regex = "remove (?<resource>(jungle|route))";
@@ -143,19 +148,26 @@ public class UnitController{
                 if (! matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(regex).matcher(command);
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             if (command.equals("repair")) {
                 if (unit.getType().equals(UnitType.WORKER))
                     return Pattern.compile(command).matcher(command);
-                else
-                    GameMenu.unitIsNotWorker();
+                GameMenu.unitIsNotWorker();
             }
 
             if (command.equals("do nothing"))
                 return Pattern.compile(command).matcher(command);
+
+            if (command.equals("found city")) {
+                if (unit.getType().equals(UnitType.SETTLER))
+                    return Pattern.compile(command).matcher(command);
+                else
+                    GameMenu.unitIsNotSettler();
+            }
+
+            System.out.println("unit decision wasn't valid");
         }
     }
 
@@ -166,6 +178,15 @@ public class UnitController{
     private static boolean isTileEmpty (int centerX, int centerY) {
         if (unit instanceof Military) return Game.getTiles()[centerX][centerY].getMilitary() == null;
         else return Game.getTiles()[centerX][centerY].getCivilian() == null;
+    }
+
+    private static boolean canFoundCityHere() {
+        ArrayList <Tile> beginningTiles = new ArrayList<>();
+        beginningTiles.add(unit.getTile());
+        beginningTiles.addAll(getTileNeighbors(unit.getTile()));
+        for (Tile tile : beginningTiles)
+            if (tile.getCity() != null) return false;
+        return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
     private static void moveUnit (int destCenterX, int destCenterY) {
@@ -251,9 +272,11 @@ public class UnitController{
             civilization.getTileVisionStatuses()[neighbor.getIndexInMapI()][neighbor.getIndexInMapJ()] = newStatus;
     }
 
-    private static boolean areNeighbors (Tile first, Tile second) {
-        if (Math.abs(first.getCenterX() - second.getCenterX()) > 2) return false;
-        return Math.abs(first.getCenterY() - second.getCenterY()) <= 1;
+    public static boolean areNeighbors (Tile first, Tile second) {
+        ArrayList <Tile> neighborsOfFirst = getTileNeighbors(first);
+        for (Tile tile : neighborsOfFirst)
+            if (tile.equals(second)) return true;
+        return false;
     }
 
     public static boolean isTileWalkable (Tile tile, Unit unit) {
@@ -291,6 +314,8 @@ public class UnitController{
             path.tiles.add(Game.getTiles()[indexI][j]);
             paths.add(path);
         }
+
+        paths.removeIf(path -> !isTileWalkable(path.tiles.get(0), unit));
     }
 
     public static ArrayList <Tile> getTileNeighbors (Tile startingTile) {
@@ -359,7 +384,10 @@ public class UnitController{
     }
 
     private static void foundCity() {
-        //TODO check settler.type bare debug
+        System.out.println("please choose name: "); //TODO... move it to menu :)
+        String cityName = GameMenu.nextCommand();
+        new City(civilization, unit.getTile(), cityName);
+        unit.kill();
     }
 
     private static void abortMission(){

@@ -14,6 +14,7 @@ public class Military extends Unit{
     public Military (UnitType militaryType) {
         super(militaryType);
     }
+
     @Override
     public void setStatus(String string) {
         super.setStatus(string);
@@ -21,6 +22,12 @@ public class Military extends Unit{
         else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("garrison")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
+    }
+
+    @Override
+    public void kill() {
+        tile.setMilitary(null);
+        civilization.getUnits().remove(this);
     }
 
     public void create(){

@@ -111,7 +111,7 @@ public class Game {
         else if(type == TerrainType.HILL) return 70;
         else if(type == TerrainType.SNOW) return 30;
         else if(type == TerrainType.TUNDRA) return 30;
-        return 10;
+        return 17;
     }
 
     private static void completeMap(Tile[][] tiles){
@@ -142,7 +142,7 @@ public class Game {
                 tiles[i][j].initializeTile(tiles[i][j].getType(),tiles[i][j].getFeature());
             }
         }
-        //TODO add river
+        generateRivers();
         addResource();
     }
 
@@ -288,6 +288,19 @@ public class Game {
         key = random.nextInt(100);
         if(checkIAndJ(i,j-1)&&(probability > key) && tiles[i][j-1].getType() == null){
             generateGroup(i,j-1,tiles,type,probability - probabilityDecrement,random,probabilityDecrement);
+        }
+    }
+
+    private static void generateRivers(){
+        Random random = new Random();
+        int howManyRivers = random.nextInt(4) + 1;
+        for(int k=0;k<howManyRivers;k++){
+            int i = random.nextInt(7) + 2;
+            int j = random.nextInt(15) + 3;
+            int targetI = random.nextInt(7) + i + 4;
+            for(int l = i ;l<targetI+1;l++){
+                tiles[l][j].setRiverAtLeft(true);
+            }
         }
     }
 

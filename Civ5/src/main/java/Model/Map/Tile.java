@@ -23,14 +23,26 @@ public class Tile {
     private Pair <Improvement, Integer> improvementInProgress;
     private boolean isRaided;
     //private boolean isCity;
-    private City city; // age null bashe city nis
-    private ArrayList<River> rivers;
+    private City city; // age null bashe city nis agar na capitale citie
+    private City memberOfThisCity;//TODO initialize she pls
+    //private ArrayList<River> rivers;
+    private boolean isRiverAtLeft;
     private int centerX; // vertical
     private int centerY; // horizontal
     private int indexInMapI;
     private int indexInMapJ;
 
+    public City getMemberOfThisCity() {
+        return memberOfThisCity;
+    }
 
+    public void setRiverAtLeft(boolean riverAtLeft) {
+        isRiverAtLeft = riverAtLeft;
+    }
+
+    public boolean isRiverAtLeft() {
+        return isRiverAtLeft;
+    }
 
     public int getFoodPerTurn() {
         return foodPerTurn;
@@ -72,8 +84,8 @@ public class Tile {
         return city;
     }
 
-    public ArrayList<River> getRivers() {
-        return rivers;
+    public void setCity (City city) {
+        this.city = city;
     }
 
     public TerrainType getType() {
