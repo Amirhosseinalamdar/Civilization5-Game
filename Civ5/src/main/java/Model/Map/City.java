@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class City {
-    private CityName name;
     private ArrayList <Tile> tiles;
     private Civilization civilization;
     private int storedFood;
@@ -37,9 +36,7 @@ public class City {
 
     }
 
-    public CityName getName() {
-        return name;
-    }
+
 
     public void updateStoredFood(){
 

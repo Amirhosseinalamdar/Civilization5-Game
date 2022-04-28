@@ -323,11 +323,11 @@ public class GameMenu {
         if(Game.getTiles()[i][j].getCity() != null &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
             String output = "*";
-            String output1 = output.concat(Game.getTiles()[i][j].getCity().toString());
+            String output1 = output.concat(Game.getTiles()[i][j].getCity().getName());
             String output2 = output1.concat("        ");
             System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0,9));
         }else if(Game.getTiles()[i][j].getCity() != null) {
-            String output = Game.getTiles()[i][j].getCity().getName().toString().concat("       ");
+            String output = Game.getTiles()[i][j].getCity().getName().concat("       ");
             System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0,9));
         }else if(Game.getTiles()[i][j].getMemberOfThisCity() != null)
             System.out.print(Game.getTiles()[i][j].getMemberOfThisCity().getCivilization().getCivColor()+"    c    ");
