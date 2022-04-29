@@ -32,6 +32,7 @@ public class UnitController{
         if (! matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
+        System.out.println("my stat = " + unit.getStatus().toString());
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
@@ -53,7 +54,6 @@ public class UnitController{
     }
 
     private static Matcher getUnitDecision() {
-        if (unit.getPath().tiles.size() > 0) return Pattern.compile("has path").matcher("has path");
 
         String regex;
 
@@ -206,13 +206,13 @@ public class UnitController{
 
     private static void continuePath() {
         Tile destTile = unit.getPath().tiles.get(unit.getPath().tiles.size() - 1);
-        Path chosenPath = findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ());
-        if (chosenPath == null) {
+        unit.setPath(findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ()));
+        if (unit.getPath() == null) {
             unit.setStatus("active");
             return;
         }
-        moveOnPath(chosenPath);
-        if (chosenPath.tiles.size() == 0) unit.setStatus("active");
+        moveOnPath(unit.getPath());
+        if (unit.getPath().tiles.size() == 0) unit.setStatus("active");
     }
 
     private static Path findBestPath (int destIndexI, int destIndexJ) {

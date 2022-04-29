@@ -2,10 +2,12 @@ package Controller;
 
 import Model.Civilization;
 import Model.Game;
+import Model.Map.Citizen;
 import Model.Map.City;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+import View.Commands;
 import View.GameMenu;
 
 import java.util.regex.Matcher;
@@ -36,25 +38,42 @@ public class CityController {
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
         }
+
+        if (matcher.pattern().toString().startsWith("lock citizen on tile")) {
+            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+            for (Citizen citizen : city.getCitizens())
+                if (citizen.getTile() == null) {
+                    lockCitizenOnTile(citizen, Game.getTiles()[x][y]);
+                    return;
+                }
+            GameMenu.noUnemployedCitizenAvailable();
+            if (city.getCitizens().size() == 0) return;
+            Citizen workingCitizen = getWorkingCitizen();
+            if (workingCitizen == null) {
+                GameMenu.citizenLockError();
+                return;
+            }
+            lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
+        }
     }
 
     public static Matcher getCityDecision() {
-        String regex;
+        Matcher matcher;
 
         while (true) {
             String command = GameMenu.nextCommand();
-            regex = "create (-u|--unit) (?<unitName>\\S+)";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.CREATE_UNIT)) != null) {
                 if (unitIsValid(matcher.group("unitName")))
                     return matcher;
                 GameMenu.invalidUnitType();
             }
-            regex = "purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.PURCHASE_TILE)) != null) {
+                if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
+                                                Integer.parseInt(matcher.group("y"))))
+                    return matcher;
+                GameMenu.indexOutOfArray();
+            }
+            if ((matcher = Commands.getMatcher(command, Commands.LOCK_CITIZEN)) != null) {
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
                                                 Integer.parseInt(matcher.group("y"))))
                     return matcher;
@@ -73,6 +92,32 @@ public class CityController {
             return false;
         }
     }
+
+    private static Citizen getWorkingCitizen() {
+        String[] args = GameMenu.nextCommand().split(" ");
+        try {
+            int x = Integer.parseInt(args[0]), y = Integer.parseInt(args[1]);
+            if (GameController.invalidPos(x, y)) {
+                GameMenu.indexOutOfArray();
+                return null;
+            }
+            Citizen citizen = Game.getTiles()[x][y].getWorkingCitizen();
+            if (citizen == null) return null;
+            if (citizen.getCity().equals(city)) return citizen;
+            GameMenu.citizenNotYours();
+            return null;
+        }
+        catch (Exception e) {
+            GameMenu.invalidPosForCitizen();
+            return null;
+        }
+    }
+
+    public static void lockCitizenOnTile (Citizen citizen, Tile tile) {
+        citizen.changeWorkingTile(tile);
+        tile.setWorkingCitizen(citizen);
+    }
+
     private void expandCity(City city) {
 
     }

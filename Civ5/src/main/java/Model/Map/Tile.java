@@ -31,6 +31,15 @@ public class Tile {
     private int centerY; // horizontal
     private int indexInMapI;
     private int indexInMapJ;
+    private Citizen workingCitizen;
+
+    public void setWorkingCitizen (Citizen citizen) {
+        this.workingCitizen = citizen;
+    }
+
+    public Citizen getWorkingCitizen() {
+        return workingCitizen;
+    }
 
     public City getMemberOfThisCity() {
         return memberOfThisCity;

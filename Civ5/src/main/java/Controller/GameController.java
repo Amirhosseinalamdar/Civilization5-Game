@@ -33,7 +33,6 @@ public class GameController {
             }
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
-            GameMenu.showMap(civilization);
         }
         else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
@@ -113,15 +112,15 @@ public class GameController {
     }
 
     public static void updateGame() {
-        for (User player : Game.getPlayers())
-            for (Unit unit : player.getCivilization().getUnits()) {
-                unit.setMovesInTurn(0);
-                UnitController.setUnit(unit);
-                UnitController.doRemainingMissions();
-            }
         Game.nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
+        User player = Game.getPlayers().get(Game.getTurn());
+        for (Unit unit : player.getCivilization().getUnits()) {
+            unit.setMovesInTurn(0);
+            UnitController.setUnit(unit);
+            UnitController.doRemainingMissions();
+        }
     }
 
     public static boolean gameIsOver() {

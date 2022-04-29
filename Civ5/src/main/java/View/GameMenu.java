@@ -26,6 +26,7 @@ public class GameMenu {
             else {
                 GameController.setCivilization();
                 GameController.doTurn(command);
+                if (command.equals("show map")) GameMenu.showMap(GameController.getCivilization());
             }
         } while (scanner.hasNextLine());
     }
@@ -466,5 +467,21 @@ public class GameMenu {
 
     public static void notEnoughGoldForTilePurchase() {
         System.out.println("can't purchase tile : not enough gold");
+    }
+
+    public static void noUnemployedCitizenAvailable() {
+        System.out.println("no unemployed citizen available: please choose one tile's citizen:");
+    }
+
+    public static void invalidPosForCitizen() {
+        System.out.println("chosen position is invalid");
+    }
+
+    public static void citizenNotYours() {
+        System.out.println("this citizen doesn't belong to chosen city");
+    }
+
+    public static void citizenLockError() {
+        System.out.println("couldn't lock any citizen");
     }
 }
