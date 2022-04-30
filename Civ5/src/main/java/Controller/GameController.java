@@ -24,11 +24,6 @@ public class GameController {
 
     public static void doTurn (String command) {
 
-        if (command.equals("show map")) {
-            GameMenu.showMap(GameController.getCivilization());
-            return;
-        }
-
         Matcher matcher;
         if((matcher =Commands.getMatcher(command, Commands.SHOW_MAP_GLOBAL)) != null)
             GameMenu.showMap(civilization,0,0,true);
