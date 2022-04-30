@@ -23,6 +23,8 @@ public class Civilization {
     private int science;
     private int happiness;
     private CivSymbol civColor;
+    private int showingCenterI;
+    private int showingCenterJ;
 
     public void setTotalGold(int totalGold) {
         this.totalGold = totalGold;
@@ -35,6 +37,24 @@ public class Civilization {
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
         this.civColor = initCivSymbol();
+        this.showingCenterI = 1;
+        this.showingCenterJ = 2;
+    }
+
+    public int getShowingCenterI() {
+        return showingCenterI;
+    }
+
+    public int getShowingCenterJ() {
+        return showingCenterJ;
+    }
+
+    public void setShowingCenterI(int showingCenterI) {
+        this.showingCenterI = showingCenterI;
+    }
+
+    public void setShowingCenterJ(int showingCenterJ) {
+        this.showingCenterJ = showingCenterJ;
     }
 
     private CivSymbol initCivSymbol(){

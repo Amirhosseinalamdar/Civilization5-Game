@@ -24,7 +24,7 @@ public class Tile {
     private boolean isRaided;
     //private boolean isCity;
     private City city; // age null bashe city nis agar na capitale citie
-    private City memberOfThisCity;//TODO initialize she pls
+//    private City memberOfThisCity;//TODO initialize she pls
     //private ArrayList<River> rivers;
     private boolean isRiverAtLeft;
     private int centerX; // vertical
@@ -41,9 +41,9 @@ public class Tile {
         return workingCitizen;
     }
 
-    public City getMemberOfThisCity() {
-        return memberOfThisCity;
-    }
+//    //public City getMemberOfThisCity() {
+//        return memberOfThisCity;
+//    }
 
     public void setRiverAtLeft(boolean riverAtLeft) {
         isRiverAtLeft = riverAtLeft;

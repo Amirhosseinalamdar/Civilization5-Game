@@ -23,7 +23,11 @@ public class GameController {
 
     public static void doTurn(String command) {
         Matcher matcher;
-        if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
+        if((matcher =Commands.getMatcher(command, Commands.SHOW_MAP_GLOBAL)) != null)
+            GameMenu.showMap(civilization,0,0,true);
+        else if (command.equals("show map"))
+            GameMenu.showMap(civilization, civilization.getShowingCenterI(),civilization.getShowingCenterJ(),false);
+        else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
@@ -33,13 +37,14 @@ public class GameController {
             }
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
-        }
-        else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
-                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
+                (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
             City chosenCity = getCityFromCommand(matcher);
             if (chosenCity == null) return;
             CityController.setCity(chosenCity);
             CityController.handleCityOption();
+        }else if((matcher = Commands.getMatcher(command,Commands.SCROLL_MAP)) != null) {
+            scrollOnMap(matcher);
         }
         else System.out.println("game controller, invalid command");
     }
@@ -75,7 +80,7 @@ public class GameController {
         return null;
     }
 
-    private static City getCityFromCommand (Matcher matcher) {
+    private static City getCityFromCommand(Matcher matcher) {
         try {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (invalidPos(x, y)) {
@@ -87,8 +92,7 @@ public class GameController {
                 return null;
             }
             return Game.getTiles()[x][y].getCity();
-        }
-        catch (IllegalArgumentException i) {
+        } catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())
                 if (city.getName().equals(matcher.group("name"))) return city;
             GameMenu.invalidNameForCity();
@@ -125,6 +129,27 @@ public class GameController {
 
     public static boolean gameIsOver() {
         return false;
+    }
+
+    private static void scrollOnMap(Matcher matcher) {
+        int moveParameter = Integer.parseInt(matcher.group("number"));
+        if (matcher.group("direction").equals("right")) {
+            GameMenu.showMap(civilization, civilization.getShowingCenterI(), civilization.getShowingCenterJ() + moveParameter,false);
+            if(civilization.getShowingCenterJ() + moveParameter > 16) civilization.setShowingCenterJ(16);
+            else civilization.setShowingCenterJ(civilization.getShowingCenterJ() + moveParameter);
+        } else if (matcher.group("direction").equals("left")) {
+            GameMenu.showMap(civilization, civilization.getShowingCenterI(), civilization.getShowingCenterJ() - moveParameter,false);
+            if(civilization.getShowingCenterJ() - moveParameter < 2) civilization.setShowingCenterJ(2);
+            else civilization.setShowingCenterJ(civilization.getShowingCenterJ() - moveParameter);
+        } else if (matcher.group("direction").equals("up")) {
+            GameMenu.showMap(civilization, civilization.getShowingCenterI() - moveParameter, civilization.getShowingCenterJ(),false);
+            if(civilization.getShowingCenterI() - moveParameter < 1) civilization.setShowingCenterI(1);
+            else civilization.setShowingCenterI(civilization.getShowingCenterI() - moveParameter);
+        } else if (matcher.group("direction").equals("down")) {
+            GameMenu.showMap(civilization, civilization.getShowingCenterI() + moveParameter, civilization.getShowingCenterJ(),false);
+            if(civilization.getShowingCenterI() + moveParameter > 18) civilization.setShowingCenterI(18);
+            else civilization.setShowingCenterI(civilization.getShowingCenterI() + moveParameter);
+        }
     }
 
 }

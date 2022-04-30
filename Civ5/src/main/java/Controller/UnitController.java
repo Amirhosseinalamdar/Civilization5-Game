@@ -256,10 +256,10 @@ public class UnitController{
                 chosenPath.tiles.get(0).setCivilian(unit);
                 unit.getTile().setCivilian(null);
             }
-            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
+            //changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
             unit.calcMovesTo(chosenPath.tiles.get(0));
             unit.setTile(chosenPath.tiles.get(0));
-            //changeTileStatus(unit.getTile(), TileStatus.CLEAR);
+            changeTileStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
         }
         if (chosenPath.tiles.size() > 0) unit.setStatus("has path");
@@ -426,4 +426,6 @@ public class UnitController{
     private static void closeAttackToUnit(Unit defendingUnit){
 
     }
+
+
 }

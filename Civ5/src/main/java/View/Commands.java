@@ -34,7 +34,9 @@ public enum Commands {
     CHOOSE_CITY2("^city (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$"),
     CREATE_UNIT("create (-u|--unit) (?<unitName>\\\\S+)"),
     PURCHASE_TILE("purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
-    LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)");
+    LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
+    SCROLL_MAP("scroll (-d|--direction) (?<direction>(right|left|up|down)) (?<number>\\d+)"),
+    SHOW_MAP_GLOBAL("show global map");
 
     private String regex;
 
