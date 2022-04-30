@@ -32,7 +32,7 @@ public enum Commands {
     CHOOSE_UNIT2("^unit (--type|-t) (?<unitType>(combat|noncombat)) (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$"),
     CHOOSE_CITY1("^city (--name|-n) (?<name>\\S+)$"),
     CHOOSE_CITY2("^city (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$"),
-    CREATE_UNIT("create (-u|--unit) (?<unitName>\\\\S+)"),
+    CREATE_UNIT("create (-u|--unit) (?<unitName>\\S+)"),
     PURCHASE_TILE("purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)");
 

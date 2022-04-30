@@ -55,8 +55,7 @@ public class Civilization {
     }
 
     public void createSettlerAndWarriorOnTile (Tile tile) {
-        UnitType tmp = UnitType.SETTLER;
-        Unit settler = new Unit(tmp);
+        Unit settler = new Unit(UnitType.SETTLER);
         settler.setCivilization(this);
         this.units.add(settler);
         settler.setTile(tile);
@@ -78,6 +77,7 @@ public class Civilization {
     }
 
     private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
+    
     public int getTotalGold() {
         return totalGold;
     }

@@ -8,6 +8,7 @@ import Model.User;
 import View.Commands;
 import View.GameMenu;
 
+import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -21,7 +22,13 @@ public class GameController {
         checkMyCivilization();
     }
 
-    public static void doTurn(String command) {
+    public static void doTurn (String command) {
+
+        if (command.equals("show map")) {
+            GameMenu.showMap(GameController.getCivilization());
+            return;
+        }
+
         Matcher matcher;
         if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
@@ -38,13 +45,14 @@ public class GameController {
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
             City chosenCity = getCityFromCommand(matcher);
             if (chosenCity == null) return;
+            System.out.println("name: " + chosenCity.getName());
             CityController.setCity(chosenCity);
             CityController.handleCityOption();
         }
         else System.out.println("game controller, invalid command");
     }
 
-    private static Unit getUnitFromCommand(Matcher matcher) {
+    private static Unit getUnitFromCommand (Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
         System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
         if (invalidPos(x, y)) {
@@ -86,6 +94,7 @@ public class GameController {
                 GameMenu.invalidPosForCity();
                 return null;
             }
+            System.out.println(matcher.group("name") + ", " + x + ", " + y);
             return Game.getTiles()[x][y].getCity();
         }
         catch (IllegalArgumentException i) {

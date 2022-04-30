@@ -29,6 +29,7 @@ public class City {
     }
 
     public City (Civilization civilization, Tile centerTile, String name) {
+        turnsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
         tiles.addAll(UnitController.getTileNeighbors(centerTile));
@@ -41,7 +42,7 @@ public class City {
         int goldSum = 0;
         for (Tile tile : tiles) goldSum += tile.getGoldPerTurn();
         System.out.println("now my gold = " + goldSum);
-        civilization.setTotalGold(goldSum);
+        civilization.setTotalGold(goldSum + civilization.getTotalGold());
 
         this.citizens = new ArrayList<>();
         this.name = name;
@@ -72,10 +73,16 @@ public class City {
     }
 
     public int getFoodPerTurn() {
+        foodPerTurn = 0;
+        for (Tile tile : tiles)
+            foodPerTurn += tile.getFoodPerTurn();
         return foodPerTurn;
     }
 
     public int getProductionPerTurn() {
+        productionPerTurn = 0;
+        for (Tile tile : tiles)
+            productionPerTurn += tile.getProductionPerTurn();
         return productionPerTurn;
     }
 
