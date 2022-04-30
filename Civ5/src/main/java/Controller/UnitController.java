@@ -268,6 +268,7 @@ public class UnitController{
 
     private static void changeTileStatus (Tile tile, TileStatus newStatus) {
         ArrayList <Tile> neighbors = getTileNeighbors(tile);
+        neighbors.add(tile);
         for (Tile neighbor : neighbors)
             civilization.getTileVisionStatuses()[neighbor.getIndexInMapI()][neighbor.getIndexInMapJ()] = newStatus;
     }

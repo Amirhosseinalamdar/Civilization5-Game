@@ -67,7 +67,7 @@ public class GameMenu {
 
     }
 
-    public static void showCity(City city) {
+    public static void showCity(City city){
 
     }
 
@@ -256,14 +256,21 @@ public class GameMenu {
 
     public static void showMap(Civilization civilization,int centerI,int centerJ,boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
         for (Unit unit : civilization.getUnits()) {//TODO test river
-            for (Tile tileNeighbor : UnitController.getTileNeighbors(unit.getTile()))
+            ArrayList<Tile> clearTiles = new ArrayList<>(UnitController.getTileNeighbors(unit.getTile()));
+            clearTiles.add(unit.getTile());
+            for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
 
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
-                civilization.setTileVisionStatuses(i, j, TileStatus.CLEAR);
-        int startingJ = calculateStartingJ(centerJ)/2;
+        for (City city : civilization.getCities()) {
+            ArrayList <Tile> clearTiles = new ArrayList<>();
+            for (Tile tile : city.getTiles()) {
+                clearTiles.add(tile);
+                clearTiles.addAll(UnitController.getTileNeighbors(tile));
+            }
+            for (Tile tileNeighbor : clearTiles)
+                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+        }        int startingJ = calculateStartingJ(centerJ)/2;
         int startingI = calculateStartingI(centerI)*6;
         boolean flag = false;
         boolean rightSideFlag = false;
@@ -539,5 +546,17 @@ public class GameMenu {
 
     public static void citizenLockError() {
         System.out.println("couldn't lock any citizen");
+    }
+
+    public static void noSuchUnitType() {
+        System.out.println("no such unit type exists");
+    }
+
+    public static void unreachedTech() {
+        System.out.println("you haven't reached necessary tech yet");
+    }
+
+    public static void notEnoughResource() {
+        System.out.println("you don't have enough resource");
     }
 }

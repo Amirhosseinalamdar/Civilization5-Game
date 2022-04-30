@@ -12,6 +12,11 @@ public enum UnitType {
     TANK(450, 4);
     private final int MP;
     private final int cost;
+
+    public boolean isPrimary() {
+        return this.equals(SETTLER) || this.equals(WORKER) || this.equals(WARRIOR) || this.equals(SCOUT);
+    }
+
     UnitType (int cost, int MP) {
         this.MP = MP;
         this.cost = cost;

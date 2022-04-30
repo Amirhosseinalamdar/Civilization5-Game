@@ -30,7 +30,12 @@ public class CityController {
         Matcher matcher = getCityDecision();
 
         if (matcher.pattern().toString().startsWith("create")) {
-
+            UnitType type = getUnitTypeFromString(matcher.group("unitName"));
+            if (type == null) {
+                GameMenu.noSuchUnitType();
+                return;
+            }
+            tryCreateUnit(type);
         }
 
         if (matcher.pattern().toString().startsWith("purchase tile")) {
@@ -122,6 +127,15 @@ public class CityController {
 
     }
 
+    private static UnitType getUnitTypeFromString (String string) {
+        try {
+            return UnitType.valueOf(string);
+        }
+        catch (IllegalArgumentException i) {
+            return null;
+        }
+    }
+
     private static boolean tileIsPurchasable (Tile targetTile) {
         boolean isNeighbor = false;
         for (Tile tile : city.getTiles()) {
@@ -170,11 +184,30 @@ public class CityController {
 
     }
 
-    private void createNewUnit(City city, UnitType unitType){
-        //hazine ha ra kam konim... turn oke she...
+    private static void tryCreateUnit (UnitType unitType){
+        if (! hasReachedTechForUnit(unitType)) {
+            GameMenu.unreachedTech();
+            return;
+        }
+        if (! hasEnoughResources(unitType)) {
+            GameMenu.notEnoughResource();
+            return;
+        }
+        city.getTurnsUntilNewProductions().put(unitType, calcTurnsForNewUnit(unitType));
     }
 
-    private void lockCitizen(){
+    private static int calcTurnsForNewUnit (UnitType unitType) {
+        return unitType.getCost() / city.getProductionPerTurn();
+    }
 
+    private static boolean hasReachedTechForUnit (UnitType unitType) {
+        if (unitType.isPrimary()) return true; //TODO
+        System.out.println("you are looking for advance tech :)");
+        return false;
+    }
+
+    private static boolean hasEnoughResources (UnitType unitType) {
+
+        return true; //TODO
     }
 }
