@@ -26,7 +26,7 @@ public class CityController {
         CityController.city = city;
     }
 
-    public static void handleCityOption() {
+    public static void handleCityOptions() {
         Matcher matcher = getCityDecision();
 
         if (matcher.pattern().toString().startsWith("create")) {

@@ -39,7 +39,7 @@ public class GameController {
                 return;
             }
             UnitController.setUnit(chosenUnit);
-            UnitController.handleUnitOption();
+            UnitController.handleUnitOptions();
         }
         else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
@@ -47,7 +47,10 @@ public class GameController {
             if (chosenCity == null) return;
             System.out.println("name: " + chosenCity.getName());
             CityController.setCity(chosenCity);
-            CityController.handleCityOption();
+            CityController.handleCityOptions();
+        }
+        else if ((matcher = Commands.getMatcher(command, Commands.MANAGE_CIVILIZATION)) != null) {
+            CivilizationController.handleCivilizationOptions();
         }
         else System.out.println("game controller, invalid command");
     }

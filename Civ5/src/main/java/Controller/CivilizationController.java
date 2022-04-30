@@ -7,10 +7,15 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 
 public class CivilizationController {
+
     private static Civilization civilization;
 
     public static void changeCivilization(Civilization civilization){
         CivilizationController.civilization = civilization;
+    }
+
+    public static void handleCivilizationOptions() {
+
     }
 
     private void addImprovement (Unit worker, Improvement improvement) {
@@ -34,7 +39,7 @@ public class CivilizationController {
          */
     }
 
-    private void askForNewResearch(Civilization civilization){
+    private void askForNewResearch(){
 
     }
 
