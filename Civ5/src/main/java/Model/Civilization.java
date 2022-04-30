@@ -23,6 +23,8 @@ public class Civilization {
     private int science;
     private int happiness;
     private CivSymbol civColor;
+    private int showingCenterI;
+    private int showingCenterJ;
 
     public void setTotalGold(int totalGold) {
         this.totalGold = totalGold;
@@ -35,28 +37,45 @@ public class Civilization {
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
         this.civColor = initCivSymbol();
+        this.showingCenterI = 1;
+        this.showingCenterJ = 2;
     }
 
-    private CivSymbol initCivSymbol() {
-        if (!CivSymbol.WHITE.isTaken()) return CivSymbol.WHITE;
-        else if (!CivSymbol.PURPLE.isTaken()) return CivSymbol.PURPLE;
-        else if (!CivSymbol.BLUE.isTaken()) return CivSymbol.BLUE;
-        else if (!CivSymbol.RED.isTaken()) return CivSymbol.RED;
-        else if (!CivSymbol.BLACK.isTaken()) return CivSymbol.BLACK;
+    public int getShowingCenterI() {
+        return showingCenterI;
+    }
+
+    public int getShowingCenterJ() {
+        return showingCenterJ;
+    }
+
+    public void setShowingCenterI(int showingCenterI) {
+        this.showingCenterI = showingCenterI;
+    }
+
+    public void setShowingCenterJ(int showingCenterJ) {
+        this.showingCenterJ = showingCenterJ;
+    }
+
+    private CivSymbol initCivSymbol(){
+        if(!CivSymbol.WHITE.isTaken()) return CivSymbol.WHITE;
+        else if(!CivSymbol.PURPLE.isTaken()) return CivSymbol.PURPLE;
+        else if(!CivSymbol.BLUE.isTaken()) return CivSymbol.BLUE;
+        else if(!CivSymbol.RED.isTaken()) return CivSymbol.RED;
+        else if(!CivSymbol.BLACK.isTaken()) return CivSymbol.BLACK;
         else {
             System.out.println("not enough symbols");
             return null;
         }
 
-    }
+     }
 
     public String getCivColor() {
         return civColor.getSymbol();
     }
 
-    public void createSettlerAndWarriorOnTile(Tile tile) {
-        UnitType tmp = UnitType.SETTLER;
-        Unit settler = new Unit(tmp);
+    public void createSettlerAndWarriorOnTile (Tile tile) {
+        Unit settler = new Unit(UnitType.SETTLER);
         settler.setCivilization(this);
         this.units.add(settler);
         settler.setTile(tile);
@@ -69,16 +88,16 @@ public class Civilization {
         tile.setMilitary(warrior);
     }
 
-    public void addCity(City city) {
+    public void addCity (City city) {
         this.cities.add(city);
     }
 
-    public void setTileVisionStatuses(int i, int j, TileStatus type) {
+    public void setTileVisionStatuses(int i,int j,TileStatus type) {
         this.tileVisionStatuses[i][j] = type;
     }
 
     private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
-
+    
     public int getTotalGold() {
         return totalGold;
     }

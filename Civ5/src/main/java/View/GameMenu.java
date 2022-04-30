@@ -67,7 +67,7 @@ public class GameMenu {
 
     }
 
-    public static void showCity(City city) {
+    public static void showCity(City city){
 
     }
 
@@ -235,35 +235,82 @@ public class GameMenu {
     }
 
     private static void printRoof() {
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < 3; j++) {
             System.out.print("   _____        ");
         }
         System.out.print('\n');
     }
 
-    public static void showMap(Civilization civilization) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
+    private static int calculateStartingJ(int centerJ){
+        if(centerJ%2 == 1) centerJ--;
+        if(centerJ < 1) return 0;
+        else if(centerJ > 17) return 14;
+        else return centerJ-2;
+    }
+
+    private static int calculateStartingI(int centerI){
+        if(centerI < 1) return 0;
+        else if(centerI > 18) return 17;
+        else return centerI-1;
+    }
+
+    public static void showMap(Civilization civilization,int centerI,int centerJ,boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
         for (Unit unit : civilization.getUnits()) {//TODO test river
-            for (Tile tileNeighbor : UnitController.getTileNeighbors(unit.getTile()))
+            ArrayList<Tile> clearTiles = new ArrayList<>(UnitController.getTileNeighbors(unit.getTile()));
+            clearTiles.add(unit.getTile());
+            for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
-                civilization.setTileVisionStatuses(i, j, TileStatus.CLEAR);
-        printRoof();
-        for (int i = 0; i < 123; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (i % 6 == 0) printLine1(i, j, civilization);
-                else if (i % 6 == 1) printLine2(i, j, civilization);
-                else if (i % 6 == 2) printLine3(i, j, civilization);
-                else if (i % 6 == 3) showXAndY((i - 3) / 6, 2 * j + 1, false, civilization);
-                else if (i % 6 == 4) showResource((i - 4) / 6, j * 2 + 1, false, civilization);
-                else printLine6(i, j, civilization);
+
+        for (City city : civilization.getCities()) {
+            ArrayList <Tile> clearTiles = new ArrayList<>();
+            for (Tile tile : city.getTiles()) {
+                clearTiles.add(tile);
+                clearTiles.addAll(UnitController.getTileNeighbors(tile));
+            }
+            for (Tile tileNeighbor : clearTiles)
+                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+        }        int startingJ = calculateStartingJ(centerJ)/2;
+        int startingI = calculateStartingI(centerI)*6;
+        boolean flag = false;
+        boolean rightSideFlag = false;
+        if(startingJ == 7) flag=true;
+        if (startingJ != 0)  rightSideFlag = true;
+        int length = 3,height = 18;
+        if(global){
+            startingI =0;
+            startingJ =0;
+            height = 123;
+            length = 10;
+        }
+        //printRoof();
+        for (int i = startingI; i < startingI + height; i++) {
+            for (int j = startingJ; j < startingJ + length; j++) {
+                if (i % 6 == 0) {
+                    if(j==startingJ && j!=0) System.out.print("  ");
+                    printLine1(i, j, civilization);
+                }else if (i % 6 == 1){
+                    if(j==startingJ && j!=0) System.out.print(" ");
+                    printLine2(i, j, civilization);
+                } else if (i % 6 == 2){
+                    printLine3(i, j, civilization);
+                } else if (i % 6 == 3){
+                    showXAndY((i - 3) / 6, 2 * j + 1, false, civilization);
+                } else if (i % 6 == 4){
+                    if(j == startingJ && j!=0) System.out.print(" ");
+                    showResource((i - 4) / 6, j * 2 + 1, false, civilization);
+                } else{
+                    if(j == startingJ && j!=0) System.out.print("  ");
+                    printLine6(i, j, civilization);
+                }
             }
 
             if (i % 6 == 3) System.out.print("\\");
-            else if (i % 6 == 4) System.out.print(
-                    Game.getTiles()[(i - 4) / 6][19].getTypeForCiv(civilization, (i - 4) / 6, 19).getColor() + " " + RESET + "\\");
-            else if (i % 6 == 5) System.out.print("\\");
+            else if (i % 6 == 4 ) {
+                System.out.print(Game.getTiles()[(i - 4) / 6][19].getTypeForCiv(civilization, (i - 4) / 6, 19).getColor());
+                if(flag || global) System.out.print(" ");
+                System.out.print(RESET + "\\");
+            }else if (i % 6 == 5) System.out.print("\\");
             else if (i % 6 == 0 && i > 2 && i != 120) System.out.print("/");
             else if (i % 6 == 1 && i > 2 && i != 121) System.out.print("/");
             else if (i % 6 == 2 && i > 2 && i != 122) System.out.print("/");
@@ -332,15 +379,20 @@ public class GameMenu {
         System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
         if (Game.getTiles()[i][j].getCity() != null &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
-            String output = "*";
-            String output1 = output.concat(Game.getTiles()[i][j].getCity().getName());
-            String output2 = output1.concat("        ");
-            System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
+            if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
+                String output = "*";
+                String output1 = output.concat(Game.getTiles()[i][j].getCity().getName());
+                String output2 = output1.concat("        ");
+                System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
+            } else
+                System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
         } else if (Game.getTiles()[i][j].getCity() != null) {
-            String output = Game.getTiles()[i][j].getCity().getName().concat("       ");
-            System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
-        } else if (Game.getTiles()[i][j].getMemberOfThisCity() != null)
-            System.out.print(Game.getTiles()[i][j].getMemberOfThisCity().getCivilization().getCivColor() + "    c    ");
+            if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
+                String output = Game.getTiles()[i][j].getCity().getName().concat("       ");
+                System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
+            } else
+                System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
+        }
         else System.out.print("         ");
         System.out.print(RESET);
     }
@@ -385,7 +437,7 @@ public class GameMenu {
         if (isEven) {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "\\" + RESET);
             else System.out.print("\\");
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor()+civilization.getCivColor());
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2);
             else System.out.print("       ");
@@ -393,7 +445,7 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
         } else {
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor()+civilization.getCivColor());
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2 + RESET);
             else System.out.print("       " + RESET);
@@ -478,5 +530,33 @@ public class GameMenu {
 
     public static void notEnoughGoldForTilePurchase() {
         System.out.println("can't purchase tile : not enough gold");
+    }
+
+    public static void noUnemployedCitizenAvailable() {
+        System.out.println("no unemployed citizen available: please choose one tile's citizen:");
+    }
+
+    public static void invalidPosForCitizen() {
+        System.out.println("chosen position is invalid");
+    }
+
+    public static void citizenNotYours() {
+        System.out.println("this citizen doesn't belong to chosen city");
+    }
+
+    public static void citizenLockError() {
+        System.out.println("couldn't lock any citizen");
+    }
+
+    public static void noSuchUnitType() {
+        System.out.println("no such unit type exists");
+    }
+
+    public static void unreachedTech() {
+        System.out.println("you haven't reached necessary tech yet");
+    }
+
+    public static void notEnoughResource() {
+        System.out.println("you don't have enough resource");
     }
 }

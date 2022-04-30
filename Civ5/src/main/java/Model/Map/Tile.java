@@ -24,17 +24,26 @@ public class Tile {
     private boolean isRaided;
     //private boolean isCity;
     private City city; // age null bashe city nis agar na capitale citie
-    private City memberOfThisCity;//TODO initialize she pls
+//    private City memberOfThisCity;//TODO initialize she pls
     //private ArrayList<River> rivers;
     private boolean isRiverAtLeft;
     private int centerX; // vertical
     private int centerY; // horizontal
     private int indexInMapI;
     private int indexInMapJ;
+    private Citizen workingCitizen;
 
-    public City getMemberOfThisCity() {
-        return memberOfThisCity;
+    public void setWorkingCitizen (Citizen citizen) {
+        this.workingCitizen = citizen;
     }
+
+    public Citizen getWorkingCitizen() {
+        return workingCitizen;
+    }
+
+//    //public City getMemberOfThisCity() {
+//        return memberOfThisCity;
+//    }
 
     public void setRiverAtLeft(boolean riverAtLeft) {
         isRiverAtLeft = riverAtLeft;

@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class City {
-    private ArrayList<Tile> tiles;
+    private ArrayList <Tile> tiles;
     private Civilization civilization;
     private int storedFood;
     private int foodPerTurn;
     private int productionPerTurn;
-    private HashMap<UnitType, Integer> turnsUntilNewProductions;
+    private HashMap <UnitType, Integer> turnsUntilNewProductions;
     private UnitType inProgressUnit;
-    private ArrayList<Citizen> citizens;
+    private ArrayList <Citizen> citizens;
     private int goldPerTurn;
     private int turnsUntilGrowth;
     private int HP;
@@ -28,7 +28,8 @@ public class City {
         return name;
     }
 
-    public City(Civilization civilization, Tile centerTile, String name) {
+    public City (Civilization civilization, Tile centerTile, String name) {
+        turnsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
         tiles.addAll(UnitController.getTileNeighbors(centerTile));
@@ -41,17 +42,17 @@ public class City {
         int goldSum = 0;
         for (Tile tile : tiles) goldSum += tile.getGoldPerTurn();
         System.out.println("now my gold = " + goldSum);
-        civilization.setTotalGold(goldSum);
+        civilization.setTotalGold(goldSum + civilization.getTotalGold());
 
         this.citizens = new ArrayList<>();
         this.name = name;
     }
 
-    public void updateStoredFood() {
+    public void updateStoredFood(){
 
     }
 
-    public void birthCitizen() {
+    public void birthCitizen(){
 
     }
 
@@ -72,10 +73,16 @@ public class City {
     }
 
     public int getFoodPerTurn() {
+        foodPerTurn = 0;
+        for (Tile tile : tiles)
+            foodPerTurn += tile.getFoodPerTurn();
         return foodPerTurn;
     }
 
     public int getProductionPerTurn() {
+        productionPerTurn = 0;
+        for (Tile tile : tiles)
+            productionPerTurn += tile.getProductionPerTurn();
         return productionPerTurn;
     }
 
