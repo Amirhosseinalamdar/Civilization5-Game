@@ -3,7 +3,7 @@ package Model.UnitPackage;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-public class Military extends Unit{
+public class Military extends Unit {
 
     private int combatStrength;
     private int rangedCombatStrength;
@@ -11,7 +11,7 @@ public class Military extends Unit{
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
     private int XP;
 
-    public Military (UnitType militaryType) {
+    public Military(UnitType militaryType) {
         super(militaryType);
     }
 
@@ -30,10 +30,11 @@ public class Military extends Unit{
         civilization.getUnits().remove(this);
     }
 
-    public void create(){
+    public void create() {
         //this.tile.setMilitary(this);
 //        this.civilization.units.add(this);
     }
+
     public void upgrade() {
         //TODO... change type (costs gold)
     }

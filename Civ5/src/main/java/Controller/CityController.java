@@ -15,12 +15,12 @@ public class CityController {
     private static Civilization civilization;
     private static City city;
 
-    public static void changeCivilization(Civilization civilization){
+    public static void changeCivilization(Civilization civilization) {
         CityController.civilization = civilization;
     }
 
 
-    public static void setCity (City city) {
+    public static void setCity(City city) {
         CityController.city = city;
     }
 
@@ -56,7 +56,7 @@ public class CityController {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (!matcher.find()) throw new RuntimeException();
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
-                                                Integer.parseInt(matcher.group("y"))))
+                        Integer.parseInt(matcher.group("y"))))
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
@@ -64,20 +64,20 @@ public class CityController {
         }
     }
 
-    private static boolean unitIsValid (String unitName) {
+    private static boolean unitIsValid(String unitName) {
         try {
             System.out.println("you have chosen: " + UnitType.valueOf(unitName) + " to create");
             return true;
-        }
-        catch (IllegalArgumentException i) {
+        } catch (IllegalArgumentException i) {
             return false;
         }
     }
+
     private void expandCity(City city) {
 
     }
 
-    private static boolean tileIsPurchasable (Tile targetTile) {
+    private static boolean tileIsPurchasable(Tile targetTile) {
         boolean isNeighbor = false;
         for (Tile tile : city.getTiles()) {
             if (tile.equals(targetTile)) {
@@ -93,21 +93,20 @@ public class CityController {
         return isNeighbor;
     }
 
-    private static void purchaseTile (Tile targetTile) {
+    private static void purchaseTile(Tile targetTile) {
         //view show options and check enough tiles //TODO
         //purchase that option
         int necessaryAmountOfGoldForPurchase = targetTile.getGoldPerTurn() * 3 + targetTile.getProductionPerTurn() +
-                                                targetTile.getFoodPerTurn() * 2;
+                targetTile.getFoodPerTurn() * 2;
         if (civilization.getTotalGold() >= necessaryAmountOfGoldForPurchase) {
             civilization.setTotalGold(civilization.getTotalGold() - necessaryAmountOfGoldForPurchase);
             city.getTiles().add(targetTile);
             targetTile.setCity(city);
-        }
-        else
+        } else
             GameMenu.notEnoughGoldForTilePurchase();
     }
 
-    private void askForNewProduction(City city){
+    private void askForNewProduction(City city) {
 
     }
 
@@ -125,11 +124,11 @@ public class CityController {
 
     }
 
-    private void createNewUnit(City city, UnitType unitType){
+    private void createNewUnit(City city, UnitType unitType) {
         //hazine ha ra kam konim... turn oke she...
     }
 
-    private void lockCitizen(){
+    private void lockCitizen() {
 
     }
 }

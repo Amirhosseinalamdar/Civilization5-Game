@@ -7,9 +7,9 @@ import Model.Map.Tile;
 import java.util.ArrayList;
 
 public class Unit {
-    protected UnitType type ;
+    protected UnitType type;
     protected Tile tile;
-    protected ArrayList <Tile> zonesOfControl;
+    protected ArrayList<Tile> zonesOfControl;
     protected Civilization civilization;
     protected int MP;
     protected int movesInTurn;
@@ -18,14 +18,14 @@ public class Unit {
     public static int MAX_HEALTH;
     protected Path path;
 
-    public Unit (UnitType unitType) {
+    public Unit(UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
         this.MP = unitType.getMP(); //TODO... temporary
     }
 
-    public void setPath (Path path) {
+    public void setPath(Path path) {
         this.path = path;
     }
 
@@ -120,7 +120,7 @@ public class Unit {
 
     //TODO change civilization -> controller
 
-    public void init(){
+    public void init() {
         //this.tile.setCivilian(this);
         //this.civilization.units.add(this);
     }
@@ -140,7 +140,7 @@ public class Unit {
         else if (string.equals("active")) this.status = UnitStatus.ACTIVE;
     }
 
-    public void calcMovesTo (Tile dest) {
+    public void calcMovesTo(Tile dest) {
         this.movesInTurn += dest.getMovementCost();
     }
 
@@ -152,5 +152,5 @@ public class Unit {
         return this.type.equals(UnitType.CATAPULT) || this.type.equals(UnitType.CANNON) ||
                 this.type.equals(UnitType.TREBUCHET) || this.type.equals(UnitType.ARTILLERY);
     }
-    
+
 }

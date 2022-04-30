@@ -46,7 +46,7 @@ public enum Commands {
         for (String string : strings) {
             if (string.startsWith("player")) {
                 players.put(Integer.parseInt(string.substring(6, 7)), string.substring(8));
-            }else if (string.startsWith("p")){
+            } else if (string.startsWith("p")) {
                 players.put(Integer.parseInt(string.substring(1, 2)), string.substring(3));
             }
         }

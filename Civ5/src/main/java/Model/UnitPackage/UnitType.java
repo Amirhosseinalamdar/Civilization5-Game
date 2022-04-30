@@ -12,13 +12,16 @@ public enum UnitType {
     TANK(450, 4);
     private final int MP;
     private final int cost;
-    UnitType (int cost, int MP) {
+
+    UnitType(int cost, int MP) {
         this.MP = MP;
         this.cost = cost;
     }
+
     public int getCost() {
         return cost;
     }
+
     public int getMP() {
         return MP;
     }

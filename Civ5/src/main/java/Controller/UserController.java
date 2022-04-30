@@ -116,7 +116,8 @@ public class UserController {
     public static void readDataFromJson() {
         try {
             String json = new String(Files.readAllBytes(Paths.get("json.json")));
-            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>(){}.getType());
+            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
+            }.getType());
         } catch (IOException e) {
             e.printStackTrace();
         }

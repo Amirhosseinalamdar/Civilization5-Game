@@ -15,8 +15,7 @@ public class LoginMenu {
             if (Commands.getMatcher(command, Commands.EXIT_MENU) != null) {
                 scanner.close();
                 return 1;
-            }
-            else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
+            } else if (Commands.getMatcher(command, Commands.CURRENT_MENU) != null) {
                 System.out.println("Login Menu");
             } else if ((matcher = Commands.getMatcher(command, Commands.REGISTER1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.REGISTER2)) != null ||

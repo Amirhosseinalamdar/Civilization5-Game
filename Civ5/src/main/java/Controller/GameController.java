@@ -23,8 +23,7 @@ public class GameController {
 
     public static void doTurn(String command) {
         Matcher matcher;
-        if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
-                (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
+        if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null || (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
             if (chosenUnit.getMovesInTurn() >= chosenUnit.getMP()) {
@@ -34,15 +33,12 @@ public class GameController {
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOption();
             GameMenu.showMap(civilization);
-        }
-        else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
-                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null || (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
             City chosenCity = getCityFromCommand(matcher);
             if (chosenCity == null) return;
             CityController.setCity(chosenCity);
             CityController.handleCityOption();
-        }
-        else System.out.println("game controller, invalid command");
+        } else System.out.println("game controller, invalid command");
     }
 
     private static Unit getUnitFromCommand(Matcher matcher) {
@@ -76,7 +72,7 @@ public class GameController {
         return null;
     }
 
-    private static City getCityFromCommand (Matcher matcher) {
+    private static City getCityFromCommand(Matcher matcher) {
         try {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (invalidPos(x, y)) {
@@ -88,8 +84,7 @@ public class GameController {
                 return null;
             }
             return Game.getTiles()[x][y].getCity();
-        }
-        catch (IllegalArgumentException i) {
+        } catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())
                 if (city.getName().equals(matcher.group("name"))) return city;
             GameMenu.invalidNameForCity();

@@ -20,7 +20,7 @@ public class Tile {
     private double combatEffect;
     private Military military;
     private Unit civilian;
-    private Pair <Improvement, Integer> improvementInProgress;
+    private Pair<Improvement, Integer> improvementInProgress;
     private boolean isRaided;
     //private boolean isCity;
     private City city; // age null bashe city nis agar na capitale citie
@@ -84,7 +84,7 @@ public class Tile {
         return city;
     }
 
-    public void setCity (City city) {
+    public void setCity(City city) {
         this.city = city;
     }
 
@@ -124,11 +124,11 @@ public class Tile {
         return centerY;
     }
 
-    public void setMilitary (Military military) {
+    public void setMilitary(Military military) {
         this.military = military;
     }
 
-    public void setCivilian (Unit civilian) {
+    public void setCivilian(Unit civilian) {
         this.civilian = civilian;
     }
 
@@ -136,17 +136,17 @@ public class Tile {
         this.type = type;
     }
 
-    public TerrainType getTypeForCiv(Civilization civilization,int i,int j) {
-        if(civilization.getTileVisionStatuses()[i][j] == TileStatus.FOGGY) return TerrainType.FOGGY;
+    public TerrainType getTypeForCiv(Civilization civilization, int i, int j) {
+        if (civilization.getTileVisionStatuses()[i][j] == TileStatus.FOGGY) return TerrainType.FOGGY;
         return type;
     }
 
-    public void initializeTile(TerrainType type,TerrainFeature feature){//first time init
+    public void initializeTile(TerrainType type, TerrainFeature feature) {//first time init
         this.goldPerTurn = type.getGold() + feature.getGold();
         this.foodPerTurn = type.getFood() + feature.getFood();
-        this.productionPerTurn = type.getProduction() +feature.getProduction();
+        this.productionPerTurn = type.getProduction() + feature.getProduction();
         this.combatEffect = type.getBattleEffect() + feature.getBattleEffect();
-        this.movementCost = type.getMovementCost()+feature.getMovementCost();
+        this.movementCost = type.getMovementCost() + feature.getMovementCost();
     }
 
     public void setFeature(TerrainFeature feature) {
