@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Map.City;
+import Model.Map.CityStatus;
 import Model.Map.Improvement;
 import Model.Technology;
 import Model.UnitPackage.Military;
@@ -62,10 +63,17 @@ public class CivilizationController {
 
     }
 
-    private void updateCivilizationsInfos() {
+    public static void updateCivilization() {
+        int science = 0;
+        int gold = 0;
+        for (City city : civilization.getCities()) {
+            CityController.updateCityInfos(city);
+            science += city.getSciencePerTurn();
+            gold += city.getGoldPerTurn();
+        }
+        civilization.setScience(science + civilization.getScience());
+        civilization.setTotalGold(gold + civilization.getTotalGold());
         /**
-         ...
-         ...
          +update happiness
          +update technology
          */
