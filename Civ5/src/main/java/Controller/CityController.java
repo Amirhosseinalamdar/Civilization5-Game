@@ -2,10 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Game;
-import Model.Map.Citizen;
-import Model.Map.City;
-import Model.Map.Resource;
-import Model.Map.Tile;
+import Model.Map.*;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
@@ -21,7 +18,6 @@ public class CityController {
     public static void changeCivilization(Civilization civilization){
         CityController.civilization = civilization;
     }
-
 
     public static void setCity (City city) {
         CityController.city = city;
@@ -128,10 +124,6 @@ public class CityController {
         tile.setWorkingCitizen(citizen);
     }
 
-    private void expandCity(City city) {
-
-    }
-
     private static UnitType getUnitTypeFromString (String string) {
         try {
             return UnitType.valueOf(string);
@@ -175,14 +167,66 @@ public class CityController {
 
     }
 
-    private void updateCitiesInfos() {
-        /**
-         * food
-         * stored food
-         * consumed food by settlers
-         * birth citizen if enough food
-         * + production and other infos
-         */
+    public static void updateCityInfos(City city) {
+        int food = 0;
+        int production = 0;
+        int gold = 0;
+        int science = 0;
+        for (Citizen citizen : city.getCitizens()) {
+            if (citizen.getTile() == null) production++;
+            else {
+                food += citizen.getTile().getFoodPerTurn();
+                production += citizen.getTile().getProductionPerTurn();
+                gold += citizen.getTile().getGoldPerTurn();
+            }
+        }
+        if (city.getCityStatus() == CityStatus.CAPITAL) science += 3;
+        science += city.getCitizens().size();
+        city.setFoodPerTurn(food);
+        city.setProductionPerTurn(production);
+        city.setGoldPerTurn(gold);
+        city.setSciencePerTurn(science);
+        city.updateStoredFood();
+        handlePopulation(city);
+        updateBorder(city);
+    }
+
+    private static void handlePopulation(City city) {
+        if (city.getStoredFood() > 0) {
+            city.setLostCitizenLastFood(city.getCitizenNecessityFood());;
+            city.setGainCitizenLastFood(city.getGainCitizenLastFood() - city.getStoredFood());
+            if (city.getGainCitizenLastFood() <= 0) {
+                Citizen citizen = new Citizen(city, city.getTiles().get(0));
+                city.getCitizens().add(citizen);
+                city.setCitizenNecessityFood((int)(city.getCitizenNecessityFood() * 1.5));
+                city.setGainCitizenLastFood(city.getCitizenNecessityFood());
+            }
+            city.setTurnsUntilBirthCitizen(city.getGainCitizenLastFood() / city.getStoredFood());
+        } else if (city.getStoredFood() == 0) city.setTurnsUntilBirthCitizen(0);
+        else if (city.getCitizens().size() > 1){
+            city.setGainCitizenLastFood(city.getCitizenNecessityFood());
+            city.setLostCitizenLastFood(city.getLostCitizenLastFood() + city.getStoredFood());
+            if (city.getLostCitizenLastFood() <= 0) {
+                city.getCitizens().remove(city.getCitizens().size() - 1);
+                city.setCitizenNecessityFood((int)(city.getCitizenNecessityFood() * 0.66));
+                city.setLostCitizenLastFood(city.getCitizenNecessityFood());
+            }
+            city.setTurnsUntilDeathCitizen(city.getLostCitizenLastFood() / city.getStoredFood());
+        }
+    }
+
+    private static void updateBorder(City city) {
+        city.setBorderLastCost(city.getBorderLastCost() - (city.getCitizens().size() + city.getStoredFood()));
+        if (city.getBorderLastCost() <= 0) {
+            expandCity(city);
+            city.setBorderExpansionCost((int)(city.getBorderExpansionCost() * 1.5));
+            city.setBorderLastCost(city.getBorderExpansionCost());
+        }
+        city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
+    }
+
+    public static void expandCity(City city) {
+        //
     }
 
     private void cityAttackToUnit(City city, Unit unit) {
