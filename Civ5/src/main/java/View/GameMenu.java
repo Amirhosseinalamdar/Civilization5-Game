@@ -56,7 +56,6 @@ public class GameMenu {
     }
 
     public static void showBanner(City city) {
-
     }
 
     public static void cityOutput(City city) {
@@ -67,8 +66,13 @@ public class GameMenu {
 
     }
 
-    public static void showCity(City city){
-
+    public static void showCityOutcome(City city){
+        System.out.println("food: " + city.getFoodPerTurn());
+        System.out.println("production: " + city.getProductionPerTurn());
+        System.out.println("gold: " + city.getGoldPerTurn());
+        System.out.println("science: " + city.getSciencePerTurn());
+        System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
+        System.out.println("turns until growth population: " + city.getTurnsUntilGrowthPopulation());
     }
 
     public static void cityShopMenu(City city) {
