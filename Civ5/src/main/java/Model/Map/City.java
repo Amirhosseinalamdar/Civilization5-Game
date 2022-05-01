@@ -154,7 +154,7 @@ public class City {
     }
 
     public void updateStoredFood(){
-        int food = this.foodPerTurn - (this.citizens.size() * 2);
+        int food = this.foodPerTurn - ((this.citizens.size() - 1) * 2);
         if (food < 0) storedFood = food;
         else if (inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
@@ -162,6 +162,7 @@ public class City {
 
     public void handlePopulation() {
         if (storedFood > 0) {
+            lostCitizenLastFood = citizenNecessityFood;
             gainCitizenLastFood -= storedFood;
             if (gainCitizenLastFood <= 0) {
                 Citizen citizen = new Citizen(this, tiles.get(0));
@@ -172,6 +173,7 @@ public class City {
             turnsUntilBirthCitizen = gainCitizenLastFood / storedFood;
         } else if (storedFood == 0) turnsUntilBirthCitizen = 0;
         else if (citizens.size() > 1){
+            gainCitizenLastFood = citizenNecessityFood;
             lostCitizenLastFood += storedFood;
             if (lostCitizenLastFood <= 0) {
                 citizens.remove(citizens.size() - 1);
