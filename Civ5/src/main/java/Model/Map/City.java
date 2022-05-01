@@ -11,13 +11,18 @@ public class City {
     private ArrayList <Tile> tiles;
     private Civilization civilization;
     private int storedFood;
+    private int goldPerTurn;
     private int foodPerTurn;
     private int productionPerTurn;
     private int sciencePerTurn;
     private HashMap <UnitType, Integer> turnsUntilNewProductions;
     private UnitType inProgressUnit;
     private ArrayList <Citizen> citizens;
-    private int goldPerTurn;
+    private int turnsUntilBirthCitizen;
+    private int turnsUntilDeathCitizen;
+    private int citizenNecessityFood;
+    private int gainCitizenLastFood;
+    private int lostCitizenLastFood;
     private int HP;
     private int combatStrength;
     private int rangedCombatStrength;
@@ -34,13 +39,18 @@ public class City {
             tile.setCity(this);
 
         this.civilization = civilization;
+        if (civilization.getCities().isEmpty()) cityStatus = CityStatus.CAPITAL;
+        else cityStatus = CityStatus.NORMAL;
         civilization.addCity(this);
         int goldSum = 0;
         for (Tile tile : tiles) goldSum += tile.getGoldPerTurn();
         System.out.println("now my gold = " + goldSum);
         civilization.setTotalGold(goldSum + civilization.getTotalGold());
-
+        //TODO ina inja chi migan
         this.citizens = new ArrayList<>();
+        this.citizenNecessityFood = 10;
+        this.gainCitizenLastFood = 10;
+        this.lostCitizenLastFood = 10;
         this.name = name;
     }
 
@@ -61,35 +71,27 @@ public class City {
     }
 
     public int getFoodPerTurn() {
-        foodPerTurn = 0;
-        for (Tile tile : tiles)
-            foodPerTurn += tile.getFoodPerTurn();
         return foodPerTurn;
     }
 
     public int getProductionPerTurn() {
-        productionPerTurn = 0;
-        for (Tile tile : tiles)
-            productionPerTurn += tile.getProductionPerTurn();
         return productionPerTurn;
-    }
-
-    public int getSciencePerTurn() {
-        return sciencePerTurn;
     }
 
     public int getGoldPerTurn() {
         return goldPerTurn;
     }
 
-    public int getTurnsUntilGrowthBorder() {
-        //TODO
-        return 0;
+    public int getSciencePerTurn() {
+        return sciencePerTurn;
     }
 
-    public int getTurnsUntilGrowthPopulation() {
-        //TODO
-        return 0;
+    public int getTurnsUntilBirthCitizen() {
+        return turnsUntilBirthCitizen;
+    }
+
+    public int getTurnsUntilDeathCitizen() {
+        return turnsUntilDeathCitizen;
     }
 
     public HashMap<UnitType, Integer> getTurnsUntilNewProductions() {
@@ -120,12 +122,60 @@ public class City {
         return cityStatus;
     }
 
-    public void updateStoredFood(){
-
+    public void setStoredFood(int storedFood) {
+        this.storedFood = storedFood;
     }
 
-    public void birthCitizen(){
+    public void setFoodPerTurn(int foodPerTurn) {
+        this.foodPerTurn = foodPerTurn;
+    }
 
+    public void setProductionPerTurn(int productionPerTurn) {
+        this.productionPerTurn = productionPerTurn;
+    }
+
+    public void setGoldPerTurn(int goldPerTurn) {
+        this.goldPerTurn = goldPerTurn;
+    }
+
+    public void setSciencePerTurn(int sciencePerTurn) {
+        this.sciencePerTurn = sciencePerTurn;
+    }
+
+    public void setTurnsUntilBirthCitizen(int turnsUntilBirthCitizen) {
+        this.turnsUntilBirthCitizen = turnsUntilBirthCitizen;
+    }
+
+    public void setTurnsUntilDeathCitizen(int turnsUntilDeathCitizen) {
+        this.turnsUntilDeathCitizen = turnsUntilDeathCitizen;
+    }
+
+    public void updateStoredFood(){
+        int food = this.foodPerTurn - (this.citizens.size() * 2);
+        if (food < 0) storedFood = food;
+        else if (inProgressUnit != UnitType.SETTLER) storedFood = food;
+    }
+
+    public void handlePopulation() {
+        if (storedFood > 0) {
+            gainCitizenLastFood -= storedFood;
+            if (gainCitizenLastFood <= 0) {
+                Citizen citizen = new Citizen(this, tiles.get(0));
+                citizens.add(citizen);
+                citizenNecessityFood *= 1.5;
+                gainCitizenLastFood = citizenNecessityFood;
+            }
+            turnsUntilBirthCitizen = gainCitizenLastFood / storedFood;
+        } else if (storedFood == 0) turnsUntilBirthCitizen = 0;
+        else if (citizens.size() > 1){
+            lostCitizenLastFood += storedFood;
+            if (lostCitizenLastFood <= 0) {
+                citizens.remove(citizens.size() - 1);
+                citizenNecessityFood *= 0.66;
+                lostCitizenLastFood = citizenNecessityFood;
+            }
+            turnsUntilDeathCitizen = lostCitizenLastFood / storedFood;
+        }
     }
 
     public void calculateStrength() {
