@@ -1,6 +1,7 @@
 package Model.Map;
 
 import Controller.CityController;
+import Controller.GameController;
 import Controller.UnitController;
 import Model.Civilization;
 import Model.UnitPackage.UnitType;
@@ -37,7 +38,7 @@ public class City {
         turnsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
-        tiles.addAll(UnitController.getTileNeighbors(centerTile));
+        tiles.addAll(GameController.getTileNeighbors(centerTile));
 
         for (Tile tile : tiles)
             tile.setCity(this);

@@ -3,11 +3,13 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
+import Model.Map.Tile;
 import Model.UnitPackage.Unit;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
 
@@ -159,6 +161,30 @@ public class GameController {
             if(civilization.getShowingCenterI() + moveParameter > 18) civilization.setShowingCenterI(18);
             else civilization.setShowingCenterI(civilization.getShowingCenterI() + moveParameter);
         }
+    }
+
+    public static ArrayList<Tile> getTileNeighbors (Tile startingTile) {
+        ArrayList <Tile> neighbors = new ArrayList<>();
+        int indexI = startingTile.getIndexInMapI(), indexJ = startingTile.getIndexInMapJ();
+
+        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
+            if (GameController.invalidPos(i, indexJ)) continue;
+            neighbors.add(Game.getTiles()[i][indexJ]);
+        }
+
+        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
+            if (GameController.invalidPos(indexI, j)) continue;
+            neighbors.add(Game.getTiles()[indexI][j]);
+        }
+
+        if (indexJ % 2 == 0) indexI--;
+        else indexI++;
+
+        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
+            if (GameController.invalidPos(indexI, j)) continue;
+            neighbors.add(Game.getTiles()[indexI][j]);
+        }
+        return neighbors;
     }
 
 }

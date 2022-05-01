@@ -183,7 +183,7 @@ public class UnitController{
     private static boolean canFoundCityHere() {
         ArrayList <Tile> beginningTiles = new ArrayList<>();
         beginningTiles.add(unit.getTile());
-        beginningTiles.addAll(getTileNeighbors(unit.getTile()));
+        beginningTiles.addAll(GameController.getTileNeighbors(unit.getTile()));
         for (Tile tile : beginningTiles)
             if (tile.getCity() != null) return false;
         return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
@@ -224,7 +224,7 @@ public class UnitController{
         while (paths.size() > 0) {
             Path path = paths.get(0);
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
-            for (Tile neighborTile : getTileNeighbors(lastTile)) {
+            for (Tile neighborTile : GameController.getTileNeighbors(lastTile)) {
                 if (! isTileWalkable(neighborTile, unit)) continue;
                 boolean isRouteRepetitive = false;
                 for (Tile oneOfPreviousTiles : path.tiles) {
@@ -267,14 +267,14 @@ public class UnitController{
     }
 
     private static void changeTileStatus (Tile tile, TileStatus newStatus) {
-        ArrayList <Tile> neighbors = getTileNeighbors(tile);
+        ArrayList <Tile> neighbors = GameController.getTileNeighbors(tile);
         neighbors.add(tile);
         for (Tile neighbor : neighbors)
             civilization.getTileVisionStatuses()[neighbor.getIndexInMapI()][neighbor.getIndexInMapJ()] = newStatus;
     }
 
     public static boolean areNeighbors (Tile first, Tile second) {
-        ArrayList <Tile> neighborsOfFirst = getTileNeighbors(first);
+        ArrayList <Tile> neighborsOfFirst = GameController.getTileNeighbors(first);
         for (Tile tile : neighborsOfFirst)
             if (tile.equals(second)) return true;
         return false;
@@ -317,30 +317,6 @@ public class UnitController{
         }
 
         paths.removeIf(path -> !isTileWalkable(path.tiles.get(0), unit));
-    }
-
-    public static ArrayList <Tile> getTileNeighbors (Tile startingTile) {
-        ArrayList <Tile> neighbors = new ArrayList<>();
-        int indexI = startingTile.getIndexInMapI(), indexJ = startingTile.getIndexInMapJ();
-
-        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
-            if (GameController.invalidPos(i, indexJ)) continue;
-            neighbors.add(Game.getTiles()[i][indexJ]);
-        }
-
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
-        }
-
-        if (indexJ % 2 == 0) indexI--;
-        else indexI++;
-
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
-        }
-        return neighbors;
     }
 
     public static void doRemainingMissions() {
