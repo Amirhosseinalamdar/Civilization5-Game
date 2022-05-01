@@ -66,7 +66,7 @@ public class GameMenu {
 
     }
 
-    public static void showCityOutcome(City city){
+    public static void showCityOutput(City city){
         System.out.println("food: " + city.getFoodPerTurn());
         System.out.println("production: " + city.getProductionPerTurn());
         System.out.println("gold: " + city.getGoldPerTurn());
