@@ -193,7 +193,7 @@ public class CityController {
 
     private static void handlePopulation(City city) {
         if (city.getStoredFood() > 0) {
-            city.setLostCitizenLastFood(city.getCitizenNecessityFood());;
+            city.setLostCitizenLastFood(city.getCitizenNecessityFood());
             city.setGainCitizenLastFood(city.getGainCitizenLastFood() - city.getStoredFood());
             if (city.getGainCitizenLastFood() <= 0) {
                 Citizen citizen = new Citizen(city, city.getTiles().get(0));
