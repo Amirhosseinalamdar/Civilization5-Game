@@ -60,6 +60,7 @@ public class CityController {
             }
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
         }
+        if (matcher.pattern().toString().startsWith("show")) GameMenu.showCityOutput(city);
     }
 
     public static Matcher getCityDecision() {
@@ -83,6 +84,9 @@ public class CityController {
                                                 Integer.parseInt(matcher.group("y"))))
                     return matcher;
                 GameMenu.indexOutOfArray();
+            }
+            if (Commands.getMatcher(command, Commands.SHOW_OUTPUT) != null) {
+                return matcher;
             }
             System.out.println("city decision wasn't valid");
         }

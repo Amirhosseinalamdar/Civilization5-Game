@@ -13,20 +13,18 @@ public class City {
     private int storedFood;
     private int foodPerTurn;
     private int productionPerTurn;
+    private int sciencePerTurn;
     private HashMap <UnitType, Integer> turnsUntilNewProductions;
     private UnitType inProgressUnit;
     private ArrayList <Citizen> citizens;
     private int goldPerTurn;
-    private int turnsUntilGrowth;
+    private int turnsUntilGrowthBorder;
+    private int turnsUntilGrowthPopulation;
     private int HP;
     private int combatStrength;
     private int rangedCombatStrength;
     private CityStatus cityStatus;
     private final String name;
-
-    public String getName() {
-        return name;
-    }
 
     public City (Civilization civilization, Tile centerTile, String name) {
         turnsUntilNewProductions = new HashMap<>();
@@ -48,16 +46,8 @@ public class City {
         this.name = name;
     }
 
-    public void updateStoredFood(){
-
-    }
-
-    public void birthCitizen(){
-
-    }
-
-    public void calculateStrength() {
-        //TODO update strength based on the unit inside the city
+    public String getName() {
+        return name;
     }
 
     public ArrayList<Tile> getTiles() {
@@ -86,6 +76,18 @@ public class City {
         return productionPerTurn;
     }
 
+    public int getSciencePerTurn() {
+        return sciencePerTurn;
+    }
+
+    public int getGoldPerTurn() {
+        return goldPerTurn;
+    }
+
+    public int getTurnsUntilGrowthBorder() {
+        return turnsUntilGrowthBorder;
+    }
+
     public HashMap<UnitType, Integer> getTurnsUntilNewProductions() {
         return turnsUntilNewProductions;
     }
@@ -98,12 +100,8 @@ public class City {
         return citizens;
     }
 
-    public int getGoldPerTurn() {
-        return goldPerTurn;
-    }
-
-    public int getTurnsUntilGrowth() {
-        return turnsUntilGrowth;
+    public int getTurnsUntilGrowthPopulation() {
+        return turnsUntilGrowthPopulation;
     }
 
     public int getHP() {
@@ -120,5 +118,17 @@ public class City {
 
     public CityStatus getCityStatus() {
         return cityStatus;
+    }
+
+    public void updateStoredFood(){
+
+    }
+
+    public void birthCitizen(){
+
+    }
+
+    public void calculateStrength() {
+        //TODO update strength based on the unit inside the city
     }
 }
