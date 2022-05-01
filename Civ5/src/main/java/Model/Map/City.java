@@ -18,8 +18,6 @@ public class City {
     private UnitType inProgressUnit;
     private ArrayList <Citizen> citizens;
     private int goldPerTurn;
-    private int turnsUntilGrowthBorder;
-    private int turnsUntilGrowthPopulation;
     private int HP;
     private int combatStrength;
     private int rangedCombatStrength;
@@ -85,7 +83,13 @@ public class City {
     }
 
     public int getTurnsUntilGrowthBorder() {
-        return turnsUntilGrowthBorder;
+        //TODO
+        return 0;
+    }
+
+    public int getTurnsUntilGrowthPopulation() {
+        //TODO
+        return 0;
     }
 
     public HashMap<UnitType, Integer> getTurnsUntilNewProductions() {
@@ -98,10 +102,6 @@ public class City {
 
     public ArrayList<Citizen> getCitizens() {
         return citizens;
-    }
-
-    public int getTurnsUntilGrowthPopulation() {
-        return turnsUntilGrowthPopulation;
     }
 
     public int getHP() {

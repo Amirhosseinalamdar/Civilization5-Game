@@ -149,5 +149,6 @@ public class Civilization {
             for (Tile tile :city.getTiles())
                 resources.add(tile.getResource());
         return resources;
+        //TODO
     }
 }
