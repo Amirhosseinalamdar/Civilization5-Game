@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CivilizationController;
 import Controller.GameController;
 import Controller.UnitController;
 import Model.Civilization;
@@ -26,6 +27,7 @@ public class GameMenu {
             if (command.equals("next turn")) GameController.updateGame();
             else {
                 GameController.setCivilization();
+                CivilizationController.updateCivilization();
                 GameController.doTurn(command);
             }
         } while (scanner.hasNextLine());
@@ -36,7 +38,6 @@ public class GameMenu {
         //return null;
     }
 
-
     public static Tile showRangedAttackOptions(Military military) {
         //return a tile based on scanner and inputs and military.tile
         return null;
@@ -45,7 +46,6 @@ public class GameMenu {
     public static void showUnitOptions(Unit unit) {
         System.out.println("one option for now... please enter \"move\"");
     }
-
 
     public static void notEnoughMoves() {
         System.out.println("unit doesn't have enough moves");
@@ -71,8 +71,10 @@ public class GameMenu {
         System.out.println("production: " + city.getProductionPerTurn());
         System.out.println("gold: " + city.getGoldPerTurn());
         System.out.println("science: " + city.getSciencePerTurn());
+        if (city.getStoredFood() > 0) System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
+        else if (city.getStoredFood() < 0) System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
+        else System.out.println("turns until growth citizen: -");
         System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
-        System.out.println("turns until growth population: " + city.getTurnsUntilGrowthPopulation());
     }
 
     public static void cityShopMenu(City city) {
@@ -260,7 +262,7 @@ public class GameMenu {
 
     public static void showMap(Civilization civilization,int centerI,int centerJ,boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
         for (Unit unit : civilization.getUnits()) {//TODO test river
-            ArrayList<Tile> clearTiles = new ArrayList<>(UnitController.getTileNeighbors(unit.getTile()));
+            ArrayList<Tile> clearTiles = new ArrayList<>(GameController.getTileNeighbors(unit.getTile()));
             clearTiles.add(unit.getTile());
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
@@ -270,7 +272,7 @@ public class GameMenu {
             ArrayList <Tile> clearTiles = new ArrayList<>();
             for (Tile tile : city.getTiles()) {
                 clearTiles.add(tile);
-                clearTiles.addAll(UnitController.getTileNeighbors(tile));
+                clearTiles.addAll(GameController.getTileNeighbors(tile));
             }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
