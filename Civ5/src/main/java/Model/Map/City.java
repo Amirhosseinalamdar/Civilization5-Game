@@ -48,6 +48,9 @@ public class City {
         civilization.setTotalGold(goldSum + civilization.getTotalGold());
         //TODO ina inja chi migan
         this.citizens = new ArrayList<>();
+        //TODO ehtemalan bayad inchenin chizi inja dashte bashim
+//        this.citizens.add(new Citizen(this, centerTile));
+//        this.citizens.add(new Citizen(this, centerTile));
         this.citizenNecessityFood = 10;
         this.gainCitizenLastFood = 10;
         this.lostCitizenLastFood = 10;
@@ -153,7 +156,8 @@ public class City {
     public void updateStoredFood(){
         int food = this.foodPerTurn - (this.citizens.size() * 2);
         if (food < 0) storedFood = food;
-        else if (inProgressUnit != UnitType.SETTLER) storedFood = food;
+        else if (inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
+        else storedFood = food;
     }
 
     public void handlePopulation() {
