@@ -25,7 +25,7 @@ public class GameController {
     public static void doTurn (String command) {
 
         Matcher matcher;
-        if((matcher =Commands.getMatcher(command, Commands.SHOW_MAP_GLOBAL)) != null)
+        if(Commands.getMatcher(command, Commands.SHOW_MAP_GLOBAL) != null)
             GameMenu.showMap(civilization,0,0,true);
         else if (command.equals("show map"))
             GameMenu.showMap(civilization, civilization.getShowingCenterI(),civilization.getShowingCenterJ(),false);
@@ -48,7 +48,7 @@ public class GameController {
             CityController.setCity(chosenCity);
             CityController.handleCityOptions();
         }
-        else if ((matcher = Commands.getMatcher(command, Commands.MANAGE_CIVILIZATION)) != null) {
+        else if (Commands.getMatcher(command, Commands.MANAGE_CIVILIZATION) != null) {
             CivilizationController.handleCivilizationOptions();
         }else if((matcher = Commands.getMatcher(command,Commands.SCROLL_MAP)) != null) {
             scrollOnMap(matcher);
@@ -133,6 +133,7 @@ public class GameController {
             UnitController.setUnit(unit);
             UnitController.doRemainingMissions();
         }
+        CivilizationController.updateCivilization();
     }
 
     public static boolean gameIsOver() {

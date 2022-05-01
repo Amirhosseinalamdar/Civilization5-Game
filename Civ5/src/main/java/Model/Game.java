@@ -38,7 +38,7 @@ public class Game {
     public static void nextTurn() {
         turn++;
         turn %= players.size();
-        time++;
+        if (turn == 0) time++;
     }
 
     public static void generateGame(ArrayList<User> users) {

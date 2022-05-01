@@ -33,6 +33,7 @@ public class Civilization {
     public Civilization() {
         cities = new ArrayList<>();
         units = new ArrayList<>();
+        turnsUntilNewTechnologies = new HashMap<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
@@ -137,6 +138,10 @@ public class Civilization {
 
     public HashMap<Resource, Boolean> getIsLuxuryResourceReached() {
         return isLuxuryResourceReached;
+    }
+
+    public void setScience(int science) {
+        this.science = science;
     }
 
     public void increaseTotalGold() {
