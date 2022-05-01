@@ -22,7 +22,7 @@ public class Civilization {
     private ArrayList<City> builtCities;
     private int science;
     private int happiness;
-    private CivSymbol civColor;
+    private final CivSymbol civColor;
     private int showingCenterI;
     private int showingCenterJ;
 
@@ -35,11 +35,20 @@ public class Civilization {
         units = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
-                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.civColor = initCivSymbol();
-        this.showingCenterI = 1;
-        this.showingCenterJ = 2;
+                tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        civColor = initCivSymbol();
+        showingCenterI = 1;
+        showingCenterJ = 2;
         turnsUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
+        inProgressTech = null;
+    }
+
+    public void setInProgressTech (Technology tech) {
+        inProgressTech = tech;
+    }
+
+    public Technology getInProgressTech() {
+        return inProgressTech;
     }
 
     public int getShowingCenterI() {

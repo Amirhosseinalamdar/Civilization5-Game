@@ -29,7 +29,10 @@ public class CivilizationController {
             try {
                 Technology newTech = Technology.valueOf(matcher.group("techName"));
                 if (canAskForTech(newTech)) {
+                    if (civilization.getInProgressTech() != null)
+                        GameMenu.canceledTech(civilization.getInProgressTech());
                     civilization.getTurnsUntilNewTechnologies().put(newTech, turnsForNewTech(newTech));
+                    civilization.setInProgressTech(newTech);
                     GameMenu.techAdded();
                 }
             }
