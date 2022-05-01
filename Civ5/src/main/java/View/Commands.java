@@ -35,7 +35,8 @@ public enum Commands {
     CREATE_UNIT("create (-u|--unit) (?<unitName>\\S+)"),
     PURCHASE_TILE("purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
-    MANAGE_CIVILIZATION("manage civilization");
+    MANAGE_CIVILIZATION("manage civilization"),
+    ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)");
 
     private String regex;
 

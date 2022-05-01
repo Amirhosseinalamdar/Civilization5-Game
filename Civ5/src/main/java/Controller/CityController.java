@@ -4,6 +4,7 @@ import Model.Civilization;
 import Model.Game;
 import Model.Map.Citizen;
 import Model.Map.City;
+import Model.Map.Resource;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
@@ -201,13 +202,19 @@ public class CityController {
     }
 
     private static boolean hasReachedTechForUnit (UnitType unitType) {
-        if (unitType.isPrimary()) return true; //TODO
-        System.out.println("you are looking for advance tech :)");
-        return false;
+        try {
+            return civilization.getTurnsUntilNewTechnologies().get(unitType.getTechnology()) <= 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
     private static boolean hasEnoughResources (UnitType unitType) {
-
-        return true; //TODO
+        for (Resource r : civilization.getResources())
+            if (r.equals(unitType.getResource()))
+                return true;
+        return false;
+        //TODO...
     }
 }

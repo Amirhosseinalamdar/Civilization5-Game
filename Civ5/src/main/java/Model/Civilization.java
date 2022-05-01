@@ -13,13 +13,12 @@ import java.util.HashMap;
 
 public class Civilization {
     private int totalGold;
-    private ArrayList<City> cities;
-    private ArrayList<Unit> units;
-    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
-    private HashMap<Technology, Integer> turnsUntilNewTechnologies;
-    private Technology inProgressTech;
-    private ArrayList<Improvement> reachedImprovements;
-    private ArrayList<City> builtCities;
+    private final ArrayList <City> cities;
+    private final ArrayList <Unit> units;
+    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];
+    private HashMap <Technology, Integer> turnsUntilNewTechnologies = new HashMap<>();
+    private ArrayList <Improvement> reachedImprovements;
+    private ArrayList <City> builtCities;
     private int science;
     private int happiness;
     private CivSymbol civColor;
@@ -33,8 +32,9 @@ public class Civilization {
         units = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
-                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.civColor = initCivSymbol();
+                tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        civColor = initCivSymbol();
+        turnsUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
     }
 
     private CivSymbol initCivSymbol(){
@@ -98,10 +98,6 @@ public class Civilization {
         return turnsUntilNewTechnologies;
     }
 
-    public Technology getInProgressTech() {
-        return inProgressTech;
-    }
-
     public ArrayList<Improvement> getReachedImprovements() {
         return reachedImprovements;
     }
@@ -124,5 +120,13 @@ public class Civilization {
 
     public void increaseTotalGold() {
         //TODO add cities gold per turn to total gold
+    }
+
+    public ArrayList <Resource> getResources() {
+        ArrayList <Resource> resources = new ArrayList<>();
+        for (City city : cities)
+            for (Tile tile :city.getTiles())
+                resources.add(tile.getResource());
+        return resources;
     }
 }
