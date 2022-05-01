@@ -27,7 +27,7 @@ public class UnitController{
         UnitController.unit = unit;
     }
 
-    public static void handleUnitOption() {
+    public static void handleUnitOptions() {
         Matcher matcher = getUnitDecision();
         if (! matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());

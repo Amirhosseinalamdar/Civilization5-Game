@@ -563,4 +563,12 @@ public class GameMenu {
     public static void notEnoughResource() {
         System.out.println("you don't have enough resource");
     }
+
+    public static void invalidTechName() {
+        System.out.println("invalid technology name");
+    }
+
+    public static void techAdded() {
+        System.out.println("technology added successfully");
+    }
 }

@@ -39,6 +39,7 @@ public class Civilization {
         this.civColor = initCivSymbol();
         this.showingCenterI = 1;
         this.showingCenterJ = 2;
+        turnsUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
     }
 
     public int getShowingCenterI() {
@@ -118,10 +119,6 @@ public class Civilization {
         return turnsUntilNewTechnologies;
     }
 
-    public Technology getInProgressTech() {
-        return inProgressTech;
-    }
-
     public ArrayList<Improvement> getReachedImprovements() {
         return reachedImprovements;
     }
@@ -144,5 +141,13 @@ public class Civilization {
 
     public void increaseTotalGold() {
         //TODO add cities gold per turn to total gold
+    }
+
+    public ArrayList <Resource> getResources() {
+        ArrayList <Resource> resources = new ArrayList<>();
+        for (City city : cities)
+            for (Tile tile :city.getTiles())
+                resources.add(tile.getResource());
+        return resources;
     }
 }

@@ -37,8 +37,9 @@ public enum Commands {
     PURCHASE_TILE("purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     SCROLL_MAP("scroll (-d|--direction) (?<direction>(right|left|up|down)) (?<number>\\d+)"),
-    SHOW_MAP_GLOBAL("show global map");
-
+    SHOW_MAP_GLOBAL("show global map"),
+    MANAGE_CIVILIZATION("manage civilization"),
+    ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)");
 
     private String regex;
 
