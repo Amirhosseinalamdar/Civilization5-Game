@@ -144,8 +144,12 @@ public class Civilization {
         this.science = science;
     }
 
-    public void increaseTotalGold() {
-        //TODO add cities gold per turn to total gold
+    public void increaseTotalGold(int gold) {
+        this.totalGold += gold;
+    }
+
+    public void increaseTotalScience(int science) {
+        this.science += science;
     }
 
     public ArrayList <Resource> getResources() {

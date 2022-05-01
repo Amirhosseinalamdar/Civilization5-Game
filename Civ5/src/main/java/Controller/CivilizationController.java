@@ -71,8 +71,8 @@ public class CivilizationController {
             science += city.getSciencePerTurn();
             gold += city.getGoldPerTurn();
         }
-        civilization.setScience(science + civilization.getScience());
-        civilization.setTotalGold(gold + civilization.getTotalGold());
+        civilization.increaseTotalScience(science);
+        civilization.increaseTotalGold(gold);
         /**
          +update happiness
          +update technology
