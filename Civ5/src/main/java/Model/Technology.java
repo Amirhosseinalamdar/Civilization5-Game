@@ -52,7 +52,7 @@ public enum Technology {
     private final Technology parent1, parent2, parent3;
     private final int cost;
 
-    Technology (int cost, Technology parent1, Technology parent2, Technology parent3) {
+    Technology(int cost, Technology parent1, Technology parent2, Technology parent3) {
         this.parent1 = parent1;
         this.parent2 = parent2;
         this.parent3 = parent3;

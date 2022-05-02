@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class City {
-    private ArrayList <Tile> tiles;
+    private ArrayList<Tile> tiles;
     private Civilization civilization;
     private int storedFood;
     private int goldPerTurn;
     private int foodPerTurn;
     private int productionPerTurn;
     private int sciencePerTurn;
-    private HashMap <UnitType, Integer> turnsUntilNewProductions;
+    private HashMap<UnitType, Integer> turnsUntilNewProductions;
     private UnitType inProgressUnit;
-    private ArrayList <Citizen> citizens;
+    private ArrayList<Citizen> citizens;
     private int turnsUntilBirthCitizen;
     private int turnsUntilDeathCitizen;
     private int citizenNecessityFood;
@@ -34,7 +34,7 @@ public class City {
     private CityStatus cityStatus;
     private final String name;
 
-    public City (Civilization civilization, Tile centerTile, String name) {
+    public City(Civilization civilization, Tile centerTile, String name) {
         turnsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
@@ -208,7 +208,7 @@ public class City {
         this.turnsUntilDeathCitizen = turnsUntilDeathCitizen;
     }
 
-    public void updateStoredFood(){
+    public void updateStoredFood() {
         int food = this.foodPerTurn - ((this.citizens.size() - 1) * 2);
         if (food < 0) storedFood = food;
         else if (inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;

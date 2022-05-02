@@ -58,21 +58,19 @@ public class GameMenu {
     public static void showBanner(City city) {
     }
 
-    public static void cityOutput(City city) {
-
-    }
-
     public static void civilizationOutput(City city) {
 
     }
 
-    public static void showCityOutput(City city){
+    public static void showCityOutput(City city) {
         System.out.println("food: " + city.getFoodPerTurn());
         System.out.println("production: " + city.getProductionPerTurn());
         System.out.println("gold: " + city.getGoldPerTurn());
         System.out.println("science: " + city.getSciencePerTurn());
-        if (city.getStoredFood() > 0) System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
-        else if (city.getStoredFood() < 0) System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
+        if (city.getStoredFood() > 0)
+            System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
+        else if (city.getStoredFood() < 0)
+            System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
         else System.out.println("turns until growth citizen: -");
         System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
     }
@@ -247,20 +245,20 @@ public class GameMenu {
         System.out.print('\n');
     }
 
-    private static int calculateStartingJ(int centerJ){
-        if(centerJ%2 == 1) centerJ--;
-        if(centerJ < 1) return 0;
-        else if(centerJ > 17) return 14;
-        else return centerJ-2;
+    private static int calculateStartingJ(int centerJ) {
+        if (centerJ % 2 == 1) centerJ--;
+        if (centerJ < 1) return 0;
+        else if (centerJ > 17) return 14;
+        else return centerJ - 2;
     }
 
-    private static int calculateStartingI(int centerI){
-        if(centerI < 1) return 0;
-        else if(centerI > 18) return 17;
-        else return centerI-1;
+    private static int calculateStartingI(int centerI) {
+        if (centerI < 1) return 0;
+        else if (centerI > 18) return 17;
+        else return centerI - 1;
     }
 
-    public static void showMap(Civilization civilization,int centerI,int centerJ,boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
+    public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
         for (Unit unit : civilization.getUnits()) {//TODO test river
             ArrayList<Tile> clearTiles = new ArrayList<>(GameController.getTileNeighbors(unit.getTile()));
             clearTiles.add(unit.getTile());
@@ -269,23 +267,24 @@ public class GameMenu {
         }
 
         for (City city : civilization.getCities()) {
-            ArrayList <Tile> clearTiles = new ArrayList<>();
+            ArrayList<Tile> clearTiles = new ArrayList<>();
             for (Tile tile : city.getTiles()) {
                 clearTiles.add(tile);
                 clearTiles.addAll(GameController.getTileNeighbors(tile));
             }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
-        }        int startingJ = calculateStartingJ(centerJ)/2;
-        int startingI = calculateStartingI(centerI)*6;
+        }
+        int startingJ = calculateStartingJ(centerJ) / 2;
+        int startingI = calculateStartingI(centerI) * 6;
         boolean flag = false;
         boolean rightSideFlag = false;
-        if(startingJ == 7) flag=true;
-        if (startingJ != 0)  rightSideFlag = true;
-        int length = 3,height = 18;
-        if(global){
-            startingI =0;
-            startingJ =0;
+        if (startingJ == 7) flag = true;
+        if (startingJ != 0) rightSideFlag = true;
+        int length = 3, height = 18;
+        if (global) {
+            startingI = 0;
+            startingJ = 0;
             height = 123;
             length = 10;
         }
@@ -293,30 +292,30 @@ public class GameMenu {
         for (int i = startingI; i < startingI + height; i++) {
             for (int j = startingJ; j < startingJ + length; j++) {
                 if (i % 6 == 0) {
-                    if(j==startingJ && j!=0) System.out.print("  ");
+                    if (j == startingJ && j != 0) System.out.print("  ");
                     printLine1(i, j, civilization);
-                }else if (i % 6 == 1){
-                    if(j==startingJ && j!=0) System.out.print(" ");
+                } else if (i % 6 == 1) {
+                    if (j == startingJ && j != 0) System.out.print(" ");
                     printLine2(i, j, civilization);
-                } else if (i % 6 == 2){
+                } else if (i % 6 == 2) {
                     printLine3(i, j, civilization);
-                } else if (i % 6 == 3){
+                } else if (i % 6 == 3) {
                     showXAndY((i - 3) / 6, 2 * j + 1, false, civilization);
-                } else if (i % 6 == 4){
-                    if(j == startingJ && j!=0) System.out.print(" ");
+                } else if (i % 6 == 4) {
+                    if (j == startingJ && j != 0) System.out.print(" ");
                     showResource((i - 4) / 6, j * 2 + 1, false, civilization);
-                } else{
-                    if(j == startingJ && j!=0) System.out.print("  ");
+                } else {
+                    if (j == startingJ && j != 0) System.out.print("  ");
                     printLine6(i, j, civilization);
                 }
             }
 
             if (i % 6 == 3) System.out.print("\\");
-            else if (i % 6 == 4 ) {
+            else if (i % 6 == 4) {
                 System.out.print(Game.getTiles()[(i - 4) / 6][19].getTypeForCiv(civilization, (i - 4) / 6, 19).getColor());
-                if(flag || global) System.out.print(" ");
+                if (flag || global) System.out.print(" ");
                 System.out.print(RESET + "\\");
-            }else if (i % 6 == 5) System.out.print("\\");
+            } else if (i % 6 == 5) System.out.print("\\");
             else if (i % 6 == 0 && i > 2 && i != 120) System.out.print("/");
             else if (i % 6 == 1 && i > 2 && i != 121) System.out.print("/");
             else if (i % 6 == 2 && i > 2 && i != 122) System.out.print("/");
@@ -398,8 +397,7 @@ public class GameMenu {
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
             } else
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
-        }
-        else System.out.print("         ");
+        } else System.out.print("         ");
         System.out.print(RESET);
     }
 
@@ -443,7 +441,7 @@ public class GameMenu {
         if (isEven) {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "\\" + RESET);
             else System.out.print("\\");
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor()+civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2);
             else System.out.print("       ");
@@ -451,7 +449,7 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
         } else {
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor()+civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2 + RESET);
             else System.out.print("       " + RESET);
