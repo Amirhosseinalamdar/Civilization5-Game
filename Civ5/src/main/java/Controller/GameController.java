@@ -52,6 +52,8 @@ public class GameController {
             CivilizationController.handleCivilizationOptions();
         } else if ((matcher = Commands.getMatcher(command, Commands.SCROLL_MAP)) != null) {
             scrollOnMap(matcher);
+        } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
+            handleBanner();
         } else System.out.println("game controller, invalid command");
     }
 
@@ -157,6 +159,29 @@ public class GameController {
             GameMenu.showMap(civilization, civilization.getShowingCenterI() + moveParameter, civilization.getShowingCenterJ(), false);
             if (civilization.getShowingCenterI() + moveParameter > 18) civilization.setShowingCenterI(18);
             else civilization.setShowingCenterI(civilization.getShowingCenterI() + moveParameter);
+        }
+    }
+
+    public static void handleBanner() {
+        if (civilization.getCities().isEmpty()) {
+            System.out.println("civilization doesn't have any cities");
+            return;
+        } else {
+            int i = 0;
+            GameMenu.showBanner(civilization.getCities().get(i));
+            while (true) {
+                String command = GameMenu.nextCommand();
+                if (command.equals("next")) {
+                    i++;
+                    i = i % civilization.getCities().size();
+                    GameMenu.showBanner(civilization.getCities().get(i));
+                } else if (command.equals("past")) {
+                    i--;
+                    i = i % civilization.getCities().size();
+                    GameMenu.showBanner(civilization.getCities().get(i));
+                } else if (command.equals("exit banner")) break;
+                else System.out.println("invalid command");
+            }
         }
     }
 

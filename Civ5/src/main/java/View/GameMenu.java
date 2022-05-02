@@ -56,6 +56,19 @@ public class GameMenu {
     }
 
     public static void showBanner(City city) {
+        System.out.println("city: " + city.getName());
+        System.out.println("combat strength: " + city.getCombatStrength());
+        System.out.println("food: " + city.getFoodPerTurn());
+        System.out.println("production: " + city.getProductionPerTurn());
+        System.out.println("gold: " + city.getGoldPerTurn());
+        System.out.println("science: " + city.getSciencePerTurn());
+        System.out.println("citizens: " + city.getCitizens().size());
+        System.out.println("citizens: " + city.getCitizens().size());
+        int i = 1;
+        for (Citizen citizen : city.getCitizens()) {
+            if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
+            i++;
+        }
     }
 
     public static void civilizationOutput(City city) {

@@ -238,9 +238,8 @@ public class CityController {
         while (tiles.size() > 0) {
             n = random.nextInt(tiles.size());
             for (Tile tileNeighbor : GameController.getTileNeighbors(tiles.get(n))) {
-                if (tileNeighbor.getCity() == null &&
-                        (tileNeighbor.getCivilian() != null && tileNeighbor.getCivilian().getCivilization() != city.getCivilization()) &&
-                        (tileNeighbor.getCivilian() != null && tileNeighbor.getMilitary().getCivilization() != city.getCivilization())) return tileNeighbor;
+                if (tileNeighbor.getCity() == null && (tileNeighbor.getCivilian() == null || tileNeighbor.getCivilian().getCivilization() != city.getCivilization()) &&
+                        (tileNeighbor.getMilitary() == null || tileNeighbor.getMilitary().getCivilization() != city.getCivilization())) return tileNeighbor;
             }
             tiles.remove(n);
         }
