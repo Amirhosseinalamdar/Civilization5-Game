@@ -63,10 +63,10 @@ public class GameMenu {
         System.out.println("gold: " + city.getGoldPerTurn());
         System.out.println("science: " + city.getSciencePerTurn());
         System.out.println("citizens: " + city.getCitizens().size());
-        System.out.println("citizens: " + city.getCitizens().size());
         int i = 1;
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
+            else System.out.println("citizen is unemployed");
             i++;
         }
     }

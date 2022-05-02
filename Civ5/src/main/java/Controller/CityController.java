@@ -194,7 +194,7 @@ public class CityController {
             city.setLostCitizenLastFood(city.getCitizenNecessityFood());
             city.setGainCitizenLastFood(city.getGainCitizenLastFood() - city.getStoredFood());
             if (city.getGainCitizenLastFood() <= 0) {
-                Citizen citizen = new Citizen(city, city.getTiles().get(0));
+                Citizen citizen = new Citizen(city, null);
                 city.getCitizens().add(citizen);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 1.5));
                 city.setGainCitizenLastFood(city.getCitizenNecessityFood());
