@@ -27,7 +27,7 @@ public class GameMenu {
             if (command.equals("next turn")) GameController.updateGame();
             else {
                 GameController.setCivilization();
-                CivilizationController.updateCivilization();
+//                CivilizationController.updateCivilization();
                 GameController.doTurn(command);
             }
         } while (scanner.hasNextLine());
@@ -72,7 +72,8 @@ public class GameMenu {
         else if (city.getStoredFood() < 0)
             System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
         else System.out.println("turns until growth citizen: -");
-        System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
+        if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: -");
+        else System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
     }
 
     public static void cityShopMenu(City city) {

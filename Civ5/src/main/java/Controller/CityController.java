@@ -84,7 +84,7 @@ public class CityController {
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
-            if (Commands.getMatcher(command, Commands.SHOW_OUTPUT) != null) {
+            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null) {
                 return matcher;
             }
             System.out.println("city decision wasn't valid");
@@ -220,7 +220,8 @@ public class CityController {
             city.setBorderExpansionCost((int) (city.getBorderExpansionCost() * 1.5));
             city.setBorderLastCost(city.getBorderExpansionCost());
         }
-        city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
+        if ((city.getCitizens().size() + city.getStoredFood()) == 0) city.setTurnsUntilGrowthBorder(0);
+        else city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
     }
 
     public static void expandCity(City city) {
@@ -238,8 +239,8 @@ public class CityController {
             n = random.nextInt(tiles.size());
             for (Tile tileNeighbor : GameController.getTileNeighbors(tiles.get(n))) {
                 if (tileNeighbor.getCity() == null &&
-                        tileNeighbor.getCivilian().getCivilization() != city.getCivilization() &&
-                        tileNeighbor.getMilitary().getCivilization() != city.getCivilization()) return tileNeighbor;
+                        (tileNeighbor.getCivilian() != null && tileNeighbor.getCivilian().getCivilization() != city.getCivilization()) &&
+                        (tileNeighbor.getCivilian() != null && tileNeighbor.getMilitary().getCivilization() != city.getCivilization())) return tileNeighbor;
             }
             tiles.remove(n);
         }

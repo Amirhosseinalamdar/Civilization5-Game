@@ -211,7 +211,7 @@ public class City {
     public void updateStoredFood() {
         int food = this.foodPerTurn - ((this.citizens.size() - 1) * 2);
         if (food < 0) storedFood = food;
-        else if (inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
+        else if (inProgressUnit != null && inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
     }
 
