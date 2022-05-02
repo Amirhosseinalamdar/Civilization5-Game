@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Map.City;
+import Model.Map.CityStatus;
 import Model.Map.Improvement;
 import Model.Technology;
 import Model.UnitPackage.Military;
@@ -35,8 +36,7 @@ public class CivilizationController {
                     civilization.setInProgressTech(newTech);
                     GameMenu.techAdded();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 GameMenu.invalidTechName();
             }
         }
@@ -53,7 +53,7 @@ public class CivilizationController {
         }
     }
 
-    private void addImprovement (Unit worker, Improvement improvement) {
+    private void addImprovement(Unit worker, Improvement improvement) {
 
     }
 
@@ -65,25 +65,31 @@ public class CivilizationController {
 
     }
 
-    private void updateCivilizationsInfos() {
+    public static void updateCivilization() {
+        int science = 0;
+        int gold = 0;
+        for (City city : civilization.getCities()) {
+            CityController.updateCityInfos(city);
+            science += city.getSciencePerTurn();
+            gold += city.getGoldPerTurn();
+        }
+        civilization.increaseTotalScience(science);
+        civilization.increaseTotalGold(gold);
         /**
-         ...
-         ...
          +update happiness
          +update technology
          */
     }
 
-    private static boolean canAskForTech (Technology newTech) {
-        HashMap <Technology, Integer> civTechs = civilization.getTurnsUntilNewTechnologies();
+    private static boolean canAskForTech(Technology newTech) {
+        HashMap<Technology, Integer> civTechs = civilization.getTurnsUntilNewTechnologies();
 
         try {
             if (civTechs.get(newTech) < 0) System.out.println("you already have this tech :)");
             else System.out.println("tech is in progress; remaining turns: " + civTechs.get(newTech));
             return false;
-        }
-        catch (Exception e1) {
-            ArrayList <Technology> parents = new ArrayList<>();
+        } catch (Exception e1) {
+            ArrayList<Technology> parents = new ArrayList<>();
 
             if (newTech.getParent1() != null) parents.add(newTech.getParent1());
             if (newTech.getParent2() != null) parents.add(newTech.getParent2());
@@ -92,8 +98,7 @@ public class CivilizationController {
             for (Technology parent : parents) {
                 try {
                     if (civTechs.get(parent) > 0) return false;
-                }
-                catch (Exception e2) {
+                } catch (Exception e2) {
                     return false;
                 }
             }
@@ -102,7 +107,7 @@ public class CivilizationController {
         }
     }
 
-    private static int turnsForNewTech (Technology newTech) {
+    private static int turnsForNewTech(Technology newTech) {
         return 1; //TODO... calc turns till new tech
     }
 

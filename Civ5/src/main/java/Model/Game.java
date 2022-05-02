@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.GameController;
 import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -38,7 +39,7 @@ public class Game {
     public static void nextTurn() {
         turn++;
         turn %= players.size();
-        time++;
+        if (turn == 0) time++;
     }
 
     public static void generateGame(ArrayList<User> users) {
@@ -65,8 +66,8 @@ public class Game {
     }
 
     private static void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
-        ArrayList<Tile> visibleTiles = UnitController.getTileNeighbors(settlerTile);
-        visibleTiles.addAll(UnitController.getTileNeighbors(warriorTile));
+        ArrayList<Tile> visibleTiles = GameController.getTileNeighbors(settlerTile);
+        visibleTiles.addAll(GameController.getTileNeighbors(warriorTile));
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }

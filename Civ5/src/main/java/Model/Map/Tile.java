@@ -24,7 +24,7 @@ public class Tile {
     private boolean isRaided;
     //private boolean isCity;
     private City city; // age null bashe city nis agar na capitale citie
-//    private City memberOfThisCity;//TODO initialize she pls
+    //    private City memberOfThisCity;//TODO initialize she pls
     //private ArrayList<River> rivers;
     private boolean isRiverAtLeft;
     private int centerX; // vertical
@@ -33,7 +33,7 @@ public class Tile {
     private int indexInMapJ;
     private Citizen workingCitizen;
 
-    public void setWorkingCitizen (Citizen citizen) {
+    public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;
     }
 

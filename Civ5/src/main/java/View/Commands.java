@@ -39,7 +39,8 @@ public enum Commands {
     SCROLL_MAP("scroll (-d|--direction) (?<direction>(right|left|up|down)) (?<number>\\d+)"),
     SHOW_MAP_GLOBAL("show global map"),
     MANAGE_CIVILIZATION("manage civilization"),
-    ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)");
+    ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
+    SHOW_BANNER("show cities banner");
 
     private String regex;
 
