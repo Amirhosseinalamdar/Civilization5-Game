@@ -16,10 +16,9 @@ public class Civilization {
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
     private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
-    private HashMap<Technology, Integer> turnsUntilNewTechnologies;
+    private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
     private Technology inProgressTech;
     private ArrayList<Improvement> reachedImprovements;
-    private ArrayList<City> builtCities;
     private int science;
     private int happiness;
     private CivSymbol civColor;
@@ -30,17 +29,27 @@ public class Civilization {
         this.totalGold = totalGold;
     }
 
+    public Technology getInProgressTech() {
+        return inProgressTech;
+    }
+
+    public void setInProgressTech(Technology inProgressTech) {
+        this.inProgressTech = inProgressTech;
+    }
+
     public Civilization() {
         cities = new ArrayList<>();
         units = new ArrayList<>();
-        turnsUntilNewTechnologies = new HashMap<>();
+        lastCostUntilNewTechnologies = new HashMap<>();
+//        reachedImprovements = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
         this.civColor = initCivSymbol();
         this.showingCenterI = 1;
         this.showingCenterJ = 2;
-        turnsUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
+        lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
+//        reachedImprovements.add(Improvement.FARM);
     }
 
     public int getShowingCenterI() {
@@ -116,16 +125,12 @@ public class Civilization {
         return tileVisionStatuses;
     }
 
-    public HashMap<Technology, Integer> getTurnsUntilNewTechnologies() {
-        return turnsUntilNewTechnologies;
+    public HashMap<Technology, Integer> getLastCostUntilNewTechnologies() {
+        return lastCostUntilNewTechnologies;
     }
 
     public ArrayList<Improvement> getReachedImprovements() {
         return reachedImprovements;
-    }
-
-    public ArrayList<City> getBuiltCities() {
-        return builtCities;
     }
 
     public int getScience() {

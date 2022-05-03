@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Civilization;
 import Model.Map.City;
-import Model.Map.CityStatus;
 import Model.Map.Improvement;
 import Model.Technology;
 import Model.UnitPackage.Military;
@@ -12,7 +11,6 @@ import View.GameMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 
 public class CivilizationController {
@@ -30,7 +28,7 @@ public class CivilizationController {
             try {
                 Technology newTech = Technology.valueOf(matcher.group("techName"));
                 if (canAskForTech(newTech)) {
-                    civilization.getTurnsUntilNewTechnologies().put(newTech, turnsForNewTech(newTech));
+                    civilization.getLastCostUntilNewTechnologies().put(newTech, newTech.getCost());
                     GameMenu.techAdded();
                 }
             } catch (Exception e) {
@@ -72,18 +70,37 @@ public class CivilizationController {
         }
         civilization.increaseTotalScience(science);
         civilization.increaseTotalGold(gold);
+        updateInProgressTech();
+        updateReachedImprovements();
         /**
          +update happiness
          +update technology
          */
     }
 
+    private static void updateReachedImprovements() {
+        //TODO اگر تکنولوژی داشتیم اضافه شه
+//        Improvement[] improvements = Improvement.values();
+//        for (Improvement improvement : improvements) {
+//            if (improvement.)
+//        }
+    }
+
+    private static void updateInProgressTech() {
+        if (civilization.getInProgressTech() != null) {
+            int i = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech());
+            i -= civilization.getScience();
+            civilization.getLastCostUntilNewTechnologies().replace(civilization.getInProgressTech(), i);
+            if (i <= 0) civilization.setInProgressTech(null);
+        }
+    }
+
     private static boolean canAskForTech(Technology newTech) {
-        HashMap<Technology, Integer> civTechs = civilization.getTurnsUntilNewTechnologies();
+        HashMap<Technology, Integer> civTechs = civilization.getLastCostUntilNewTechnologies();
 
         try {
             if (civTechs.get(newTech) < 0) System.out.println("you already have this tech :)");
-            else System.out.println("tech is in progress; remaining turns: " + civTechs.get(newTech));
+            else System.out.println("tech is already in progress");
             return false;
         } catch (Exception e1) {
             ArrayList<Technology> parents = new ArrayList<>();
@@ -99,13 +116,21 @@ public class CivilizationController {
                     return false;
                 }
             }
-
-            return true; //TODO... consider cost too
+            return true;
         }
     }
 
-    private static int turnsForNewTech(Technology newTech) {
-        return 1; //TODO... calc turns till new tech
+    public static String turnsForNewTech() {
+        String output;
+        int turn;
+        if (civilization.getInProgressTech() == null) output = "there is no technology in progress";
+        else {
+            if (civilization.getScience() != 0) {
+                turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
+                output = "turns until reaching" + civilization.getInProgressTech().name() + " : " + turn + ".";
+            } else output = "turns until reaching" + civilization.getInProgressTech().name() + " : " + "-";
+        }
+        return output;
     }
 
     private void conquerCity(City city, Military military) {

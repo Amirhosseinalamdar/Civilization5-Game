@@ -11,7 +11,6 @@ import View.GameMenu;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CityController {
     private static Civilization civilization;
@@ -187,6 +186,7 @@ public class CityController {
         city.updateStoredFood();
         handlePopulation(city);
         updateBorder(city);
+        //TODO production
     }
 
     private static void handlePopulation(City city) {
@@ -268,7 +268,7 @@ public class CityController {
 
     private static boolean hasReachedTechForUnit(UnitType unitType) {
         try {
-            return civilization.getTurnsUntilNewTechnologies().get(unitType.getTechnology()) <= 0;
+            return civilization.getLastCostUntilNewTechnologies().get(unitType.getTechnology()) <= 0;
         } catch (Exception e) {
             return false;
         }

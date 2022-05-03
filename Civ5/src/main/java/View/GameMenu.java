@@ -27,7 +27,6 @@ public class GameMenu {
             if (command.equals("next turn")) GameController.updateGame();
             else {
                 GameController.setCivilization();
-//                CivilizationController.updateCivilization();
                 GameController.doTurn(command);
             }
         } while (scanner.hasNextLine());
