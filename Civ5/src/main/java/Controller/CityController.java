@@ -191,11 +191,11 @@ public class CityController {
 
     private static void updateProduction(City city) {
         if (city.getInProgressUnit() != null) {
-            int i = city.getTurnsUntilNewProductions().get(city.getInProgressUnit());
+            int i = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit());
             i -= city.getProductionPerTurn();
-            city.getTurnsUntilNewProductions().replace(city.getInProgressUnit(), i);
+            city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
             if (i <= 0) {
-                city.getTurnsUntilNewProductions().remove(city.getInProgressUnit());
+                city.getLastCostsUntilNewProductions().remove(city.getInProgressUnit());
                 //TODO method baraye dorost shodan unit
 //                civilization.addUnit(unit);
                 city.setInProgressUnit(null);
@@ -274,13 +274,13 @@ public class CityController {
             return;
         }
         try {
-            int remainingTurns = city.getTurnsUntilNewProductions().get(unitType);
+            int remainingTurns = city.getLastCostsUntilNewProductions().get(unitType);
             System.out.println("already in progress... remaining turns: " + remainingTurns); //TODO... view
         }
         catch (Exception e) {
-            city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
+            city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
-        city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
+        city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         city.setInProgressUnit(unitType);
     }
 
