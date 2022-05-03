@@ -8,6 +8,7 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import Model.User;
 import View.GameMenu;
 import javafx.util.Pair;
 //import de.scravy.pair.Pair;
@@ -406,8 +407,19 @@ public class UnitController {
     private static void foundCity() {
         System.out.println("please choose name: "); //TODO... move it to menu :)
         String cityName = GameMenu.nextCommand();
+        while (cityNameAlreadyExists(cityName)) {
+            GameMenu.cityNameAlreadyExists();
+            cityName = GameMenu.nextCommand();
+        }
         new City(civilization, unit.getTile(), cityName);
         unit.kill();
+    }
+
+    private static boolean cityNameAlreadyExists (String cityName) {
+        for (User player : Game.getPlayers())
+            for (City city : player.getCivilization().getCities())
+                if (city.getName().equals(cityName)) return true;
+        return false;
     }
 
     private static void abortMission() {

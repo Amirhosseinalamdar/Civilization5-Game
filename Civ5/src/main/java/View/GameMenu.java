@@ -595,4 +595,8 @@ public class GameMenu {
     public static void cantBuildImprovementOnTile() {
         System.out.println("can not build chosen improvement on this tile");
     }
+
+    public static void cityNameAlreadyExists() {
+        System.out.println("city name already exists... please pick another name:");
+    }
 }

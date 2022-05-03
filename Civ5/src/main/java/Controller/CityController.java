@@ -274,8 +274,8 @@ public class CityController {
             return;
         }
         try {
-            city.getTurnsUntilNewProductions().get(unitType);
-            System.out.println("already in progress"); //TODO... view
+            int remainingTurns = city.getTurnsUntilNewProductions().get(unitType);
+            System.out.println("already in progress... remaining turns: " + remainingTurns); //TODO... view
         }
         catch (Exception e) {
             city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
@@ -297,6 +297,7 @@ public class CityController {
     }
 
     private static boolean hasEnoughResources(UnitType unitType) {
+        if (unitType.getResource() == null) return true;
         for (Resource r : civilization.getResources())
             if (r.equals(unitType.getResource()))
                 return true;
