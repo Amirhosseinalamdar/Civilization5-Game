@@ -32,7 +32,7 @@ public class CivilizationController {
                 if (canAskForTech(newTech)) {
                     if (civilization.getInProgressTech() != null)
                         GameMenu.canceledTech(civilization.getInProgressTech());
-                    civilization.getLastCostUntilNewTechnologies().put(newTech, turnsForNewTech(newTech));
+                    civilization.getLastCostUntilNewTechnologies().put(newTech, newTech.getCost());
                     civilization.setInProgressTech(newTech);
                     GameMenu.techAdded();
                 }
@@ -79,16 +79,17 @@ public class CivilizationController {
         updateReachedImprovements();
         /**
          +update happiness
-         +update technology
          */
     }
 
     private static void updateReachedImprovements() {
-        //TODO اگر تکنولوژی داشتیم اضافه شه
-//        Improvement[] improvements = Improvement.values();
-//        for (Improvement improvement : improvements) {
-//            if (improvement.)
-//        }
+        Improvement[] improvements = Improvement.values();
+        for (Improvement improvement : improvements) {
+            if (civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) != null &&
+                    civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) <= 0) {
+                civilization.getReachedImprovements().add(improvement);
+            }
+        }
     }
 
     private static void updateInProgressTech() {
