@@ -63,6 +63,10 @@ public class City {
         this.name = name;
     }
 
+    public void setInProgressUnit (UnitType unitType) {
+        this.inProgressUnit = unitType;
+    }
+
     public String getName() {
         return name;
     }

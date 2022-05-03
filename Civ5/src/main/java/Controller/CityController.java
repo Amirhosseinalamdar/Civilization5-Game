@@ -259,7 +259,15 @@ public class CityController {
             GameMenu.notEnoughResource();
             return;
         }
+        try {
+            city.getTurnsUntilNewProductions().get(unitType);
+            System.out.println("already in progress"); //TODO... view
+        }
+        catch (Exception e) {
+            city.getTurnsUntilNewProductions().put(unitType, calcTurnsForNewUnit(unitType));
+        }
         city.getTurnsUntilNewProductions().put(unitType, calcTurnsForNewUnit(unitType));
+        city.setInProgressUnit(unitType);
     }
 
     private static int calcTurnsForNewUnit(UnitType unitType) {

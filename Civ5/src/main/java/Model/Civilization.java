@@ -169,4 +169,13 @@ public class Civilization {
         return resources;
         //TODO
     }
+
+    public boolean hasReachedTech (Technology technology) {
+        try {
+            return turnsUntilNewTechnologies.get(technology) <= 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
 }

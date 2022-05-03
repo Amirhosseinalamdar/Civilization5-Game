@@ -4,7 +4,7 @@ import Model.Game;
 import View.GameMenu;
 import View.MainMenu;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {

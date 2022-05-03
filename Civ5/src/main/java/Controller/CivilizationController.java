@@ -85,15 +85,14 @@ public class CivilizationController {
         HashMap<Technology, Integer> civTechs = civilization.getTurnsUntilNewTechnologies();
 
         try {
-            if (civTechs.get(newTech) < 0) System.out.println("you already have this tech :)");
-            else System.out.println("tech is in progress; remaining turns: " + civTechs.get(newTech));
+            if (civTechs.get(newTech) <= 0) System.out.println("you already have this tech :)");
+            else {
+                System.out.println("tech is in progress; remaining turns: " + civTechs.get(newTech));
+                civilization.setInProgressTech(newTech);
+            }
             return false;
         } catch (Exception e1) {
-            ArrayList<Technology> parents = new ArrayList<>();
-
-            if (newTech.getParent1() != null) parents.add(newTech.getParent1());
-            if (newTech.getParent2() != null) parents.add(newTech.getParent2());
-            if (newTech.getParent3() != null) parents.add(newTech.getParent3());
+            ArrayList<Technology> parents = newTech.getParents();
 
             for (Technology parent : parents) {
                 try {

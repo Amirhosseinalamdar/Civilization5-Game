@@ -5,7 +5,8 @@ import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
-import de.scravy.pair.Pair;
+import javafx.util.Pair;
+//import de.scravy.pair.Pair;
 
 import java.util.ArrayList;
 
@@ -143,6 +144,10 @@ public class Tile {
 
     public void setType(TerrainType type) {
         this.type = type;
+    }
+
+    public void setImprovementInProgress (Pair <Improvement, Integer> improvementInProgress) {
+        this.improvementInProgress = improvementInProgress;
     }
 
     public TerrainType getTypeForCiv(Civilization civilization, int i, int j) {

@@ -586,4 +586,12 @@ public class GameMenu {
     public static void canceledTech (Technology canceled) {
         System.out.println(canceled.toString() + " is now canceled");
     }
+
+    public static void noSuchImprovement() {
+        System.out.println("no such improvement exists");
+    }
+
+    public static void cantBuildImprovementOnTile() {
+        System.out.println("can not build chosen improvement on this tile");
+    }
 }
