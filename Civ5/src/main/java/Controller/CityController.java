@@ -186,7 +186,21 @@ public class CityController {
         city.updateStoredFood();
         handlePopulation(city);
         updateBorder(city);
-        //TODO production
+        updateProduction(city);
+    }
+
+    private static void updateProduction(City city) {
+        if (city.getInProgressUnit() != null) {
+            int i = city.getTurnsUntilNewProductions().get(city.getInProgressUnit());
+            i -= city.getProductionPerTurn();
+            city.getTurnsUntilNewProductions().replace(city.getInProgressUnit(), i);
+            if (i <= 0) {
+                city.getTurnsUntilNewProductions().remove(city.getInProgressUnit());
+                //TODO method baraye dorost shodan unit
+//                civilization.addUnit(unit);
+                city.setInProgressUnit(null);
+            }
+        }
     }
 
     private static void handlePopulation(City city) {
@@ -264,9 +278,9 @@ public class CityController {
             System.out.println("already in progress"); //TODO... view
         }
         catch (Exception e) {
-            city.getTurnsUntilNewProductions().put(unitType, calcTurnsForNewUnit(unitType));
+            city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
         }
-        city.getTurnsUntilNewProductions().put(unitType, calcTurnsForNewUnit(unitType));
+        city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
         city.setInProgressUnit(unitType);
     }
 

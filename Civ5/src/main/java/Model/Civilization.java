@@ -122,6 +122,10 @@ public class Civilization {
         return units;
     }
 
+    public void addUnit(Unit unit) {
+        this.units.add(unit);
+    }
+
     public TileStatus[][] getTileVisionStatuses() {
         return tileVisionStatuses;
     }
