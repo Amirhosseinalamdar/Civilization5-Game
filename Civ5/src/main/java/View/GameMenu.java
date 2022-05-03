@@ -19,9 +19,13 @@ public class GameMenu {
     public static void startGame(ArrayList<User> players, Scanner scanner) {
         Game.generateGame(players);
         GameMenu.scanner = scanner;
+        GameController.setCivilization();
         do {
             String command = scanner.nextLine();
-            if (command.equals("next turn")) GameController.updateGame();
+            if (command.equals("next turn")) {
+                if (GameController.noTaskRemaining())
+                    GameController.updateGame();
+            }
             else {
                 GameController.setCivilization();
                 GameController.doTurn(command);
@@ -598,5 +602,18 @@ public class GameMenu {
 
     public static void cityNameAlreadyExists() {
         System.out.println("city name already exists... please pick another name:");
+    }
+
+    public static void unitHasRemainingMove (Unit unit) {
+        System.out.println("a " + unit.getType().toString() + " unit on " + unit.getTile().getIndexInMapI() + ", " +
+                unit.getTile().getIndexInMapJ() + " has remaining moves");
+    }
+
+    public static void chooseProductionForCity (String cityName) {
+        System.out.println(cityName + " has no production currently; choose production for it");
+    }
+
+    public static void chooseTechForCivilization() {
+        System.out.println("civilization has no tech in progress; choose a research");
     }
 }

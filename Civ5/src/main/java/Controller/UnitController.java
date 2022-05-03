@@ -65,7 +65,7 @@ public class UnitController {
                 GameMenu.noSuchImprovement();
             }
         }
-        else System.out.println("unit controller, invalid command");
+        else System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
     }
 
     private static Matcher getUnitDecision() {

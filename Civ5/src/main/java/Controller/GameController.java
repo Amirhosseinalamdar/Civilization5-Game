@@ -5,6 +5,7 @@ import Model.Game;
 import Model.Map.City;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
@@ -22,6 +23,26 @@ public class GameController {
 
     public static void setCivilization() {
         checkMyCivilization();
+    }
+
+    public static boolean noTaskRemaining() {
+        for (Unit unit : civilization.getUnits())
+            if (!unit.getStatus().equals(UnitStatus.DO_NOTHING) && !unit.getStatus().equals(UnitStatus.HEAL)
+                    && !unit.getStatus().equals(UnitStatus.FORTIFY) && !unit.getStatus().equals(UnitStatus.SLEEP) &&
+                    unit.getMovesInTurn() < unit.getMP()) {
+                GameMenu.unitHasRemainingMove(unit);
+                return false;
+            }
+        for (City city : civilization.getCities())
+            if (city.getInProgressUnit() == null) {
+                GameMenu.chooseProductionForCity(city.getName()); //TODO... city may not be able to produce unit at all
+                return false;
+            }
+        if (civilization.getInProgressTech() == null && civilization.getCities().size() > 0) {
+            GameMenu.chooseTechForCivilization();
+            return false;
+        }
+        return true;
     }
 
     public static void doTurn(String command) {
