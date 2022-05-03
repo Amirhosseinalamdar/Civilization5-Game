@@ -86,7 +86,8 @@ public class CivilizationController {
         Improvement[] improvements = Improvement.values();
         for (Improvement improvement : improvements) {
             if (civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) != null &&
-                    civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) <= 0) {
+                    civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) <= 0 &&
+            !civilization.getReachedImprovements().contains(improvement)) {
                 civilization.getReachedImprovements().add(improvement);
             }
         }

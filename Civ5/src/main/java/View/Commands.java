@@ -40,7 +40,8 @@ public enum Commands {
     SHOW_MAP_GLOBAL("show global map"),
     MANAGE_CIVILIZATION("manage civilization"),
     ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
-    SHOW_BANNER("show cities banner");
+    SHOW_BANNER("show cities banner"),
+    CIVILIZATION_OUTPUT("show civilization output");
 
     private String regex;
 

@@ -54,6 +54,8 @@ public class GameController {
             scrollOnMap(matcher);
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();
+        }else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
+            GameMenu.civilizationOutput(civilization);
         } else System.out.println("game controller, invalid command");
     }
 
@@ -165,7 +167,6 @@ public class GameController {
     public static void handleBanner() {
         if (civilization.getCities().isEmpty()) {
             System.out.println("civilization doesn't have any cities");
-            return;
         } else {
             int i = 0;
             GameMenu.showBanner(civilization.getCities().get(i));

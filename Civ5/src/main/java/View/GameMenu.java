@@ -67,8 +67,10 @@ public class GameMenu {
         }
     }
 
-    public static void civilizationOutput(City city) {
-
+    public static void civilizationOutput(Civilization civilization) {
+        System.out.println("gold: " + civilization.getTotalGold());
+        System.out.println("science: " + civilization.getScience());
+        System.out.println("happiness: " + civilization.getHappiness());
     }
 
     public static void showCityOutput(City city) {
