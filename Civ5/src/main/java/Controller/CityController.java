@@ -3,6 +3,7 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
@@ -196,11 +197,40 @@ public class CityController {
             city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
             if (i <= 0) {
                 city.getLastCostsUntilNewProductions().remove(city.getInProgressUnit());
-                //TODO method baraye dorost shodan unit
-//                civilization.addUnit(unit);
+                produceUnit(city);
                 city.setInProgressUnit(null);
             }
         }
+    }
+
+    private static void produceUnit(City city) {
+        if (city.getInProgressUnit().equals(UnitType.WORKER) || city.getInProgressUnit().equals(UnitType.SETTLER)) {
+            Unit civilian = new Unit(city.getInProgressUnit());
+            civilian.setCivilization(civilization);
+            civilization.getUnits().add(civilian);
+            civilian.setTile(city.getTiles().get(0));
+            city.getTiles().get(0).setCivilian(civilian);
+            civilization.addUnit(civilian);
+        } else {
+            Military military = new Military(city.getInProgressUnit());
+            military.setCivilization(civilization);
+            civilization.getUnits().add(military);
+            military.setTile(city.getTiles().get(0));
+            city.getTiles().get(0).setMilitary(military);
+        }
+    }
+
+    public static String turnsForNewUnit(City city) {
+        String output;
+        int turn;
+        if (city.getInProgressUnit() == null) output = "there is no unit in progress";
+        else {
+            if (city.getProductionPerTurn() != 0) {
+                turn = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit()) / city.getProductionPerTurn();
+                output = "turns until producing" + city.getInProgressUnit().name() + " : " + turn + ".";
+            } else output = "turns until producing" + city.getInProgressUnit().name() + " : " + "-";
+        }
+        return output;
     }
 
     private static void handlePopulation(City city) {

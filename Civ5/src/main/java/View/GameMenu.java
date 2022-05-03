@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CityController;
 import Controller.CivilizationController;
 import Controller.GameController;
 import Controller.UnitController;
@@ -71,6 +72,7 @@ public class GameMenu {
         System.out.println("gold: " + civilization.getTotalGold());
         System.out.println("science: " + civilization.getScience());
         System.out.println("happiness: " + civilization.getHappiness());
+        System.out.println(CivilizationController.turnsForNewTech());
     }
 
     public static void showCityOutput(City city) {
@@ -78,6 +80,7 @@ public class GameMenu {
         System.out.println("production: " + city.getProductionPerTurn());
         System.out.println("gold: " + city.getGoldPerTurn());
         System.out.println("science: " + city.getSciencePerTurn());
+        System.out.println(CityController.turnsForNewUnit(city));
         if (city.getStoredFood() > 0)
             System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
         else if (city.getStoredFood() < 0)

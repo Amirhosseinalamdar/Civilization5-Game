@@ -13,6 +13,10 @@ public class Military extends Unit {
 
     public Military(UnitType militaryType) {
         super(militaryType);
+        this.combatStrength = militaryType.getCombatStrength();
+        this.rangedCombatStrength = militaryType.getRangedCombatStrength();
+        this.range = militaryType.getRange();
+        this.isReady = !isSiege();
     }
 
     @Override
@@ -30,9 +34,8 @@ public class Military extends Unit {
         civilization.getUnits().remove(this);
     }
 
-    public void create() {
-        //this.tile.setMilitary(this);
-//        this.civilization.units.add(this);
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 
     public void upgrade() {
