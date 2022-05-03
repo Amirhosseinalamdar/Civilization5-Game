@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Civilization;
 import Model.Map.City;
+import Model.Map.CityStatus;
 import Model.Map.Improvement;
 import Model.Technology;
 import Model.UnitPackage.Military;
@@ -11,6 +12,7 @@ import View.GameMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 
 public class CivilizationController {
@@ -28,7 +30,10 @@ public class CivilizationController {
             try {
                 Technology newTech = Technology.valueOf(matcher.group("techName"));
                 if (canAskForTech(newTech)) {
-                    civilization.getLastCostUntilNewTechnologies().put(newTech, newTech.getCost());
+                    if (civilization.getInProgressTech() != null)
+                        GameMenu.canceledTech(civilization.getInProgressTech());
+                    civilization.getLastCostUntilNewTechnologies().put(newTech, turnsForNewTech(newTech));
+                    civilization.setInProgressTech(newTech);
                     GameMenu.techAdded();
                 }
             } catch (Exception e) {
@@ -99,15 +104,14 @@ public class CivilizationController {
         HashMap<Technology, Integer> civTechs = civilization.getLastCostUntilNewTechnologies();
 
         try {
-            if (civTechs.get(newTech) < 0) System.out.println("you already have this tech :)");
-            else System.out.println("tech is already in progress");
+            if (civTechs.get(newTech) <= 0) System.out.println("you already have this tech :)");
+            else {
+                System.out.println("tech is in progress;" + turnsForNewTech());
+                civilization.setInProgressTech(newTech);
+            }
             return false;
         } catch (Exception e1) {
-            ArrayList<Technology> parents = new ArrayList<>();
-
-            if (newTech.getParent1() != null) parents.add(newTech.getParent1());
-            if (newTech.getParent2() != null) parents.add(newTech.getParent2());
-            if (newTech.getParent3() != null) parents.add(newTech.getParent3());
+            ArrayList<Technology> parents = newTech.getParents();
 
             for (Technology parent : parents) {
                 try {

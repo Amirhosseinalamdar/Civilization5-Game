@@ -21,7 +21,7 @@ public class Civilization {
     private ArrayList<Improvement> reachedImprovements;
     private int science;
     private int happiness;
-    private CivSymbol civColor;
+    private final CivSymbol civColor;
     private int showingCenterI;
     private int showingCenterJ;
 
@@ -50,6 +50,7 @@ public class Civilization {
         this.showingCenterJ = 2;
         lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
 //        reachedImprovements.add(Improvement.FARM);
+        inProgressTech = null;
     }
 
     public int getShowingCenterI() {
@@ -164,5 +165,14 @@ public class Civilization {
                 resources.add(tile.getResource());
         return resources;
         //TODO
+    }
+
+    public boolean hasReachedTech (Technology technology) {
+        try {
+            return lastCostUntilNewTechnologies.get(technology) <= 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

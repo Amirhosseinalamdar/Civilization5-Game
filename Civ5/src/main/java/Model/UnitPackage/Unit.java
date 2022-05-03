@@ -133,7 +133,7 @@ public class Unit {
         else if (string.equals("wake")) this.status = UnitStatus.WAKE;
         else if (string.equals("delete")) this.kill();
         else if (string.equals("repair")) this.status = UnitStatus.HEAL;
-        else if (string.startsWith("build")) this.status = UnitStatus.BUILD;
+        else if (string.startsWith("build")) this.status = UnitStatus.BUILD_IMPROVEMENT;
         else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
         else if (string.startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
         else if (string.equals("do nothing")) this.status = UnitStatus.DO_NOTHING;

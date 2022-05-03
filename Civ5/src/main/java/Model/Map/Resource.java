@@ -22,15 +22,31 @@ public enum Resource {
     SUGAR(0, 0, 2, Improvement.SEEDING_AND_WORKING),
     NONE(0, 0, 0, Improvement.NONE);
 
-    private int food;
-    private int production;
-    private int gold;
-    private Improvement improvement;
+    private final int food;
+    private final int production;
+    private final int gold;
+    private final Improvement prerequisiteImprovement;
 
     Resource(int food, int production, int gold, Improvement improvement) {
         this.food = food;
         this.gold = gold;
         this.production = production;
-        this.improvement = improvement;
+        this.prerequisiteImprovement = improvement;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public int getProduction() {
+        return production;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public Improvement getPrerequisiteImprovement() {
+        return prerequisiteImprovement;
     }
 }

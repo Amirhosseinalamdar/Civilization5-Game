@@ -9,6 +9,8 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.GameMenu;
+import javafx.util.Pair;
+//import de.scravy.pair.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,14 +43,28 @@ public class UnitController {
                 return;
             }
             GameMenu.unavailableTile();
-        } else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
+        }
+        else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
                 if (unit.getMovesInTurn() < unit.getMP()) foundCity();
                 else GameMenu.notEnoughMoves();
                 return;
             }
             GameMenu.cantFoundCityHere();
-        } else System.out.println("unit controller, invalid command");
+        }
+        else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
+            try {
+                Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
+                if (canBuildImprovementHere(improvement)) {
+                    if (unit.getMovesInTurn() < unit.getMP()) buildImprovement(improvement);
+                    else GameMenu.notEnoughMoves();
+                }
+            }
+            catch (Exception e) {
+                GameMenu.noSuchImprovement();
+            }
+        }
+        else System.out.println("unit controller, invalid command");
     }
 
     private static Matcher getUnitDecision() {
@@ -76,7 +92,7 @@ public class UnitController {
             if (command.equals("delete"))
                 return Pattern.compile("delete").matcher(command);
 
-            regex = "attack (?<x>\\d+) (?<y>\\d+)";
+            regex = "attack to (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)";
             if (command.matches(regex)) {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (!matcher.find()) throw new RuntimeException();
@@ -182,6 +198,38 @@ public class UnitController {
         for (Tile tile : beginningTiles)
             if (tile.getCity() != null) return false;
         return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
+    }
+
+    private static boolean canBuildImprovementHere(Improvement improvement) {
+        if (! civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
+            GameMenu.unreachedTech();
+            return false;
+        }
+        if (! tileIsValidForImprovement(unit.getTile(), improvement)) {
+            GameMenu.cantBuildImprovementOnTile();
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean tileIsValidForImprovement (Tile tile, Improvement improvement) {
+        if (improvement.getPrerequisiteTypes() != null)
+            for (TerrainType type : improvement.getPrerequisiteTypes())
+                if (type.equals(tile.getType())) return true;
+        if (improvement.getPrerequisiteFeatures() != null)
+            for (TerrainFeature feature : improvement.getPrerequisiteFeatures())
+                if (feature.equals(tile.getFeature()))
+                    return true;
+        return false;
+    }
+
+    private static void buildImprovement (Improvement improvement) {
+        Pair <Improvement, Integer> pair = new Pair<Improvement, Integer>(improvement, calcTurnsForImprovement(improvement));
+        unit.getTile().setImprovementInProgress(pair);
+    }
+
+    private static int calcTurnsForImprovement (Improvement improvement) {
+        return 1; //TODO
     }
 
     private static void moveUnit(int destCenterX, int destCenterY) {

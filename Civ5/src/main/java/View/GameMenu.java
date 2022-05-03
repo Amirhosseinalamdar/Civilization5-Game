@@ -3,14 +3,11 @@ package View;
 import Controller.CivilizationController;
 import Controller.GameController;
 import Controller.UnitController;
-import Model.Civilization;
-import Model.Game;
+import Model.*;
 import Model.Map.*;
-import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
-import Model.User;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -583,5 +580,17 @@ public class GameMenu {
 
     public static void techAdded() {
         System.out.println("technology added successfully");
+    }
+
+    public static void canceledTech (Technology canceled) {
+        System.out.println(canceled.toString() + " is now canceled");
+    }
+
+    public static void noSuchImprovement() {
+        System.out.println("no such improvement exists");
+    }
+
+    public static void cantBuildImprovementOnTile() {
+        System.out.println("can not build chosen improvement on this tile");
     }
 }
