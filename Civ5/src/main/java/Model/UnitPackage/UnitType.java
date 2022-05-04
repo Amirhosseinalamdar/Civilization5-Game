@@ -75,4 +75,8 @@ public enum UnitType {
     public int getRange() {
         return range;
     }
+
+    public boolean isCivilian() {
+        return this.equals(WORKER) || this.equals(SETTLER);
+    }
 }

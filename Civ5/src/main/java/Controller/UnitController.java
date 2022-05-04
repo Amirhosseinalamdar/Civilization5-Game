@@ -217,6 +217,7 @@ public class UnitController {
     }
 
     private static boolean tileIsValidForImprovement (Tile tile, Improvement improvement) {
+        if (tile.getCity() == null || !tile.getCity().getCivilization().equals(civilization)) return false;
         if (improvement.getPrerequisiteTypes() != null)
             for (TerrainType type : improvement.getPrerequisiteTypes())
                 if (type.equals(tile.getType())) return true;
