@@ -18,7 +18,6 @@ public class Civilization {
     private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
     private HashMap <Technology, Integer> lastCostUntilNewTechnologies;
     private Technology inProgressTech;
-    private ArrayList<Improvement> reachedImprovements;
     private int science;
     private int happiness;
     private final CivSymbol civColor;
@@ -41,7 +40,6 @@ public class Civilization {
         cities = new ArrayList<>();
         units = new ArrayList<>();
         lastCostUntilNewTechnologies = new HashMap<>();
-        reachedImprovements = new ArrayList<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
@@ -49,7 +47,6 @@ public class Civilization {
         this.showingCenterI = 1;
         this.showingCenterJ = 2;
         lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
-        reachedImprovements.add(Improvement.FARM);
         inProgressTech = null;
     }
 
@@ -132,10 +129,6 @@ public class Civilization {
 
     public HashMap<Technology, Integer> getLastCostUntilNewTechnologies() {
         return lastCostUntilNewTechnologies;
-    }
-
-    public ArrayList<Improvement> getReachedImprovements() {
-        return reachedImprovements;
     }
 
     public int getScience() {

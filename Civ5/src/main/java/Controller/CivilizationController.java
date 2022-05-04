@@ -76,21 +76,9 @@ public class CivilizationController {
         civilization.increaseTotalScience(science);
         civilization.increaseTotalGold(gold);
         updateInProgressTech();
-        updateReachedImprovements();
         /**
          +update happiness
          */
-    }
-
-    private static void updateReachedImprovements() {
-        Improvement[] improvements = Improvement.values();
-        for (Improvement improvement : improvements) {
-            if (civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) != null &&
-                    civilization.getLastCostUntilNewTechnologies().get(improvement.getPrerequisiteTech()) <= 0 &&
-            !civilization.getReachedImprovements().contains(improvement)) {
-                civilization.getReachedImprovements().add(improvement);
-            }
-        }
     }
 
     private static void updateInProgressTech() {
