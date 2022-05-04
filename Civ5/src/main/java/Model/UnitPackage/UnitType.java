@@ -32,14 +32,14 @@ public enum UnitType {
 
     private final int MP;
     private final int cost;
-    private final Resource resource;
-    private final Technology technology;
+    private final Resource prerequisiteResource;
+    private final Technology prerequisiteTech;
 
     UnitType (int cost, int MP, Resource resource, Technology technology) {
         this.MP = MP;
         this.cost = cost;
-        this.resource = resource;
-        this.technology = technology;
+        this.prerequisiteResource = resource;
+        this.prerequisiteTech = technology;
     }
 
     public int getCost() {
@@ -48,10 +48,10 @@ public enum UnitType {
     public int getMP() {
         return MP;
     }
-    public Resource getResource() {
-        return resource;
+    public Resource getPrerequisiteResource() {
+        return prerequisiteResource;
     }
-    public Technology getTechnology() {
-        return technology;
+    public Technology getPrerequisiteTech() {
+        return prerequisiteTech;
     }
 }

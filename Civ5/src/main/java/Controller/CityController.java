@@ -290,18 +290,17 @@ public class CityController {
 
     private static boolean hasReachedTechForUnit(UnitType unitType) {
         try {
-            return civilization.getLastCostUntilNewTechnologies().get(unitType.getTechnology()) <= 0;
+            return civilization.getLastCostUntilNewTechnologies().get(unitType.getPrerequisiteTech()) <= 0;
         } catch (Exception e) {
             return false;
         }
     }
 
     private static boolean hasEnoughResources(UnitType unitType) {
-        if (unitType.getResource() == null) return true;
+        if (unitType.getPrerequisiteResource() == null) return true;
         for (Resource r : civilization.getResources())
-            if (r.equals(unitType.getResource()))
+            if (r.equals(unitType.getPrerequisiteResource()))
                 return true;
         return false;
-        //TODO...
     }
 }

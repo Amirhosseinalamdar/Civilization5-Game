@@ -16,7 +16,7 @@ public class Civilization {
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
     private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
-    private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
+    private HashMap <Technology, Integer> lastCostUntilNewTechnologies;
     private Technology inProgressTech;
     private ArrayList<Improvement> reachedImprovements;
     private int science;
@@ -166,9 +166,8 @@ public class Civilization {
         ArrayList<Resource> resources = new ArrayList<>();
         for (City city : cities)
             for (Tile tile : city.getTiles())
-                resources.add(tile.getResource());
+                if (tile.canUseItsResource()) resources.add(tile.getResource());
         return resources;
-        //TODO
     }
 
     public boolean hasReachedTech (Technology technology) {

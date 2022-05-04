@@ -11,10 +11,8 @@ import Model.UnitPackage.UnitType;
 import Model.User;
 import View.GameMenu;
 import javafx.util.Pair;
-//import de.scravy.pair.Pair;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,12 +33,11 @@ public class UnitController {
         if (!matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());
         //TODO switch case and call the related func
-        System.out.println("my stat = " + unit.getStatus().toString());
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
                 if (unit.getMovesInTurn() < unit.getMP()) moveUnit(destCenterX, destCenterY);
-                else GameMenu.notEnoughMoves(); //TODO... take it to view :)
+                else GameMenu.notEnoughMoves();
                 return;
             }
             GameMenu.unavailableTile();
@@ -65,7 +62,8 @@ public class UnitController {
                 GameMenu.noSuchImprovement();
             }
         }
-        else System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
+        else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
+            System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
     }
 
     private static Matcher getUnitDecision() {
@@ -131,7 +129,8 @@ public class UnitController {
                         return Pattern.compile(command).matcher(command);
                     else
                         GameMenu.cantMakeGarrison();
-                } else
+                }
+                else
                     GameMenu.unitIsCivilianError();
             }
 
@@ -150,7 +149,7 @@ public class UnitController {
                 Matcher matcher = Pattern.compile(regex).matcher(command);
                 if (!matcher.find()) throw new RuntimeException();
                 if (unit.getType().equals(UnitType.WORKER))
-                    return Pattern.compile(regex).matcher(command); //TODO check validation of improvements in future
+                    return Pattern.compile(regex).matcher(command);
                 GameMenu.unitIsNotWorker();
             }
 
@@ -184,7 +183,11 @@ public class UnitController {
     }
 
     private static boolean militaryIsInCityTiles() {
-        return true;
+        for (City city : civilization.getCities())
+            for (Tile tile : city.getTiles())
+                if (tile.equals(unit.getTile()))
+                    return true;
+        return false;
     }
 
     private static boolean isTileEmpty(int centerX, int centerY) {
@@ -225,6 +228,7 @@ public class UnitController {
     }
 
     private static void buildImprovement (Improvement improvement) {
+        if (!unit.getTile().getResource().getPrerequisiteImprovement().equals(improvement)) return;
         Pair <Improvement, Integer> pair = new Pair<Improvement, Integer>(improvement, calcTurnsForImprovement(improvement));
         unit.getTile().setImprovementInProgress(pair);
     }
@@ -233,11 +237,10 @@ public class UnitController {
         return 1; //TODO
     }
 
-    private static void moveUnit(int destCenterX, int destCenterY) {
-        int destIndexI = destCenterX, destIndexJ = destCenterY;
-        //if (destIndexJ % 2 == 0) destIndexI /= 2;
+    private static void moveUnit(int destIndexI, int destIndexJ) {
+
         if (!isTileWalkable(Game.getTiles()[destIndexI][destIndexJ], unit)) {
-            System.out.println("can't walk on that tile"); //TODO... non walkable unit
+            System.out.println("can't walk on that tile"); //TODO... non walkable tile
             return;
         }
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
@@ -365,6 +368,9 @@ public class UnitController {
     public static void doRemainingMissions() {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH))
             continuePath();
+        if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY)) //TODO fortify heal
+            return;
+        unit.setStatus("active");
     }
 
     private static void sleepUnit() {

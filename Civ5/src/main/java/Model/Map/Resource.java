@@ -6,9 +6,9 @@ public enum Resource {
     DEER(1, 0, 0, Improvement.CAMP),
     SHEEP(1, 0, 0, Improvement.PASTURE),
     WHEAT(1, 0, 0, Improvement.FARM),
-    COAL(0, 1, 0, Improvement.MINE),//TODO
+    COAL(0, 1, 0, Improvement.MINE),//TODO (amirhossein)
     HORSE(0, 1, 0, Improvement.PASTURE),//TODO dar doc tozihate bishtari daran
-    IRON(0, 1, 0, Improvement.MINE),//TODO
+    IRON(0, 1, 0, Improvement.MINE),//TODO (amirhossein)
     COTTON(0, 0, 2, Improvement.SEEDING_AND_WORKING),
     COLOR(0, 0, 2, Improvement.SEEDING_AND_WORKING),
     FUR(0, 0, 2, Improvement.CAMP),

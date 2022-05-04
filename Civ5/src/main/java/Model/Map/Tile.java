@@ -4,11 +4,7 @@ import Model.Civilization;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
-import Model.UnitPackage.UnitType;
 import javafx.util.Pair;
-//import de.scravy.pair.Pair;
-
-import java.util.ArrayList;
 
 public class Tile {
     private TerrainType type;
@@ -179,5 +175,9 @@ public class Tile {
         return resource;
     }
 
-
+    public boolean canUseItsResource() {
+        if (resource == null || improvementInProgress == null) return false;
+        return improvementInProgress.getKey().equals(resource.getPrerequisiteImprovement()) &&
+                improvementInProgress.getValue() <= 0;
+    }
 }

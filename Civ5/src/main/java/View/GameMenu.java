@@ -1,8 +1,6 @@
 package View;
 
-import Controller.CivilizationController;
 import Controller.GameController;
-import Controller.UnitController;
 import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
@@ -275,9 +273,17 @@ public class GameMenu {
     }
 
     public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
+        TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
+
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
+
         for (Unit unit : civilization.getUnits()) {//TODO test river
             ArrayList<Tile> clearTiles = new ArrayList<>(GameController.getTileNeighbors(unit.getTile()));
-            clearTiles.add(unit.getTile());
+            int clearTileLength = clearTiles.size();
+            for (int i = 0; i < clearTileLength; i++)
+                clearTiles.addAll(GameController.getTileNeighbors(clearTiles.get(i)));
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
@@ -291,6 +297,13 @@ public class GameMenu {
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
+
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
+                        && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
+                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
+
         int startingJ = calculateStartingJ(centerJ) / 2;
         int startingI = calculateStartingI(centerI) * 6;
         boolean flag = false;

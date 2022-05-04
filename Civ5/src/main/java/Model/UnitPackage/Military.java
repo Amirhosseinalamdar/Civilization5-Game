@@ -30,11 +30,6 @@ public class Military extends Unit {
         civilization.getUnits().remove(this);
     }
 
-    public void create() {
-        //this.tile.setMilitary(this);
-//        this.civilization.units.add(this);
-    }
-
     public void upgrade() {
         //TODO... change type (costs gold)
     }
