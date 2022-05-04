@@ -8,6 +8,7 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -188,6 +189,21 @@ public class CityController {
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
+        updateImprovement(city);
+    }
+
+    private static void updateImprovement(City city) {
+        for (Tile tile : city.getTiles()) {
+            if (tile.getImprovementInProgress() != null) {
+                if (tile.getImprovementInProgress().getValue() == 0) continue;
+                int i = tile.getImprovementInProgress().getValue();
+                i--;
+                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), i));
+//                if (i == 0) {
+//                    //TODO changes which happened when an improvement built
+//                }
+            }
+        }
     }
 
     private static void updateProduction(City city) {

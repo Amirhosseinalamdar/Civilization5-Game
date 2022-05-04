@@ -364,7 +364,7 @@ public class GameMenu {
     }
 
     private static char getFeatureFirstChar(TerrainFeature feature) {
-        if (feature == TerrainFeature.SWAMP) return 'S';
+        if (feature == TerrainFeature.MARSH) return 'S';
         else if (feature == TerrainFeature.FOREST) return 'F';
         else if (feature == TerrainFeature.JUNGLE) return 'J';
         else if (feature == TerrainFeature.ICE) return 'I';
