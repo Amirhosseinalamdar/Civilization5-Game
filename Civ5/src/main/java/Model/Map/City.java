@@ -1,8 +1,6 @@
 package Model.Map;
 
-import Controller.CityController;
 import Controller.GameController;
-import Controller.UnitController;
 import Model.Civilization;
 import Model.UnitPackage.UnitType;
 
@@ -17,7 +15,7 @@ public class City {
     private int foodPerTurn;
     private int productionPerTurn;
     private int sciencePerTurn;
-    private HashMap<UnitType, Integer> turnsUntilNewProductions;
+    private HashMap<UnitType, Integer> lastCostsUntilNewProductions;
     private UnitType inProgressUnit;
     private ArrayList<Citizen> citizens;
     private int turnsUntilBirthCitizen;
@@ -35,7 +33,7 @@ public class City {
     private final String name;
 
     public City(Civilization civilization, Tile centerTile, String name) {
-        turnsUntilNewProductions = new HashMap<>();
+        lastCostsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
         tiles.addAll(GameController.getTileNeighbors(centerTile));
@@ -131,8 +129,8 @@ public class City {
         return borderLastCost;
     }
 
-    public HashMap<UnitType, Integer> getTurnsUntilNewProductions() {
-        return turnsUntilNewProductions;
+    public HashMap<UnitType, Integer> getLastCostsUntilNewProductions() {
+        return lastCostsUntilNewProductions;
     }
 
     public UnitType getInProgressUnit() {

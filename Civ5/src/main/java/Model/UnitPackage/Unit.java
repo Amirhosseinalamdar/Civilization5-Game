@@ -120,11 +120,6 @@ public class Unit {
 
     //TODO change civilization -> controller
 
-    public void init() {
-        //this.tile.setCivilian(this);
-        //this.civilization.units.add(this);
-    }
-
     public void setStatus(String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
@@ -152,5 +147,4 @@ public class Unit {
         return this.type.equals(UnitType.CATAPULT) || this.type.equals(UnitType.CANNON) ||
                 this.type.equals(UnitType.TREBUCHET) || this.type.equals(UnitType.ARTILLERY);
     }
-
 }

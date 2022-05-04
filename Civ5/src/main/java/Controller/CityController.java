@@ -3,6 +3,7 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
@@ -191,16 +192,45 @@ public class CityController {
 
     private static void updateProduction(City city) {
         if (city.getInProgressUnit() != null) {
-            int i = city.getTurnsUntilNewProductions().get(city.getInProgressUnit());
+            int i = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit());
             i -= city.getProductionPerTurn();
-            city.getTurnsUntilNewProductions().replace(city.getInProgressUnit(), i);
+            city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
             if (i <= 0) {
-                city.getTurnsUntilNewProductions().remove(city.getInProgressUnit());
-                //TODO method baraye dorost shodan unit
-//                civilization.addUnit(unit);
+                city.getLastCostsUntilNewProductions().remove(city.getInProgressUnit());
+                produceUnit(city);
                 city.setInProgressUnit(null);
             }
         }
+    }
+
+    private static void produceUnit(City city) {
+        if (city.getInProgressUnit().equals(UnitType.WORKER) || city.getInProgressUnit().equals(UnitType.SETTLER)) {
+            Unit civilian = new Unit(city.getInProgressUnit());
+            civilian.setCivilization(civilization);
+            civilization.getUnits().add(civilian);
+            civilian.setTile(city.getTiles().get(0));
+            city.getTiles().get(0).setCivilian(civilian);
+            civilization.addUnit(civilian);
+        } else {
+            Military military = new Military(city.getInProgressUnit());
+            military.setCivilization(civilization);
+            civilization.getUnits().add(military);
+            military.setTile(city.getTiles().get(0));
+            city.getTiles().get(0).setMilitary(military);
+        }
+    }
+
+    public static String turnsForNewUnit(City city) {
+        String output;
+        int turn;
+        if (city.getInProgressUnit() == null) output = "there is no unit in progress";
+        else {
+            if (city.getProductionPerTurn() != 0) {
+                turn = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit()) / city.getProductionPerTurn();
+                output = "turns until producing" + city.getInProgressUnit().name() + " : " + turn + ".";
+            } else output = "turns until producing" + city.getInProgressUnit().name() + " : " + "-";
+        }
+        return output;
     }
 
     private static void handlePopulation(City city) {
@@ -274,13 +304,13 @@ public class CityController {
             return;
         }
         try {
-            int remainingTurns = city.getTurnsUntilNewProductions().get(unitType);
+            int remainingTurns = city.getLastCostsUntilNewProductions().get(unitType);
             System.out.println("already in progress... remaining turns: " + remainingTurns); //TODO... view
         }
         catch (Exception e) {
-            city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
+            city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
-        city.getTurnsUntilNewProductions().put(unitType, unitType.getCost());
+        city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         city.setInProgressUnit(unitType);
     }
 
