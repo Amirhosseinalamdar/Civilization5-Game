@@ -629,4 +629,8 @@ public class GameMenu {
     public static void chooseTechForCivilization() {
         System.out.println("civilization has no tech in progress; choose a research");
     }
+
+    public static void cityIsOccupied (String type) {
+        System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
+    }
 }

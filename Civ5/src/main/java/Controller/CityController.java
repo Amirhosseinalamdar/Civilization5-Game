@@ -319,14 +319,23 @@ public class CityController {
             GameMenu.notEnoughResource();
             return;
         }
+        if (unitType.isCivilian()) //TODO... improve it
+            if (city.getTiles().get(0).getCivilian() != null) {
+                GameMenu.cityIsOccupied("civilian");
+                return;
+            }
+        else
+            if (city.getTiles().get(0).getMilitary() != null) {
+                GameMenu.cityIsOccupied("military");
+                return;
+            }
         try {
-            int remainingTurns = city.getLastCostsUntilNewProductions().get(unitType);
-            System.out.println("already in progress... remaining turns: " + remainingTurns); //TODO... view
+            int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
+            System.out.println("already in progress... remaining cost: " + remainingCost); //TODO... view
         }
         catch (Exception e) {
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
-        city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         city.setInProgressUnit(unitType);
     }
 
