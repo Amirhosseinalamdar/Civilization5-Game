@@ -296,7 +296,7 @@ public class CityController {
 
     private static void tryCreateUnit(UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
-            GameMenu.unreachedTech();
+            GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
         }
         if (!hasEnoughResources(unitType)) {

@@ -105,8 +105,12 @@ public class CivilizationController {
 
             for (Technology parent : parents) {
                 try {
-                    if (civTechs.get(parent) > 0) return false;
+                    if (civTechs.get(parent) > 0) {
+                        GameMenu.unreachedTech(parent);
+                        return false;
+                    }
                 } catch (Exception e2) {
+                    GameMenu.unreachedTech(parent);
                     return false;
                 }
             }

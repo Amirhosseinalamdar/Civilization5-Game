@@ -62,6 +62,8 @@ public class UnitController {
                 GameMenu.noSuchImprovement();
             }
         }
+        else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
+            unit.setStatus("active");
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
             System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
     }
@@ -178,6 +180,9 @@ public class UnitController {
                     GameMenu.unitIsNotSettler();
             }
 
+            if (command.equals("cancel mission"))
+                return Pattern.compile(command).matcher(command);
+
             System.out.println("unit decision wasn't valid");
         }
     }
@@ -206,7 +211,7 @@ public class UnitController {
 
     private static boolean canBuildImprovementHere(Improvement improvement) {
         if (! civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
-            GameMenu.unreachedTech();
+            GameMenu.unreachedTech(improvement.getPrerequisiteTech());
             return false;
         }
         if (! tileIsValidForImprovement(unit.getTile(), improvement)) {

@@ -585,8 +585,8 @@ public class GameMenu {
         System.out.println("no such unit type exists");
     }
 
-    public static void unreachedTech() {
-        System.out.println("you haven't reached necessary tech yet");
+    public static void unreachedTech (Technology prerequisiteTech) {
+        System.out.println("you haven't reached " + prerequisiteTech.toString() + " yet");
     }
 
     public static void notEnoughResource() {
