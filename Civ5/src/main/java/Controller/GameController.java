@@ -118,7 +118,6 @@ public class GameController {
                 GameMenu.invalidPosForCity();
                 return null;
             }
-            System.out.println(matcher.group("name") + ", " + x + ", " + y);
             return Game.getTiles()[x][y].getCity();
         } catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())

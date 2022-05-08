@@ -633,4 +633,8 @@ public class GameMenu {
     public static void cityIsOccupied (String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
+
+    public static void notEnoughGoldForUnit (UnitType unitType) {
+        System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
+    }
 }

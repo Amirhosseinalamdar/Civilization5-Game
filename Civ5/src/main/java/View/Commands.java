@@ -34,16 +34,21 @@ public enum Commands {
     CHOOSE_CITY2("^city (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)$"),
     SHOW_OUTPUT("show output"),
     CREATE_UNIT("create (-u|--unit) (?<unitName>\\S+)"),
-    PURCHASE_TILE("purchase tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
+    PURCHASE_TILE("purchase (-t|--tile) (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     LOCK_CITIZEN("lock citizen on tile (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     SCROLL_MAP("scroll (-d|--direction) (?<direction>(right|left|up|down)) (?<number>\\d+)"),
     SHOW_MAP_GLOBAL("show global map"),
     MANAGE_CIVILIZATION("manage civilization"),
     ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
     SHOW_BANNER("show cities banner"),
-    CIVILIZATION_OUTPUT("show civilization output");
+    CIVILIZATION_OUTPUT("show civilization output"),
+    PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
 
-    private String regex;
+    private final String regex;
+
+    public String getRegex() {
+        return regex;
+    }
 
     Commands(String regex) {
         this.regex = regex;

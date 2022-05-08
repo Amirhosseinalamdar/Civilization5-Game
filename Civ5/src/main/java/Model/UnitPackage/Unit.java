@@ -18,7 +18,7 @@ public class Unit {
     public static int MAX_HEALTH;
     protected Path path;
 
-    public Unit(UnitType unitType) {
+    public Unit (UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
