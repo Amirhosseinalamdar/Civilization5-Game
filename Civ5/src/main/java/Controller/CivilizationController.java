@@ -116,6 +116,7 @@ public class CivilizationController {
             }
             return true;
         }
+        
     }
 
     public static String turnsForNewTech() {
