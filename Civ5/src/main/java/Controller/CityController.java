@@ -62,7 +62,10 @@ public class CityController {
             }
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
         }
-        if (matcher.pattern().toString().startsWith("show")) GameMenu.showCityOutput(city);
+        if (matcher.pattern().toString().startsWith("show")) {
+            updateCityInfos(city);
+            GameMenu.showCityOutput(city);
+        }
     }
 
     public static Matcher getCityDecision() {
@@ -219,14 +222,20 @@ public class CityController {
         city.setFoodPerTurn(food);
         city.setProductionPerTurn(production);
         city.setGoldPerTurn(gold);
-        //TODO units maintenance
         city.setSciencePerTurn(science);
         city.updateStoredFood();
-        //TODO make method of update then use it in banners
+    }
+
+
+    public static void updateCity(City city) {
+        updateCityInfos(city);
+        //TODO units maintenance
+        // TODO make method of update then use it in banners
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
         updateImprovement(city);
+        //TODO update road
     }
 
     private static void updateImprovement(City city) {

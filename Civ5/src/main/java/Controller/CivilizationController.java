@@ -69,7 +69,7 @@ public class CivilizationController {
         int science = 0;
         int gold = 0;
         for (City city : civilization.getCities()) {
-            CityController.updateCityInfos(city);
+            CityController.updateCity(city);
             science += city.getSciencePerTurn();
             gold += city.getGoldPerTurn();
         }

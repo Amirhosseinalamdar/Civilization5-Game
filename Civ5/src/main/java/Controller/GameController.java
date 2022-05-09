@@ -186,16 +186,19 @@ public class GameController {
             System.out.println("civilization doesn't have any cities");
         } else {
             int i = 0;
+            CityController.updateCityInfos(civilization.getCities().get(i));
             GameMenu.showBanner(civilization.getCities().get(i));
             while (true) {
                 String command = GameMenu.nextCommand();
                 if (command.equals("next")) {
                     i++;
                     i = i % civilization.getCities().size();
+                    CityController.updateCityInfos(civilization.getCities().get(i));
                     GameMenu.showBanner(civilization.getCities().get(i));
                 } else if (command.equals("past")) {
                     i--;
                     i = i % civilization.getCities().size();
+                    CityController.updateCityInfos(civilization.getCities().get(i));
                     GameMenu.showBanner(civilization.getCities().get(i));
                 } else if (command.equals("exit banner")) break;
                 else System.out.println("invalid command");
