@@ -18,7 +18,7 @@ public class Tile {
     private Military military;
     private Unit civilian;
     private Pair<Improvement, Integer> improvementInProgress;
-    private Pair<String, Integer> roadOrRailroadInProgress;
+    private Pair<String, Integer> routeInProgress;
     private boolean isRaided;
     private City city; // age null bashe city nis agar na capitale citie
     //    private City memberOfThisCity;//TODO initialize she pls
@@ -64,10 +64,10 @@ public class Tile {
 
     public int getMovementCost() {
         int movementCost = this.movementCost;
-        if (this.getRoadOrRailroadInProgress() != null) {
-            if (this.getRoadOrRailroadInProgress().getValue() <= 0) {
-                if (this.getRoadOrRailroadInProgress().getKey().equals("road")) movementCost -= 1; //TODO... set this
-                else if (this.getRoadOrRailroadInProgress().getKey().equals("railroad")) movementCost -= 3; //TODO
+        if (this.getRouteInProgress() != null) {
+            if (this.getRouteInProgress().getValue() <= 0) {
+                if (this.getRouteInProgress().getKey().equals("road")) movementCost -= 1; //TODO... set this
+                else if (this.getRouteInProgress().getKey().equals("railroad")) movementCost -= 3; //TODO
             }
         }
         return movementCost;
@@ -89,8 +89,8 @@ public class Tile {
         return improvementInProgress;
     }
 
-    public Pair<String, Integer> getRoadOrRailroadInProgress() {
-        return roadOrRailroadInProgress;
+    public Pair<String, Integer> getRouteInProgress() {
+        return routeInProgress;
     }
 
     public boolean isRaided() {
@@ -157,8 +157,8 @@ public class Tile {
         this.improvementInProgress = improvementInProgress;
     }
 
-    public void setRoadOrRailroadInProgress (Pair <String, Integer> roadOrRailroadInProgress) {
-        this.roadOrRailroadInProgress = roadOrRailroadInProgress;
+    public void setRouteInProgress (Pair <String, Integer> routeInProgress) {
+        this.routeInProgress = routeInProgress;
     }
 
     public TerrainType getTypeForCiv(Civilization civilization, int i, int j) {

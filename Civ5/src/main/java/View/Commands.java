@@ -42,7 +42,13 @@ public enum Commands {
     ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
     SHOW_BANNER("show cities banner"),
     CIVILIZATION_OUTPUT("show civilization output"),
-    PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
+    PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)"),
+    MOVE_UNIT("move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)"),
+    ATTACK("attack to (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
+    BUILD_IMPROVEMENT("build improvement (-t|--type) (?<improvement>\\S+)"),
+    REMOVE_RESOURCE("remove (-r|--resource) (?<resource>(jungle|road|railroad))"),
+    REPAIR("repair (-i|--improvement) (?<improvement>\\S+)"),
+    PILLAGE("pillage (-i|--improvement) (?<improvement>\\S+)");
 
     private final String regex;
 

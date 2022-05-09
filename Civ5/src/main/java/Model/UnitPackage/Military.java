@@ -26,6 +26,8 @@ public class Military extends Unit {
         else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("garrison")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
+        else if (string.startsWith("pillage")) this.status = UnitStatus.PILLAGE;
+        else if (string.equals("heal")) this.status = UnitStatus.HEAL;
     }
 
     @Override

@@ -653,4 +653,12 @@ public class GameMenu {
     public static void tileAlreadyHas (String improvementName) {
         System.out.println("this tile already has " + improvementName);
     }
+
+    public static void tileIsNotInTerritory (Improvement improvement) {
+        System.out.println("can not build " + improvement.toString() + " here; tile is out of city limits");
+    }
+
+    public static void pillageSuccessful (String improvement) {
+        System.out.println(improvement + " was successfully pillaged");
+    }
 }

@@ -6,11 +6,11 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import View.Commands;
 import View.GameMenu;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +30,7 @@ public class UnitController {
         Matcher matcher = getUnitDecision();
         if (!matcher.find()) throw new RuntimeException();
         unit.setStatus(matcher.pattern().toString());
-        //TODO switch case and call the related func
+
         if (unit.getStatus().equals(UnitStatus.MOVE)) {
             int destCenterX = Integer.parseInt(matcher.group("x")), destCenterY = Integer.parseInt(matcher.group("y"));
             if (isTileEmpty(destCenterX, destCenterY)) {
@@ -40,6 +40,7 @@ public class UnitController {
             }
             GameMenu.unavailableTile();
         }
+
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
                 if (unit.getMovesInTurn() < unit.getMP()) foundCity();
@@ -48,6 +49,7 @@ public class UnitController {
             }
             GameMenu.cantFoundCityHere();
         }
+
         else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
@@ -59,14 +61,14 @@ public class UnitController {
             catch (IllegalArgumentException i) {
                 if (matcher.group("improvement").equals("ROAD")) {
                     if (canBuildRoadHere()) {
-                        if (unit.getMovesInTurn() < unit.getMP()) buildRoadOrRailroad("road");
+                        if (unit.getMovesInTurn() < unit.getMP()) buildRoute("road");
                         else GameMenu.notEnoughMoves();
                     }
                     else GameMenu.cantBuildRoadHere();
                 }
                 if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
                     if (canBuildRailroadHere()) {
-                        if (unit.getMovesInTurn() < unit.getMP()) buildRoadOrRailroad("railroad");
+                        if (unit.getMovesInTurn() < unit.getMP()) buildRoute("railroad");
                         else GameMenu.notEnoughMoves();
                     }
                     else if (civilization.hasReachedTech(Technology.RAILROAD)) GameMenu.cantBuildRailroadHere();
@@ -77,24 +79,46 @@ public class UnitController {
                 GameMenu.noSuchImprovement();
             }
         }
+
+        else if (unit.getStatus().equals(UnitStatus.PILLAGE)) {
+            if (matcher.group("improvement").equals("road") || matcher.group("improvement").equals("railroad")) {
+                if (canPillageRoute(matcher.group("improvement")))
+                    pillageRoute(matcher.group("improvement"));
+            }
+            else {
+                try {
+                    Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
+                    if (canPillageImprovement(improvement))
+                        pillageImprovement();
+                }
+                catch (Exception e) {
+                    GameMenu.noSuchImprovement();
+                }
+            }
+            unit.setStatus("active");
+        }
+
+        else if (unit.getStatus().equals(UnitStatus.REPAIR)) {
+            if (matcher.group("improvement").equals("road") || matcher.group("improvement").equals("railroad")) {
+                //TODO... MAJOR TODO
+            }
+        }
+
         else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
             unit.setStatus("active");
+
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
             System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
     }
 
     private static Matcher getUnitDecision() {
-
-        String regex;
+        Matcher matcher;
 
         while (true) {
             String command = GameMenu.nextCommand();
-            regex = "move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.MOVE_UNIT)) != null) {
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
-                    return Pattern.compile(regex).matcher(command);
+                    return matcher;
                 else
                     GameMenu.indexOutOfArray();
             }
@@ -108,17 +132,14 @@ public class UnitController {
             if (command.equals("delete"))
                 return Pattern.compile("delete").matcher(command);
 
-            regex = "attack to (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
                 int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
                 if (!(unit instanceof Military))
                     GameMenu.unitIsCivilianError();
                 else if (GameController.invalidPos(x, y))
                     GameMenu.indexOutOfArray();
                 else if (!unit.isSiege() || unit.getStatus().equals(UnitStatus.SIEGEPREP))
-                    return Pattern.compile(regex).matcher(command);
+                    return matcher;
                 else
                     GameMenu.siegeNotPrepared();
             }
@@ -161,27 +182,21 @@ public class UnitController {
                     GameMenu.unitIsCivilianError();
             }
 
-            regex = "build improvement (-t|--type) (?<improvement>\\S+)";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.BUILD_IMPROVEMENT)) != null) {
                 if (unit.getType().equals(UnitType.WORKER))
-                    return Pattern.compile(regex).matcher(command);
+                    return matcher;
                 GameMenu.unitIsNotWorker();
             }
 
-            regex = "remove (?<resource>(jungle|route))";
-            if (command.matches(regex)) {
-                Matcher matcher = Pattern.compile(regex).matcher(command);
-                if (!matcher.find()) throw new RuntimeException();
+            if ((matcher = Commands.getMatcher(command, Commands.REMOVE_RESOURCE)) != null) {
                 if (unit.getType().equals(UnitType.WORKER))
-                    return Pattern.compile(regex).matcher(command);
+                    return matcher;
                 GameMenu.unitIsNotWorker();
             }
 
-            if (command.equals("repair")) {
+            if ((matcher = Commands.getMatcher(command, Commands.REPAIR)) != getUnitDecision()) {
                 if (unit.getType().equals(UnitType.WORKER))
-                    return Pattern.compile(command).matcher(command);
+                    return matcher;
                 GameMenu.unitIsNotWorker();
             }
 
@@ -191,12 +206,17 @@ public class UnitController {
             if (command.equals("found city")) {
                 if (unit.getType().equals(UnitType.SETTLER))
                     return Pattern.compile(command).matcher(command);
-                else
-                    GameMenu.unitIsNotSettler();
+                GameMenu.unitIsNotSettler();
             }
 
             if (command.equals("cancel mission"))
                 return Pattern.compile(command).matcher(command);
+
+            if ((matcher = Commands.getMatcher(command, Commands.PILLAGE)) != null) {
+                if (!unit.getType().isCivilian())
+                    return matcher;
+                GameMenu.unitIsCivilianError();
+            }
 
             System.out.println("unit decision wasn't valid");
         }
@@ -213,6 +233,34 @@ public class UnitController {
     private static boolean isTileEmpty(int centerX, int centerY) {
         if (unit instanceof Military) return Game.getTiles()[centerX][centerY].getMilitary() == null;
         else return Game.getTiles()[centerX][centerY].getCivilian() == null;
+    }
+
+    private static boolean canPillageRoute (String routeType) {
+        return unit.getTile().getRouteInProgress() != null &&
+                unit.getTile().getRouteInProgress().getKey().equals(routeType) &&
+                    unit.getTile().getRouteInProgress().getValue() == 0;
+    }
+
+    private static void pillageRoute (String routeType) {
+        //TODO... add gold and stuff BLA BLA
+        Pair <String, Integer> pair =
+                new Pair<>(unit.getTile().getRouteInProgress().getKey(), unit.getTile().getRouteInProgress().getValue() * -1);
+        unit.getTile().setRouteInProgress(pair);
+        GameMenu.pillageSuccessful(routeType);
+    }
+
+    private static boolean canPillageImprovement (Improvement improvement) {
+        return unit.getTile().getImprovementInProgress() != null &&
+                unit.getTile().getImprovementInProgress().getValue() == 0 &&
+                    unit.getTile().getImprovementInProgress().getKey().equals(improvement);
+    }
+
+    private static void pillageImprovement() {
+        //TODO... add gold to attackers' civilization BLA BLA
+        Pair <Improvement, Integer> pair =
+                new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
+        unit.getTile().setImprovementInProgress(pair);
+        GameMenu.pillageSuccessful(pair.getKey().toString());
     }
 
     private static boolean canFoundCityHere() {
@@ -260,53 +308,61 @@ public class UnitController {
         return false;
     }
 
-    private static void buildRoadOrRailroad (String roadOrRailroad) {
-        if (tileAlreadyHas(unit.getTile(), roadOrRailroad)) {
-            GameMenu.tileAlreadyHas(roadOrRailroad);
+    private static void buildRoute (String routeType) {
+        if (tileAlreadyHas(routeType)) {
+            GameMenu.tileAlreadyHas(routeType);
             return;
         }
-        else if (roadOrRailroad.equals("road") && tileAlreadyHas(unit.getTile(), "railroad")) { //Railroad is more advanced so user can not build road on it
+        else if (routeType.equals("road") && tileAlreadyHas("railroad")) { //Railroad is more advanced so user can not build road on it
             GameMenu.tileAlreadyHas("railroad");
             return;
         }
-        Pair <String, Integer> pair = new Pair<>(roadOrRailroad, calcTurnsFor(roadOrRailroad));
-        unit.getTile().setRoadOrRailroadInProgress(pair);
+        Pair <String, Integer> pair = new Pair<>(routeType, calcTurnsFor(routeType));
+        unit.getTile().setRouteInProgress(pair);
     }
 
-    private static boolean tileAlreadyHas (Tile tile, String roadOrRailroad) {
+    private static boolean tileAlreadyHas (String routeType) {
         try {
-            return tile.getRoadOrRailroadInProgress().getKey().equals(roadOrRailroad) &&
-                    tile.getRoadOrRailroadInProgress().getValue() <= 0;
+            return unit.getTile().getRouteInProgress().getKey().equals(routeType) &&
+                    unit.getTile().getRouteInProgress().getValue() <= 0;
         }
         catch (Exception e) {
             return false;
         }
     }
 
-    private static int calcTurnsFor (String roadOrRailroad) {
-        if (unit.getTile().getRoadOrRailroadInProgress() != null &&
-                unit.getTile().getRoadOrRailroadInProgress().getKey().equals(roadOrRailroad))
-            return unit.getTile().getRoadOrRailroadInProgress().getValue();
-        return 3; //TODO... calc turn for road construction
+    private static int calcTurnsFor (String routeType) {
+        if (unit.getTile().getRouteInProgress() != null &&
+                unit.getTile().getRouteInProgress().getKey().equals(routeType))
+            return unit.getTile().getRouteInProgress().getValue();
+        return 3; //Page 87 of manual doc
     }
 
     private static void buildImprovement (Improvement improvement) {
-        if (tileAlreadyHasImprovement(unit.getTile(), improvement)) {
+        if (tileAlreadyHasImprovement(improvement)) {
             GameMenu.tileAlreadyHas(improvement.toString());
+            return;
+        }
+        if (tileOutOfCityLimits()) {
+            GameMenu.tileIsNotInTerritory(improvement);
             return;
         }
         Pair <Improvement, Integer> pair = new Pair<Improvement, Integer>(improvement, calcTurnsForImprovement(improvement));
         unit.getTile().setImprovementInProgress(pair);
     }
 
-    private static boolean tileAlreadyHasImprovement (Tile tile, Improvement improvement) {
+    private static boolean tileAlreadyHasImprovement (Improvement improvement) {
         try {
-            return tile.getImprovementInProgress().getKey().equals(improvement) &&
-                    tile.getImprovementInProgress().getValue() <= 0;
+            return unit.getTile().getImprovementInProgress().getKey().equals(improvement) &&
+                    unit.getTile().getImprovementInProgress().getValue() <= 0;
         }
         catch (Exception e) {
             return false;
         }
+    }
+
+    private static boolean tileOutOfCityLimits() {
+        return unit.getTile().getCity() == null || !unit.getTile().getCity().getCivilization().equals(civilization);
     }
 
     private static int calcTurnsForImprovement (Improvement improvement) {

@@ -120,14 +120,14 @@ public class Unit {
 
     //TODO change civilization -> controller
 
-    public void setStatus(String string) {
+    public void setStatus (String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
         else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
         else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION; //should it be?
         else if (string.equals("wake")) this.status = UnitStatus.WAKE;
         else if (string.equals("delete")) this.kill();
-        else if (string.equals("repair")) this.status = UnitStatus.HEAL;
+        else if (string.startsWith("repair")) this.status = UnitStatus.REPAIR;
         else if (string.startsWith("build")) this.status = UnitStatus.BUILD_IMPROVEMENT;
         else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
         else if (string.startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
