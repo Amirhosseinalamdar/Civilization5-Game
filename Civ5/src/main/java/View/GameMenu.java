@@ -158,8 +158,10 @@ public class GameMenu {
 
     }
 
-    public static void notificationHistory() {
-
+    public static void notificationHistory(Civilization civilization) {
+        for (String notification : civilization.getNotifications()) {
+            System.out.println(notification);
+        }
     }
 
     private static void militaryInfo() {

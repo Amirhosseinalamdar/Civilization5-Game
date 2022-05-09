@@ -73,6 +73,8 @@ public class GameController {
             GameMenu.researchInfoScreen(civilization);
         } else if (Commands.getMatcher(command, Commands.DIPLOMACY_INFO_PANEL) != null) {
             handleDiplomacyPanel(civilization);
+        } else if (Commands.getMatcher(command, Commands.NOTIFICATION_HISTORY) != null) {
+            GameMenu.notificationHistory(civilization);
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();
         } else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {

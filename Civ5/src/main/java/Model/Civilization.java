@@ -42,6 +42,10 @@ public class Civilization {
         score = 0;
     }
 
+    public ArrayList<String> getNotifications() {
+        return notifications;
+    }
+
     public int getScore() {
         return score;
     }
