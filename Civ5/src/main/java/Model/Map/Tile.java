@@ -178,6 +178,6 @@ public class Tile {
     public boolean canUseItsResource() {
         if (resource == null || improvementInProgress == null) return false;
         return improvementInProgress.getKey().equals(resource.getPrerequisiteImprovement()) &&
-                improvementInProgress.getValue() <= 0;
+                improvementInProgress.getValue() == 0;
     }
 }

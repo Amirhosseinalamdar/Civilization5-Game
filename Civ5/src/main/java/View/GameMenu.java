@@ -64,7 +64,7 @@ public class GameMenu {
         int i = 1;
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
-            else System.out.println("citizen is unemployed");
+            else System.out.println(i + "citizen is unemployed");
             i++;
         }
     }

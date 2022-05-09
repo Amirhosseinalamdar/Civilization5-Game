@@ -184,8 +184,10 @@ public class CityController {
         city.setFoodPerTurn(food);
         city.setProductionPerTurn(production);
         city.setGoldPerTurn(gold);
+        //TODO units maintenance
         city.setSciencePerTurn(science);
         city.updateStoredFood();
+        //TODO make method of update then use it in banners
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
@@ -201,7 +203,10 @@ public class CityController {
                 tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), i));
 //                if (i == 0) {
 //                    //TODO changes which happened when an improvement built
+                //TODO effect resource on tile
+
 //                }
+                //TODO i < 0
             }
         }
     }
@@ -223,14 +228,13 @@ public class CityController {
         if (city.getInProgressUnit().equals(UnitType.WORKER) || city.getInProgressUnit().equals(UnitType.SETTLER)) {
             Unit civilian = new Unit(city.getInProgressUnit());
             civilian.setCivilization(civilization);
-            civilization.getUnits().add(civilian);
+            civilization.addUnit(civilian);
             civilian.setTile(city.getTiles().get(0));
             city.getTiles().get(0).setCivilian(civilian);
-            civilization.addUnit(civilian);
         } else {
             Military military = new Military(city.getInProgressUnit());
             military.setCivilization(civilization);
-            civilization.getUnits().add(military);
+            civilization.addUnit(military);
             military.setTile(city.getTiles().get(0));
             city.getTiles().get(0).setMilitary(military);
         }
