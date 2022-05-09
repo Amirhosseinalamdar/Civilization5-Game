@@ -46,6 +46,7 @@ public enum Commands {
     DIPLOMACY_INFO_PANEL("show diplomacy info panel"),
     NOTIFICATION_HISTORY("show notification history"),
     MILITARY_OVERVIEW("show military overview"),
+    ECONOMIC_OVERVIEW("show economic overview"),
     PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
 
     private final String regex;

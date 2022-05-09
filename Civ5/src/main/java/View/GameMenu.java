@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CityController;
 import Controller.GameController;
 import Model.*;
 import Model.Map.*;
@@ -170,8 +171,16 @@ public class GameMenu {
         }
     }
 
-    private static void economicInfo() {
-
+    public static void economicOverview(Civilization civilization) {
+        for (City city : civilization.getCities()) {
+            System.out.println("Name: " + city.getName() + "  |  Population: " + city.getCitizens().size() + "  |  Defensive Strength: " + city.getHP());
+            System.out.println("food: " + city.getFoodPerTurn());
+            System.out.println("production: " + city.getProductionPerTurn());
+            System.out.println("gold: " + city.getGoldPerTurn());
+            System.out.println("science: " + city.getSciencePerTurn());
+            System.out.println(CityController.turnsForNewUnit(city));
+            //TODO switch to unit
+        }
     }
 
     private static void tradingHistory() {
