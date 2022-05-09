@@ -84,8 +84,8 @@ public class GameMenu {
             System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
         else if (city.getStoredFood() < 0)
             System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
-        else System.out.println("turns until growth citizen: -");
-        if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: -");
+        else System.out.println("turns until growth citizen: N/A");
+        if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: N/A");
         else System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
     }
 
@@ -126,15 +126,13 @@ public class GameMenu {
             int turn = 0;
             System.out.println("current research project is : " + civilization.getInProgressTech().name());
             if (civilization.getScience() != 0) turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
-            if (turn == 0) System.out.println("--- turns remain for the research");
+            if (turn == 0) System.out.println("N/A turns remain for the research");
             else System.out.println(turn + " turns remain for the research");
             System.out.println("this research will unlock:");
             int i = 1;
-            if (civilization.getInProgressTech().getUnlocks() != null) {
-                for (String unlock : civilization.getInProgressTech().getUnlocks()) {
-                    System.out.println(i + " : " + unlock);
-                    i++;
-                }
+            for (String unlock : civilization.getInProgressTech().getUnlocks()) {
+                System.out.println(i + " : " + unlock);
+                i++;
             }
         }
     }
@@ -147,8 +145,9 @@ public class GameMenu {
 
     }
 
-    private static void diplomacyInfo() {
-
+    public static void showDiplomacyInfo(Civilization civilization) {
+        System.out.println("Game Score: " + civilization.getScore());
+        //TODO diplomacy with others and calculate game score
     }
 
     private static void victoryProgressInfo() {
@@ -159,7 +158,7 @@ public class GameMenu {
 
     }
 
-    private static void notificationHistory() {
+    public static void notificationHistory() {
 
     }
 

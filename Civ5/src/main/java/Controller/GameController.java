@@ -71,6 +71,8 @@ public class GameController {
             scrollOnMap(matcher);
         } else if (Commands.getMatcher(command, Commands.RESEARCH_INFO_SCREEN) != null) {
             GameMenu.researchInfoScreen(civilization);
+        } else if (Commands.getMatcher(command, Commands.DIPLOMACY_INFO_PANEL) != null) {
+            handleDiplomacyPanel(civilization);
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();
         } else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
@@ -206,6 +208,11 @@ public class GameController {
                 else System.out.println("invalid command");
             }
         }
+    }
+
+    private static void handleDiplomacyPanel(Civilization civilization) {
+        GameMenu.showDiplomacyInfo(civilization);
+        //TODO can diplomacy with others
     }
 
     public static ArrayList<Tile> getTileNeighbors(Tile startingTile) {

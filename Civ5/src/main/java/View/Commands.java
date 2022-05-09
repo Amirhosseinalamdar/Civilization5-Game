@@ -43,6 +43,7 @@ public enum Commands {
     SHOW_BANNER("show cities banner"),
     CIVILIZATION_OUTPUT("show civilization output"),
     RESEARCH_INFO_SCREEN("show research info screen"),
+    DIPLOMACY_INFO_PANEL("show diplomacy info panel"),
     PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
 
     private final String regex;

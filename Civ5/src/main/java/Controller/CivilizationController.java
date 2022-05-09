@@ -68,13 +68,19 @@ public class CivilizationController {
     public static void updateCivilization() {
         int science = 0;
         int gold = 0;
+        int score = civilization.getScore();
         for (City city : civilization.getCities()) {
             CityController.updateCity(city);
             science = city.getSciencePerTurn();
             gold += city.getGoldPerTurn();
+            score += city.getTiles().size();
+            score += city.getCitizens().size();
         }
+        score += civilization.getCities().size();
+        score += civilization.getLastCostUntilNewTechnologies().size();
         civilization.increaseTotalScience(science);
         civilization.increaseTotalGold(gold);
+        civilization.setScore(score);
         updateInProgressTech();
         /**
          +update happiness

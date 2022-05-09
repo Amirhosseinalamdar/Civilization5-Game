@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Civilization {
+    private int score;
     private int totalGold;
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
@@ -23,6 +24,31 @@ public class Civilization {
     private final CivSymbol civColor;
     private int showingCenterI;
     private int showingCenterJ;
+    private ArrayList<String> notifications;
+
+    public Civilization() {
+        cities = new ArrayList<>();
+        units = new ArrayList<>();
+        notifications = new ArrayList<>();
+        lastCostUntilNewTechnologies = new HashMap<>();
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        this.civColor = initCivSymbol();
+        this.showingCenterI = 1;
+        this.showingCenterJ = 2;
+        lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
+        inProgressTech = null;
+        score = 0;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public void setTotalGold(int totalGold) {
         this.totalGold = totalGold;
@@ -34,20 +60,6 @@ public class Civilization {
 
     public void setInProgressTech(Technology inProgressTech) {
         this.inProgressTech = inProgressTech;
-    }
-
-    public Civilization() {
-        cities = new ArrayList<>();
-        units = new ArrayList<>();
-        lastCostUntilNewTechnologies = new HashMap<>();
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
-                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.civColor = initCivSymbol();
-        this.showingCenterI = 1;
-        this.showingCenterJ = 2;
-        lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
-        inProgressTech = null;
     }
 
     public int getShowingCenterI() {
