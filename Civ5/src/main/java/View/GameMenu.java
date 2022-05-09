@@ -164,8 +164,10 @@ public class GameMenu {
         }
     }
 
-    private static void militaryInfo() {
-
+    public static void militaryOverview(Civilization civilization) {
+        for (Unit unit : civilization.getUnits()) {
+            System.out.println("Name: " + unit.getType().name() + "  |  Status: " + unit.getStatus().name() + "  |  Health: " + unit.getHealth());
+        }
     }
 
     private static void economicInfo() {
