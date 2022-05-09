@@ -240,7 +240,13 @@ public class UnitController {
     }
 
     private static int calcTurnsForImprovement (Improvement improvement) {
-        return 1; //TODO
+        int additionalTurn = 0;
+        if (improvement.equals(Improvement.FARM) || improvement.equals(Improvement.MINE)) {
+            if (unit.getTile().getFeature().equals(TerrainFeature.FOREST)) additionalTurn = 4;
+            else if (unit.getTile().getFeature().equals(TerrainFeature.JUNGLE)) additionalTurn = 7;
+            else if (unit.getTile().getFeature().equals(TerrainFeature.MARSH)) additionalTurn = 6;
+        }
+        return improvement.getConstructionTime() + additionalTurn;
     }
 
     private static void moveUnit(int destIndexI, int destIndexJ) {

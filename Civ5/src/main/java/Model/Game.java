@@ -6,11 +6,8 @@ import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
-import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 public class Game {
@@ -165,7 +162,7 @@ public class Game {
                     else if (key < 20) tiles[i][j].setResource(Resource.COLOR);
                     else if (key < 30) tiles[i][j].setResource(Resource.FUR);
                     else if (key < 40) tiles[i][j].setResource(Resource.SILK);
-                } else if (tiles[i][j].getFeature() == TerrainFeature.SWAMP) {
+                } else if (tiles[i][j].getFeature() == TerrainFeature.MARSH) {
                     if (key < 20) tiles[i][j].setResource(Resource.SUGAR);
                 } else if (tiles[i][j].getFeature() == TerrainFeature.DELTA) {
                     if (key < 10) tiles[i][j].setResource(Resource.WHEAT);
@@ -253,10 +250,10 @@ public class Game {
         if (key < 50 && tiles[i][j].getFeature() == null) {
             if (type == TerrainType.GRASS) {
                 tiles[i][j].setFeature(TerrainFeature.FOREST);
-                if (key < 5) tiles[i][j].setFeature(TerrainFeature.SWAMP);
+                if (key < 5) tiles[i][j].setFeature(TerrainFeature.MARSH);
             } else if (type == TerrainType.PLAIN) {
                 tiles[i][j].setFeature(TerrainFeature.JUNGLE);
-                if (key < 5) tiles[i][j].setFeature(TerrainFeature.SWAMP);
+                if (key < 5) tiles[i][j].setFeature(TerrainFeature.MARSH);
             } else if (type == TerrainType.SNOW) {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
