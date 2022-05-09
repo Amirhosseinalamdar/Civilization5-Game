@@ -637,4 +637,20 @@ public class GameMenu {
     public static void notEnoughGoldForUnit (UnitType unitType) {
         System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
     }
+
+    public static void cantBuildRoadHere() {
+        System.out.println("can not build road here");
+    }
+
+    public static void cantBuildRailroadHere() {
+        System.out.println("can not build railroad here");
+    }
+
+    public static void unrelatedImprovementToResource() {
+        System.out.println("can not build this improvement; its related resource is not here");
+    }
+
+    public static void tileAlreadyHas (String improvementName) {
+        System.out.println("this tile already has " + improvementName);
+    }
 }

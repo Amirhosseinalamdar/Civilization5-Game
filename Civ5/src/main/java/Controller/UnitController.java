@@ -1,18 +1,16 @@
 package Controller;
 
-import Model.Civilization;
-import Model.Game;
+import Model.*;
 import Model.Map.*;
-import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
-import Model.User;
 import View.GameMenu;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +54,23 @@ public class UnitController {
                 if (canBuildImprovementHere(improvement)) {
                     if (unit.getMovesInTurn() < unit.getMP()) buildImprovement(improvement);
                     else GameMenu.notEnoughMoves();
+                }
+            }
+            catch (IllegalArgumentException i) {
+                if (matcher.group("improvement").equals("ROAD")) {
+                    if (canBuildRoadHere()) {
+                        if (unit.getMovesInTurn() < unit.getMP()) buildRoadOrRailroad("road");
+                        else GameMenu.notEnoughMoves();
+                    }
+                    else GameMenu.cantBuildRoadHere();
+                }
+                if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
+                    if (canBuildRailroadHere()) {
+                        if (unit.getMovesInTurn() < unit.getMP()) buildRoadOrRailroad("railroad");
+                        else GameMenu.notEnoughMoves();
+                    }
+                    else if (civilization.hasReachedTech(Technology.RAILROAD)) GameMenu.cantBuildRailroadHere();
+                    else GameMenu.unreachedTech(Technology.RAILROAD);
                 }
             }
             catch (Exception e) {
@@ -218,7 +233,19 @@ public class UnitController {
             GameMenu.cantBuildImprovementOnTile();
             return false;
         }
+        if (! unit.getTile().getResource().getPrerequisiteImprovement().equals(improvement)) {
+            GameMenu.unrelatedImprovementToResource();
+            return false;
+        }
         return true;
+    }
+
+    private static boolean canBuildRoadHere() {
+        return true; //TODO
+    }
+
+    private static boolean canBuildRailroadHere() {
+        return civilization.hasReachedTech(Technology.RAILROAD); //TODO
     }
 
     private static boolean tileIsValidForImprovement (Tile tile, Improvement improvement) {
@@ -233,13 +260,59 @@ public class UnitController {
         return false;
     }
 
+    private static void buildRoadOrRailroad (String roadOrRailroad) {
+        if (tileAlreadyHas(unit.getTile(), roadOrRailroad)) {
+            GameMenu.tileAlreadyHas(roadOrRailroad);
+            return;
+        }
+        else if (roadOrRailroad.equals("road") && tileAlreadyHas(unit.getTile(), "railroad")) { //Railroad is more advanced so user can not build road on it
+            GameMenu.tileAlreadyHas("railroad");
+            return;
+        }
+        Pair <String, Integer> pair = new Pair<>(roadOrRailroad, calcTurnsFor(roadOrRailroad));
+        unit.getTile().setRoadOrRailroadInProgress(pair);
+    }
+
+    private static boolean tileAlreadyHas (Tile tile, String roadOrRailroad) {
+        try {
+            return tile.getRoadOrRailroadInProgress().getKey().equals(roadOrRailroad) &&
+                    tile.getRoadOrRailroadInProgress().getValue() <= 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static int calcTurnsFor (String roadOrRailroad) {
+        if (unit.getTile().getRoadOrRailroadInProgress() != null &&
+                unit.getTile().getRoadOrRailroadInProgress().getKey().equals(roadOrRailroad))
+            return unit.getTile().getRoadOrRailroadInProgress().getValue();
+        return 3; //TODO... calc turn for road construction
+    }
+
     private static void buildImprovement (Improvement improvement) {
-        if (!unit.getTile().getResource().getPrerequisiteImprovement().equals(improvement)) return;
+        if (tileAlreadyHasImprovement(unit.getTile(), improvement)) {
+            GameMenu.tileAlreadyHas(improvement.toString());
+            return;
+        }
         Pair <Improvement, Integer> pair = new Pair<Improvement, Integer>(improvement, calcTurnsForImprovement(improvement));
         unit.getTile().setImprovementInProgress(pair);
     }
 
+    private static boolean tileAlreadyHasImprovement (Tile tile, Improvement improvement) {
+        try {
+            return tile.getImprovementInProgress().getKey().equals(improvement) &&
+                    tile.getImprovementInProgress().getValue() <= 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
     private static int calcTurnsForImprovement (Improvement improvement) {
+        if (unit.getTile().getImprovementInProgress() != null &&
+                unit.getTile().getImprovementInProgress().getKey().equals(improvement))
+            return unit.getTile().getImprovementInProgress().getValue();
         int additionalTurn = 0;
         if (improvement.equals(Improvement.FARM) || improvement.equals(Improvement.MINE)) {
             if (unit.getTile().getFeature().equals(TerrainFeature.FOREST)) additionalTurn = 4;
@@ -314,8 +387,8 @@ public class UnitController {
                 chosenPath.tiles.get(0).setCivilian(unit);
                 unit.getTile().setCivilian(null);
             }
-            //changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
-            unit.calcMovesTo(chosenPath.tiles.get(0));
+            changeTileStatus(unit.getTile(), TileStatus.DISCOVERED);
+            unit.updateMovesInTurn(chosenPath.tiles.get(0));
             unit.setTile(chosenPath.tiles.get(0));
             changeTileStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
