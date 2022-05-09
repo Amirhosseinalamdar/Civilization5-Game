@@ -42,6 +42,7 @@ public enum Commands {
     ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
     SHOW_BANNER("show cities banner"),
     CIVILIZATION_OUTPUT("show civilization output"),
+    RESEARCH_INFO_SCREEN("show research info screen"),
     PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
 
     private final String regex;

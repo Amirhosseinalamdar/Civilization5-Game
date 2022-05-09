@@ -69,9 +69,11 @@ public class GameController {
             CivilizationController.handleCivilizationOptions();
         } else if ((matcher = Commands.getMatcher(command, Commands.SCROLL_MAP)) != null) {
             scrollOnMap(matcher);
+        } else if (Commands.getMatcher(command, Commands.RESEARCH_INFO_SCREEN) != null) {
+            GameMenu.researchInfoScreen(civilization);
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();
-        }else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
+        } else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
             GameMenu.civilizationOutput(civilization);
         } else System.out.println("game controller, invalid command");
     }

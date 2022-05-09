@@ -120,8 +120,23 @@ public class GameMenu {
 
 //info part ===============================
 
-    private static void researchInfo() {
-
+    public static void researchInfoScreen(Civilization civilization) {
+        if (civilization.getInProgressTech() == null) System.out.println("there is no research in progress");
+        else {
+            int turn = 0;
+            System.out.println("current research project is : " + civilization.getInProgressTech().name());
+            if (civilization.getScience() != 0) turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
+            if (turn == 0) System.out.println("--- turns remain for the research");
+            else System.out.println(turn + " turns remain for the research");
+            System.out.println("this research will unlock:");
+            int i = 1;
+            if (civilization.getInProgressTech().getUnlocks() != null) {
+                for (String unlock : civilization.getInProgressTech().getUnlocks()) {
+                    System.out.println(i + " : " + unlock);
+                    i++;
+                }
+            }
+        }
     }
 
     private static void unitsInfo() {
@@ -653,4 +668,6 @@ public class GameMenu {
     public static void tileAlreadyHas (String improvementName) {
         System.out.println("this tile already has " + improvementName);
     }
+
+
 }
