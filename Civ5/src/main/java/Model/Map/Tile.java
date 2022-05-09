@@ -18,8 +18,8 @@ public class Tile {
     private Military military;
     private Unit civilian;
     private Pair<Improvement, Integer> improvementInProgress;
+    private Pair<String, Integer> roadOrRailroadInProgress;
     private boolean isRaided;
-    //private boolean isCity;
     private City city; // age null bashe city nis agar na capitale citie
     //    private City memberOfThisCity;//TODO initialize she pls
     //private ArrayList<River> rivers;
@@ -63,6 +63,13 @@ public class Tile {
     }
 
     public int getMovementCost() {
+        int movementCost = this.movementCost;
+        if (this.getRoadOrRailroadInProgress() != null) {
+            if (this.getRoadOrRailroadInProgress().getValue() <= 0) {
+                if (this.getRoadOrRailroadInProgress().getKey().equals("road")) movementCost -= 1; //TODO... set this
+                else if (this.getRoadOrRailroadInProgress().getKey().equals("railroad")) movementCost -= 3; //TODO
+            }
+        }
         return movementCost;
     }
 
@@ -80,6 +87,10 @@ public class Tile {
 
     public Pair<Improvement, Integer> getImprovementInProgress() {
         return improvementInProgress;
+    }
+
+    public Pair<String, Integer> getRoadOrRailroadInProgress() {
+        return roadOrRailroadInProgress;
     }
 
     public boolean isRaided() {
@@ -144,6 +155,10 @@ public class Tile {
 
     public void setImprovementInProgress (Pair <Improvement, Integer> improvementInProgress) {
         this.improvementInProgress = improvementInProgress;
+    }
+
+    public void setRoadOrRailroadInProgress (Pair <String, Integer> roadOrRailroadInProgress) {
+        this.roadOrRailroadInProgress = roadOrRailroadInProgress;
     }
 
     public TerrainType getTypeForCiv(Civilization civilization, int i, int j) {

@@ -18,7 +18,7 @@ public class Unit {
     public static int MAX_HEALTH;
     protected Path path;
 
-    public Unit(UnitType unitType) {
+    public Unit (UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
@@ -135,8 +135,10 @@ public class Unit {
         else if (string.equals("active")) this.status = UnitStatus.ACTIVE;
     }
 
-    public void calcMovesTo(Tile dest) {
+    public void updateMovesInTurn (Tile dest) {
         this.movesInTurn += dest.getMovementCost();
+        if (this.type.equals(UnitType.SCOUT))
+            this.movesInTurn -= dest.getFeature().getMovementCost();
     }
 
     //    public void changeStatus (UnitStatus status) { ------> to controller

@@ -56,10 +56,6 @@ public class GameController {
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
-            if (chosenUnit.getMovesInTurn() >= chosenUnit.getMP()) {
-                System.out.println("no moves remaining"); //TODO... take it to view :)
-                return;
-            }
             UnitController.setUnit(chosenUnit);
             UnitController.handleUnitOptions();
         } else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
@@ -122,7 +118,6 @@ public class GameController {
                 GameMenu.invalidPosForCity();
                 return null;
             }
-            System.out.println(matcher.group("name") + ", " + x + ", " + y);
             return Game.getTiles()[x][y].getCity();
         } catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())
@@ -152,6 +147,7 @@ public class GameController {
         checkMyCivilization();
         checkControllersCivilization();
         User player = Game.getPlayers().get(Game.getTurn());
+        System.out.println("turn: " + player.getUsername());
         for (Unit unit : player.getCivilization().getUnits()) {
             unit.setMovesInTurn(0);
             UnitController.setUnit(unit);

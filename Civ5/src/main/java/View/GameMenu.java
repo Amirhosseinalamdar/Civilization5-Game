@@ -585,8 +585,8 @@ public class GameMenu {
         System.out.println("no such unit type exists");
     }
 
-    public static void unreachedTech() {
-        System.out.println("you haven't reached necessary tech yet");
+    public static void unreachedTech (Technology prerequisiteTech) {
+        System.out.println("you haven't reached " + prerequisiteTech.toString() + " yet");
     }
 
     public static void notEnoughResource() {
@@ -632,5 +632,25 @@ public class GameMenu {
 
     public static void cityIsOccupied (String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
+    }
+
+    public static void notEnoughGoldForUnit (UnitType unitType) {
+        System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
+    }
+
+    public static void cantBuildRoadHere() {
+        System.out.println("can not build road here");
+    }
+
+    public static void cantBuildRailroadHere() {
+        System.out.println("can not build railroad here");
+    }
+
+    public static void unrelatedImprovementToResource() {
+        System.out.println("can not build this improvement; its related resource is not here");
+    }
+
+    public static void tileAlreadyHas (String improvementName) {
+        System.out.println("this tile already has " + improvementName);
     }
 }

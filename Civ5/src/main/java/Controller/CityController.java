@@ -29,22 +29,24 @@ public class CityController {
     public static void handleCityOptions() {
         Matcher matcher = getCityDecision();
 
-        if (matcher.pattern().toString().startsWith("create")) {
-            UnitType type = getUnitTypeFromString(matcher.group("unitName"));
-            if (type == null) {
+        if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex()) ||
+            matcher.pattern().toString().matches(Commands.PURCHASE_UNIT.getRegex())) {
+            UnitType unitType = getUnitTypeFromString(matcher.group("unitName"));
+            if (unitType == null) {
                 GameMenu.noSuchUnitType();
                 return;
             }
-            tryCreateUnit(type);
+            if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
+            else tryPurchaseUnit(unitType);
         }
 
-        if (matcher.pattern().toString().startsWith("purchase tile")) {
+        if (matcher.pattern().toString().matches(Commands.PURCHASE_TILE.getRegex())) {
             Tile targetTile = Game.getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
         }
 
-        if (matcher.pattern().toString().startsWith("lock citizen on tile")) {
+        if (matcher.pattern().toString().matches(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
@@ -68,7 +70,8 @@ public class CityController {
 
         while (true) {
             String command = GameMenu.nextCommand();
-            if ((matcher = Commands.getMatcher(command, Commands.CREATE_UNIT)) != null) {
+            if ((matcher = Commands.getMatcher(command, Commands.CREATE_UNIT)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.PURCHASE_UNIT)) != null) {
                 if (unitIsValid(matcher.group("unitName")))
                     return matcher;
                 GameMenu.invalidUnitType();
@@ -89,6 +92,38 @@ public class CityController {
                 return matcher;
             }
             System.out.println("city decision wasn't valid");
+        }
+    }
+
+    private static void tryPurchaseUnit (UnitType unitType) {
+        int unitGoldCost = 100; //TODO... calculate cost of unit
+        if (!civilization.hasReachedTech(unitType.getPrerequisiteTech())) {
+            GameMenu.unreachedTech(unitType.getPrerequisiteTech());
+            return;
+        }
+        if (unitGoldCost < civilization.getTotalGold()) {
+            GameMenu.notEnoughGoldForUnit(unitType);
+            return;
+        }
+        if ((unitType.isCivilian() && city.getTiles().get(0).getCivilian() != null) ||
+                city.getTiles().get(0).getMilitary() != null){
+            GameMenu.cityIsOccupied(unitType.toString());
+            return;
+        }
+        civilization.setTotalGold(civilization.getTotalGold() - unitGoldCost);
+        if (unitType.isCivilian()) {
+            Unit civilian = new Unit(unitType);
+            civilization.addUnit(civilian);
+            city.getTiles().get(0).setCivilian(civilian);
+            civilian.setTile(city.getTiles().get(0));
+            civilian.setCivilization(civilization);
+        }
+        else {
+            Military military = new Military(unitType);
+            civilization.addUnit(military);
+            city.getTiles().get(0).setMilitary(military);
+            military.setTile(city.getTiles().get(0));
+            military.setCivilization(civilization);
         }
     }
 
@@ -316,7 +351,7 @@ public class CityController {
 
     private static void tryCreateUnit(UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
-            GameMenu.unreachedTech();
+            GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
         }
         if (!hasEnoughResources(unitType)) {
@@ -325,12 +360,12 @@ public class CityController {
         }
         if (unitType.isCivilian()) //TODO... improve it
             if (city.getTiles().get(0).getCivilian() != null) {
-                GameMenu.cityIsOccupied("civilian");
+                GameMenu.cityIsOccupied(unitType.toString());
                 return;
             }
         else
             if (city.getTiles().get(0).getMilitary() != null) {
-                GameMenu.cityIsOccupied("military");
+                GameMenu.cityIsOccupied(unitType.toString());
                 return;
             }
         try {
