@@ -280,10 +280,10 @@ public class GameMenu {
                 civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
 
         for (Unit unit : civilization.getUnits()) {//TODO test river
-            ArrayList<Tile> clearTiles = new ArrayList<>(GameController.getTileNeighbors(unit.getTile()));
+            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
             int clearTileLength = clearTiles.size();
             for (int i = 0; i < clearTileLength; i++)
-                clearTiles.addAll(GameController.getTileNeighbors(clearTiles.get(i)));
+                clearTiles.addAll((clearTiles.get(i).getNeighbors()));
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
@@ -292,7 +292,7 @@ public class GameMenu {
             ArrayList<Tile> clearTiles = new ArrayList<>();
             for (Tile tile : city.getTiles()) {
                 clearTiles.add(tile);
-                clearTiles.addAll(GameController.getTileNeighbors(tile));
+                clearTiles.addAll(tile.getNeighbors());
             }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;

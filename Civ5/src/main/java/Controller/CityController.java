@@ -331,7 +331,7 @@ public class CityController {
         ArrayList<Tile> tiles = new ArrayList<>(city.getTiles());
         while (tiles.size() > 0) {
             n = random.nextInt(tiles.size());
-            for (Tile tileNeighbor : GameController.getTileNeighbors(tiles.get(n))) {
+            for (Tile tileNeighbor : tiles.get(n).getNeighbors()) {
                 if (tileNeighbor.getCity() == null && (tileNeighbor.getCivilian() == null || tileNeighbor.getCivilian().getCivilization() != city.getCivilization()) &&
                         (tileNeighbor.getMilitary() == null || tileNeighbor.getMilitary().getCivilization() != city.getCivilization())) return tileNeighbor;
             }

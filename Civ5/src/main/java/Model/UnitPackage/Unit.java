@@ -126,7 +126,7 @@ public class Unit {
         else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
         else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION; //should it be?
         else if (string.equals("wake")) this.status = UnitStatus.WAKE;
-        else if (string.equals("delete")) this.kill();
+        else if (string.equals("delete")) this.delete();
         else if (string.startsWith("repair")) this.status = UnitStatus.REPAIR;
         else if (string.startsWith("build")) this.status = UnitStatus.BUILD_IMPROVEMENT;
         else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
@@ -135,7 +135,16 @@ public class Unit {
         else if (string.equals("active")) this.status = UnitStatus.ACTIVE;
     }
 
+    private void delete() {
+        this.kill();
+        civilization.setTotalGold(civilization.getTotalGold() + 5); //TODO... set this
+    }
+
     public void updateMovesInTurn (Tile dest) {
+        if (dest.isEnemyZoneOfControl(this.civilization)) {
+            this.movesInTurn = MP;
+            return;
+        }
         this.movesInTurn += dest.getMovementCost();
         if (this.type.equals(UnitType.SCOUT))
             this.movesInTurn -= dest.getFeature().getMovementCost();

@@ -119,7 +119,9 @@ public class UnitController {
             unit.setStatus("active");
 
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
-            System.out.println("unit controller, invalid command"); //TODO... add else_if for other statuses
+            System.out.println("doing nothing"); //TODO... add else_if for other statuses
+
+        else System.out.println("invalid unit decision");
     }
 
     private static Matcher getUnitDecision() {
@@ -205,7 +207,7 @@ public class UnitController {
                 GameMenu.unitIsNotWorker();
             }
 
-            if ((matcher = Commands.getMatcher(command, Commands.REPAIR)) != getUnitDecision()) {
+            if ((matcher = Commands.getMatcher(command, Commands.REPAIR)) != null) {
                 if (unit.getType().equals(UnitType.WORKER))
                     return matcher;
                 GameMenu.unitIsNotWorker();
@@ -310,7 +312,7 @@ public class UnitController {
     private static boolean canFoundCityHere() {
         ArrayList<Tile> beginningTiles = new ArrayList<>();
         beginningTiles.add(unit.getTile());
-        beginningTiles.addAll(GameController.getTileNeighbors(unit.getTile()));
+        beginningTiles.addAll(unit.getTile().getNeighbors());
         for (Tile tile : beginningTiles)
             if (tile.getCity() != null) return false;
         return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
@@ -456,7 +458,7 @@ public class UnitController {
         while (paths.size() > 0) {
             Path path = paths.get(0);
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
-            for (Tile neighborTile : GameController.getTileNeighbors(lastTile)) {
+            for (Tile neighborTile : lastTile.getNeighbors()) {
                 if (!isTileWalkable(neighborTile, unit)) continue;
                 boolean isRouteRepetitive = false;
                 for (Tile oneOfPreviousTiles : path.tiles) {
@@ -498,14 +500,14 @@ public class UnitController {
     }
 
     private static void changeTileStatus(Tile tile, TileStatus newStatus) {
-        ArrayList<Tile> neighbors = GameController.getTileNeighbors(tile);
+        ArrayList<Tile> neighbors = tile.getNeighbors();
         neighbors.add(tile);
         for (Tile neighbor : neighbors)
             civilization.getTileVisionStatuses()[neighbor.getIndexInMapI()][neighbor.getIndexInMapJ()] = newStatus;
     }
 
     public static boolean areNeighbors(Tile first, Tile second) {
-        ArrayList<Tile> neighborsOfFirst = GameController.getTileNeighbors(first);
+        ArrayList<Tile> neighborsOfFirst = first.getNeighbors();
         for (Tile tile : neighborsOfFirst)
             if (tile.equals(second)) return true;
         return false;
@@ -553,7 +555,8 @@ public class UnitController {
     public static void doRemainingMissions() {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH))
             continuePath();
-        if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY)) //TODO fortify heal
+        if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY) ||
+                (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20)) //TODO fortify heal
             return;
         unit.setStatus("active");
     }

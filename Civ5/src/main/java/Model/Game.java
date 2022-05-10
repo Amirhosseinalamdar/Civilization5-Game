@@ -63,8 +63,8 @@ public class Game {
     }
 
     private static void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
-        ArrayList<Tile> visibleTiles = GameController.getTileNeighbors(settlerTile);
-        visibleTiles.addAll(GameController.getTileNeighbors(warriorTile));
+        ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
+        visibleTiles.addAll(warriorTile.getNeighbors());
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }

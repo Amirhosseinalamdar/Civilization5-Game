@@ -36,7 +36,7 @@ public class City {
         lastCostsUntilNewProductions = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
-        tiles.addAll(GameController.getTileNeighbors(centerTile));
+        tiles.addAll(centerTile.getNeighbors());
 
         for (Tile tile : tiles)
             tile.setCity(this);

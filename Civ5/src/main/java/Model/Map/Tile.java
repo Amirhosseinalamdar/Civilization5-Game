@@ -1,10 +1,14 @@
 package Model.Map;
 
+import Controller.GameController;
 import Model.Civilization;
+import Model.Game;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import javafx.util.Pair;
+
+import java.util.ArrayList;
 
 public class Tile {
     private TerrainType type;
@@ -194,5 +198,37 @@ public class Tile {
         if (resource == null || improvementInProgress == null) return false;
         return improvementInProgress.getKey().equals(resource.getPrerequisiteImprovement()) &&
                 improvementInProgress.getValue() <= 0;
+    }
+
+    public boolean isEnemyZoneOfControl(Civilization civilization) {
+        ArrayList <Tile> neighbors = this.getNeighbors();
+        for (Tile neighbor : neighbors)
+            if (neighbor.getMilitary() != null && !neighbor.getMilitary().getCivilization().equals(civilization))
+                return true;
+        return false;
+    }
+
+    public ArrayList <Tile> getNeighbors() {
+        ArrayList<Tile> neighbors = new ArrayList<>();
+        int indexI = this.getIndexInMapI(), indexJ = this.getIndexInMapJ();
+
+        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
+            if (GameController.invalidPos(i, indexJ)) continue;
+            neighbors.add(Game.getTiles()[i][indexJ]);
+        }
+
+        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
+            if (GameController.invalidPos(indexI, j)) continue;
+            neighbors.add(Game.getTiles()[indexI][j]);
+        }
+
+        if (indexJ % 2 == 0) indexI--;
+        else indexI++;
+
+        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
+            if (GameController.invalidPos(indexI, j)) continue;
+            neighbors.add(Game.getTiles()[indexI][j]);
+        }
+        return neighbors;
     }
 }
