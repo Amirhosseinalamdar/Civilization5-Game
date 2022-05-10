@@ -46,6 +46,7 @@ public enum Commands {
     UNIT_LIST_PANEL("show unit list panel"),
     CITY_LIST_PANEL("show city list panel"),
     DIPLOMACY_INFO_PANEL("show diplomacy info panel"),
+    DEMOGRAPHICS_SCREEN("show demographics screen"),
     NOTIFICATION_HISTORY("show notification history"),
     MILITARY_OVERVIEW("show military overview"),
     ECONOMIC_OVERVIEW("show economic overview"),

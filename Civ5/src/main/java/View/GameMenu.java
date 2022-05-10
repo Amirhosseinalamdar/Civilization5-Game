@@ -155,8 +155,22 @@ public class GameMenu {
 
     }
 
-    private static void demographicsInfo() {
-
+    public static void demographicsInfoScreen(Civilization civilization) {
+        System.out.println("Cities: " + civilization.getCities().size() + "  |  Best: " + GameController.findBestCity()
+                + "  |  Average: " + GameController.findAverageCity() + "  |  Worst: " + GameController.findWorstCity()
+                + "  |  Rank: " + GameController.findRankInCities());
+        System.out.println("Gold: " + civilization.getTotalGold() + "  |  Best: " + GameController.findBestGold()
+                + "  |  Average: " + GameController.findAverageGold() + "  |  Worst: " + GameController.findWorstGold()
+                + "  |  Rank: " + GameController.findRankInGolds());
+        System.out.println("Units: " + civilization.getUnits().size() + "  |  Best: " + GameController.findBestUnit()
+                + "  |  Average: " + GameController.findAverageUnit() + "  |  Worst: " + GameController.findWorstUnit()
+                + "  |  Rank: " + GameController.findRankInUnits());
+        System.out.println("Science: " + civilization.getScience() + "  |  Best: " + GameController.findBestScience()
+                + "  |  Average: " + GameController.findAverageScience() + "  |  Worst: " + GameController.findWorstScience()
+                + "  |  Rank: " + GameController.findRankInScience());
+        System.out.println("Happiness: " + civilization.getHappiness() + "  |  Best: " + GameController.findBestHappiness()
+                + "  |  Average: " + GameController.findAverageHappiness() + "  |  Worst: " + GameController.findWorstHappiness()
+                + "  |  Rank: " + GameController.findRankInHappiness());
     }
 
     public static void notificationHistory(Civilization civilization) {

@@ -77,6 +77,8 @@ public class GameController {
             handleCityListPanel();
         } else if (Commands.getMatcher(command, Commands.DIPLOMACY_INFO_PANEL) != null) {
             handleDiplomacyPanel();
+        } else if (Commands.getMatcher(command, Commands.DEMOGRAPHICS_SCREEN) != null) {
+            GameMenu.demographicsInfoScreen(civilization);
         } else if (Commands.getMatcher(command, Commands.NOTIFICATION_HISTORY) != null) {
             GameMenu.notificationHistory(civilization);
         } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
@@ -292,4 +294,169 @@ public class GameController {
         return neighbors;
     }
 
+    public static int findBestCity() {
+        int size = 0;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getCities().size() > size) size = player.getCivilization().getCities().size();
+        }
+        return size;
+    }
+
+    public static int findAverageCity() {
+        int size = 0;
+        for (User player : Game.getPlayers()) {
+            size += player.getCivilization().getCities().size();
+        }
+        size = size / Game.getPlayers().size();
+        return size;
+    }
+
+    public static int findWorstCity() {
+        int size = 10000;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getCities().size() < size) size = player.getCivilization().getCities().size();
+        }
+        return size;
+    }
+
+    public static int findRankInCities() {
+        int rank = 1;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getCities().size() > civilization.getCities().size()) rank++;
+        }
+        return rank;
+    }
+
+    public static int findBestGold() {
+        int gold = 0;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getTotalGold() > gold) gold = player.getCivilization().getTotalGold();
+        }
+        return gold;
+    }
+
+    public static int findAverageGold() {
+        int gold = 0;
+        for (User player : Game.getPlayers()) {
+            gold += player.getCivilization().getTotalGold();
+        }
+        gold = gold / Game.getPlayers().size();
+        return gold;
+    }
+
+    public static int findWorstGold() {
+        int gold = 1000000;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getTotalGold() < gold) gold = player.getCivilization().getTotalGold();
+        }
+        return gold;
+    }
+
+    public static int findRankInGolds() {
+        int rank = 1;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getTotalGold() > civilization.getTotalGold()) rank++;
+        }
+        return rank;
+    }
+
+    public static int findBestUnit() {
+        int size = 0;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getUnits().size() > size) size = player.getCivilization().getUnits().size();
+        }
+        return size;
+    }
+
+    public static int findAverageUnit() {
+        int size = 0;
+        for (User player : Game.getPlayers()) {
+            size += player.getCivilization().getUnits().size();
+        }
+        size = size / Game.getPlayers().size();
+        return size;
+    }
+
+    public static int findWorstUnit() {
+        int size = 10000;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getUnits().size() < size) size = player.getCivilization().getUnits().size();
+        }
+        return size;
+    }
+
+    public static int findRankInUnits() {
+        int rank = 1;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getUnits().size() > civilization.getUnits().size()) rank++;
+        }
+        return rank;
+    }
+
+    public static int findBestScience() {
+        int science = 0;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getScience() > science) science = player.getCivilization().getScience();
+        }
+        return science;
+    }
+
+    public static int findAverageScience() {
+        int science = 0;
+        for (User player : Game.getPlayers()) {
+            science += player.getCivilization().getScience();
+        }
+        science = science / Game.getPlayers().size();
+        return science;
+    }
+
+    public static int findWorstScience() {
+        int science = 1000000;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getScience() < science) science = player.getCivilization().getScience();
+        }
+        return science;
+    }
+
+    public static int findRankInScience() {
+        int rank = 1;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getScience() > civilization.getScience()) rank++;
+        }
+        return rank;
+    }
+
+
+    public static int findBestHappiness() {
+        int happiness = 0;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getHappiness() > happiness) happiness = player.getCivilization().getHappiness();
+        }
+        return happiness;
+    }
+
+    public static int findAverageHappiness() {
+        int happiness = 0;
+        for (User player : Game.getPlayers()) {
+            happiness += player.getCivilization().getHappiness();
+        }
+        happiness = happiness / Game.getPlayers().size();
+        return happiness;
+    }
+
+    public static int findWorstHappiness() {
+        int happiness = 1000000;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getHappiness() < happiness) happiness = player.getCivilization().getHappiness();
+        }
+        return happiness;
+    }
+
+    public static int findRankInHappiness() {
+        int rank = 1;
+        for (User player : Game.getPlayers()) {
+            if (player.getCivilization().getHappiness() > civilization.getHappiness()) rank++;
+        }
+        return rank;
+    }
 }
