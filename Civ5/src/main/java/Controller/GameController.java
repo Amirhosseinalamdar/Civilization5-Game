@@ -258,7 +258,7 @@ public class GameController {
                 }
                 break;
             } else if (Commands.getMatcher(command, Commands.ECONOMIC_OVERVIEW) != null) {
-                GameMenu.economicOverview(civilization);
+                handleEconomicOverview();
                 break;
             } else if (command.equals("close")) break;
             else System.out.println("invalid command");
