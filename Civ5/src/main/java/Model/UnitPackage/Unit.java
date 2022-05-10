@@ -145,6 +145,10 @@ public class Unit {
             this.movesInTurn = MP;
             return;
         }
+        if (dest.isRoughTerrain() && type.equals(UnitType.CHARIOT_ARCHER)) {
+            this.movesInTurn = MP;
+            return;
+        }
         this.movesInTurn += dest.getMovementCost();
         if (this.type.equals(UnitType.SCOUT))
             this.movesInTurn -= dest.getFeature().getMovementCost();

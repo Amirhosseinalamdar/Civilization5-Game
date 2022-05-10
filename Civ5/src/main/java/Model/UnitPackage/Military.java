@@ -24,7 +24,7 @@ public class Military extends Unit {
         super.setStatus(string);
         if (string.equals("alert")) this.status = UnitStatus.ALERT;
         else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
-        else if (string.equals("garrison")) this.status = UnitStatus.FORTIFY;
+        else if (string.equals("garrison")) this.status = UnitStatus.GARRISON;
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
         else if (string.startsWith("pillage")) this.status = UnitStatus.PILLAGE;
         else if (string.equals("heal")) this.status = UnitStatus.HEAL;
@@ -45,7 +45,8 @@ public class Military extends Unit {
     }
 
     public int getCombatStrength() {
-        if (this.status.equals(UnitStatus.FORTIFY)) return combatStrength + 2; //Combat Strength handled
+        if (this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus())
+            return combatStrength + 2; //Combat Strength handled
         return combatStrength;
     }
 

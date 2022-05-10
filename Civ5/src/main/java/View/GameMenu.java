@@ -281,9 +281,11 @@ public class GameMenu {
 
         for (Unit unit : civilization.getUnits()) {//TODO test river
             ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
-            int clearTileLength = clearTiles.size();
-            for (int i = 0; i < clearTileLength; i++)
-                clearTiles.addAll((clearTiles.get(i).getNeighbors()));
+            if (!unit.getType().hasLimitedVisibility()) {
+                int clearTileLength = clearTiles.size();
+                for (int i = 0; i < clearTileLength; i++)
+                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
+            }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }

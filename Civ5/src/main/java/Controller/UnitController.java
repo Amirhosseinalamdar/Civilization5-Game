@@ -115,6 +115,11 @@ public class UnitController {
             }
         }
 
+        else if (unit.getStatus().equals(UnitStatus.GARRISON)) {
+            if (canGarrison())
+                garrison();
+        }
+
         else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
             unit.setStatus("active");
 
@@ -246,6 +251,14 @@ public class UnitController {
     private static boolean isTileEmpty(int centerX, int centerY) {
         if (unit instanceof Military) return Game.getTiles()[centerX][centerY].getMilitary() == null;
         else return Game.getTiles()[centerX][centerY].getCivilian() == null;
+    }
+
+    private static boolean canGarrison() {
+        return unit.getTile().getCity() != null && unit.getTile().getCity().getTiles().get(0).equals(unit.getTile());
+    }
+
+    private static void garrison() {
+
     }
 
     private static boolean canPillageRoute (String routeType) {

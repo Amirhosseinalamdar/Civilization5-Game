@@ -231,4 +231,8 @@ public class Tile {
         }
         return neighbors;
     }
+
+    public boolean isRoughTerrain() {
+        return type.equals(TerrainType.HILL) || feature.equals(TerrainFeature.JUNGLE) || feature.equals(TerrainFeature.FOREST);
+    }
 }
