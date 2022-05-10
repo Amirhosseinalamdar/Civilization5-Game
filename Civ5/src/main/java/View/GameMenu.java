@@ -195,7 +195,6 @@ public class GameMenu {
             System.out.println("gold: " + city.getGoldPerTurn());
             System.out.println("science: " + city.getSciencePerTurn());
             System.out.println(CityController.turnsForNewUnit(city));
-            //TODO switch to city
         }
     }
 

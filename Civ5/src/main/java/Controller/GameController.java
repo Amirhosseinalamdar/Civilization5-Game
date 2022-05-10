@@ -84,7 +84,7 @@ public class GameController {
         } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
             GameMenu.militaryOverview(civilization);
         } else if (Commands.getMatcher(command, Commands.ECONOMIC_OVERVIEW) != null) {
-            GameMenu.economicOverview(civilization);
+            handleEconomicOverview();
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();
         } else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
@@ -268,6 +268,25 @@ public class GameController {
     private static void handleDiplomacyPanel() {
         GameMenu.showDiplomacyInfo(civilization);
         //TODO can diplomacy with others
+    }
+
+    private static void handleEconomicOverview() {
+        GameMenu.economicOverview(civilization);
+        Matcher matcher;
+        while (true) {
+            String command = GameMenu.nextCommand();
+            if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
+                City chosenCity = getCityFromCommand(matcher);
+                if (chosenCity != null) {
+                    System.out.println("name: " + chosenCity.getName());
+                    CityController.setCity(chosenCity);
+                    CityController.handleCityOptions();
+                }
+                break;
+            } else if (command.equals("close")) break;
+            else System.out.println("invalid command");
+        }
     }
 
     public static ArrayList<Tile> getTileNeighbors(Tile startingTile) {
