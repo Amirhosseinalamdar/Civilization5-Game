@@ -71,8 +71,10 @@ public class GameController {
             scrollOnMap(matcher);
         } else if (Commands.getMatcher(command, Commands.RESEARCH_INFO_SCREEN) != null) {
             GameMenu.researchInfoScreen(civilization);
+        } else if (Commands.getMatcher(command, Commands.UNIT_LIST_PANEL) != null) {
+            handleUnitListPanel();
         } else if (Commands.getMatcher(command, Commands.DIPLOMACY_INFO_PANEL) != null) {
-            handleDiplomacyPanel(civilization);
+            handleDiplomacyPanel();
         } else if (Commands.getMatcher(command, Commands.NOTIFICATION_HISTORY) != null) {
             GameMenu.notificationHistory(civilization);
         } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
@@ -216,7 +218,28 @@ public class GameController {
         }
     }
 
-    private static void handleDiplomacyPanel(Civilization civilization) {
+    private static void handleUnitListPanel() {
+        GameMenu.militaryOverview(civilization);
+        Matcher matcher;
+        while (true) {
+            String command = GameMenu.nextCommand();
+            if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT1)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
+                Unit chosenUnit = getUnitFromCommand(matcher);
+                if (chosenUnit != null) {
+                    UnitController.setUnit(chosenUnit);
+                    UnitController.handleUnitOptions();
+                }
+                break;
+            } if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
+                GameMenu.militaryOverview(civilization);
+                break;
+            } else if (command.equals("close")) break;
+            else System.out.println("invalid command");
+        }
+    }
+
+    private static void handleDiplomacyPanel() {
         GameMenu.showDiplomacyInfo(civilization);
         //TODO can diplomacy with others
     }

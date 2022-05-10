@@ -24,8 +24,7 @@ public class GameMenu {
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();
-            }
-            else {
+            } else {
                 GameController.setCivilization();
                 GameController.doTurn(command);
             }
@@ -64,7 +63,8 @@ public class GameMenu {
         System.out.println("citizens: " + city.getCitizens().size());
         int i = 1;
         for (Citizen citizen : city.getCitizens()) {
-            if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
+            if (citizen.getTile() != null)
+                System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
             else System.out.println(i + " : citizen is unemployed");
             i++;
         }
@@ -126,7 +126,8 @@ public class GameMenu {
         else {
             int turn = 0;
             System.out.println("current research project is : " + civilization.getInProgressTech().name());
-            if (civilization.getScience() != 0) turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
+            if (civilization.getScience() != 0)
+                turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
             if (turn == 0) System.out.println("N/A turns remain for the research");
             else System.out.println(turn + " turns remain for the research");
             System.out.println("this research will unlock:");
@@ -167,7 +168,8 @@ public class GameMenu {
 
     public static void militaryOverview(Civilization civilization) {
         for (Unit unit : civilization.getUnits()) {
-            System.out.println("Name: " + unit.getType().name() + "  |  Status: " + unit.getStatus().name() + "  |  Health: " + unit.getHealth());
+            System.out.println("Name: " + unit.getType().name() + "  |  Status: " + unit.getStatus().name() + "  |  Health: "
+                    + unit.getHealth() + "  |  X: " + unit.getTile().getIndexInMapI() + "  |  Y: " + unit.getTile().getIndexInMapJ());
         }
     }
 
@@ -613,7 +615,7 @@ public class GameMenu {
         System.out.println("no such unit type exists");
     }
 
-    public static void unreachedTech (Technology prerequisiteTech) {
+    public static void unreachedTech(Technology prerequisiteTech) {
         System.out.println("you haven't reached " + prerequisiteTech.toString() + " yet");
     }
 
@@ -629,7 +631,7 @@ public class GameMenu {
         System.out.println("technology added successfully");
     }
 
-    public static void canceledTech (Technology canceled) {
+    public static void canceledTech(Technology canceled) {
         System.out.println(canceled.toString() + " is now canceled");
     }
 
@@ -645,12 +647,12 @@ public class GameMenu {
         System.out.println("city name already exists... please pick another name:");
     }
 
-    public static void unitHasRemainingMove (Unit unit) {
+    public static void unitHasRemainingMove(Unit unit) {
         System.out.println("a " + unit.getType().toString() + " unit on " + unit.getTile().getIndexInMapI() + ", " +
                 unit.getTile().getIndexInMapJ() + " has remaining moves");
     }
 
-    public static void chooseProductionForCity (String cityName) {
+    public static void chooseProductionForCity(String cityName) {
         System.out.println(cityName + " has no production currently; choose production for it");
     }
 
@@ -658,11 +660,11 @@ public class GameMenu {
         System.out.println("civilization has no tech in progress; choose a research");
     }
 
-    public static void cityIsOccupied (String type) {
+    public static void cityIsOccupied(String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
-    public static void notEnoughGoldForUnit (UnitType unitType) {
+    public static void notEnoughGoldForUnit(UnitType unitType) {
         System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
     }
 
@@ -678,7 +680,7 @@ public class GameMenu {
         System.out.println("can not build this improvement; its related resource is not here");
     }
 
-    public static void tileAlreadyHas (String improvementName) {
+    public static void tileAlreadyHas(String improvementName) {
         System.out.println("this tile already has " + improvementName);
     }
 
