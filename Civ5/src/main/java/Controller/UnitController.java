@@ -100,7 +100,18 @@ public class UnitController {
 
         else if (unit.getStatus().equals(UnitStatus.REPAIR)) {
             if (matcher.group("improvement").equals("road") || matcher.group("improvement").equals("railroad")) {
-                //TODO... MAJOR TODO
+                if (canRepairRoute(matcher.group("improvement")))
+                    repairRoute();
+            }
+            else {
+                try {
+                    Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
+                    if (canRepairImprovement(improvement))
+                        repairImprovement();
+                }
+                catch (Exception e) {
+                    GameMenu.noSuchImprovement();
+                }
             }
         }
 
@@ -261,6 +272,39 @@ public class UnitController {
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
         unit.getTile().setImprovementInProgress(pair);
         GameMenu.pillageSuccessful(pair.getKey().toString());
+    }
+
+    private static boolean canRepairRoute (String routeType) {
+        try {
+            return unit.getTile().getRouteInProgress().getKey().equals(routeType) &&
+                    unit.getTile().getRouteInProgress().getValue() < 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static void repairRoute() {
+        Pair <String, Integer> pair =
+                new Pair<>(unit.getTile().getRouteInProgress().getKey(), unit.getTile().getRouteInProgress().getValue() * -1);
+        unit.getTile().setRouteInProgress(pair);
+        GameMenu.repairStarted(unit.getTile().getRouteInProgress().getKey());
+    }
+
+    private static boolean canRepairImprovement (Improvement improvement) {
+        try {
+            return unit.getTile().getImprovementInProgress().getKey().equals(improvement) &&
+                    unit.getTile().getImprovementInProgress().getValue() < 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static void repairImprovement() {
+        Pair <Improvement, Integer> pair =
+                new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
+        unit.getTile().setImprovementInProgress(pair);
     }
 
     private static boolean canFoundCityHere() {

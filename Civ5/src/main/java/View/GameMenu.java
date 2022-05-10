@@ -606,7 +606,7 @@ public class GameMenu {
     }
 
     public static void noSuchImprovement() {
-        System.out.println("no such improvement exists");
+        System.out.println("no such improvement even exists");
     }
 
     public static void cantBuildImprovementOnTile() {
@@ -660,5 +660,9 @@ public class GameMenu {
 
     public static void pillageSuccessful (String improvement) {
         System.out.println(improvement + " was successfully pillaged");
+    }
+
+    public static void repairStarted (String improvement) {
+        System.out.println("successfully started repairing " + improvement);
     }
 }
