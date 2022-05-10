@@ -77,7 +77,7 @@ public class GameController {
             GameMenu.notificationHistory(civilization);
         } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
             GameMenu.militaryOverview(civilization);
-        } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
+        } else if (Commands.getMatcher(command, Commands.ECONOMIC_OVERVIEW) != null) {
             GameMenu.economicOverview(civilization);
         } else if (Commands.getMatcher(command, Commands.SHOW_BANNER) != null) {
             handleBanner();

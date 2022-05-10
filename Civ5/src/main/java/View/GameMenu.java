@@ -65,7 +65,7 @@ public class GameMenu {
         int i = 1;
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
-            else System.out.println(i + "citizen is unemployed");
+            else System.out.println(i + " : citizen is unemployed");
             i++;
         }
     }
@@ -173,6 +173,7 @@ public class GameMenu {
 
     public static void economicOverview(Civilization civilization) {
         for (City city : civilization.getCities()) {
+            CityController.updateCityInfos(city);
             System.out.println("Name: " + city.getName() + "  |  Population: " + city.getCitizens().size() + "  |  Defensive Strength: " + city.getHP());
             System.out.println("food: " + city.getFoodPerTurn());
             System.out.println("production: " + city.getProductionPerTurn());
