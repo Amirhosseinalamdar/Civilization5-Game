@@ -322,10 +322,12 @@ public class GameMenu {
                 civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
 
         for (Unit unit : civilization.getUnits()) {//TODO test river
-            ArrayList<Tile> clearTiles = new ArrayList<>(GameController.getTileNeighbors(unit.getTile()));
-            int clearTileLength = clearTiles.size();
-            for (int i = 0; i < clearTileLength; i++)
-                clearTiles.addAll(GameController.getTileNeighbors(clearTiles.get(i)));
+            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
+            if (!unit.getType().hasLimitedVisibility()) {
+                int clearTileLength = clearTiles.size();
+                for (int i = 0; i < clearTileLength; i++)
+                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
+            }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
@@ -334,7 +336,7 @@ public class GameMenu {
             ArrayList<Tile> clearTiles = new ArrayList<>();
             for (Tile tile : city.getTiles()) {
                 clearTiles.add(tile);
-                clearTiles.addAll(GameController.getTileNeighbors(tile));
+                clearTiles.addAll(tile.getNeighbors());
             }
             for (Tile tileNeighbor : clearTiles)
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
@@ -648,7 +650,7 @@ public class GameMenu {
     }
 
     public static void noSuchImprovement() {
-        System.out.println("no such improvement exists");
+        System.out.println("no such improvement even exists");
     }
 
     public static void cantBuildImprovementOnTile() {
@@ -696,5 +698,15 @@ public class GameMenu {
         System.out.println("this tile already has " + improvementName);
     }
 
+    public static void tileIsNotInTerritory (Improvement improvement) {
+        System.out.println("can not build " + improvement.toString() + " here; tile is out of city limits");
+    }
 
+    public static void pillageSuccessful (String improvement) {
+        System.out.println(improvement + " was successfully pillaged");
+    }
+
+    public static void repairStarted (String improvement) {
+        System.out.println("successfully started repairing " + improvement);
+    }
 }

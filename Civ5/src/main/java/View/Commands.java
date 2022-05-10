@@ -42,6 +42,13 @@ public enum Commands {
     ASK_FOR_TECH("new tech (-n|--name) (?<techName>\\S+)"),
     SHOW_BANNER("show cities banner"),
     CIVILIZATION_OUTPUT("show civilization output"),
+    PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)"),
+    MOVE_UNIT("move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)"),
+    ATTACK("attack to (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
+    BUILD_IMPROVEMENT("build improvement (-t|--type) (?<improvement>\\S+)"),
+    REMOVE_RESOURCE("remove (-r|--resource) (?<resource>(jungle|road|railroad))"),
+    REPAIR("repair (-i|--improvement) (?<improvement>\\S+)"),
+    PILLAGE("pillage (-i|--improvement) (?<improvement>\\S+)"),
     RESEARCH_INFO_SCREEN("show research info screen"),
     UNIT_LIST_PANEL("show unit list panel"),
     CITY_LIST_PANEL("show city list panel"),
@@ -49,9 +56,7 @@ public enum Commands {
     DEMOGRAPHICS_SCREEN("show demographics screen"),
     NOTIFICATION_HISTORY("show notification history"),
     MILITARY_OVERVIEW("show military overview"),
-    ECONOMIC_OVERVIEW("show economic overview"),
-    PURCHASE_UNIT("purchase (--unit|-u) (?<unitName>\\S+)");
-
+    ECONOMIC_OVERVIEW("show economic overview");
     private final String regex;
 
     public String getRegex() {

@@ -79,4 +79,14 @@ public enum UnitType {
     public boolean isCivilian() {
         return this.equals(WORKER) || this.equals(SETTLER);
     }
+
+    public boolean hasLimitedVisibility() {
+        return this.equals(CATAPULT) || this.equals(TREBUCHET) || this.equals(PANZER);
+    }
+
+    public boolean hasDefensiveBonus() {
+        return !(this.equals(CATAPULT) || this.equals(KNIGHT) || this.equals(TREBUCHET) || this.equals(CANNON) ||
+                    this.equals(CHARIOT_ARCHER) || this.equals(HORSEMAN) || this.equals(CAVALRY) || this.equals(LANCER) ||
+                        this.equals(ARTILLERY) || this.equals(PANZER) || this.equals(TANK));
+    }
 }
