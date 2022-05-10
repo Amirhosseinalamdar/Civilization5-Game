@@ -139,12 +139,11 @@ public class GameMenu {
         }
     }
 
-    private static void unitsInfo() {
-
-    }
-
-    private static void cityInfo() {
-
+    public static void cityList(Civilization civilization) {
+        for (City city : civilization.getCities()) {
+            System.out.println("Name: " + city.getName() + "  |  Population: " + city.getCitizens().size() + "  |  Defensive Strength: " + city.getHP());
+            System.out.println(CityController.turnsForNewUnit(city));
+        }
     }
 
     public static void showDiplomacyInfo(Civilization civilization) {
@@ -182,7 +181,7 @@ public class GameMenu {
             System.out.println("gold: " + city.getGoldPerTurn());
             System.out.println("science: " + city.getSciencePerTurn());
             System.out.println(CityController.turnsForNewUnit(city));
-            //TODO switch to unit
+            //TODO switch to city
         }
     }
 

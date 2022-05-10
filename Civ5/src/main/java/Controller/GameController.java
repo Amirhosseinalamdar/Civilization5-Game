@@ -73,6 +73,8 @@ public class GameController {
             GameMenu.researchInfoScreen(civilization);
         } else if (Commands.getMatcher(command, Commands.UNIT_LIST_PANEL) != null) {
             handleUnitListPanel();
+        } else if (Commands.getMatcher(command, Commands.CITY_LIST_PANEL) != null) {
+            handleCityListPanel();
         } else if (Commands.getMatcher(command, Commands.DIPLOMACY_INFO_PANEL) != null) {
             handleDiplomacyPanel();
         } else if (Commands.getMatcher(command, Commands.NOTIFICATION_HISTORY) != null) {
@@ -231,8 +233,30 @@ public class GameController {
                     UnitController.handleUnitOptions();
                 }
                 break;
-            } if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
+            } else if (Commands.getMatcher(command, Commands.MILITARY_OVERVIEW) != null) {
                 GameMenu.militaryOverview(civilization);
+                break;
+            } else if (command.equals("close")) break;
+            else System.out.println("invalid command");
+        }
+    }
+
+    private static void handleCityListPanel() {
+        GameMenu.cityList(civilization);
+        Matcher matcher;
+        while (true) {
+            String command = GameMenu.nextCommand();
+            if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
+                City chosenCity = getCityFromCommand(matcher);
+                if (chosenCity != null) {
+                    System.out.println("name: " + chosenCity.getName());
+                    CityController.setCity(chosenCity);
+                    CityController.handleCityOptions();
+                }
+                break;
+            } else if (Commands.getMatcher(command, Commands.ECONOMIC_OVERVIEW) != null) {
+                GameMenu.economicOverview(civilization);
                 break;
             } else if (command.equals("close")) break;
             else System.out.println("invalid command");
