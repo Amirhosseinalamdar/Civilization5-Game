@@ -34,6 +34,19 @@ public class Tile {
     private int indexInMapJ;
     private Citizen workingCitizen;
 
+
+    public void setFoodPerTurn(int foodPerTurn) {
+        this.foodPerTurn = foodPerTurn;
+    }
+
+    public void setGoldPerTurn(int goldPerTurn) {
+        this.goldPerTurn = goldPerTurn;
+    }
+
+    public void setProductionPerTurn(int productionPerTurn) {
+        this.productionPerTurn = productionPerTurn;
+    }
+
     public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;
     }

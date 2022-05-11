@@ -124,8 +124,8 @@ public class GameMenu {
     public static void researchInfoScreen(Civilization civilization) {
         if (civilization.getInProgressTech() == null) System.out.println("there is no research in progress");
         else {
-            int turn = 0;
             System.out.println("current research project is : " + civilization.getInProgressTech().name());
+            int turn = 0;
             if (civilization.getScience() != 0)
                 turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
             if (turn == 0) System.out.println("N/A turns remain for the research");

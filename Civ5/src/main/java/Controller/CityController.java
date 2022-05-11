@@ -212,9 +212,9 @@ public class CityController {
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() == null) production++;
             else {
-                food += citizen.getTile().getFoodPerTurn();
-                production += citizen.getTile().getProductionPerTurn();
-                gold += citizen.getTile().getGoldPerTurn();
+                food += citizen.getTile().getFoodPerTurn() + citizen.getTile().getResource().getFood();
+                production += citizen.getTile().getProductionPerTurn() + citizen.getTile().getResource().getProduction();
+                gold += citizen.getTile().getGoldPerTurn() + citizen.getTile().getResource().getGold();
             }
         }
         if (city.getCityStatus() == CityStatus.CAPITAL) science += 3;
@@ -230,7 +230,6 @@ public class CityController {
     public static void updateCity(City city) {
         updateCityInfos(city);
         //TODO units maintenance
-        // TODO make method of update then use it in banners
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
@@ -241,16 +240,20 @@ public class CityController {
     private static void updateImprovement(City city) {
         for (Tile tile : city.getTiles()) {
             if (tile.getImprovementInProgress() != null) {
-                if (tile.getImprovementInProgress().getValue() == 0) continue;
-                int i = tile.getImprovementInProgress().getValue();
-                i--;
-                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), i));
-//                if (i == 0) {
-//                    //TODO changes which happened when an improvement built
-                //TODO effect resource on tile
-
-//                }
-                //TODO i < 0
+                if (tile.getImprovementInProgress().getValue() <= 0) continue;
+                int turn = tile.getImprovementInProgress().getValue();
+                turn--;
+                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), turn));
+                if (turn == 0) {
+                    tile.getCivilian().setStatus("active");
+                    if (tile.getResource().getType().equals("luxury")) {
+                        if (civilization.getLuxuryResources().containsKey(tile.getResource())) {
+                            int count = civilization.getLuxuryResources().get(tile.getResource());
+                            count++;
+                            civilization.getLuxuryResources().replace(tile.getResource(), count);
+                        } else civilization.getLuxuryResources().put(tile.getResource(), 1);
+                    }
+                }
             }
         }
     }
@@ -385,10 +388,6 @@ public class CityController {
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
         city.setInProgressUnit(unitType);
-    }
-
-    private static int calcTurnsForNewUnit(UnitType unitType) {
-        return unitType.getCost() / city.getProductionPerTurn();
     }
 
     private static boolean hasReachedTechForUnit(UnitType unitType) {

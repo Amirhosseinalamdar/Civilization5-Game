@@ -25,12 +25,14 @@ public class Civilization {
     private int showingCenterI;
     private int showingCenterJ;
     private ArrayList<String> notifications;
+    private HashMap<Resource, Integer> luxuryResources;
 
     public Civilization() {
         cities = new ArrayList<>();
         units = new ArrayList<>();
         notifications = new ArrayList<>();
         lastCostUntilNewTechnologies = new HashMap<>();
+        luxuryResources = new HashMap<>();
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
@@ -42,12 +44,20 @@ public class Civilization {
         score = 0;
     }
 
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
+
     public ArrayList<String> getNotifications() {
         return notifications;
     }
 
     public int getScore() {
         return score;
+    }
+
+    public HashMap<Resource, Integer> getLuxuryResources() {
+        return luxuryResources;
     }
 
     public void setScore(int score) {
@@ -121,8 +131,6 @@ public class Civilization {
         this.tileVisionStatuses[i][j] = type;
     }
 
-    private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
-
     public int getTotalGold() {
         return totalGold;
     }
@@ -153,10 +161,6 @@ public class Civilization {
 
     public int getHappiness() {
         return happiness;
-    }
-
-    public HashMap<Resource, Boolean> getIsLuxuryResourceReached() {
-        return isLuxuryResourceReached;
     }
 
     public void setScience(int science) {
