@@ -289,30 +289,6 @@ public class GameController {
         }
     }
 
-    public static ArrayList<Tile> getTileNeighbors(Tile startingTile) {
-        ArrayList<Tile> neighbors = new ArrayList<>();
-        int indexI = startingTile.getIndexInMapI(), indexJ = startingTile.getIndexInMapJ();
-
-        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
-            if (GameController.invalidPos(i, indexJ)) continue;
-            neighbors.add(Game.getTiles()[i][indexJ]);
-        }
-
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
-        }
-
-        if (indexJ % 2 == 0) indexI--;
-        else indexI++;
-
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
-        }
-        return neighbors;
-    }
-
     public static int findBestCity() {
         int size = 0;
         for (User player : Game.getPlayers()) {

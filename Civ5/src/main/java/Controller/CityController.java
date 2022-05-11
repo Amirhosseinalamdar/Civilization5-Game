@@ -212,9 +212,14 @@ public class CityController {
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() == null) production++;
             else {
-                food += citizen.getTile().getFoodPerTurn() + citizen.getTile().getResource().getFood();
-                production += citizen.getTile().getProductionPerTurn() + citizen.getTile().getResource().getProduction();
-                gold += citizen.getTile().getGoldPerTurn() + citizen.getTile().getResource().getGold();
+                food += citizen.getTile().getFoodPerTurn();
+                production += citizen.getTile().getProductionPerTurn();
+                gold += citizen.getTile().getGoldPerTurn();
+                if (citizen.getTile().canUseItsResource()) {
+                    food += citizen.getTile().getResource().getFood();
+                    production += citizen.getTile().getResource().getProduction();
+                    gold += citizen.getTile().getResource().getGold();
+                }
             }
         }
         if (city.getCityStatus() == CityStatus.CAPITAL) science += 3;
