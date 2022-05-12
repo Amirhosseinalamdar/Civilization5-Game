@@ -171,6 +171,10 @@ public class Civilization {
         this.totalGold += gold;
     }
 
+    public void decreaseTotalGold(int cost) {
+        this.totalGold -= cost;
+    }
+
     public void increaseTotalScience(int science) {
         this.science += science;
     }

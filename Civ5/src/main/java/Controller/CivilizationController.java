@@ -4,9 +4,11 @@ import Model.Civilization;
 import Model.Map.City;
 import Model.Map.CityStatus;
 import Model.Map.Improvement;
+import Model.Map.Tile;
 import Model.Technology;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
 
@@ -80,11 +82,43 @@ public class CivilizationController {
         score += civilization.getLastCostUntilNewTechnologies().size();
         civilization.increaseTotalScience(science);
         civilization.increaseTotalGold(gold);
+        handleUnitsMaintenance();
+        handleRoadsMaintenance();
         civilization.setScore(score);
         updateInProgressTech();
         /**
          +update happiness
          */
+    }
+
+    private static void handleRoadsMaintenance() {
+        int cost = 0;
+        for (City city : civilization.getCities()) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.getRouteInProgress().getValue() == 0) cost++;
+            }
+        }
+        cost /= 2;
+        civilization.decreaseTotalGold(cost);
+    }
+
+    private static void handleUnitsMaintenance() {
+        int cost = 0;
+        for (Unit unit : civilization.getUnits()) {
+            if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
+                    !unit.getType().equals(UnitType.WARRIOR))
+                cost++;
+        }
+        while (cost > civilization.getTotalGold()) {
+            for (Unit unit : civilization.getUnits()) {
+                if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
+                        !unit.getType().equals(UnitType.WARRIOR)) {
+                    civilization.getUnits().remove(unit);
+                    cost--;
+                }
+            }
+        }
+        civilization.decreaseTotalGold(cost);
     }
 
     private static void updateInProgressTech() {

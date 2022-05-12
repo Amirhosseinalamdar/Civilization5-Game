@@ -234,12 +234,22 @@ public class CityController {
 
     public static void updateCity(City city) {
         updateCityInfos(city);
-        //TODO units maintenance
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
         updateImprovement(city);
-        //TODO update road
+        updateRoads(city);
+    }
+
+    private static void updateRoads(City city) {
+        for (Tile tile : city.getTiles()) {
+            if (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad")) {
+                if (tile.getRouteInProgress().getValue() <= 0) continue;
+                int turn = tile.getRouteInProgress().getValue();
+                turn--;
+                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), turn));
+            }
+        }
     }
 
     private static void updateImprovement(City city) {
