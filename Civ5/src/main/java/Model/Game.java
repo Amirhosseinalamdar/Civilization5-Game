@@ -50,7 +50,7 @@ public class Game {
             do {
                 randomX = (int) Math.floor(Math.random() * 20);
                 randomY = (int) Math.floor(Math.random() * 20);
-            } while (!UnitController.isTileWalkable(tiles[randomX][randomY], null));
+            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
             System.out.println("i am " + player.getUsername() + ", my first unit is on " +

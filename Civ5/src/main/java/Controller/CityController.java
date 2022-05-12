@@ -62,6 +62,14 @@ public class CityController {
             }
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
         }
+
+        if (matcher.pattern().toString().matches(Commands.ATTACK.getRegex())) {
+            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+            if (canCityAttackTo(Game.getTiles()[x][y])) {
+                rangeAttackToUnit(Game.getTiles()[x][y].getMilitary());
+            }
+        }
+
         if (matcher.pattern().toString().startsWith("show")) GameMenu.showCityOutput(city);
     }
 
@@ -88,11 +96,45 @@ public class CityController {
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
-            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null) {
+            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null)
                 return matcher;
+
+            if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
+                if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
+                        Integer.parseInt(matcher.group("y"))))
+                    return matcher;
+                GameMenu.indexOutOfArray();
             }
+
             System.out.println("city decision wasn't valid");
         }
+    }
+
+    private static boolean canCityAttackTo (Tile targetTile) {
+        boolean tileWithin2radius = false;
+        for (Tile tile : city.getTiles()) {
+            if (targetTile.equals(tile)) {
+                tileWithin2radius = true;
+                break;
+            }
+            for (Tile neighbor : tile.getNeighbors()) {
+                if (targetTile.equals(neighbor)) {
+                    tileWithin2radius = true;
+                    break;
+                }
+                for (Tile neighbor2 : neighbor.getNeighbors()) {
+                    if (targetTile.equals(neighbor2)) {
+                        tileWithin2radius = true;
+                        break;
+                    }
+                }
+                if (tileWithin2radius) break;
+            }
+            if (tileWithin2radius) break;
+        }
+        if (!tileWithin2radius) return false;
+        return targetTile.getMilitary() != null &&
+                !targetTile.getMilitary().getCivilization().equals(civilization);
     }
 
     private static void tryPurchaseUnit (UnitType unitType) {
@@ -391,5 +433,10 @@ public class CityController {
             if (r.equals(unitType.getPrerequisiteResource()))
                 return true;
         return false;
+    }
+
+    private static void rangeAttackToUnit (Military targetUnit) {
+        targetUnit.setHealth((city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
+        if (targetUnit.getHealth() <= 0) targetUnit.kill();
     }
 }

@@ -49,10 +49,6 @@ public class GameMenu {
         System.out.println("unit doesn't have enough moves");
     }
 
-    public static void unavailableTile() {
-        System.out.println("Tile is unavailable");
-    }
-
     public static void showBanner(City city) {
         System.out.println("city: " + city.getName());
         System.out.println("combat strength: " + city.getCombatStrength());
@@ -515,8 +511,8 @@ public class GameMenu {
         System.out.println("can't make garrison, no city available");
     }
 
-    public static void unitIsNotSiege() {
-        System.out.println("chosen unit is not siege");
+    public static void unitIsNot (String unitName) {
+        System.out.println("chosen unit is not " + unitName);
     }
 
     public static void siegeAlreadyPrepared() {
@@ -537,14 +533,6 @@ public class GameMenu {
 
     public static void unitHasFullHealth() {
         System.out.println("unit's health is already full");
-    }
-
-    public static void unitIsNotWorker() {
-        System.out.println("this unit is not worker");
-    }
-
-    public static void unitIsNotSettler() {
-        System.out.println("this unit is not settler");
     }
 
     public static void invalidUnitType() {
@@ -666,5 +654,9 @@ public class GameMenu {
 
     public static void repairStarted (String improvement) {
         System.out.println("successfully started repairing " + improvement);
+    }
+
+    public static void impassableTile() {
+        System.out.println("can not walk on that tile");
     }
 }

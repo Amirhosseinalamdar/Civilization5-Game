@@ -15,7 +15,7 @@ public class Unit {
     protected int movesInTurn;
     protected int health;
     protected int cost;
-    public static int MAX_HEALTH;
+    public static int MAX_HEALTH = 10;
     protected Path path;
 
     public Unit (UnitType unitType) {
@@ -23,6 +23,7 @@ public class Unit {
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
         this.MP = unitType.getMP();
+        this.health = MAX_HEALTH;
     }
 
     public void setPath(Path path) {
@@ -130,7 +131,7 @@ public class Unit {
         else if (string.startsWith("repair")) this.status = UnitStatus.REPAIR;
         else if (string.startsWith("build")) this.status = UnitStatus.BUILD_IMPROVEMENT;
         else if (string.startsWith("move")) this.status = UnitStatus.MOVE;
-        else if (string.startsWith("remove")) this.status = UnitStatus.REMOVE_RESOURCE;
+        else if (string.startsWith("clear")) this.status = UnitStatus.CLEAR_LAND;
         else if (string.equals("do nothing")) this.status = UnitStatus.DO_NOTHING;
         else if (string.equals("active")) this.status = UnitStatus.ACTIVE;
     }
@@ -161,5 +162,9 @@ public class Unit {
     public boolean isSiege() {
         return this.type.equals(UnitType.CATAPULT) || this.type.equals(UnitType.CANNON) ||
                 this.type.equals(UnitType.TREBUCHET) || this.type.equals(UnitType.ARTILLERY);
+    }
+
+    public boolean hasRemainingMoves() {
+        return movesInTurn < MP;
     }
 }

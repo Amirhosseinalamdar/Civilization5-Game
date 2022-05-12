@@ -2,6 +2,7 @@ package Model.Map;
 
 import Controller.GameController;
 import Model.Civilization;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
@@ -56,7 +57,8 @@ public class City {
         this.borderExpansionCost = 50;
         this.borderLastCost = 50;
         this.HP = 20;
-        this.combatStrength = 0;
+        if (this.tiles.get(0).getType().equals(TerrainType.HILL)) this.combatStrength = 13;
+        else this.combatStrength = 10;
         this.rangedCombatStrength = 0;
         this.name = name;
     }
@@ -146,7 +148,22 @@ public class City {
     }
 
     public int getCombatStrength() {
-        return combatStrength;
+        int defaultCombatStrength;
+
+        if (this.getTiles().get(0).getType().equals(TerrainType.HILL)) defaultCombatStrength = 13;
+        else defaultCombatStrength = 10;
+
+        defaultCombatStrength += this.citizens.size();
+        defaultCombatStrength += garrisonBonus();
+
+        return defaultCombatStrength;
+    }
+
+    private int garrisonBonus() {
+        Tile centerTile = this.tiles.get(0);
+        if (centerTile.getMilitary() != null && centerTile.getMilitary().getStatus().equals(UnitStatus.GARRISON))
+            return centerTile.getMilitary().getCombatStrength();
+        return 0;
     }
 
     public int getRangedCombatStrength() {
@@ -220,5 +237,4 @@ public class City {
     public void calculateStrength() {
         //TODO update strength based on the unit inside the city
     }
-
 }
