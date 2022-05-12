@@ -41,6 +41,7 @@ public class Civilization {
         this.showingCenterJ = 2;
         lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
         inProgressTech = null;
+        happiness = 50;
         score = 0;
     }
 

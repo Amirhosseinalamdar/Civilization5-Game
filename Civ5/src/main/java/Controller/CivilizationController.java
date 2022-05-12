@@ -1,10 +1,7 @@
 package Controller;
 
 import Model.Civilization;
-import Model.Map.City;
-import Model.Map.CityStatus;
-import Model.Map.Improvement;
-import Model.Map.Tile;
+import Model.Map.*;
 import Model.Technology;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
@@ -86,9 +83,19 @@ public class CivilizationController {
         handleRoadsMaintenance();
         civilization.setScore(score);
         updateInProgressTech();
-        /**
-         +update happiness
-         */
+        updateHappiness();
+    }
+
+    private static void updateHappiness() {
+        int unhappiness = 2 * civilization.getCities().size();
+        for (City city : civilization.getCities()) {
+            if (city.getCityStatus().equals(CityStatus.POPPET)) unhappiness++;
+            unhappiness += city.getCitizens().size();
+        }
+        for (HashMap.Entry<Resource, Integer> set : civilization.getLuxuryResources().entrySet()) {
+            if (set.getValue() > 0) unhappiness -= 4;
+        }
+        civilization.setHappiness(civilization.getHappiness() - unhappiness);
     }
 
     private static void handleRoadsMaintenance() {
