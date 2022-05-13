@@ -61,6 +61,18 @@ public class City {
         this.name = name;
     }
 
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    public void setCombatStrength(int combatStrength) {
+        this.combatStrength = combatStrength;
+    }
+
+    public void setRangedCombatStrength(int rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
+    }
+
     public void setInProgressUnit (UnitType unitType) {
         this.inProgressUnit = unitType;
     }

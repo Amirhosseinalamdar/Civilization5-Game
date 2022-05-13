@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 
 public class Military extends Unit {
 
-    private final int combatStrength;
+    private int combatStrength;
     private int rangedCombatStrength;
     private int range;
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
@@ -30,6 +30,14 @@ public class Military extends Unit {
         else if (string.equals("heal")) this.status = UnitStatus.HEAL;
     }
 
+    public int getRangedCombatStrength() {
+        return rangedCombatStrength;
+    }
+
+    public void setRangedCombatStrength(int rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
+    }
+
     @Override
     public void kill() {
         tile.setMilitary(null);
@@ -48,6 +56,10 @@ public class Military extends Unit {
         if (this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus())
             return combatStrength + 2; //Combat Strength handled
         return combatStrength;
+    }
+
+    public void setCombatStrength(int combatStrength) {
+        this.combatStrength = combatStrength;
     }
 
 }

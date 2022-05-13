@@ -4,6 +4,7 @@ import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
 import Model.Map.Tile;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.User;
@@ -89,7 +90,112 @@ public class GameController {
             handleBanner();
         } else if (Commands.getMatcher(command, Commands.CIVILIZATION_OUTPUT) != null) {
             GameMenu.civilizationOutput(civilization);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT1)) != null) {
+            cheatTurn(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT2)) != null) {
+            cheatGold(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT3)) != null) {
+            cheatHappiness(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT4)) != null) {
+            cheatScore(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT5)) != null) {
+            cheatCitiesHP(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT6)) != null) {
+            cheatUnitsHealth(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT7)) != null) {
+            cheatCitiesCombatStrength(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT8)) != null) {
+            cheatCitiesRangedCombatStrength(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT9)) != null) {
+            cheatUnitsMP(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT10)) != null) {
+            cheatUnitsCombatStrength(matcher);
+        } else if ((matcher = Commands.getMatcher(command, Commands.CHEAT11)) != null) {
+            cheatUnitsRangedCombatStrength(matcher);
         } else System.out.println("game controller, invalid command");
+    }
+
+    private static void cheatTurn(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (int i = 0; i < x - 1; i++) {
+            Game.nextTurn();
+            checkMyCivilization();
+            checkControllersCivilization();
+            CivilizationController.updateCivilization();
+        }
+        updateGame();
+    }
+
+    private static void cheatGold(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        civilization.setTotalGold(civilization.getTotalGold() + x);
+    }
+
+    private static void cheatHappiness(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        civilization.setHappiness(civilization.getHappiness() + x);
+    }
+
+    private static void cheatScore(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        civilization.increaseScore(civilization.getScore() + x);
+    }
+
+    private static void cheatCitiesHP(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (City city : civilization.getCities()) {
+            city.setHP(city.getHP() + x);
+        }
+    }
+
+    private static void cheatUnitsHealth(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (Unit unit : civilization.getUnits()) {
+            unit.setHealth(unit.getHealth() + x);
+        }
+    }
+
+    private static void cheatCitiesCombatStrength(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (City city : civilization.getCities()) {
+            city.setCombatStrength(city.getCombatStrength() + x);
+        }
+    }
+
+    private static void cheatCitiesRangedCombatStrength(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (City city : civilization.getCities()) {
+            city.setRangedCombatStrength(city.getRangedCombatStrength() + x);
+        }
+    }
+
+    private static void cheatUnitsMP(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (Unit unit : civilization.getUnits()) {
+            unit.setMP(unit.getMP() + x);
+        }
+    }
+
+    private static void cheatUnitsCombatStrength(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (Unit unit : civilization.getUnits()) {
+            if (!unit.getType().isCivilian()) {
+                Military military = (Military)unit;
+                military.setCombatStrength(military.getCombatStrength() + x);
+            }
+        }
+    }
+
+    private static void cheatUnitsRangedCombatStrength(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("x"));
+        for (Unit unit : civilization.getUnits()) {
+            if (!unit.getType().isCivilian()) {
+                Military military = (Military)unit;
+                if (military.getRangedCombatStrength() > 0) {
+                    military.setRangedCombatStrength(military.getRangedCombatStrength() + x);
+                }
+            }
+        }
     }
 
     private static Unit getUnitFromCommand(Matcher matcher) {
