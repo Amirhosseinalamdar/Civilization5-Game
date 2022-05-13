@@ -436,7 +436,7 @@ public class CityController {
     }
 
     private static void rangeAttackToUnit (Military targetUnit) {
-        targetUnit.setHealth((city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
+        targetUnit.setHealth(targetUnit.getHealth() - (city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
         if (targetUnit.getHealth() <= 0) targetUnit.kill();
     }
 }

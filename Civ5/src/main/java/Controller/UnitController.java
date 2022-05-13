@@ -374,7 +374,7 @@ public class UnitController {
     }
 
     private static boolean canBuildRailroadHere() {
-        return civilization.hasReachedTech(Technology.RAILROAD); //TODO
+        return civilization.hasReachedTech(Technology.RAILROAD);
     }
 
     private static boolean tileIsValidForImprovement (Tile tile, Improvement improvement) {
@@ -606,19 +606,6 @@ public class UnitController {
         return true;
     }
 
-    private static void rangedAttack() {//may attack to a city or a military or civilian
-        Tile tile = GameMenu.showRangedAttackOptions((Military) unit);
-        if (tile == null)
-            ; //ke hichi// ya cancle mikone ya eshteba mizane//age eshteba zad while beznim ta odorst bezane
-        //ya rangedAttackToUnit
-        //ya rangedAttackToCity
-        //ya attackCivilian ????//TODO
-    }
-
-    private static void raid() {
-
-    }
-
     private static void foundCity() {
         System.out.println("please choose name: "); //TODO... move it to menu :)
         String cityName = GameMenu.nextCommand();
@@ -666,12 +653,13 @@ public class UnitController {
             GameMenu.siegeNotPrepared();
             return;
         }
-        city.setHP(city.getHP() - military.getRangedCombatStrength() / 3);
+        city.setHP(city.getHP() - military.getRangedCombatStrength() / 4);
         if (city.getHP() < 0) city.setHP(0);
         GameMenu.rangedAttackToCitySuccessfully(city);
     }
 
     private static boolean cityIsOutOfRange (City city) {
+        //TODO... add mountain
         ArrayList<Tile> unitInRangeTiles = new ArrayList<>(unit.getTile().getNeighbors());
         int beginIndex = 0;
         for (int i = 0; i < unit.getType().getRange(); i++) {
@@ -690,7 +678,7 @@ public class UnitController {
     }
 
     private static void meleeAttackToCity (City city) {
-
+        
     }
 
     private static void meleeAttackToUnit (Unit defendingUnit) {

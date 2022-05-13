@@ -27,9 +27,9 @@ public class City {
     private int turnsUntilGrowthBorder;
     private int borderExpansionCost;
     private int borderLastCost;
-    private int HP;
-    private int combatStrength;
-    private int rangedCombatStrength;
+    private double HP;
+    private double combatStrength;
+    private double rangedCombatStrength;
     private CityStatus cityStatus;
     private final String name;
 
@@ -143,19 +143,16 @@ public class City {
         return citizens;
     }
 
-    public int getHP() {
+    public double getHP() {
         return HP;
     }
 
-    public void setHP (int HP) {
+    public void setHP (double HP) {
         this.HP = HP;
     }
 
-    public int getCombatStrength() {
-        int defaultCombatStrength;
-
-        if (this.getTiles().get(0).getType().equals(TerrainType.HILL)) defaultCombatStrength = 13;
-        else defaultCombatStrength = 10;
+    public double getCombatStrength() {
+        double defaultCombatStrength = combatStrength;
 
         defaultCombatStrength += this.citizens.size();
         defaultCombatStrength += garrisonBonus();
@@ -163,14 +160,14 @@ public class City {
         return defaultCombatStrength;
     }
 
-    private int garrisonBonus() {
+    private double garrisonBonus() {
         Tile centerTile = this.tiles.get(0);
         if (centerTile.getMilitary() != null && centerTile.getMilitary().getStatus().equals(UnitStatus.GARRISON))
             return centerTile.getMilitary().getCombatStrength();
         return 0;
     }
 
-    public int getRangedCombatStrength() {
+    public double getRangedCombatStrength() {
         return rangedCombatStrength;
     }
 

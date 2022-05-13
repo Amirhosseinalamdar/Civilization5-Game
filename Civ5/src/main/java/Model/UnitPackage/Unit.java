@@ -13,9 +13,9 @@ public class Unit {
     protected Civilization civilization;
     protected int MP;
     protected int movesInTurn;
-    protected int health;
+    protected double health;
     protected int cost;
-    public static int MAX_HEALTH = 10;
+    public static double MAX_HEALTH = 10;
     protected Path path;
 
     public Unit (UnitType unitType) {
@@ -58,7 +58,7 @@ public class Unit {
         this.movesInTurn = movesInTurn;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }
 
@@ -94,7 +94,7 @@ public class Unit {
         return MP;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 

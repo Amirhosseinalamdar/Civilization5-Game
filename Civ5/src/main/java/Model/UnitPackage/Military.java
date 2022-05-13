@@ -1,17 +1,18 @@
 package Model.UnitPackage;
 
+import Model.Map.TerrainType;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class Military extends Unit {
 
-    private final int combatStrength;
-    private int rangedCombatStrength;
+    private final double combatStrength;
+    private double rangedCombatStrength;
     private int range;
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
-    private int XP;
 
-    public Military(UnitType militaryType) {
+    public Military (UnitType militaryType) {
         super(militaryType);
         this.combatStrength = militaryType.getCombatStrength();
         this.rangedCombatStrength = militaryType.getRangedCombatStrength();
@@ -44,13 +45,15 @@ public class Military extends Unit {
         //TODO... change type (costs gold)
     }
 
-    public int getCombatStrength() {
-        if (this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus())
+    public double getCombatStrength() {
+        if ((this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus()) ||
+                this.tile.getType().equals(TerrainType.HILL))
             return combatStrength + 2; //Combat Strength handled
         return combatStrength;
     }
 
-    public int getRangedCombatStrength() {
+    public double getRangedCombatStrength() {
+        if (this.tile.getType().equals(TerrainType.HILL)) return rangedCombatStrength + 2;
         return rangedCombatStrength;
     }
 
