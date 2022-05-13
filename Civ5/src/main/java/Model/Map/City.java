@@ -56,8 +56,8 @@ public class City {
         this.borderExpansionCost = 50;
         this.borderLastCost = 50;
         this.HP = 20;
-        this.combatStrength = 0;
-        this.rangedCombatStrength = 0;
+        this.combatStrength = 3;
+        this.rangedCombatStrength = 3;
         this.name = name;
     }
 

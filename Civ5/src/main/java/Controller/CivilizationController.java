@@ -67,7 +67,7 @@ public class CivilizationController {
     public static void updateCivilization() {
         int science = 0;
         int gold = 0;
-        int score = civilization.getScore();
+        int score = 0;
         for (City city : civilization.getCities()) {
             CityController.updateCity(city);
             science = city.getSciencePerTurn();
@@ -77,11 +77,11 @@ public class CivilizationController {
         }
         score += civilization.getCities().size();
         score += civilization.getLastCostUntilNewTechnologies().size();
-        civilization.increaseTotalScience(science);
-        civilization.increaseTotalGold(gold);
+        civilization.setTotalScience(science);
+        civilization.setTotalGold(civilization.getTotalGold() + gold);
         handleUnitsMaintenance();
         handleRoadsMaintenance();
-        civilization.setScore(score);
+        civilization.increaseScore(score);
         updateInProgressTech();
         updateHappiness();
     }
@@ -106,7 +106,7 @@ public class CivilizationController {
             }
         }
         cost /= 2;
-        civilization.decreaseTotalGold(cost);
+        civilization.setTotalGold(civilization.getTotalGold() - cost);
     }
 
     private static void handleUnitsMaintenance() {
@@ -125,7 +125,7 @@ public class CivilizationController {
                 }
             }
         }
-        civilization.decreaseTotalGold(cost);
+        civilization.setTotalGold(civilization.getTotalGold() - cost);
     }
 
     private static void updateInProgressTech() {

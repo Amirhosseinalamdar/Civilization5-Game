@@ -61,8 +61,8 @@ public class Civilization {
         return luxuryResources;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void increaseScore(int score) {
+        this.score += score;
     }
 
     public void setTotalGold(int totalGold) {
@@ -164,20 +164,8 @@ public class Civilization {
         return happiness;
     }
 
-    public void setScience(int science) {
+    public void setTotalScience(int science) {
         this.science = science;
-    }
-
-    public void increaseTotalGold(int gold) {
-        this.totalGold += gold;
-    }
-
-    public void decreaseTotalGold(int cost) {
-        this.totalGold -= cost;
-    }
-
-    public void increaseTotalScience(int science) {
-        this.science += science;
     }
 
     public ArrayList<Resource> getResources() {

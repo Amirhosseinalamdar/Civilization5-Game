@@ -23,6 +23,7 @@ public class Unit {
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
         this.MP = unitType.getMP();
+        this.health = 10;
     }
 
     public void setPath(Path path) {
