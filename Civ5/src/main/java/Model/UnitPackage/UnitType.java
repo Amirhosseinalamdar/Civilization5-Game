@@ -89,4 +89,17 @@ public enum UnitType {
                     this.equals(CHARIOT_ARCHER) || this.equals(HORSEMAN) || this.equals(CAVALRY) || this.equals(LANCER) ||
                         this.equals(ARTILLERY) || this.equals(PANZER) || this.equals(TANK));
     }
+
+    public boolean isSiege() {
+        return this.equals(CATAPULT) || this.equals(CANNON) ||
+                this.equals(TREBUCHET) || this.equals(ARTILLERY);
+    }
+
+    public boolean isRangeCombat() {
+        return rangedCombatStrength > 0;
+    }
+
+    public boolean isMeleeCombat() {
+        return combatStrength > 0;
+    }
 }

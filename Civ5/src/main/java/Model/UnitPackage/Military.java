@@ -16,7 +16,7 @@ public class Military extends Unit {
         this.combatStrength = militaryType.getCombatStrength();
         this.rangedCombatStrength = militaryType.getRangedCombatStrength();
         this.range = militaryType.getRange();
-        this.isReady = !isSiege();
+        this.isReady = !this.type.isSiege();
     }
 
     @Override
@@ -48,6 +48,14 @@ public class Military extends Unit {
         if (this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus())
             return combatStrength + 2; //Combat Strength handled
         return combatStrength;
+    }
+
+    public int getRangedCombatStrength() {
+        return rangedCombatStrength;
+    }
+
+    public int getRange() {
+        return range;
     }
 
 }

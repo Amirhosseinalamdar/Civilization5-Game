@@ -659,4 +659,12 @@ public class GameMenu {
     public static void impassableTile() {
         System.out.println("can not walk on that tile");
     }
+
+    public static void cityOutOfUnitRange() {
+        System.out.println("can not range attack, city out of range");
+    }
+
+    public static void rangedAttackToCitySuccessfully (City city) {
+        System.out.println("ranged attack to " + city.getName() + " was a success");
+    }
 }

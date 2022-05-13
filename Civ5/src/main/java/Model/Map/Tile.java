@@ -269,4 +269,8 @@ public class Tile {
         return (forestOrJungle.equals("jungle") && feature.equals(TerrainFeature.JUNGLE)) ||
                 (forestOrJungle.equals("forest") && feature.equals(TerrainFeature.FOREST));
     }
+
+    public boolean isCenterOfCity (City city) {
+        return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
+    }
 }

@@ -41,6 +41,13 @@ public class UnitController {
             else GameMenu.notEnoughMoves();
         }
 
+        else if (unit.getStatus().equals(UnitStatus.ATTACK)) {
+            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+
+            if (unit.hasRemainingMoves()) attack(Game.getTiles()[x][y]);
+            else GameMenu.notEnoughMoves();
+        }
+
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
                 if (unit.hasRemainingMoves()) foundCity();
@@ -170,14 +177,12 @@ public class UnitController {
 
             if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
                 int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-                if (!(unit instanceof Military))
+                if (unit.getType().isCivilian())
                     GameMenu.unitIsCivilianError();
                 else if (GameController.invalidPos(x, y))
                     GameMenu.indexOutOfArray();
-                else if (!unit.isSiege() || unit.getStatus().equals(UnitStatus.SIEGEPREP))
-                    return matcher;
                 else
-                    GameMenu.siegeNotPrepared();
+                    return matcher;
             }
 
             if (command.equals("alert") || command.equals("fortify")) {
@@ -210,7 +215,7 @@ public class UnitController {
 
             if (command.equals("setup ranged")) {
                 if (unit instanceof Military) {
-                    if (unit.isSiege())
+                    if (unit.getType().isSiege())
                         return Pattern.compile(command).matcher(command);
                     else
                         GameMenu.unitIsNot("siege");
@@ -275,7 +280,7 @@ public class UnitController {
     }
 
     private static void garrison() {
-        //TODO
+        unit.setStatus("garrison");
     }
 
     private static boolean canPillageRoute (String routeType) {
@@ -287,7 +292,7 @@ public class UnitController {
     private static void pillageRoute (String routeType) {
         //TODO... add gold and stuff BLA BLA
         Pair <String, Integer> pair =
-                new Pair<>(unit.getTile().getRouteInProgress().getKey(), unit.getTile().getRouteInProgress().getValue() * -1);
+                new Pair<>(unit.getTile().getRouteInProgress().getKey(), -3);
         unit.getTile().setRouteInProgress(pair);
         GameMenu.pillageSuccessful(routeType);
     }
@@ -301,7 +306,7 @@ public class UnitController {
     private static void pillageImprovement() {
         //TODO... add gold to attackers' civilization BLA BLA
         Pair <Improvement, Integer> pair =
-                new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
+                new Pair<>(unit.getTile().getImprovementInProgress().getKey(), -3);
         unit.getTile().setImprovementInProgress(pair);
         GameMenu.pillageSuccessful(pair.getKey().toString());
     }
@@ -586,7 +591,8 @@ public class UnitController {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH))
             continuePath();
         if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY) ||
-                (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20)) //TODO fortify heal
+                (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) ||
+                    unit.getStatus().equals(UnitStatus.GARRISON) || unit.getStatus().equals(UnitStatus.SIEGEPREP)) //TODO fortify heal
             return;
         if (unit.getStatus().equals(UnitStatus.ALERT) && noEnemyNearby())
             return;
@@ -631,25 +637,63 @@ public class UnitController {
         return false;
     }
 
-    private static void attack(Unit defendingUnit) {//should call by move
+    private static void attack (Tile targetTile) {//should call by move
         //TODO if defender is civilian
         //TODO call ranged attack to city or unit
         //TODO call close attack to city or unit
+        if (targetTile.isCenterOfCity(targetTile.getCity())) {
+            if (unit.getType().isRangeCombat())
+                rangedAttackToCity(targetTile.getCity());
+            if (unit.getType().isMeleeCombat())
+                meleeAttackToCity(targetTile.getCity());
+        }
+        else {
+            System.out.println("next phase ;)"); //TODO next phase
+        }
     }
 
     private static void rangedAttackToUnit(Unit defendingUnit) {
 
     }
 
-    private static void rangedAttackToCity(City city) {
+    private static void rangedAttackToCity (City city) {
+        if (cityIsOutOfRange(city)) {
+            GameMenu.cityOutOfUnitRange();
+            return;
+        }
+        Military military = (Military) unit;
+        if (unit.getType().isSiege() && !unit.getStatus().equals(UnitStatus.SIEGEPREP)) {
+            GameMenu.siegeNotPrepared();
+            return;
+        }
+        city.setHP(city.getHP() - military.getRangedCombatStrength() / 3);
+        if (city.getHP() < 0) city.setHP(0);
+        GameMenu.rangedAttackToCitySuccessfully(city);
+    }
+
+    private static boolean cityIsOutOfRange (City city) {
+        ArrayList<Tile> unitInRangeTiles = new ArrayList<>(unit.getTile().getNeighbors());
+        int beginIndex = 0;
+        for (int i = 0; i < unit.getType().getRange(); i++) {
+            for (Tile tile : unitInRangeTiles)
+                if (tile.isCenterOfCity(city))
+                    return true;
+            int sizeHolder = unitInRangeTiles.size();
+            for (int j = beginIndex; j < sizeHolder; j++)
+                unitInRangeTiles.addAll(unitInRangeTiles.get(j).getNeighbors());
+            beginIndex = sizeHolder;
+        }
+        for (Tile tile : unitInRangeTiles)
+            if (tile.isCenterOfCity(city))
+                return true;
+        return false;
+    }
+
+    private static void meleeAttackToCity (City city) {
 
     }
 
-    private static void closeAttackToCity(City city) {
-
-    }
-
-    private static void closeAttackToUnit(Unit defendingUnit) {
+    private static void meleeAttackToUnit (Unit defendingUnit) {
 
     }
 

@@ -159,11 +159,6 @@ public class Unit {
 //        this.status = status;
 //    }
 
-    public boolean isSiege() {
-        return this.type.equals(UnitType.CATAPULT) || this.type.equals(UnitType.CANNON) ||
-                this.type.equals(UnitType.TREBUCHET) || this.type.equals(UnitType.ARTILLERY);
-    }
-
     public boolean hasRemainingMoves() {
         return movesInTurn < MP;
     }

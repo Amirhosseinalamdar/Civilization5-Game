@@ -147,6 +147,10 @@ public class City {
         return HP;
     }
 
+    public void setHP (int HP) {
+        this.HP = HP;
+    }
+
     public int getCombatStrength() {
         int defaultCombatStrength;
 
