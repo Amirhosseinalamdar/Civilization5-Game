@@ -365,10 +365,6 @@ public class UnitController {
             GameMenu.cantBuildImprovementOnTile();
             return false;
         }
-        if (! unit.getTile().getResource().getPrerequisiteImprovement().equals(improvement)) {
-            GameMenu.unrelatedImprovementToResource();
-            return false;
-        }
         return true;
     }
 
@@ -403,6 +399,7 @@ public class UnitController {
         }
         Pair <String, Integer> pair = new Pair<>(routeType, calcTurnsFor(routeType));
         unit.getTile().setRouteInProgress(pair);
+        GameMenu.buildRouteSuccessfully(routeType);
     }
 
     private static boolean tileAlreadyHas (String routeType) {

@@ -100,11 +100,9 @@ public class CivilizationController {
 
     private static void handleRoadsMaintenance() {
         int cost = 0;
-        for (City city : civilization.getCities()) {
-            for (Tile tile : city.getTiles()) {
-                if (tile.getRouteInProgress().getValue() == 0) cost++;
-            }
-        }
+        for (City city : civilization.getCities())
+            for (Tile tile : city.getTiles())
+                if (tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() == 0) cost++;
         cost /= 2;
         civilization.setTotalGold(civilization.getTotalGold() - cost);
     }
