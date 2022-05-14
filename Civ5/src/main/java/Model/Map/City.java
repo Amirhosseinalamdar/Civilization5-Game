@@ -189,6 +189,10 @@ public class City {
         return cityStatus;
     }
 
+    public void setCityStatus (CityStatus status) {
+        this.cityStatus = status;
+    }
+
     public void setStoredFood(int storedFood) {
         this.storedFood = storedFood;
     }

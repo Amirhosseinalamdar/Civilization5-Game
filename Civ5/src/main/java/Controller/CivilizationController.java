@@ -89,7 +89,7 @@ public class CivilizationController {
     private static void updateHappiness() {
         int unhappiness = 2 * civilization.getCities().size();
         for (City city : civilization.getCities()) {
-            if (city.getCityStatus().equals(CityStatus.POPPET)) unhappiness++;
+            if (city.getCityStatus().equals(CityStatus.PUPPET)) unhappiness++;
             unhappiness += city.getCitizens().size();
         }
         for (HashMap.Entry<Resource, Integer> set : civilization.getLuxuryResources().entrySet()) {
@@ -182,12 +182,15 @@ public class CivilizationController {
             String decision = GameMenu.nextCommand();
             if (decision.equals("do nothing")) return;
             else if (decision.equals("attach")) attachCity(city);
+            else if (decision.equals("puppet")) puppetCity(city);
+            else if (decision.equals("raze")) razeCity(city);
             else GameMenu.invalidDecisionForConqueredCity();
         }
     }
 
     private static void puppetCity (City city) {
-
+        city.setCityStatus(CityStatus.PUPPET);
+        civilization.addCity(city);
     }
 
     private static void attachCity (City city) {
@@ -196,7 +199,10 @@ public class CivilizationController {
         GameMenu.attachCitySuccessful(city);
     }
 
-    private static void destroyCity (City city) {
-
+    private static void razeCity (City city) {
+        civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
+        int firstPopulation = city.getCitizens().size();
+        if (firstPopulation / 2 > 0)
+            city.getCitizens().subList(0, firstPopulation / 2).clear();
     }
 }
