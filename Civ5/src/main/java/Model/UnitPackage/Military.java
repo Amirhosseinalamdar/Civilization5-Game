@@ -65,4 +65,8 @@ public class Military extends Unit {
         this.combatStrength = combatStrength;
     }
 
+    public void setRangedCombatStrength (double rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
+    }
+
 }

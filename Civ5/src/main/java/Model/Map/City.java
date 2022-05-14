@@ -164,6 +164,14 @@ public class City {
         return defaultCombatStrength;
     }
 
+    public void setCombatStrength (double combatStrength) {
+        this.combatStrength = combatStrength;
+    }
+
+    public void setRangedCombatStrength (double rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
+    }
+
     private double garrisonBonus() {
         Tile centerTile = this.tiles.get(0);
         if (centerTile.getMilitary() != null && centerTile.getMilitary().getStatus().equals(UnitStatus.GARRISON))
