@@ -65,7 +65,7 @@ public class City {
         this.productionPerTurn = 1;
     }
 
-    public void setInProgressUnit (UnitType unitType) {
+    public void setInProgressUnit(UnitType unitType) {
         this.inProgressUnit = unitType;
     }
 
@@ -81,7 +81,7 @@ public class City {
         return civilization;
     }
 
-    public void setCivilization (Civilization civilization) {
+    public void setCivilization(Civilization civilization) {
         this.civilization = civilization;
     }
 
@@ -153,7 +153,7 @@ public class City {
         return HP;
     }
 
-    public void setHP (double HP) {
+    public void setHP(double HP) {
         this.HP = HP;
     }
 
@@ -166,11 +166,11 @@ public class City {
         return defaultCombatStrength;
     }
 
-    public void setCombatStrength (double combatStrength) {
+    public void setCombatStrength(double combatStrength) {
         this.combatStrength = combatStrength;
     }
 
-    public void setRangedCombatStrength (double rangedCombatStrength) {
+    public void setRangedCombatStrength(double rangedCombatStrength) {
         this.rangedCombatStrength = rangedCombatStrength;
     }
 
@@ -189,7 +189,7 @@ public class City {
         return cityStatus;
     }
 
-    public void setCityStatus (CityStatus status) {
+    public void setCityStatus(CityStatus status) {
         this.cityStatus = status;
     }
 

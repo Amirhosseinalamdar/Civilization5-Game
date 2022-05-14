@@ -76,7 +76,8 @@ public class UserController {
     public static ArrayList<User> startGame(ArrayList<String> usernames) {
         ArrayList<User> players = new ArrayList<>();
         for (String username : usernames) {
-            if (getUserByUsername(username.trim()) == null || getUserByUsername(username.trim()).equals(loggedInUser)) return null;
+            if (getUserByUsername(username.trim()) == null || getUserByUsername(username.trim()).equals(loggedInUser))
+                return null;
             else players.add(getUserByUsername(username.trim()));
         }
         players.add(0, loggedInUser);

@@ -180,7 +180,7 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x"));
         for (Unit unit : civilization.getUnits()) {
             if (!unit.getType().isCivilian()) {
-                Military military = (Military)unit;
+                Military military = (Military) unit;
                 military.setCombatStrength(military.getCombatStrength() + x);
             }
         }
@@ -190,7 +190,7 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x"));
         for (Unit unit : civilization.getUnits()) {
             if (!unit.getType().isCivilian()) {
-                Military military = (Military)unit;
+                Military military = (Military) unit;
                 if (military.getRangedCombatStrength() > 0) {
                     military.setRangedCombatStrength(military.getRangedCombatStrength() + x);
                 }
@@ -530,7 +530,8 @@ public class GameController {
     public static int findBestHappiness() {
         int happiness = 0;
         for (User player : Game.getPlayers()) {
-            if (player.getCivilization().getHappiness() > happiness) happiness = player.getCivilization().getHappiness();
+            if (player.getCivilization().getHappiness() > happiness)
+                happiness = player.getCivilization().getHappiness();
         }
         return happiness;
     }
@@ -547,7 +548,8 @@ public class GameController {
     public static int findWorstHappiness() {
         int happiness = 1000000;
         for (User player : Game.getPlayers()) {
-            if (player.getCivilization().getHappiness() < happiness) happiness = player.getCivilization().getHappiness();
+            if (player.getCivilization().getHappiness() < happiness)
+                happiness = player.getCivilization().getHappiness();
         }
         return happiness;
     }

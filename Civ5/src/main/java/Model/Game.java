@@ -260,7 +260,7 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
-            } else if(tiles[i][j].isRiverAtLeft() && key<20){
+            } else if (tiles[i][j].isRiverAtLeft() && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }

@@ -181,7 +181,7 @@ public class CivilizationController {
         return output;
     }
 
-    public static void enterCityAsConqueror (City city) {
+    public static void enterCityAsConqueror(City city) {
         while (true) {
             String decision = GameMenu.nextCommand();
             if (decision.equals("do nothing")) return;
@@ -192,18 +192,18 @@ public class CivilizationController {
         }
     }
 
-    private static void puppetCity (City city) {
+    private static void puppetCity(City city) {
         city.setCityStatus(CityStatus.PUPPET);
         civilization.addCity(city);
     }
 
-    private static void attachCity (City city) {
+    private static void attachCity(City city) {
         city.setCivilization(civilization);
         civilization.getCities().add(city);
         GameMenu.attachCitySuccessful(city);
     }
 
-    private static void razeCity (City city) {
+    private static void razeCity(City city) {
         civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
         int firstPopulation = city.getCitizens().size();
         if (firstPopulation / 2 > 0)

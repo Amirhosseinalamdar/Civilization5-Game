@@ -33,11 +33,11 @@ public enum Improvement {
 
     private final int constructionTime;
     private final Technology prerequisiteTech;
-    private final ArrayList <TerrainType> prerequisiteTypes;
-    private final ArrayList <TerrainFeature> prerequisiteFeatures;
+    private final ArrayList<TerrainType> prerequisiteTypes;
+    private final ArrayList<TerrainFeature> prerequisiteFeatures;
 
 
-    Improvement (int constructionTime, ArrayList <TerrainType> prerequisiteTypes, ArrayList <TerrainFeature> prerequisiteFeatures, Technology prerequisiteTech) {
+    Improvement(int constructionTime, ArrayList<TerrainType> prerequisiteTypes, ArrayList<TerrainFeature> prerequisiteFeatures, Technology prerequisiteTech) {
         this.constructionTime = constructionTime;
         this.prerequisiteTech = prerequisiteTech;
         this.prerequisiteTypes = prerequisiteTypes;

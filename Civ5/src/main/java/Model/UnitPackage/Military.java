@@ -12,7 +12,7 @@ public class Military extends Unit {
     private int range;
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
 
-    public Military (UnitType militaryType) {
+    public Military(UnitType militaryType) {
         super(militaryType);
         this.combatStrength = militaryType.getCombatStrength();
         this.rangedCombatStrength = militaryType.getRangedCombatStrength();
@@ -61,11 +61,11 @@ public class Military extends Unit {
         return range;
     }
 
-    public void setCombatStrength (double combatStrength) {
+    public void setCombatStrength(double combatStrength) {
         this.combatStrength = combatStrength;
     }
 
-    public void setRangedCombatStrength (double rangedCombatStrength) {
+    public void setRangedCombatStrength(double rangedCombatStrength) {
         this.rangedCombatStrength = rangedCombatStrength;
     }
 

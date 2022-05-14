@@ -18,7 +18,7 @@ public class Unit {
     public static double MAX_HEALTH = 10;
     protected Path path;
 
-    public Unit (UnitType unitType) {
+    public Unit(UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
@@ -119,7 +119,7 @@ public class Unit {
         path = null;
     }
 
-    public void setStatus (String string) {
+    public void setStatus(String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
         else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
@@ -139,7 +139,7 @@ public class Unit {
         civilization.setTotalGold(civilization.getTotalGold() + 5);
     }
 
-    public void updateMovesInTurn (Tile dest) {
+    public void updateMovesInTurn(Tile dest) {
         if (dest.isEnemyZoneOfControl(this.civilization)) {
             this.movesInTurn = MP;
             return;

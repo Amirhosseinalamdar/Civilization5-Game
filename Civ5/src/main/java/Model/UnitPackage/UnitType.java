@@ -38,7 +38,7 @@ public enum UnitType {
     private final Resource prerequisiteResource;
     private final Technology prerequisiteTech;
 
-    UnitType (int cost, int MP, int combatStrength, int rangedCombatStrength, int range, Resource resource, Technology technology) {
+    UnitType(int cost, int MP, int combatStrength, int rangedCombatStrength, int range, Resource resource, Technology technology) {
         this.MP = MP;
         this.cost = cost;
         this.combatStrength = combatStrength;
@@ -86,8 +86,8 @@ public enum UnitType {
 
     public boolean hasDefensiveBonus() {
         return !(this.equals(CATAPULT) || this.equals(KNIGHT) || this.equals(TREBUCHET) || this.equals(CANNON) ||
-                    this.equals(CHARIOT_ARCHER) || this.equals(HORSEMAN) || this.equals(CAVALRY) || this.equals(LANCER) ||
-                        this.equals(ARTILLERY) || this.equals(PANZER) || this.equals(TANK));
+                this.equals(CHARIOT_ARCHER) || this.equals(HORSEMAN) || this.equals(CAVALRY) || this.equals(LANCER) ||
+                this.equals(ARTILLERY) || this.equals(PANZER) || this.equals(TANK));
     }
 
     public boolean isSiege() {
