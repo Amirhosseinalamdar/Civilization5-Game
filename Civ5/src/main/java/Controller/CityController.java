@@ -5,6 +5,7 @@ import Model.Game;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
@@ -287,14 +288,18 @@ public class CityController {
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
-        updateImprovement(city);
+        updateBuildingImprovement(city);
+        updateRemovingImprovement(city);
         updateRoads(city);
+
     }
 
     private static void updateRoads(City city) {
         for (Tile tile : city.getTiles()) {
-            if (tile.getRouteInProgress() == null) continue;
-            if (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad")) {
+            if (tile.getRouteInProgress() != null
+                    && (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad"))
+                    && tile.getCivilian() != null && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && (tile.getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || tile.getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
                 if (tile.getRouteInProgress().getValue() <= 0) continue;
                 int turn = tile.getRouteInProgress().getValue();
                 turn--;
@@ -303,9 +308,27 @@ public class CityController {
         }
     }
 
-    private static void updateImprovement(City city) {
+    private static void updateRemovingImprovement(City city) {
         for (Tile tile : city.getTiles()) {
-            if (tile.getImprovementInProgress() != null) {
+            if (tile.getRemoveInProgress() != null && tile.getCivilian() != null
+                    && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && tile.getCivilian().getStatus().equals(UnitStatus.CLEAR_LAND)) {
+                int turn = tile.getRemoveInProgress().getValue();
+                turn--;
+                tile.setRemoveInProgress(new Pair<>(tile.getRouteInProgress().getKey(), turn));
+                if (turn == 0) {
+                    tile.getCivilian().setStatus("active");
+                    tile.setFeature(TerrainFeature.NONE);
+                }
+            }
+        }
+    }
+
+    private static void updateBuildingImprovement(City city) {
+        for (Tile tile : city.getTiles()) {
+            if (tile.getImprovementInProgress() != null && tile.getCivilian() != null
+                    && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && (tile.getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || tile.getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
                 if (tile.getImprovementInProgress().getValue() <= 0) continue;
                 int turn = tile.getImprovementInProgress().getValue();
                 turn--;
