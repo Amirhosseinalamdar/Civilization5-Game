@@ -29,24 +29,24 @@ public class CityController {
     public static void handleCityOptions() {
         Matcher matcher = getCityDecision();
 
-        if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex()) ||
-            matcher.pattern().toString().matches(Commands.PURCHASE_UNIT.getRegex())) {
+        if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex()) ||
+            matcher.pattern().toString().equals(Commands.PURCHASE_UNIT.getRegex())) {
             UnitType unitType = getUnitTypeFromString(matcher.group("unitName"));
             if (unitType == null) {
-                GameMenu.noSuchUnitType();
+                GameMenu.invalidUnitType();
                 return;
             }
-            if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
+            if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
             else tryPurchaseUnit(unitType);
         }
 
-        if (matcher.pattern().toString().matches(Commands.PURCHASE_TILE.getRegex())) {
+        else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
             Tile targetTile = Game.getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
         }
 
-        if (matcher.pattern().toString().matches(Commands.LOCK_CITIZEN.getRegex())) {
+        else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
@@ -63,14 +63,14 @@ public class CityController {
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
         }
 
-        if (matcher.pattern().toString().matches(Commands.ATTACK.getRegex())) {
+        else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (canCityAttackTo(Game.getTiles()[x][y])) {
                 rangeAttackToUnit(Game.getTiles()[x][y].getMilitary());
             }
         }
 
-        if (matcher.pattern().toString().startsWith("show")) {
+        else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
             GameMenu.showCityOutput(city);
         }
@@ -110,6 +110,9 @@ public class CityController {
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
+
+            if ((matcher = Commands.getMatcher(command, Commands.SHOW_CITY_OUTPUT)) != null)
+                return matcher;
 
             System.out.println("city decision wasn't valid");
         }
@@ -420,7 +423,7 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit(UnitType unitType) {
+    private static void tryCreateUnit (UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -429,16 +432,18 @@ public class CityController {
             GameMenu.notEnoughResource();
             return;
         }
-        if (unitType.isCivilian()) //TODO... improve it
+        if (unitType.isCivilian()) {//TODO... improve it
             if (city.getTiles().get(0).getCivilian() != null) {
-                GameMenu.cityIsOccupied(unitType.toString());
+                GameMenu.cityIsOccupied(city.getTiles().get(0).getCivilian().getType().toString());
                 return;
             }
-        else
+        }
+        else {
             if (city.getTiles().get(0).getMilitary() != null) {
-                GameMenu.cityIsOccupied(unitType.toString());
+                GameMenu.cityIsOccupied(city.getTiles().get(0).getMilitary().getType().toString());
                 return;
             }
+        }
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             System.out.println("already in progress... remaining cost: " + remainingCost); //TODO... view

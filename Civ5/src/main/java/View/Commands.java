@@ -60,6 +60,7 @@ public enum Commands {
     NOTIFICATION_HISTORY("^show notification history$"),
     MILITARY_OVERVIEW("^show military overview$"),
     ECONOMIC_OVERVIEW("^show economic overview$"),
+    SHOW_CITY_OUTPUT("show city output"),
     CHEAT1("^increase (--turn|-t) (?<x>\\d+)$"),
     CHEAT2("^increase (--gold|-g) (?<x>\\d+)$"),
     CHEAT3("^increase (--happiness|-h) (?<x>\\d+)$"),

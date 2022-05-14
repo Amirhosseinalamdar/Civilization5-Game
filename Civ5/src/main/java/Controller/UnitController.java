@@ -150,7 +150,7 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
             System.out.println("doing nothing"); //TODO... add else_if for other statuses
 
-        else System.out.println("unit controller, invalid command");
+        else System.out.println("unit controller, status: " + unit.getStatus());
     }
 
     private static Matcher getUnitDecision() {
@@ -634,7 +634,7 @@ public class UnitController {
         return tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(civilization);
     }
 
-    private static void attack (Tile targetTile) {//should call by move
+    private static void attack (Tile targetTile) {
         //TODO if defender is civilian
         //TODO call ranged attack to unit
         //TODO call close attack to unit

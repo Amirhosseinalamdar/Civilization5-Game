@@ -613,10 +613,6 @@ public class GameMenu {
         System.out.println("couldn't lock any citizen");
     }
 
-    public static void noSuchUnitType() {
-        System.out.println("no such unit type exists");
-    }
-
     public static void unreachedTech(Technology prerequisiteTech) {
         System.out.println("you haven't reached " + prerequisiteTech.toString() + " yet");
     }
@@ -662,7 +658,7 @@ public class GameMenu {
         System.out.println("civilization has no tech in progress; choose a research");
     }
 
-    public static void cityIsOccupied(String type) {
+    public static void cityIsOccupied (String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
