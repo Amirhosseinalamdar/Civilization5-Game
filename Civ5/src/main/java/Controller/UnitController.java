@@ -291,6 +291,7 @@ public class UnitController {
         }
         Pair<String, Integer> pair = new Pair<>(clearingTarget, turns);
         unit.getTile().setRemoveInProgress(pair);
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canGarrison() {
@@ -299,6 +300,7 @@ public class UnitController {
 
     private static void garrison() {
         unit.setStatus("garrison");
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canPillageRoute (String routeType) {
@@ -312,6 +314,7 @@ public class UnitController {
                 new Pair<>(unit.getTile().getRouteInProgress().getKey(), -3);
         unit.getTile().setRouteInProgress(pair);
         GameMenu.pillageSuccessful(routeType);
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canPillageImprovement (Improvement improvement) {
@@ -325,6 +328,7 @@ public class UnitController {
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), -3);
         unit.getTile().setImprovementInProgress(pair);
         GameMenu.pillageSuccessful(pair.getKey().toString());
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canRepairRoute (String routeType) {
@@ -342,6 +346,7 @@ public class UnitController {
                 new Pair<>(unit.getTile().getRouteInProgress().getKey(), unit.getTile().getRouteInProgress().getValue() * -1);
         unit.getTile().setRouteInProgress(pair);
         GameMenu.repairStarted(unit.getTile().getRouteInProgress().getKey());
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canRepairImprovement (Improvement improvement) {
@@ -358,6 +363,7 @@ public class UnitController {
         Pair <Improvement, Integer> pair =
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
         unit.getTile().setImprovementInProgress(pair);
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean canFoundCityHere() {
@@ -413,6 +419,7 @@ public class UnitController {
         Pair <String, Integer> pair = new Pair<>(routeType, calcTurnsFor(routeType));
         unit.getTile().setRouteInProgress(pair);
         GameMenu.buildRouteSuccessfully(routeType);
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean tileAlreadyHas (String routeType) {
@@ -443,6 +450,7 @@ public class UnitController {
         }
         Pair <Improvement, Integer> pair = new Pair<>(improvement, calcTurnsForImprovement(improvement));
         unit.getTile().setImprovementInProgress(pair);
+        unit.setMovesInTurn(unit.getMP());
     }
 
     private static boolean tileAlreadyHasImprovement (Improvement improvement) {
