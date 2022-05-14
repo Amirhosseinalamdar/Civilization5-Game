@@ -57,8 +57,8 @@ public class City {
         this.borderExpansionCost = 50;
         this.borderLastCost = 50;
         this.HP = 20;
-        if (this.tiles.get(0).getType().equals(TerrainType.HILL)) this.combatStrength = 13;
-        else this.combatStrength = 10;
+        if (this.tiles.get(0).getType().equals(TerrainType.HILL)) this.combatStrength = 18;
+        else this.combatStrength = 15;
         this.rangedCombatStrength = 0;
         this.name = name;
     }
@@ -77,6 +77,10 @@ public class City {
 
     public Civilization getCivilization() {
         return civilization;
+    }
+
+    public void setCivilization (Civilization civilization) {
+        this.civilization = civilization;
     }
 
     public int getStoredFood() {
@@ -143,7 +147,7 @@ public class City {
         return citizens;
     }
 
-    public double getHP() {
+    public double getHP() { //TODO add walls
         return HP;
     }
 

@@ -132,20 +132,26 @@ public class CivilizationController {
         return output;
     }
 
-    private void conquerCity(City city, Military military) {
-        //CityStatus ra taghir midahim va asarat ra eemal mikonim
-        //call puppetCity or ownCity or destroyCity
+    public static void enterCityAsConqueror (City city) {
+        while (true) {
+            String decision = GameMenu.nextCommand();
+            if (decision.equals("do nothing")) return;
+            else if (decision.equals("attach")) attachCity(city);
+            else GameMenu.invalidDecisionForConqueredCity();
+        }
     }
 
-    private void puppetCity(City city, Civilization civilization) {
+    private static void puppetCity (City city) {
 
     }
 
-    private void ownCity(City city, Civilization civilization) {
-
+    private static void attachCity (City city) {
+        city.setCivilization(civilization);
+        civilization.getCities().add(city);
+        GameMenu.attachCitySuccessful(city);
     }
 
-    private void destroyCity(City city) {
+    private static void destroyCity (City city) {
 
     }
 }

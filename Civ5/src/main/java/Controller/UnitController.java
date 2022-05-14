@@ -468,7 +468,7 @@ public class UnitController {
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
         if (chosenPath == null) return;
-        moveOnPath(chosenPath);
+        moveOnPath(unit, chosenPath);
 
         if (chosenPath.tiles.size() > 0) unit.setPath(chosenPath);
     }
@@ -480,7 +480,7 @@ public class UnitController {
             unit.setStatus("active");
             return;
         }
-        moveOnPath(unit.getPath());
+        moveOnPath(unit, unit.getPath());
         if (unit.getPath().tiles.size() == 0) unit.setStatus("active");
     }
 
@@ -515,7 +515,7 @@ public class UnitController {
         return null;
     }
 
-    public static void moveOnPath(Path chosenPath) {
+    public static void moveOnPath (Unit unit, Path chosenPath) {
         while (unit.getMovesInTurn() < unit.getMP() && chosenPath.tiles.size() > 0) {
             if (unit instanceof Military) {
                 chosenPath.tiles.get(0).setMilitary((Military) unit);
@@ -524,10 +524,10 @@ public class UnitController {
                 chosenPath.tiles.get(0).setCivilian(unit);
                 unit.getTile().setCivilian(null);
             }
-            changeTileVisionStatus(unit.getTile(), TileStatus.DISCOVERED);
+            if (unit.equals(UnitController.unit)) changeTileVisionStatus(unit.getTile(), TileStatus.DISCOVERED);
             unit.updateMovesInTurn(chosenPath.tiles.get(0));
             unit.setTile(chosenPath.tiles.get(0));
-            changeTileVisionStatus(unit.getTile(), TileStatus.CLEAR);
+            if (unit.equals(UnitController.unit)) changeTileVisionStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
         }
         if (chosenPath.tiles.size() > 0) unit.setStatus("has path");
@@ -626,8 +626,8 @@ public class UnitController {
 
     private static void attack (Tile targetTile) {//should call by move
         //TODO if defender is civilian
-        //TODO call ranged attack to city or unit
-        //TODO call close attack to city or unit
+        //TODO call ranged attack to unit
+        //TODO call close attack to unit
         if (targetTile.isCenterOfCity(targetTile.getCity())) {
             if (unit.getType().isRangeCombat())
                 rangedAttackToCity(targetTile.getCity());
@@ -678,8 +678,26 @@ public class UnitController {
     }
 
     private static void meleeAttackToCity (City city) {
-        
+        Path bestPath = findBestPath(city.getTiles().get(0).getIndexInMapI(), city.getTiles().get(0).getIndexInMapJ());
+        Military test = new Military(unit.getType());
+        moveOnPath(test, bestPath);
+        if (bestPath == null || test.getStatus().equals(UnitStatus.HAS_PATH)) {
+            GameMenu.cityCenterOutOfMeleeRange(city);
+            return;
+        }
+        Tile destTile = bestPath.tiles.get(bestPath.tiles.size() - 1);
+        bestPath = findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ());
+        moveOnPath(unit, bestPath);
+        unit.setHealth(unit.getHealth() - city.getCombatStrength() / 4);
+        city.setHP(city.getHP() - ((Military)unit).getCombatStrength() / 10);
+        if (unit.getHealth() <= 0) unit.kill();
+        if (city.getHP() <= 0) {
+            GameMenu.cityHPIsZero(city);
+            CivilizationController.enterCityAsConqueror(city);
+        }
     }
+
+
 
     private static void meleeAttackToUnit (Unit defendingUnit) {
 

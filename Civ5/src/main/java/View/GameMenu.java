@@ -667,4 +667,20 @@ public class GameMenu {
     public static void rangedAttackToCitySuccessfully (City city) {
         System.out.println("ranged attack to " + city.getName() + " was a success");
     }
+
+    public static void cityCenterOutOfMeleeRange (City city) {
+        System.out.println("can not attack to " + city.getName() + ", out of range");
+    }
+
+    public static void cityHPIsZero (City city) {
+        System.out.println(city.getName() + " is zero");
+    }
+
+    public static void invalidDecisionForConqueredCity() {
+        System.out.println("city conquer decision was invalid");
+    }
+
+    public static void attachCitySuccessful (City city) {
+        System.out.println(city.getName() + " attached successfully");
+    }
 }
