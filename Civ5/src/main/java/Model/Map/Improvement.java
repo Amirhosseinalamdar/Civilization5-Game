@@ -25,10 +25,6 @@ public enum Improvement {
 
     TRADING_POST(8, new ArrayList<>(Arrays.asList(TerrainType.PLAIN, TerrainType.DESERT, TerrainType.GRASS, TerrainType.TUNDRA, TerrainType.HILL)), null, Technology.TRAPPING),
 
-//    MANUFACTORY(5, new ArrayList<>(Arrays.asList(TerrainType.PLAIN, TerrainType.DESERT, TerrainType.GRASS, TerrainType.TUNDRA, TerrainType.SNOW)), null, Technology.ENGINEERING),
-
-//    ROAD(null, null, null),
-
     NONE(0, null, null, null);
 
     private final int constructionTime;

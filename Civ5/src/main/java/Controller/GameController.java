@@ -30,7 +30,8 @@ public class GameController {
         for (Unit unit : civilization.getUnits())
             if (!unit.getStatus().equals(UnitStatus.DO_NOTHING) && !unit.getStatus().equals(UnitStatus.HEAL)
                     && !unit.getStatus().equals(UnitStatus.FORTIFY) && !unit.getStatus().equals(UnitStatus.SLEEP) &&
-                    !unit.getStatus().equals(UnitStatus.ALERT) && unit.getMovesInTurn() < unit.getMP()) {
+                    !unit.getStatus().equals(UnitStatus.ALERT) && !unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) &&
+                    !unit.getStatus().equals(UnitStatus.REPAIR) && !unit.getStatus().equals(UnitStatus.CLEAR_LAND) && unit.getMovesInTurn() < unit.getMP()) {
                 GameMenu.unitHasRemainingMove(unit);
                 return false;
             }

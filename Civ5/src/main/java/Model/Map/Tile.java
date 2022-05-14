@@ -25,12 +25,10 @@ public class Tile {
     private Pair<String, Integer> routeInProgress;
     private Pair<String, Integer> removeInProgress;
     private boolean isRaided;
-    private City city; // age null bashe city nis agar na capitale citie
-    //    private City memberOfThisCity;
-    //private ArrayList<River> rivers;
+    private City city;
     private boolean isRiverAtLeft;
-    private int centerX; // vertical
-    private int centerY; // horizontal
+    private int centerX;
+    private int centerY;
     private int indexInMapI;
     private int indexInMapJ;
     private Citizen workingCitizen;
@@ -55,10 +53,6 @@ public class Tile {
     public Citizen getWorkingCitizen() {
         return workingCitizen;
     }
-
-//    //public City getMemberOfThisCity() {
-//        return memberOfThisCity;
-//    }
 
     public void setRiverAtLeft(boolean riverAtLeft) {
         isRiverAtLeft = riverAtLeft;

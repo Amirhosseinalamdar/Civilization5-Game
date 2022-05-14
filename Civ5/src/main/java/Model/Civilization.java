@@ -16,7 +16,7 @@ public class Civilization {
     private int totalGold;
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
-    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];//change name +vision
+    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];
     private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
     private Technology inProgressTech;
     private int science;

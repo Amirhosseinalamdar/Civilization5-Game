@@ -123,7 +123,7 @@ public class Unit {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
         else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
-        else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION; //should it be?
+        else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION;
         else if (string.equals("wake")) this.status = UnitStatus.WAKE;
         else if (string.equals("delete")) this.delete();
         else if (string.startsWith("repair")) this.status = UnitStatus.REPAIR;
@@ -152,10 +152,6 @@ public class Unit {
         if (this.type.equals(UnitType.SCOUT))
             this.movesInTurn -= dest.getFeature().getMovementCost();
     }
-
-    //    public void changeStatus (UnitStatus status) { ------> to controller
-//        this.status = status;
-//    }
 
     public boolean hasRemainingMoves() {
         return movesInTurn < MP;

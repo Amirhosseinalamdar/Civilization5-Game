@@ -57,10 +57,6 @@ public class CivilizationController {
 
     }
 
-//    private void makeImprovement(Unit worker){
-//
-//    }
-
     private void updateTilesVisionStatus() {
 
     }

@@ -10,7 +10,7 @@ public class Military extends Unit {
     private double combatStrength;
     private double rangedCombatStrength;
     private int range;
-    private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
+    private boolean isReady;
 
     public Military(UnitType militaryType) {
         super(militaryType);
@@ -48,7 +48,7 @@ public class Military extends Unit {
     public double getCombatStrength() {
         if ((this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus()) ||
                 this.tile.getType().equals(TerrainType.HILL))
-            return combatStrength + 2; //Combat Strength handled
+            return combatStrength + 2;
         return combatStrength;
     }
 

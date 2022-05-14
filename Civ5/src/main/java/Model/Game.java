@@ -15,7 +15,7 @@ public class Game {
     private static ArrayList<User> players = new ArrayList<>();
     private static int turn;
     private static int time;
-    private static ArrayList<Tile> map;//20*20
+    private static ArrayList<Tile> map;
     private static Tile[][] tiles = new Tile[20][20];
 
     public static ArrayList<User> getPlayers() {
@@ -222,8 +222,6 @@ public class Game {
             }
         }
     }
-
-//check kardane i va j dar v1 niaz nis chon ta 2 laye ocean e va goftim type null bashe unja
 
     private static void addCounter(int[] counter, TerrainType type) {
         if (type == TerrainType.DESERT) counter[0]++;

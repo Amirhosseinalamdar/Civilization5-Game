@@ -37,11 +37,9 @@ public class GameMenu {
 
     public static String nextCommand() {
         return scanner.nextLine();
-        //return null;
     }
 
     public static Tile showRangedAttackOptions(Military military) {
-        //return a tile based on scanner and inputs and military.tile
         return null;
     }
 
@@ -94,13 +92,9 @@ public class GameMenu {
 
     }
 
-    public static UnitType cityProductionMenu(City city) {// should add building in next phase
+    public static UnitType cityProductionMenu(City city) {
         return null;
     }
-
-//    public static UnitType showProductionOptions(City city){
-//
-//    }
 
     public static void showResearchOptions(Civilization civilization) {
 
@@ -263,7 +257,7 @@ public class GameMenu {
                 System.out.print(Game.getTiles()[(i - 2) / 6][j * 2].getTypeForCiv(civilization, I, J).getColor());
                 showRoadAndRailRoadAndFoodAndProduction(I, J, true);
                 System.out.print(getTypeFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getTypeForCiv(civilization, I, J)) + "," +
-                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()));//9 wh
+                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()));
                 showRoadAndRailRoadAndFoodAndProduction(I, J, false);
                 System.out.print(RESET);
             } else {
@@ -310,7 +304,7 @@ public class GameMenu {
             System.out.print(Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor());
             showRoadAndRailRoadAndFoodAndProduction(I, J, true);
             System.out.print(getTypeFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getTypeForCiv(civilization, I, J)) + "," +
-                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()));//7 wh
+                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()));
             showRoadAndRailRoadAndFoodAndProduction(I, J, false);
             System.out.print(RESET);
         } else System.out.print("         ");
@@ -383,7 +377,6 @@ public class GameMenu {
             height = 123;
             length = 10;
         }
-        //printRoof();
         for (int i = startingI; i < startingI + height; i++) {
             for (int j = startingJ; j < startingJ + length; j++) {
                 if (i % 6 == 0) {
@@ -509,7 +502,6 @@ public class GameMenu {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "/" + RESET);
             else System.out.print("/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-            //String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             String loc = i + "," + j;
             System.out.print(loc);
             for (int k = 0; k < 5 - loc.length(); k++) System.out.print(' ');
@@ -526,7 +518,6 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-            //String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             String loc = i + "," + j;
             System.out.print(loc);
             for (int k = 0; k < 5 - loc.length(); k++) System.out.print(' ');
