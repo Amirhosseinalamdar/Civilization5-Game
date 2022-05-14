@@ -36,7 +36,7 @@ public class GameController {
             }
         for (City city : civilization.getCities())
             if (city.getInProgressUnit() == null) {
-                GameMenu.chooseProductionForCity(city.getName()); //TODO... SETTLER needs at least 2 citizens
+                GameMenu.chooseProductionForCity(city.getName());
                 return false;
             }
         if (civilization.getInProgressTech() == null && civilization.getCities().size() > 0) {

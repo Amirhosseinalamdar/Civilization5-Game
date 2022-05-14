@@ -252,8 +252,4 @@ public class City {
         else if (inProgressUnit != null && inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
     }
-
-    public void calculateStrength() {
-        //TODO update strength based on the unit inside the city
-    }
 }
