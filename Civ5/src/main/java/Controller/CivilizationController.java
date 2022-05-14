@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Civilization;
+import Model.Game;
 import Model.Map.*;
 import Model.Technology;
 import Model.UnitPackage.Military;
@@ -133,7 +134,10 @@ public class CivilizationController {
             int i = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech());
             i -= civilization.getScience();
             civilization.getLastCostUntilNewTechnologies().replace(civilization.getInProgressTech(), i);
-            if (i <= 0) civilization.setInProgressTech(null);
+            if (i <= 0) {
+                civilization.getNotifications().add(civilization.getInProgressTech().name() + "is now unlocked.     turn: " + Game.getTime());
+                civilization.setInProgressTech(null);
+            }
         }
     }
 
