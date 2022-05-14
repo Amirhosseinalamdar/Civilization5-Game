@@ -30,7 +30,7 @@ public class GameController {
         for (Unit unit : civilization.getUnits())
             if (!unit.getStatus().equals(UnitStatus.DO_NOTHING) && !unit.getStatus().equals(UnitStatus.HEAL)
                     && !unit.getStatus().equals(UnitStatus.FORTIFY) && !unit.getStatus().equals(UnitStatus.SLEEP) &&
-                    unit.getMovesInTurn() < unit.getMP()) {
+                    !unit.getStatus().equals(UnitStatus.ALERT) && unit.getMovesInTurn() < unit.getMP()) {
                 GameMenu.unitHasRemainingMove(unit);
                 return false;
             }
@@ -236,7 +236,7 @@ public class GameController {
                 GameMenu.indexOutOfArray();
                 return null;
             }
-            if (Game.getTiles()[x][y].getCity() == null) {
+            if (Game.getTiles()[x][y].getCity() == null || !Game.getTiles()[x][y].isCenterOfCity(Game.getTiles()[x][y].getCity())) {
                 GameMenu.invalidPosForCity();
                 return null;
             }

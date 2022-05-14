@@ -8,8 +8,8 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        UserController.readDataFromJson();
+        UserController.readDataFromJson("json.json");
         MainMenu.run();
-        UserController.writeDataToJson();
+        UserController.writeDataToJson("json.json");
     }
 }

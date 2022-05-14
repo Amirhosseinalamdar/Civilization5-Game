@@ -23,6 +23,7 @@ public class Tile {
     private Unit civilian;
     private Pair<Improvement, Integer> improvementInProgress;
     private Pair<String, Integer> routeInProgress;
+    private Pair<String, Integer> removeInProgress;
     private boolean isRaided;
     private City city; // age null bashe city nis agar na capitale citie
     //    private City memberOfThisCity;//TODO initialize she pls
@@ -108,6 +109,14 @@ public class Tile {
 
     public Pair<String, Integer> getRouteInProgress() {
         return routeInProgress;
+    }
+
+    public Pair<String, Integer> getRemoveInProgress() {
+        return removeInProgress;
+    }
+
+    public void setRemoveInProgress (Pair<String, Integer> removeInProgress) {
+        this.removeInProgress = removeInProgress;
     }
 
     public boolean isRaided() {

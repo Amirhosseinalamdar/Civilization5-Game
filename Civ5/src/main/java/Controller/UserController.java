@@ -16,8 +16,16 @@ public class UserController {
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
-    public static User getLoggedInUser() {
-        return loggedInUser;
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
+    }
+
+    public static void setAllUsers(ArrayList<User> allUsers) {
+        UserController.allUsers = allUsers;
+    }
+
+    public static void setLoggedInUser(User loggedInUser) {
+        UserController.loggedInUser = loggedInUser;
     }
 
     public static String registerUser(Matcher matcher) {
@@ -92,7 +100,8 @@ public class UserController {
     public static String changeNickname(Matcher matcher) {
         String newNickname = matcher.group("nickname");
         String output;
-        if (isNicknameExist(newNickname)) output = "user with nickname " + newNickname + " already exists";
+        if (isNicknameExist(newNickname))
+            output = "user with nickname " + newNickname + " already exists";
         else {
             output = "nickname changed successfully!";
             loggedInUser.setNickname(newNickname);
@@ -113,9 +122,9 @@ public class UserController {
         return output;
     }
 
-    public static void readDataFromJson() {
+    public static void readDataFromJson(String fileName) {
         try {
-            String json = new String(Files.readAllBytes(Paths.get("json.json")));
+            String json = new String(Files.readAllBytes(Paths.get(fileName)));
             allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
             }.getType());
         } catch (IOException e) {
@@ -123,7 +132,7 @@ public class UserController {
         }
     }
 
-    public static void writeDataToJson() {
+    public static void writeDataToJson(String fileName) {
         try {
             FileWriter fileWriter = new FileWriter("json.json");
             fileWriter.write(new Gson().toJson(allUsers));

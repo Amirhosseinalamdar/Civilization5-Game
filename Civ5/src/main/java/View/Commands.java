@@ -46,7 +46,7 @@ public enum Commands {
     MOVE_UNIT("move to (--coordinates|-c) (?<x>\\d+) (?<y>\\d+)"),
     ATTACK("attack to (-c|--coordinates) (?<x>\\d+) (?<y>\\d+)"),
     BUILD_IMPROVEMENT("build improvement (-t|--type) (?<improvement>\\S+)"),
-    CLEAR_LAND("clear (?<clearable>(jungle|road|railroad))"),
+    CLEAR_LAND("clear (?<clearable>(forest|jungle|road|railroad))"),
     REPAIR("repair (-i|--improvement) (?<improvement>\\S+)"),
     BACK("back"), SLEEP_UNIT("sleep"), WAKE_UNIT("wake"), DELETE("delete"),
     ALERT("alert"), FORTIFY("fortify"), HEAL("heal"), GARRISON("garrison"),
