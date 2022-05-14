@@ -248,4 +248,42 @@ public class Tile {
     public boolean isRoughTerrain() {
         return type.equals(TerrainType.HILL) || feature.equals(TerrainFeature.JUNGLE) || feature.equals(TerrainFeature.FOREST);
     }
+
+    public boolean hasClearable (String clearable) {
+        if (clearable.equals("road"))
+            return hasRoad();
+        else if (clearable.equals("railroad"))
+            return hasRailRoad();
+        else
+            return hasFeature(clearable);
+    }
+
+    private boolean hasRoad() {
+        try {
+            return routeInProgress.getKey().equals("road") &&
+                    routeInProgress.getValue() == 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean hasRailRoad() {
+        try {
+            return routeInProgress.getKey().equals("railroad") &&
+                    routeInProgress.getValue() == 0;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean hasFeature (String forestOrJungle) {
+        return (forestOrJungle.equals("jungle") && feature.equals(TerrainFeature.JUNGLE)) ||
+                (forestOrJungle.equals("forest") && feature.equals(TerrainFeature.FOREST));
+    }
+
+    public boolean isCenterOfCity (City city) {
+        return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
+    }
 }

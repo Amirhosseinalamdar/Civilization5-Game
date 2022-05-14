@@ -49,10 +49,6 @@ public class GameMenu {
         System.out.println("unit doesn't have enough moves");
     }
 
-    public static void unavailableTile() {
-        System.out.println("Tile is unavailable");
-    }
-
     public static void showBanner(City city) {
         System.out.println("city: " + city.getName());
         System.out.println("combat strength: " + city.getCombatStrength());
@@ -261,9 +257,12 @@ public class GameMenu {
             if (civilization.getTileVisionStatuses()[I][J] != TileStatus.FOGGY) {
                 if (isRiverValidToShow(I, J, civilization)) System.out.print(BLUE + "/" + RESET);
                 else System.out.print(RESET + "/");
-                System.out.print(Game.getTiles()[(i - 2) / 6][j * 2].getTypeForCiv(civilization, I, J).getColor()
-                        + "   " + getTypeFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getTypeForCiv(civilization, I, J)) + "," +
-                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()) + "   " + RESET);//9 wh
+                System.out.print(Game.getTiles()[(i - 2) / 6][j * 2].getTypeForCiv(civilization, I, J).getColor());
+                showRoadAndRailRoadAndFoodAndProduction(I,J,true);
+                System.out.print(getTypeFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getTypeForCiv(civilization, I, J)) + "," +
+                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()));//9 wh
+                showRoadAndRailRoadAndFoodAndProduction(I,J,false);
+                System.out.print(RESET);
             } else {
                 System.out.print("/         ");
             }
@@ -275,7 +274,23 @@ public class GameMenu {
             else System.out.print("\\_____");
         }
     }
-
+    private static void showRoadAndRailRoadAndFoodAndProduction(int i,int j,boolean isAtLeft){
+        if(isAtLeft){
+            System.out.print("f"+Game.getTiles()[i][j].getFoodPerTurn());
+            if(Game.getTiles()[i][j].getRouteInProgress() != null){
+                if(Game.getTiles()[i][j].getRouteInProgress().getKey().equals("road"))System.out.print("r");
+                else System.out.print("R");
+            }
+            else System.out.print(" ");
+        }else{
+            if(Game.getTiles()[i][j].getRouteInProgress() != null &&
+                    Game.getTiles()[i][j].getRouteInProgress().getValue() !=0) System.out.print("&");
+            else if(Game.getTiles()[i][j].getRouteInProgress() != null &&
+                    Game.getTiles()[i][j].getRouteInProgress().getValue() ==0) System.out.print("$");
+            else System.out.print(" ");
+            System.out.print("p"+Game.getTiles()[i][j].getProductionPerTurn());
+        }
+    }
     private static void printLine6(int i, int j, Civilization civilization) {
         int I = (i - 5) / 6;
         int J = (2 * j + 1);
@@ -287,11 +302,14 @@ public class GameMenu {
             if (isRiverValidToShow(I, J, civilization)) System.out.print(BLUE + "/" + RESET);
             else System.out.print("/");
         } else System.out.print("\\_____/");
-        if (civilization.getTileVisionStatuses()[I][J] != TileStatus.FOGGY)
-            System.out.print(Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor() + "   "
-                    + getTypeFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getTypeForCiv(civilization, I, J)) + "," +
-                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()) + "   " + RESET);//7 wh
-        else System.out.print("         ");
+        if (civilization.getTileVisionStatuses()[I][J] != TileStatus.FOGGY) {
+            System.out.print(Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor());
+            showRoadAndRailRoadAndFoodAndProduction(I,J,true);
+            System.out.print(getTypeFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getTypeForCiv(civilization, I, J)) + "," +
+                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()));//7 wh
+            showRoadAndRailRoadAndFoodAndProduction(I,J,false);
+            System.out.print(RESET);
+        }else System.out.print("         ");
     }
 
     private static void printRoof() {
@@ -424,7 +442,10 @@ public class GameMenu {
             else System.out.print("/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
             System.out.print(outputResource(civilization, i, j));
-            for (int k = 0; k < 7 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
+            if(Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
+            else if(Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
+            else System.out.print(" ");
+            for (int k = 0; k < 6 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
             if (i > 0 && isRiverValidToShow(i - 1, j + 1, civilization))
                 System.out.print(BLUE + "\\" + RESET);
             else System.out.print(RESET + "\\");
@@ -435,9 +456,12 @@ public class GameMenu {
             if (j > 0) showUnitAndMilitary(i, j - 1, true, civilization);
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
             System.out.print(outputResource(civilization, i, j));
-            for (int k = 0; k < 6 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
+            if(Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
+            else if(Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
+            else System.out.print(" ");
+            for (int k = 0; k < 5 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
 
-            if ((j - 1) / 2 != 9 && !outputResource(civilization, i, j).equals(Resource.BOKHOOR.toString()))
+            if ((j - 1) / 2 != 9 && outputResource(civilization, i, j).length() != 6)
                 System.out.print(" ");
             System.out.print(RESET);
         }
@@ -446,6 +470,7 @@ public class GameMenu {
     private static String outputResource(Civilization civilization, int i, int j) {
         if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR) {
             if (Game.getTiles()[i][j].getResource() == Resource.JEWELERY) return "JEWEL";
+            else if(Game.getTiles()[i][j].getResource() == Resource.BOKHOOR) return "BOKHOO";
             else if (Game.getTiles()[i][j].getResource() == Resource.NONE) return " ";
             else return Game.getTiles()[i][j].getResource().toString();
         } else {
@@ -557,8 +582,8 @@ public class GameMenu {
         System.out.println("can't make garrison, no city available");
     }
 
-    public static void unitIsNotSiege() {
-        System.out.println("chosen unit is not siege");
+    public static void unitIsNot (String unitName) {
+        System.out.println("chosen unit is not " + unitName);
     }
 
     public static void siegeAlreadyPrepared() {
@@ -579,14 +604,6 @@ public class GameMenu {
 
     public static void unitHasFullHealth() {
         System.out.println("unit's health is already full");
-    }
-
-    public static void unitIsNotWorker() {
-        System.out.println("this unit is not worker");
-    }
-
-    public static void unitIsNotSettler() {
-        System.out.println("this unit is not settler");
     }
 
     public static void invalidUnitType() {
@@ -623,10 +640,6 @@ public class GameMenu {
 
     public static void citizenLockError() {
         System.out.println("couldn't lock any citizen");
-    }
-
-    public static void noSuchUnitType() {
-        System.out.println("no such unit type exists");
     }
 
     public static void unreachedTech(Technology prerequisiteTech) {
@@ -674,7 +687,7 @@ public class GameMenu {
         System.out.println("civilization has no tech in progress; choose a research");
     }
 
-    public static void cityIsOccupied(String type) {
+    public static void cityIsOccupied (String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
@@ -708,5 +721,37 @@ public class GameMenu {
 
     public static void repairStarted (String improvement) {
         System.out.println("successfully started repairing " + improvement);
+    }
+
+    public static void impassableTile() {
+        System.out.println("can not walk on that tile");
+    }
+
+    public static void cityOutOfUnitRange() {
+        System.out.println("can not range attack, city out of range");
+    }
+
+    public static void rangedAttackToCitySuccessfully (City city) {
+        System.out.println("ranged attack to " + city.getName() + " was a success");
+    }
+
+    public static void cityCenterOutOfMeleeRange (City city) {
+        System.out.println("can not attack to " + city.getName() + ", out of range");
+    }
+
+    public static void cityHPIsZero (City city) {
+        System.out.println(city.getName() + " is zero");
+    }
+
+    public static void invalidDecisionForConqueredCity() {
+        System.out.println("city conquer decision was invalid");
+    }
+
+    public static void attachCitySuccessful (City city) {
+        System.out.println(city.getName() + " attached successfully");
+    }
+
+    public static void invalidTileForAttack() {
+        System.out.println("can not attack to chosen tile, there are no enemy units/city");
     }
 }

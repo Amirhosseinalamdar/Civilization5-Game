@@ -2,6 +2,7 @@ package Model.Map;
 
 import Controller.GameController;
 import Model.Civilization;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 
 import java.util.ArrayList;
@@ -26,9 +27,9 @@ public class City {
     private int turnsUntilGrowthBorder;
     private int borderExpansionCost;
     private int borderLastCost;
-    private int HP;
-    private int combatStrength;
-    private int rangedCombatStrength;
+    private double HP;
+    private double combatStrength;
+    private double rangedCombatStrength;
     private CityStatus cityStatus;
     private final String name;
 
@@ -56,21 +57,10 @@ public class City {
         this.borderExpansionCost = 50;
         this.borderLastCost = 50;
         this.HP = 20;
-        this.combatStrength = 3;
-        this.rangedCombatStrength = 3;
+        if (this.tiles.get(0).getType().equals(TerrainType.HILL)) this.combatStrength = 18;
+        else this.combatStrength = 15;
+        this.rangedCombatStrength = 0;
         this.name = name;
-    }
-
-    public void setHP(int HP) {
-        this.HP = HP;
-    }
-
-    public void setCombatStrength(int combatStrength) {
-        this.combatStrength = combatStrength;
-    }
-
-    public void setRangedCombatStrength(int rangedCombatStrength) {
-        this.rangedCombatStrength = rangedCombatStrength;
     }
 
     public void setInProgressUnit (UnitType unitType) {
@@ -87,6 +77,10 @@ public class City {
 
     public Civilization getCivilization() {
         return civilization;
+    }
+
+    public void setCivilization (Civilization civilization) {
+        this.civilization = civilization;
     }
 
     public int getStoredFood() {
@@ -153,15 +147,39 @@ public class City {
         return citizens;
     }
 
-    public int getHP() {
+    public double getHP() { //TODO add walls
         return HP;
     }
 
-    public int getCombatStrength() {
-        return combatStrength;
+    public void setHP (double HP) {
+        this.HP = HP;
     }
 
-    public int getRangedCombatStrength() {
+    public double getCombatStrength() {
+        double defaultCombatStrength = combatStrength;
+
+        defaultCombatStrength += this.citizens.size();
+        defaultCombatStrength += garrisonBonus();
+
+        return defaultCombatStrength;
+    }
+
+    public void setCombatStrength (double combatStrength) {
+        this.combatStrength = combatStrength;
+    }
+
+    public void setRangedCombatStrength (double rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
+    }
+
+    private double garrisonBonus() {
+        Tile centerTile = this.tiles.get(0);
+        if (centerTile.getMilitary() != null && centerTile.getMilitary().getStatus().equals(UnitStatus.GARRISON))
+            return centerTile.getMilitary().getCombatStrength();
+        return 0;
+    }
+
+    public double getRangedCombatStrength() {
         return rangedCombatStrength;
     }
 
@@ -232,5 +250,4 @@ public class City {
     public void calculateStrength() {
         //TODO update strength based on the unit inside the city
     }
-
 }

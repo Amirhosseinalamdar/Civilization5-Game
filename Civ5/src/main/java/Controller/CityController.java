@@ -29,24 +29,24 @@ public class CityController {
     public static void handleCityOptions() {
         Matcher matcher = getCityDecision();
 
-        if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex()) ||
-            matcher.pattern().toString().matches(Commands.PURCHASE_UNIT.getRegex())) {
+        if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex()) ||
+            matcher.pattern().toString().equals(Commands.PURCHASE_UNIT.getRegex())) {
             UnitType unitType = getUnitTypeFromString(matcher.group("unitName"));
             if (unitType == null) {
-                GameMenu.noSuchUnitType();
+                GameMenu.invalidUnitType();
                 return;
             }
-            if (matcher.pattern().toString().matches(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
+            if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
             else tryPurchaseUnit(unitType);
         }
 
-        if (matcher.pattern().toString().matches(Commands.PURCHASE_TILE.getRegex())) {
+        else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
             Tile targetTile = Game.getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
         }
 
-        if (matcher.pattern().toString().matches(Commands.LOCK_CITIZEN.getRegex())) {
+        else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
@@ -62,10 +62,20 @@ public class CityController {
             }
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
         }
-        if (matcher.pattern().toString().startsWith("show")) {
+
+        else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
+            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+            if (canCityAttackTo(Game.getTiles()[x][y])) {
+                rangeAttackToUnit(Game.getTiles()[x][y].getMilitary());
+            }
+        }
+
+        else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
             GameMenu.showCityOutput(city);
         }
+
+        else System.out.println("city controller, invalid command");
     }
 
     public static Matcher getCityDecision() {
@@ -91,11 +101,48 @@ public class CityController {
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
-            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null) {
+            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null)
                 return matcher;
+
+            if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
+                if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
+                        Integer.parseInt(matcher.group("y"))))
+                    return matcher;
+                GameMenu.indexOutOfArray();
             }
+
+            if ((matcher = Commands.getMatcher(command, Commands.SHOW_CITY_OUTPUT)) != null)
+                return matcher;
+
             System.out.println("city decision wasn't valid");
         }
+    }
+
+    private static boolean canCityAttackTo (Tile targetTile) {
+        boolean tileWithin2radius = false;
+        for (Tile tile : city.getTiles()) {
+            if (targetTile.equals(tile)) {
+                tileWithin2radius = true;
+                break;
+            }
+            for (Tile neighbor : tile.getNeighbors()) {
+                if (targetTile.equals(neighbor)) {
+                    tileWithin2radius = true;
+                    break;
+                }
+                for (Tile neighbor2 : neighbor.getNeighbors()) {
+                    if (targetTile.equals(neighbor2)) {
+                        tileWithin2radius = true;
+                        break;
+                    }
+                }
+                if (tileWithin2radius) break;
+            }
+            if (tileWithin2radius) break;
+        }
+        if (!tileWithin2radius) return false;
+        return targetTile.getMilitary() != null &&
+                !targetTile.getMilitary().getCivilization().equals(civilization);
     }
 
     private static void tryPurchaseUnit (UnitType unitType) {
@@ -387,7 +434,7 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit(UnitType unitType) {
+    private static void tryCreateUnit (UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -396,16 +443,18 @@ public class CityController {
             GameMenu.notEnoughResource();
             return;
         }
-        if (unitType.isCivilian()) //TODO... improve it
+        if (unitType.isCivilian()) {//TODO... improve it
             if (city.getTiles().get(0).getCivilian() != null) {
-                GameMenu.cityIsOccupied(unitType.toString());
+                GameMenu.cityIsOccupied(city.getTiles().get(0).getCivilian().getType().toString());
                 return;
             }
-        else
+        }
+        else {
             if (city.getTiles().get(0).getMilitary() != null) {
-                GameMenu.cityIsOccupied(unitType.toString());
+                GameMenu.cityIsOccupied(city.getTiles().get(0).getMilitary().getType().toString());
                 return;
             }
+        }
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             System.out.println("already in progress... remaining cost: " + remainingCost); //TODO... view
@@ -430,5 +479,10 @@ public class CityController {
             if (r.equals(unitType.getPrerequisiteResource()))
                 return true;
         return false;
+    }
+
+    private static void rangeAttackToUnit (Military targetUnit) {
+        targetUnit.setHealth(targetUnit.getHealth() - (city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
+        if (targetUnit.getHealth() <= 0) targetUnit.kill();
     }
 }

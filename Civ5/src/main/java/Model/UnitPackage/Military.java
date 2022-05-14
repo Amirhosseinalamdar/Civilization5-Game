@@ -1,41 +1,35 @@
 package Model.UnitPackage;
 
+import Model.Map.TerrainType;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class Military extends Unit {
 
-    private int combatStrength;
-    private int rangedCombatStrength;
+    private double combatStrength;
+    private double rangedCombatStrength;
     private int range;
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
-    private int XP;
 
-    public Military(UnitType militaryType) {
+    public Military (UnitType militaryType) {
         super(militaryType);
         this.combatStrength = militaryType.getCombatStrength();
         this.rangedCombatStrength = militaryType.getRangedCombatStrength();
         this.range = militaryType.getRange();
-        this.isReady = !isSiege();
+        this.isReady = !this.type.isSiege();
     }
 
     @Override
     public void setStatus(String string) {
         super.setStatus(string);
-        if (string.equals("alert")) this.status = UnitStatus.ALERT;
+        if (string.startsWith("attack")) this.status = UnitStatus.ATTACK;
+        else if (string.equals("alert")) this.status = UnitStatus.ALERT;
         else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("garrison")) this.status = UnitStatus.GARRISON;
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;
         else if (string.startsWith("pillage")) this.status = UnitStatus.PILLAGE;
         else if (string.equals("heal")) this.status = UnitStatus.HEAL;
-    }
-
-    public int getRangedCombatStrength() {
-        return rangedCombatStrength;
-    }
-
-    public void setRangedCombatStrength(int rangedCombatStrength) {
-        this.rangedCombatStrength = rangedCombatStrength;
     }
 
     @Override
@@ -52,14 +46,28 @@ public class Military extends Unit {
         //TODO... change type (costs gold)
     }
 
-    public int getCombatStrength() {
-        if (this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus())
+    public double getCombatStrength() {
+        if ((this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus()) ||
+                this.tile.getType().equals(TerrainType.HILL))
             return combatStrength + 2; //Combat Strength handled
         return combatStrength;
     }
 
-    public void setCombatStrength(int combatStrength) {
+    public double getRangedCombatStrength() {
+        if (this.tile.getType().equals(TerrainType.HILL)) return rangedCombatStrength + 2;
+        return rangedCombatStrength;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setCombatStrength (double combatStrength) {
         this.combatStrength = combatStrength;
+    }
+
+    public void setRangedCombatStrength (double rangedCombatStrength) {
+        this.rangedCombatStrength = rangedCombatStrength;
     }
 
 }

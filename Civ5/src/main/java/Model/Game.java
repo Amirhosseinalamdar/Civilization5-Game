@@ -7,11 +7,12 @@ import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
 
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    private static ArrayList<User> players;
+    private static ArrayList<User> players = new ArrayList<>();
     private static int turn;
     private static int time;
     private static ArrayList<Tile> map;//20*20
@@ -36,7 +37,7 @@ public class Game {
     public static void nextTurn() {
         turn++;
         turn %= players.size();
-        if (turn == 0) time++;
+        if (Game.getTurn() == 0) time++;
     }
 
     public static void generateGame(ArrayList<User> users) {
@@ -50,7 +51,7 @@ public class Game {
             do {
                 randomX = (int) Math.floor(Math.random() * 20);
                 randomY = (int) Math.floor(Math.random() * 20);
-            } while (!UnitController.isTileWalkable(tiles[randomX][randomY], null));
+            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
             System.out.println("i am " + player.getUsername() + ", my first unit is on " +
