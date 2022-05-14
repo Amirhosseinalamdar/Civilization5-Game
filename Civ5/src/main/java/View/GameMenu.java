@@ -15,17 +15,21 @@ import java.util.Scanner;
 public class GameMenu {
     static Scanner scanner;
 
+    public static void setScanner(Scanner scanner) {
+        GameMenu.scanner = scanner;
+    }
+
     public static void startGame(ArrayList<User> players, Scanner scanner) {
         Game.generateGame(players);
         GameMenu.scanner = scanner;
-        GameController.setCivilization();
+        GameController.checkMyCivilization();
         do {
             String command = scanner.nextLine();
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();
             } else {
-                GameController.setCivilization();
+                GameController.checkMyCivilization();
                 GameController.doTurn(command);
             }
         } while (scanner.hasNextLine());

@@ -116,7 +116,7 @@ public class Game {
         return 17;
     }
 
-    private static void completeMap(Tile[][] tiles) {
+    public static void completeMap(Tile[][] tiles) {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 if (tiles[i][j].getType() == null) {
@@ -233,6 +233,7 @@ public class Game {
         else if (type == TerrainType.PLAIN) counter[4]++;
         else if (type == TerrainType.TUNDRA) counter[5]++;
         else if (type == TerrainType.SNOW) counter[6]++;
+        else counter[0]++;
     }
 
     private static TerrainType getType(int key) {
