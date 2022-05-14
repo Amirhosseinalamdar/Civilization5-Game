@@ -22,8 +22,8 @@ public class GameController {
         return civilization;
     }
 
-    public static void setCivilization() {
-        checkMyCivilization();
+    public static void setCivilization(Civilization civilization) {
+        GameController.civilization = civilization;
     }
 
     public static boolean noTaskRemaining() {
@@ -253,7 +253,7 @@ public class GameController {
         return x > 19 || x < 0 || y > 19 || y < 0;
     }
 
-    private static void checkMyCivilization() {
+    public static void checkMyCivilization() {
         civilization = Game.getPlayers().get(Game.getTurn()).getCivilization();
         checkControllersCivilization();
     }
