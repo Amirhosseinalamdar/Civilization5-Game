@@ -17,6 +17,7 @@ class UserControllerTest {
         Matcher matcher = Pattern.compile(Commands.REGISTER1.getRegex(), Pattern.CASE_INSENSITIVE).matcher(input);
         matcher.matches();
         ArrayList<User> allUsers = null;
+        UserController.setAllUsers(allUsers);
         String output = "user created successfully!";
         Assertions.assertEquals(output, UserController.registerUser(matcher));
     }
