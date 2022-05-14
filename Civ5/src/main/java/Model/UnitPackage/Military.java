@@ -23,7 +23,8 @@ public class Military extends Unit {
     @Override
     public void setStatus(String string) {
         super.setStatus(string);
-        if (string.equals("alert")) this.status = UnitStatus.ALERT;
+        if (string.startsWith("attack")) this.status = UnitStatus.ATTACK;
+        else if (string.equals("alert")) this.status = UnitStatus.ALERT;
         else if (string.equals("fortify")) this.status = UnitStatus.FORTIFY;
         else if (string.equals("garrison")) this.status = UnitStatus.GARRISON;
         else if (string.equals("setup ranged")) this.status = UnitStatus.SIEGEPREP;

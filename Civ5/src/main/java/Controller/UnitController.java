@@ -28,7 +28,6 @@ public class UnitController {
 
     public static void handleUnitOptions() {
         Matcher matcher = getUnitDecision();
-        if (!matcher.find()) throw new RuntimeException();
 
         if (matcher.pattern().toString().equals("back")) return;
 
@@ -44,7 +43,10 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.ATTACK)) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
 
-            if (unit.hasRemainingMoves()) attack(Game.getTiles()[x][y]);
+            if (unit.hasRemainingMoves()) {
+                if (canAttackTo(Game.getTiles()[x][y])) attack(Game.getTiles()[x][y]);
+                else GameMenu.invalidTileForAttack();
+            }
             else GameMenu.notEnoughMoves();
         }
 
@@ -148,7 +150,7 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
             System.out.println("doing nothing"); //TODO... add else_if for other statuses
 
-        else System.out.println("invalid unit decision");
+        else System.out.println("unit controller, invalid command");
     }
 
     private static Matcher getUnitDecision() {
@@ -166,14 +168,14 @@ public class UnitController {
                     GameMenu.indexOutOfArray();
             }
 
-            if (command.equals("sleep"))
-                return Pattern.compile("sleep").matcher(command);
+            if ((matcher = Commands.getMatcher(command, Commands.SLEEP_UNIT)) != null)
+                return matcher;
 
-            if (command.equals("wake") && unit.getStatus().equals(UnitStatus.SLEEP))
-                return Pattern.compile("wake").matcher(command);
+            if ((matcher = Commands.getMatcher(command, Commands.WAKE_UNIT)) != null && unit.getStatus().equals(UnitStatus.SLEEP))
+                return matcher;
 
-            if (command.equals("delete"))
-                return Pattern.compile("delete").matcher(command);
+            if ((matcher = Commands.getMatcher(command, Commands.DELETE)) != null)
+                return matcher;
 
             if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
                 int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
@@ -185,27 +187,28 @@ public class UnitController {
                     return matcher;
             }
 
-            if (command.equals("alert") || command.equals("fortify")) {
+            if ((matcher = Commands.getMatcher(command, Commands.ALERT)) != null ||
+                    (matcher = Commands.getMatcher(command, Commands.FORTIFY)) != null) {
                 if (unit instanceof Military)
-                    return Pattern.compile(command).matcher(command);
+                    return matcher;
                 else
                     GameMenu.unitIsCivilianError();
             }
 
-            if (command.equals("fortify heal")) {
+            if ((matcher = Commands.getMatcher(command, Commands.HEAL)) != null) {
                 if (unit instanceof Military) {
                     if (unit.getHealth() < Unit.MAX_HEALTH)
-                        return Pattern.compile(command).matcher(command);
+                        return matcher;
                     else
                         GameMenu.unitHasFullHealth();
                 } else
                     GameMenu.unitIsCivilianError();
             }
 
-            if (command.equals("garrison")) {
+            if ((matcher = Commands.getMatcher(command, Commands.GARRISON)) != null) {
                 if (unit instanceof Military) {
                     if (militaryIsInCityTiles())
-                        return Pattern.compile(command).matcher(command);
+                        return matcher;
                     else
                         GameMenu.cantMakeGarrison();
                 }
@@ -213,10 +216,10 @@ public class UnitController {
                     GameMenu.unitIsCivilianError();
             }
 
-            if (command.equals("setup ranged")) {
+            if ((matcher = Commands.getMatcher(command, Commands.SETUP_RANDED)) != null) {
                 if (unit instanceof Military) {
                     if (unit.getType().isSiege())
-                        return Pattern.compile(command).matcher(command);
+                        return matcher;
                     else
                         GameMenu.unitIsNot("siege");
                 } else
@@ -235,17 +238,17 @@ public class UnitController {
                 GameMenu.unitIsNot("worker");
             }
 
-            if (command.equals("do nothing"))
-                return Pattern.compile(command).matcher(command);
+            if ((matcher = Commands.getMatcher(command, Commands.DO_NOTHING)) != null)
+                return matcher;
 
-            if (command.equals("found city")) {
+            if ((matcher = Commands.getMatcher(command, Commands.FOUND_CITY)) != null) {
                 if (unit.getType().equals(UnitType.SETTLER))
-                    return Pattern.compile(command).matcher(command);
+                    return matcher;
                 GameMenu.unitIsNot("settler");
             }
 
-            if (command.equals("cancel mission"))
-                return Pattern.compile(command).matcher(command);
+            if ((matcher = Commands.getMatcher(command, Commands.CANCEL_MISSION)) != null)
+                return matcher;
 
             if ((matcher = Commands.getMatcher(command, Commands.PILLAGE)) != null) {
                 if (!unit.getType().isCivilian())
@@ -622,6 +625,13 @@ public class UnitController {
             for (City city : player.getCivilization().getCities())
                 if (city.getName().equals(cityName)) return true;
         return false;
+    }
+
+    private static boolean canAttackTo (Tile tile) {
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity()) &&
+                !tile.getCity().getCivilization().equals(civilization))
+            return true;
+        return tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(civilization);
     }
 
     private static void attack (Tile targetTile) {//should call by move
