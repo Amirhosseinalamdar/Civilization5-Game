@@ -1,5 +1,6 @@
 package View;
 
+import Controller.CityController;
 import Controller.GameController;
 import Model.*;
 import Model.Map.*;
@@ -23,8 +24,7 @@ public class GameMenu {
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();
-            }
-            else {
+            } else {
                 GameController.setCivilization();
                 GameController.doTurn(command);
             }
@@ -59,8 +59,9 @@ public class GameMenu {
         System.out.println("citizens: " + city.getCitizens().size());
         int i = 1;
         for (Citizen citizen : city.getCitizens()) {
-            if (citizen.getTile() != null) System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
-            else System.out.println("citizen is unemployed");
+            if (citizen.getTile() != null)
+                System.out.println(i + " : x " + citizen.getTile().getIndexInMapI() + " | y : " + citizen.getTile().getIndexInMapJ());
+            else System.out.println(i + " : citizen is unemployed");
             i++;
         }
     }
@@ -80,8 +81,8 @@ public class GameMenu {
             System.out.println("turns until growth citizen: " + city.getTurnsUntilBirthCitizen());
         else if (city.getStoredFood() < 0)
             System.out.println("turns until lose citizen: " + city.getTurnsUntilDeathCitizen());
-        else System.out.println("turns until growth citizen: -");
-        if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: -");
+        else System.out.println("turns until growth citizen: N/A");
+        if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: N/A");
         else System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
     }
 
@@ -116,40 +117,81 @@ public class GameMenu {
 
 //info part ===============================
 
-    private static void researchInfo() {
-
+    public static void researchInfoScreen(Civilization civilization) {
+        if (civilization.getInProgressTech() == null) System.out.println("there is no research in progress");
+        else {
+            System.out.println("current research project is : " + civilization.getInProgressTech().name());
+            int turn = 0;
+            if (civilization.getScience() != 0)
+                turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
+            if (turn == 0) System.out.println("N/A turns remain for the research");
+            else System.out.println(turn + " turns remain for the research");
+            System.out.println("this research will unlock:");
+            int i = 1;
+            for (String unlock : civilization.getInProgressTech().getUnlocks()) {
+                System.out.println(i + " : " + unlock);
+                i++;
+            }
+        }
     }
 
-    private static void unitsInfo() {
-
+    public static void cityList(Civilization civilization) {
+        for (City city : civilization.getCities()) {
+            System.out.println("Name: " + city.getName() + "  |  Population: " + city.getCitizens().size() + "  |  Defensive Strength: " + city.getHP());
+            System.out.println(CityController.turnsForNewUnit(city));
+        }
     }
 
-    private static void cityInfo() {
-
-    }
-
-    private static void diplomacyInfo() {
-
+    public static void showDiplomacyInfo(Civilization civilization) {
+        System.out.println("Game Score: " + civilization.getScore());
+        //TODO diplomacy with others and calculate game score
     }
 
     private static void victoryProgressInfo() {
 
     }
 
-    private static void demographicsInfo() {
-
+    public static void demographicsInfoScreen(Civilization civilization) {
+        System.out.println("Cities: " + civilization.getCities().size() + "  |  Best: " + GameController.findBestCity()
+                + "  |  Average: " + GameController.findAverageCity() + "  |  Worst: " + GameController.findWorstCity()
+                + "  |  Rank: " + GameController.findRankInCities());
+        System.out.println("Gold: " + civilization.getTotalGold() + "  |  Best: " + GameController.findBestGold()
+                + "  |  Average: " + GameController.findAverageGold() + "  |  Worst: " + GameController.findWorstGold()
+                + "  |  Rank: " + GameController.findRankInGolds());
+        System.out.println("Units: " + civilization.getUnits().size() + "  |  Best: " + GameController.findBestUnit()
+                + "  |  Average: " + GameController.findAverageUnit() + "  |  Worst: " + GameController.findWorstUnit()
+                + "  |  Rank: " + GameController.findRankInUnits());
+        System.out.println("Science: " + civilization.getScience() + "  |  Best: " + GameController.findBestScience()
+                + "  |  Average: " + GameController.findAverageScience() + "  |  Worst: " + GameController.findWorstScience()
+                + "  |  Rank: " + GameController.findRankInScience());
+        System.out.println("Happiness: " + civilization.getHappiness() + "  |  Best: " + GameController.findBestHappiness()
+                + "  |  Average: " + GameController.findAverageHappiness() + "  |  Worst: " + GameController.findWorstHappiness()
+                + "  |  Rank: " + GameController.findRankInHappiness());
     }
 
-    private static void notificationHistory() {
-
+    public static void notificationHistory(Civilization civilization) {
+        for (String notification : civilization.getNotifications()) {
+            System.out.println(notification);
+        }
     }
 
-    private static void militaryInfo() {
-
+    public static void militaryOverview(Civilization civilization) {
+        for (Unit unit : civilization.getUnits()) {
+            System.out.println("Name: " + unit.getType().name() + "  |  Status: " + unit.getStatus().name() + "  |  Health: "
+                    + unit.getHealth() + "  |  X: " + unit.getTile().getIndexInMapI() + "  |  Y: " + unit.getTile().getIndexInMapJ());
+        }
     }
 
-    private static void economicInfo() {
-
+    public static void economicOverview(Civilization civilization) {
+        for (City city : civilization.getCities()) {
+            CityController.updateCityInfos(city);
+            System.out.println("Name: " + city.getName() + "  |  Population: " + city.getCitizens().size() + "  |  Defensive Strength: " + city.getHP());
+            System.out.println("food: " + city.getFoodPerTurn());
+            System.out.println("production: " + city.getProductionPerTurn());
+            System.out.println("gold: " + city.getGoldPerTurn());
+            System.out.println("science: " + city.getSciencePerTurn());
+            System.out.println(CityController.turnsForNewUnit(city));
+        }
     }
 
     private static void tradingHistory() {
@@ -575,7 +617,7 @@ public class GameMenu {
         System.out.println("no such unit type exists");
     }
 
-    public static void unreachedTech (Technology prerequisiteTech) {
+    public static void unreachedTech(Technology prerequisiteTech) {
         System.out.println("you haven't reached " + prerequisiteTech.toString() + " yet");
     }
 
@@ -591,7 +633,7 @@ public class GameMenu {
         System.out.println("technology added successfully");
     }
 
-    public static void canceledTech (Technology canceled) {
+    public static void canceledTech(Technology canceled) {
         System.out.println(canceled.toString() + " is now canceled");
     }
 
@@ -607,12 +649,12 @@ public class GameMenu {
         System.out.println("city name already exists... please pick another name:");
     }
 
-    public static void unitHasRemainingMove (Unit unit) {
+    public static void unitHasRemainingMove(Unit unit) {
         System.out.println("a " + unit.getType().toString() + " unit on " + unit.getTile().getIndexInMapI() + ", " +
                 unit.getTile().getIndexInMapJ() + " has remaining moves");
     }
 
-    public static void chooseProductionForCity (String cityName) {
+    public static void chooseProductionForCity(String cityName) {
         System.out.println(cityName + " has no production currently; choose production for it");
     }
 
@@ -620,11 +662,11 @@ public class GameMenu {
         System.out.println("civilization has no tech in progress; choose a research");
     }
 
-    public static void cityIsOccupied (String type) {
+    public static void cityIsOccupied(String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
-    public static void notEnoughGoldForUnit (UnitType unitType) {
+    public static void notEnoughGoldForUnit(UnitType unitType) {
         System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
     }
 
@@ -640,7 +682,7 @@ public class GameMenu {
         System.out.println("can not build this improvement; its related resource is not here");
     }
 
-    public static void tileAlreadyHas (String improvementName) {
+    public static void tileAlreadyHas(String improvementName) {
         System.out.println("this tile already has " + improvementName);
     }
 

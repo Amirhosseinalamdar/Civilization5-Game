@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Civilization {
+    private int score;
     private int totalGold;
     private ArrayList<City> cities;
     private ArrayList<Unit> units;
@@ -23,6 +24,46 @@ public class Civilization {
     private final CivSymbol civColor;
     private int showingCenterI;
     private int showingCenterJ;
+    private ArrayList<String> notifications;
+    private HashMap<Resource, Integer> luxuryResources;
+
+    public Civilization() {
+        cities = new ArrayList<>();
+        units = new ArrayList<>();
+        notifications = new ArrayList<>();
+        lastCostUntilNewTechnologies = new HashMap<>();
+        luxuryResources = new HashMap<>();
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
+        this.civColor = initCivSymbol();
+        this.showingCenterI = 1;
+        this.showingCenterJ = 2;
+        lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
+        inProgressTech = null;
+        happiness = 50;
+        score = 0;
+    }
+
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
+
+    public ArrayList<String> getNotifications() {
+        return notifications;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public HashMap<Resource, Integer> getLuxuryResources() {
+        return luxuryResources;
+    }
+
+    public void increaseScore(int score) {
+        this.score += score;
+    }
 
     public void setTotalGold(int totalGold) {
         this.totalGold = totalGold;
@@ -34,20 +75,6 @@ public class Civilization {
 
     public void setInProgressTech(Technology inProgressTech) {
         this.inProgressTech = inProgressTech;
-    }
-
-    public Civilization() {
-        cities = new ArrayList<>();
-        units = new ArrayList<>();
-        lastCostUntilNewTechnologies = new HashMap<>();
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
-                this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.civColor = initCivSymbol();
-        this.showingCenterI = 1;
-        this.showingCenterJ = 2;
-        lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
-        inProgressTech = null;
     }
 
     public int getShowingCenterI() {
@@ -105,8 +132,6 @@ public class Civilization {
         this.tileVisionStatuses[i][j] = type;
     }
 
-    private HashMap<Resource, Boolean> isLuxuryResourceReached;//key faghat luxury ha and moghe construct
-
     public int getTotalGold() {
         return totalGold;
     }
@@ -139,20 +164,8 @@ public class Civilization {
         return happiness;
     }
 
-    public HashMap<Resource, Boolean> getIsLuxuryResourceReached() {
-        return isLuxuryResourceReached;
-    }
-
-    public void setScience(int science) {
+    public void setTotalScience(int science) {
         this.science = science;
-    }
-
-    public void increaseTotalGold(int gold) {
-        this.totalGold += gold;
-    }
-
-    public void increaseTotalScience(int science) {
-        this.science += science;
     }
 
     public ArrayList<Resource> getResources() {

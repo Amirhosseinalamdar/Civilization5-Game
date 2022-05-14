@@ -1,12 +1,11 @@
 package Controller;
 
 import Model.Civilization;
-import Model.Map.City;
-import Model.Map.CityStatus;
-import Model.Map.Improvement;
+import Model.Map.*;
 import Model.Technology;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
 
@@ -68,17 +67,65 @@ public class CivilizationController {
     public static void updateCivilization() {
         int science = 0;
         int gold = 0;
+        int score = 0;
         for (City city : civilization.getCities()) {
-            CityController.updateCityInfos(city);
-            science += city.getSciencePerTurn();
+            CityController.updateCity(city);
+            science = city.getSciencePerTurn();
             gold += city.getGoldPerTurn();
+            score += city.getTiles().size();
+            score += city.getCitizens().size();
         }
-        civilization.increaseTotalScience(science);
-        civilization.increaseTotalGold(gold);
+        score += civilization.getCities().size();
+        score += civilization.getLastCostUntilNewTechnologies().size();
+        civilization.setTotalScience(science);
+        civilization.setTotalGold(civilization.getTotalGold() + gold);
+        handleUnitsMaintenance();
+        handleRoadsMaintenance();
+        civilization.increaseScore(score);
         updateInProgressTech();
-        /**
-         +update happiness
-         */
+        updateHappiness();
+    }
+
+    private static void updateHappiness() {
+        int unhappiness = 2 * civilization.getCities().size();
+        for (City city : civilization.getCities()) {
+            if (city.getCityStatus().equals(CityStatus.POPPET)) unhappiness++;
+            unhappiness += city.getCitizens().size();
+        }
+        for (HashMap.Entry<Resource, Integer> set : civilization.getLuxuryResources().entrySet()) {
+            if (set.getValue() > 0) unhappiness -= 4;
+        }
+        civilization.setHappiness(civilization.getHappiness() - unhappiness);
+    }
+
+    private static void handleRoadsMaintenance() {
+        int cost = 0;
+        for (City city : civilization.getCities()) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.getRouteInProgress().getValue() == 0) cost++;
+            }
+        }
+        cost /= 2;
+        civilization.setTotalGold(civilization.getTotalGold() - cost);
+    }
+
+    private static void handleUnitsMaintenance() {
+        int cost = 0;
+        for (Unit unit : civilization.getUnits()) {
+            if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
+                    !unit.getType().equals(UnitType.WARRIOR))
+                cost++;
+        }
+        while (cost > civilization.getTotalGold()) {
+            for (Unit unit : civilization.getUnits()) {
+                if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
+                        !unit.getType().equals(UnitType.WARRIOR)) {
+                    civilization.getUnits().remove(unit);
+                    cost--;
+                }
+            }
+        }
+        civilization.setTotalGold(civilization.getTotalGold() - cost);
     }
 
     private static void updateInProgressTech() {

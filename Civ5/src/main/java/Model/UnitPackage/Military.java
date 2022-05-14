@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 
 public class Military extends Unit {
 
-    private final double combatStrength;
+    private double combatStrength;
     private double rangedCombatStrength;
     private int range;
     private boolean isReady; //hame ready an joz siege//ke faghat if(isReady)
@@ -59,6 +59,10 @@ public class Military extends Unit {
 
     public int getRange() {
         return range;
+    }
+
+    public void setCombatStrength (double combatStrength) {
+        this.combatStrength = combatStrength;
     }
 
 }

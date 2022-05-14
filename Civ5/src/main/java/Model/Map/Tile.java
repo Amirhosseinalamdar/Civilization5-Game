@@ -34,6 +34,19 @@ public class Tile {
     private int indexInMapJ;
     private Citizen workingCitizen;
 
+
+    public void setFoodPerTurn(int foodPerTurn) {
+        this.foodPerTurn = foodPerTurn;
+    }
+
+    public void setGoldPerTurn(int goldPerTurn) {
+        this.goldPerTurn = goldPerTurn;
+    }
+
+    public void setProductionPerTurn(int productionPerTurn) {
+        this.productionPerTurn = productionPerTurn;
+    }
+
     public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;
     }
@@ -197,7 +210,7 @@ public class Tile {
     public boolean canUseItsResource() {
         if (resource == null || improvementInProgress == null) return false;
         return improvementInProgress.getKey().equals(resource.getPrerequisiteImprovement()) &&
-                improvementInProgress.getValue() <= 0;
+                improvementInProgress.getValue() == 0;
     }
 
     public boolean isEnemyZoneOfControl(Civilization civilization) {
