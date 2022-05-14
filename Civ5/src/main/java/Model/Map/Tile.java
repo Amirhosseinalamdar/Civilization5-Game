@@ -196,6 +196,8 @@ public class Tile {
         this.goldPerTurn = type.getGold() + feature.getGold();
         this.foodPerTurn = type.getFood() + feature.getFood();
         this.productionPerTurn = type.getProduction() + feature.getProduction();
+        if(this.foodPerTurn<0) this.foodPerTurn =0;
+        if(this.productionPerTurn<0) this.productionPerTurn=0;
         this.combatEffect = type.getBattleEffect() + feature.getBattleEffect();
         this.movementCost = type.getMovementCost() + feature.getMovementCost();
     }

@@ -88,6 +88,7 @@ public class Game {
                 }
             }
         }
+        generateRivers();
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 if (tiles[i][j].getType() != null) continue;
@@ -144,7 +145,6 @@ public class Game {
                 tiles[i][j].initializeTile(tiles[i][j].getType(), tiles[i][j].getFeature());
             }
         }
-        generateRivers();
         addResource();
     }
 
@@ -260,6 +260,8 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
+            } else if(tiles[i][j].isRiverAtLeft() && key<20){
+                tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }
         if (checkIAndJ(i - 1, j) && (probability > key) && tiles[i - 1][j].getType() == null) {

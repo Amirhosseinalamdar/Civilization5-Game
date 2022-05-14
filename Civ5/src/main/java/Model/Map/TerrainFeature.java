@@ -8,7 +8,6 @@ public enum TerrainFeature {
     MARSH(-1, 0, 0, -0.33, 2),
     OASIS(3, 0, 1, -0.33, 1),
     NONE(0, 0, 0, 0, 0);
-    //RIVER
 
     private int food;
     private int production;
