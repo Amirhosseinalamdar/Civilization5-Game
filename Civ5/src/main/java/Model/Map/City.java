@@ -149,7 +149,7 @@ public class City {
         return citizens;
     }
 
-    public double getHP() { //TODO add walls
+    public double getHP() {
         return HP;
     }
 
@@ -254,6 +254,5 @@ public class City {
     }
 
     public void calculateStrength() {
-        //TODO update strength based on the unit inside the city
     }
 }

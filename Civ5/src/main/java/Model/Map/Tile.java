@@ -26,7 +26,7 @@ public class Tile {
     private Pair<String, Integer> removeInProgress;
     private boolean isRaided;
     private City city; // age null bashe city nis agar na capitale citie
-    //    private City memberOfThisCity;//TODO initialize she pls
+    //    private City memberOfThisCity;
     //private ArrayList<River> rivers;
     private boolean isRiverAtLeft;
     private int centerX; // vertical
@@ -84,8 +84,8 @@ public class Tile {
         int movementCost = this.movementCost;
         if (this.getRouteInProgress() != null) {
             if (this.getRouteInProgress().getValue() <= 0) {
-                if (this.getRouteInProgress().getKey().equals("road")) movementCost -= 1; //TODO... set this
-                else if (this.getRouteInProgress().getKey().equals("railroad")) movementCost -= 3; //TODO
+                if (this.getRouteInProgress().getKey().equals("road")) movementCost -= 1;
+                else if (this.getRouteInProgress().getKey().equals("railroad")) movementCost -= 3;
             }
         }
         return movementCost;
@@ -192,7 +192,7 @@ public class Tile {
         return type;
     }
 
-    public void initializeTile(TerrainType type, TerrainFeature feature) {//first time init
+    public void initializeTile(TerrainType type, TerrainFeature feature) {
         this.goldPerTurn = type.getGold() + feature.getGold();
         this.foodPerTurn = type.getFood() + feature.getFood();
         this.productionPerTurn = type.getProduction() + feature.getProduction();

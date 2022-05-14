@@ -148,7 +148,6 @@ public class GameMenu {
 
     public static void showDiplomacyInfo(Civilization civilization) {
         System.out.println("Game Score: " + civilization.getScore());
-        //TODO diplomacy with others and calculate game score
     }
 
     private static void victoryProgressInfo() {
@@ -336,14 +335,14 @@ public class GameMenu {
         else return centerI - 1;
     }
 
-    public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
+    public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {
         TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
 
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
 
-        for (Unit unit : civilization.getUnits()) {//TODO test river
+        for (Unit unit : civilization.getUnits()) {
             ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
             if (!unit.getType().hasLimitedVisibility()) {
                 int clearTileLength = clearTiles.size();
@@ -482,7 +481,7 @@ public class GameMenu {
         }
     }
 
-    private static void showCitiesOnMap(int i, int j, Civilization civilization) {//TODO not tested
+    private static void showCitiesOnMap(int i, int j, Civilization civilization) {
         System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
         if (Game.getTiles()[i][j].getCity() != null &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {

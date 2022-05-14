@@ -43,7 +43,6 @@ public class Military extends Unit {
     }
 
     public void upgrade() {
-        //TODO... change type (costs gold)
     }
 
     public double getCombatStrength() {

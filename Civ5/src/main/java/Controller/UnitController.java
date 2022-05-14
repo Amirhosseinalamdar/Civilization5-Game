@@ -150,7 +150,7 @@ public class UnitController {
             unit.setStatus("active");
 
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
-            System.out.println("doing nothing"); //TODO... add else_if for other statuses
+            System.out.println("doing nothing");
 
         else System.out.println("unit controller, status: " + unit.getStatus());
     }
@@ -308,7 +308,6 @@ public class UnitController {
     }
 
     private static void pillageRoute (String routeType) {
-        //TODO... add gold and stuff BLA BLA
         Pair <String, Integer> pair =
                 new Pair<>(unit.getTile().getRouteInProgress().getKey(), -3);
         unit.getTile().setRouteInProgress(pair);
@@ -322,7 +321,6 @@ public class UnitController {
     }
 
     private static void pillageImprovement() {
-        //TODO... add gold to attackers' civilization BLA BLA
         Pair <Improvement, Integer> pair =
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), -3);
         unit.getTile().setImprovementInProgress(pair);
@@ -384,7 +382,7 @@ public class UnitController {
     }
 
     private static boolean canBuildRoadHere() {
-        return civilization.hasReachedTech(Technology.WHEEL) && unit.getTile().getFeature().equals(TerrainFeature.ICE); //TODO
+        return civilization.hasReachedTech(Technology.WHEEL) && unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
     private static boolean canBuildRailroadHere() {
@@ -607,7 +605,7 @@ public class UnitController {
             continuePath();
         if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY) ||
                 (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) ||
-                    unit.getStatus().equals(UnitStatus.GARRISON) || unit.getStatus().equals(UnitStatus.SIEGEPREP)) //TODO fortify heal
+                    unit.getStatus().equals(UnitStatus.GARRISON) || unit.getStatus().equals(UnitStatus.SIEGEPREP))
             return;
         if (unit.getStatus().equals(UnitStatus.ALERT) && noEnemyNearby())
             return;
@@ -622,7 +620,7 @@ public class UnitController {
     }
 
     private static void foundCity() {
-        System.out.println("please choose name: "); //TODO... move it to menu :)
+        System.out.println("please choose name: ");
         String cityName = GameMenu.nextCommand();
         while (cityNameAlreadyExists(cityName)) {
             GameMenu.cityNameAlreadyExists();
@@ -647,9 +645,6 @@ public class UnitController {
     }
 
     private static void attack (Tile targetTile) {
-        //TODO if defender is civilian
-        //TODO call ranged attack to unit
-        //TODO call close attack to unit
         if (targetTile.isCenterOfCity(targetTile.getCity())) {
             if (unit.getType().isRangeCombat())
                 rangedAttackToCity(targetTile.getCity());
@@ -657,7 +652,7 @@ public class UnitController {
                 meleeAttackToCity(targetTile.getCity());
         }
         else {
-            System.out.println("next phase ;)"); //TODO next phase
+            System.out.println("next phase ;)");
         }
     }
 
@@ -681,7 +676,6 @@ public class UnitController {
     }
 
     private static boolean cityIsOutOfRange (City city) {
-        //TODO... add mountain
         ArrayList<Tile> unitInRangeTiles = new ArrayList<>(unit.getTile().getNeighbors());
         int beginIndex = 0;
         for (int i = 0; i < unit.getType().getRange(); i++) {

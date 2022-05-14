@@ -1,7 +1,7 @@
 package Model.Map;
 
 public enum TerrainFeature {
-    DELTA(2, 0, 0, -0.33, 1),//TODO add river then this
+    DELTA(2, 0, 0, -0.33, 1),
     JUNGLE(1, 1, 0, 0.25, 2),
     ICE(0, 0, 0, 0, 1000),
     FOREST(1, -1, 0, 0.25, 2),

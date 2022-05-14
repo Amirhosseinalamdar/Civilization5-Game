@@ -147,7 +147,7 @@ public class CityController {
     }
 
     private static void tryPurchaseUnit (UnitType unitType) {
-        int unitGoldCost = 100; //TODO... calculate cost of unit
+        int unitGoldCost = 100;
         if (!civilization.hasReachedTech(unitType.getPrerequisiteTech())) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -236,8 +236,6 @@ public class CityController {
     }
 
     private static void purchaseTile(Tile targetTile) {
-        //view show options and check enough tiles //TODO
-        //purchase that option
         int necessaryAmountOfGoldForPurchase = targetTile.getGoldPerTurn() * 3 + targetTile.getProductionPerTurn() +
                 targetTile.getFoodPerTurn() * 2;
         if (civilization.getTotalGold() >= necessaryAmountOfGoldForPurchase) {

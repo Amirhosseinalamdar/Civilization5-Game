@@ -73,7 +73,7 @@ public class Game {
     public static void generateMap() {
         map = new ArrayList<>();
         Random random = new Random();
-        int centersParameter = 1;//TODO for graphics
+        int centersParameter = 1;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 tiles[i][j] = new Tile();

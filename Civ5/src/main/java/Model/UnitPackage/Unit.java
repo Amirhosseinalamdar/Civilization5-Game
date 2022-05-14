@@ -119,8 +119,6 @@ public class Unit {
         path = null;
     }
 
-    //TODO change civilization -> controller
-
     public void setStatus (String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
@@ -138,7 +136,7 @@ public class Unit {
 
     private void delete() {
         this.kill();
-        civilization.setTotalGold(civilization.getTotalGold() + 5); //TODO... set this
+        civilization.setTotalGold(civilization.getTotalGold() + 5);
     }
 
     public void updateMovesInTurn (Tile dest) {
