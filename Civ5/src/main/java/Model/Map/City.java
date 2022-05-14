@@ -61,6 +61,8 @@ public class City {
         else this.combatStrength = 15;
         this.rangedCombatStrength = 0;
         this.name = name;
+        this.foodPerTurn = 1;
+        this.productionPerTurn = 1;
     }
 
     public void setInProgressUnit (UnitType unitType) {
@@ -185,6 +187,10 @@ public class City {
 
     public CityStatus getCityStatus() {
         return cityStatus;
+    }
+
+    public void setCityStatus (CityStatus status) {
+        this.cityStatus = status;
     }
 
     public void setStoredFood(int storedFood) {

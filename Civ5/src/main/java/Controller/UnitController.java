@@ -140,8 +140,10 @@ public class UnitController {
 
         else if (unit.getStatus().equals(UnitStatus.CLEAR_LAND)) {
             String clearingTarget = matcher.group("clearable");
-            if (unit.getTile().hasClearable(clearingTarget))
-                clearTileFrom(clearingTarget);
+            if (unit.getTile().hasClearable(clearingTarget)) {
+                if (unit.hasRemainingMoves()) clearTileFrom(clearingTarget);
+                else GameMenu.notEnoughMoves();
+            }
         }
 
         else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
@@ -275,7 +277,20 @@ public class UnitController {
     }
 
     private static void clearTileFrom (String clearingTarget) {
-        //TODO
+        int turns;
+        switch (clearingTarget) {
+            case "jungle":
+                turns = 6;
+                break;
+            case "forest":
+                turns = 4;
+                break;
+            default:
+                turns = 3;
+                break;
+        }
+        Pair<String, Integer> pair = new Pair<>(clearingTarget, turns);
+        unit.getTile().setRemoveInProgress(pair);
     }
 
     private static boolean canGarrison() {
@@ -365,10 +380,6 @@ public class UnitController {
             GameMenu.cantBuildImprovementOnTile();
             return false;
         }
-        if (! unit.getTile().getResource().getPrerequisiteImprovement().equals(improvement)) {
-            GameMenu.unrelatedImprovementToResource();
-            return false;
-        }
         return true;
     }
 
@@ -403,6 +414,7 @@ public class UnitController {
         }
         Pair <String, Integer> pair = new Pair<>(routeType, calcTurnsFor(routeType));
         unit.getTile().setRouteInProgress(pair);
+        GameMenu.buildRouteSuccessfully(routeType);
     }
 
     private static boolean tileAlreadyHas (String routeType) {

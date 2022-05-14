@@ -256,8 +256,8 @@ public class CityController {
     public static void updateCityInfos(City city) {
         int food = 1;
         int production = 1;
-        int gold = 1;
-        int science = 1;
+        int gold = 0;
+        int science = 0;
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() == null) production++;
             else {
@@ -293,6 +293,7 @@ public class CityController {
 
     private static void updateRoads(City city) {
         for (Tile tile : city.getTiles()) {
+            if (tile.getRouteInProgress() == null) continue;
             if (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad")) {
                 if (tile.getRouteInProgress().getValue() <= 0) continue;
                 int turn = tile.getRouteInProgress().getValue();
@@ -443,7 +444,7 @@ public class CityController {
             GameMenu.notEnoughResource();
             return;
         }
-        if (unitType.isCivilian()) {//TODO... improve it
+        if (unitType.isCivilian()) {
             if (city.getTiles().get(0).getCivilian() != null) {
                 GameMenu.cityIsOccupied(city.getTiles().get(0).getCivilian().getType().toString());
                 return;
@@ -457,7 +458,7 @@ public class CityController {
         }
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
-            System.out.println("already in progress... remaining cost: " + remainingCost); //TODO... view
+            System.out.println("already in progress... remaining cost: " + remainingCost);
         }
         catch (Exception e) {
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());

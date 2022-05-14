@@ -754,4 +754,8 @@ public class GameMenu {
     public static void invalidTileForAttack() {
         System.out.println("can not attack to chosen tile, there are no enemy units/city");
     }
+
+    public static void buildRouteSuccessfully (String routeType) {
+        System.out.println(routeType + " constructed successfully");
+    }
 }
