@@ -5,6 +5,7 @@ import Model.Game;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
@@ -243,6 +244,8 @@ public class CityController {
             civilization.setTotalGold(civilization.getTotalGold() - necessaryAmountOfGoldForPurchase);
             city.getTiles().add(targetTile);
             targetTile.setCity(city);
+            civilization.getNotifications().add("new tile is purchased. tile x: "
+                    + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    turn: " + Game.getTime());
         } else
             GameMenu.notEnoughGoldForTilePurchase();
     }
@@ -280,18 +283,23 @@ public class CityController {
 
 
     public static void updateCity(City city) {
+        if (city.getHP() < 20) city.setHP(city.getHP() + 1);
         updateCityInfos(city);
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
-        updateImprovement(city);
+        updateBuildingImprovement(city);
+        updateRemovingImprovement(city);
         updateRoads(city);
+
     }
 
     private static void updateRoads(City city) {
         for (Tile tile : city.getTiles()) {
-            if (tile.getRouteInProgress() == null) continue;
-            if (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad")) {
+            if (tile.getRouteInProgress() != null
+                    && (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad"))
+                    && tile.getCivilian() != null && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && (tile.getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || tile.getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
                 if (tile.getRouteInProgress().getValue() <= 0) continue;
                 int turn = tile.getRouteInProgress().getValue();
                 turn--;
@@ -300,21 +308,44 @@ public class CityController {
         }
     }
 
-    private static void updateImprovement(City city) {
+    private static void updateRemovingImprovement(City city) {
         for (Tile tile : city.getTiles()) {
-            if (tile.getImprovementInProgress() != null) {
+            if (tile.getRemoveInProgress() != null && tile.getCivilian() != null
+                    && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && tile.getCivilian().getStatus().equals(UnitStatus.CLEAR_LAND)) {
+                int turn = tile.getRemoveInProgress().getValue();
+                turn--;
+                tile.setRemoveInProgress(new Pair<>(tile.getRouteInProgress().getKey(), turn));
+                if (turn == 0) {
+                    tile.getCivilian().setStatus("active");
+                    tile.setFeature(TerrainFeature.NONE);
+                }
+            }
+        }
+    }
+
+    private static void updateBuildingImprovement(City city) {
+        for (Tile tile : city.getTiles()) {
+            if (tile.getImprovementInProgress() != null && tile.getCivilian() != null
+                    && tile.getCivilian().getType().equals(UnitType.WORKER)
+                    && (tile.getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || tile.getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
                 if (tile.getImprovementInProgress().getValue() <= 0) continue;
                 int turn = tile.getImprovementInProgress().getValue();
                 turn--;
                 tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), turn));
                 if (turn == 0) {
                     tile.getCivilian().setStatus("active");
-                    if (tile.getResource().getType().equals("luxury")) {
+                    if (tile.getResource() != null && tile.getResource().getType().equals("luxury")) {
                         if (civilization.getLuxuryResources().containsKey(tile.getResource())) {
                             int count = civilization.getLuxuryResources().get(tile.getResource());
                             count++;
                             civilization.getLuxuryResources().replace(tile.getResource(), count);
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
+                    }
+                    civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
+                            + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    turn: " + Game.getTime());
+                    if (tile.getResource() != null) {
+                    civilization.getNotifications().add(tile.getResource() + " is achieved.    turn: " + Game.getTime());
                     }
                 }
             }
@@ -372,6 +403,7 @@ public class CityController {
                 city.getCitizens().add(citizen);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 1.5));
                 city.setGainCitizenLastFood(city.getCitizenNecessityFood());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is increased     turn: " + Game.getTime());
             }
             city.setTurnsUntilBirthCitizen(city.getGainCitizenLastFood() / city.getStoredFood());
         } else if (city.getStoredFood() == 0) city.setTurnsUntilBirthCitizen(0);
@@ -382,6 +414,7 @@ public class CityController {
                 city.getCitizens().remove(city.getCitizens().size() - 1);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 0.66));
                 city.setLostCitizenLastFood(city.getCitizenNecessityFood());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is decreased     turn: " + Game.getTime());
             }
             city.setTurnsUntilDeathCitizen(city.getLostCitizenLastFood() / city.getStoredFood());
         }
@@ -393,6 +426,7 @@ public class CityController {
             expandCity(city);
             city.setBorderExpansionCost((int) (city.getBorderExpansionCost() * 1.5));
             city.setBorderLastCost(city.getBorderExpansionCost());
+            civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     turn: " + Game.getTime());
         }
         if ((city.getCitizens().size() + city.getStoredFood()) == 0) city.setTurnsUntilGrowthBorder(0);
         else city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
