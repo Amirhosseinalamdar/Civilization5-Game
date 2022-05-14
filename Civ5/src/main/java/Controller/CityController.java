@@ -207,10 +207,10 @@ public class CityController {
     }
 
     public static void updateCityInfos(City city) {
-        int food = 0;
-        int production = 0;
-        int gold = 0;
-        int science = 0;
+        int food = 1;
+        int production = 1;
+        int gold = 1;
+        int science = 1;
         for (Citizen citizen : city.getCitizens()) {
             if (citizen.getTile() == null) production++;
             else {
