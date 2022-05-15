@@ -93,6 +93,7 @@ public class CivilizationController {
             if (set.getValue() > 0) unhappiness -= 4;
         }
         civilization.setHappiness(civilization.getHappiness() - unhappiness);
+        if (civilization.getHappiness() < 1) civilization.setHappiness(1);
     }
 
     private static void handleRoadsMaintenance() {
@@ -102,6 +103,7 @@ public class CivilizationController {
                 if (tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() == 0) cost++;
         cost /= 2;
         civilization.setTotalGold(civilization.getTotalGold() - cost);
+        if (civilization.getTotalGold() < 0) civilization.setTotalGold(0);
     }
 
     private static void handleUnitsMaintenance() {
@@ -115,8 +117,13 @@ public class CivilizationController {
             for (Unit unit : civilization.getUnits()) {
                 if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
                         !unit.getType().equals(UnitType.WARRIOR)) {
-                    civilization.getUnits().remove(unit);
+                    civilization.setTotalScience(civilization.getScience() - 1);
+                    civilization.setHappiness(civilization.getHappiness() - 1);
                     cost--;
+                    if (civilization.getUnits().size() == 0) {
+                        cost = 0;
+                        break;
+                    }
                 }
             }
         }
@@ -129,7 +136,7 @@ public class CivilizationController {
             i -= civilization.getScience();
             civilization.getLastCostUntilNewTechnologies().replace(civilization.getInProgressTech(), i);
             if (i <= 0) {
-                civilization.getNotifications().add(civilization.getInProgressTech().name() + "is now unlocked.     turn: " + Game.getTime());
+                civilization.getNotifications().add(civilization.getInProgressTech().name() + " is now unlocked.     time: " + Game.getTime());
                 civilization.setInProgressTech(null);
             }
         }

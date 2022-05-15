@@ -16,10 +16,6 @@ public class UserController {
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
-    public static ArrayList<User> getAllUsers() {
-        return allUsers;
-    }
-
     public static void setAllUsers(ArrayList<User> allUsers) {
         UserController.allUsers = allUsers;
     }
