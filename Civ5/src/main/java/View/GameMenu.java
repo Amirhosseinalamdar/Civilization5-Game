@@ -762,4 +762,12 @@ public class GameMenu {
     public static void buildRouteSuccessfully (String routeType) {
         System.out.println(routeType + " constructed successfully");
     }
+
+    public static void workerStated (String improvement) {
+        System.out.println("worker unit started " + improvement);
+    }
+
+    public static void pillaged (String pillageTarget) {
+        System.out.println(pillageTarget + " got pillaged successfully");
+    }
 }

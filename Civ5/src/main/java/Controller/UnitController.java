@@ -67,7 +67,7 @@ public class UnitController {
                     else GameMenu.notEnoughMoves();
                 }
             }
-            catch (IllegalArgumentException i) {
+            catch (Exception e) {
                 if (matcher.group("improvement").equals("ROAD")) {
                     if (canBuildRoadHere()) {
                         if (unit.hasRemainingMoves()) buildRoute("road");
@@ -75,7 +75,7 @@ public class UnitController {
                     }
                     else GameMenu.cantBuildRoadHere();
                 }
-                if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
+                else if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
                     if (canBuildRailroadHere()) {
                         if (unit.hasRemainingMoves()) buildRoute("railroad");
                         else GameMenu.notEnoughMoves();
@@ -83,9 +83,7 @@ public class UnitController {
                     else if (civilization.hasReachedTech(Technology.RAILROAD)) GameMenu.cantBuildRailroadHere();
                     else GameMenu.unreachedTech(Technology.RAILROAD);
                 }
-            }
-            catch (Exception e) {
-                GameMenu.noSuchImprovement();
+                else GameMenu.noSuchImprovement();
             }
         }
 
@@ -161,7 +159,11 @@ public class UnitController {
         while (true) {
             String command = GameMenu.nextCommand();
 
-            if (command.equals("back")) return Pattern.compile(command).matcher(command);
+            if (command.equals("back")) {
+                matcher = Pattern.compile(command).matcher(command);
+                matcher.find();
+                return matcher;
+            }
 
             if ((matcher = Commands.getMatcher(command, Commands.MOVE_UNIT)) != null) {
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))))
@@ -315,6 +317,7 @@ public class UnitController {
         unit.getTile().setRouteInProgress(pair);
         GameMenu.pillageSuccessful(routeType);
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.pillaged(routeType);
     }
 
     private static boolean canPillageImprovement (Improvement improvement) {
@@ -329,6 +332,7 @@ public class UnitController {
         unit.getTile().setImprovementInProgress(pair);
         GameMenu.pillageSuccessful(pair.getKey().toString());
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.pillaged(unit.getTile().getImprovementInProgress().getKey().toString());
     }
 
     private static boolean canRepairRoute (String routeType) {
@@ -347,6 +351,7 @@ public class UnitController {
         unit.getTile().setRouteInProgress(pair);
         GameMenu.repairStarted(unit.getTile().getRouteInProgress().getKey());
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.workerStated("repairing" + unit.getTile().getRouteInProgress().getKey());
     }
 
     private static boolean canRepairImprovement (Improvement improvement) {
@@ -364,6 +369,7 @@ public class UnitController {
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), unit.getTile().getImprovementInProgress().getValue() * -1);
         unit.getTile().setImprovementInProgress(pair);
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.workerStated("repairing" + unit.getTile().getImprovementInProgress().getKey().toString());
     }
 
     private static boolean canFoundCityHere() {
@@ -420,6 +426,7 @@ public class UnitController {
         unit.getTile().setRouteInProgress(pair);
         GameMenu.buildRouteSuccessfully(routeType);
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.workerStated("building" + routeType);
     }
 
     private static boolean tileAlreadyHas (String routeType) {
@@ -451,6 +458,7 @@ public class UnitController {
         Pair <Improvement, Integer> pair = new Pair<>(improvement, calcTurnsForImprovement(improvement));
         unit.getTile().setImprovementInProgress(pair);
         unit.setMovesInTurn(unit.getMP());
+        GameMenu.workerStated("building" + improvement.toString());
     }
 
     private static boolean tileAlreadyHasImprovement (Improvement improvement) {
@@ -496,6 +504,23 @@ public class UnitController {
 
     private static void continuePath() {
         Tile destTile = unit.getPath().tiles.get(unit.getPath().tiles.size() - 1);
+        for (Tile unitNeighbor : unit.getTile().getNeighbors())
+            if (unitNeighbor.equals(destTile)) {
+                if (! unit.getType().isCivilian()) {
+                    unitNeighbor.setMilitary((Military) unit);
+                    unit.getTile().setMilitary(null);
+                } else {
+                    unitNeighbor.setCivilian(unit);
+                    unit.getTile().setCivilian(null);
+                }
+                changeTileVisionStatus(unit.getTile(), TileStatus.DISCOVERED);
+                unit.updateMovesInTurn(unitNeighbor);
+                unit.setTile(unitNeighbor);
+                changeTileVisionStatus(unit.getTile(), TileStatus.CLEAR);
+                unit.setPath(null);
+                unit.setStatus("active");
+                return;
+            }
         unit.setPath(findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ()));
         if (unit.getPath() == null) {
             unit.setStatus("active");
@@ -538,7 +563,7 @@ public class UnitController {
 
     public static void moveOnPath (Unit unit, Path chosenPath) {
         while (unit.getMovesInTurn() < unit.getMP() && chosenPath.tiles.size() > 0) {
-            if (unit instanceof Military) {
+            if (! unit.getType().isCivilian()) {
                 chosenPath.tiles.get(0).setMilitary((Military) unit);
                 unit.getTile().setMilitary(null);
             } else {
@@ -551,7 +576,10 @@ public class UnitController {
             if (unit.equals(UnitController.unit)) changeTileVisionStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
         }
-        if (chosenPath.tiles.size() > 0) unit.setStatus("has path");
+        if (chosenPath.tiles.size() > 0) {
+            unit.setStatus("has path");
+            unit.setPath(chosenPath);
+        }
         else unit.setStatus("active");
     }
 
@@ -609,14 +637,18 @@ public class UnitController {
     }
 
     public static void doRemainingMissions() {
-        if (unit.getStatus().equals(UnitStatus.HAS_PATH))
+        if (unit.getStatus().equals(UnitStatus.HAS_PATH)) {
             continuePath();
+            return;
+        }
         if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY) ||
                 (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) ||
                     unit.getStatus().equals(UnitStatus.GARRISON) || unit.getStatus().equals(UnitStatus.SIEGEPREP))
             return;
         if (unit.getStatus().equals(UnitStatus.ALERT) && noEnemyNearby())
             return;
+        if (unit.getStatus().equals(UnitStatus.REPAIR) || unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) ||
+                unit.getStatus().equals(UnitStatus.CLEAR_LAND)) return;
         unit.setStatus("active");
     }
 
