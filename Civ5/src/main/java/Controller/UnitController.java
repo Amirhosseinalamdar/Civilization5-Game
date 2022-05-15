@@ -418,7 +418,7 @@ public class UnitController {
             GameMenu.tileAlreadyHas(routeType);
             return;
         }
-        else if (routeType.equals("road") && tileAlreadyHas("railroad")) { //Railroad is more advanced so user can not build road on it
+        else if (routeType.equals("road") && tileAlreadyHas("railroad")) {
             GameMenu.tileAlreadyHas("railroad");
             return;
         }
@@ -443,7 +443,7 @@ public class UnitController {
         if (unit.getTile().getRouteInProgress() != null &&
                 unit.getTile().getRouteInProgress().getKey().equals(routeType))
             return unit.getTile().getRouteInProgress().getValue();
-        return 3; //Page 87 of manual doc
+        return 3;
     }
 
     private static void buildImprovement (Improvement improvement) {
@@ -685,9 +685,6 @@ public class UnitController {
     }
 
     private static void attack (Tile targetTile) {
-        //TODO if defender is civilian
-        //TODO call ranged attack to unit
-        //TODO call close attack to unit
         if (targetTile.isCenterOfCity(targetTile.getCity())) {
             if (unit.getType().isRangeCombat())
                 rangedAttackToCity(targetTile.getCity());
@@ -695,7 +692,7 @@ public class UnitController {
                 meleeAttackToCity(targetTile.getCity());
         }
         else {
-            System.out.println("next phase ;)"); //TODO next phase
+            System.out.println("next phase ;)");
         }
     }
 
@@ -719,7 +716,6 @@ public class UnitController {
     }
 
     private static boolean cityIsOutOfRange (City city) {
-        //TODO... add mountain
         ArrayList<Tile> unitInRangeTiles = new ArrayList<>(unit.getTile().getNeighbors());
         int beginIndex = 0;
         for (int i = 0; i < unit.getType().getRange(); i++) {

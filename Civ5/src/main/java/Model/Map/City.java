@@ -149,7 +149,7 @@ public class City {
         return citizens;
     }
 
-    public double getHP() { //TODO add walls
+    public double getHP() {
         return HP;
     }
 
@@ -251,5 +251,8 @@ public class City {
         if (food < 0) storedFood = food;
         else if (inProgressUnit != null && inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
+    }
+
+    public void calculateStrength() {
     }
 }

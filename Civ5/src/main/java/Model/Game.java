@@ -15,7 +15,7 @@ public class Game {
     private static ArrayList<User> players = new ArrayList<>();
     private static int turn;
     private static int time;
-    private static ArrayList<Tile> map;//20*20
+    private static ArrayList<Tile> map;
     private static Tile[][] tiles = new Tile[20][20];
 
     public static ArrayList<User> getPlayers() {
@@ -73,7 +73,7 @@ public class Game {
     public static void generateMap() {
         map = new ArrayList<>();
         Random random = new Random();
-        int centersParameter = 1;//TODO for graphics
+        int centersParameter = 1;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 tiles[i][j] = new Tile();
@@ -223,8 +223,6 @@ public class Game {
         }
     }
 
-//check kardane i va j dar v1 niaz nis chon ta 2 laye ocean e va goftim type null bashe unja
-
     private static void addCounter(int[] counter, TerrainType type) {
         if (type == TerrainType.DESERT) counter[0]++;
         else if (type == TerrainType.GRASS) counter[1]++;
@@ -260,7 +258,7 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
-            } else if(tiles[i][j].isRiverAtLeft() && key<20){
+            } else if (tiles[i][j].isRiverAtLeft() && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }
