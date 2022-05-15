@@ -752,9 +752,7 @@ public class UnitController {
             CivilizationController.enterCityAsConqueror(city);
         }
     }
-
-
-
+    
     private static void meleeAttackToUnit (Unit defendingUnit) {
 
     }
