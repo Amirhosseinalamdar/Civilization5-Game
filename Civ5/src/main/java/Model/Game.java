@@ -1,6 +1,5 @@
 package Model;
 
-import Controller.GameController;
 import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -52,7 +51,8 @@ public class Game {
             do {
                 randomX = random.nextInt(20);
                 randomY = random.nextInt(20);
-            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
+            }
+            while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
             System.out.println("i am " + player.getUsername() + ", my first unit is on " +

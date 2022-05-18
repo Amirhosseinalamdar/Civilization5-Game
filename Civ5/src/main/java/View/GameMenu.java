@@ -25,6 +25,7 @@ public class GameMenu {
         GameController.checkMyCivilization();
         do {
             String command = scanner.nextLine();
+            if (command.equals("EXIT GAME")) System.exit(0);
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();
@@ -122,7 +123,7 @@ public class GameMenu {
             int turn = 0;
             if (civilization.getScience() != 0)
                 turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
-            if (turn == 0) System.out.println("N/A turns remain for the research");
+            if (civilization.getScience() == 0) System.out.println("N/A turns remain for the research");
             else System.out.println(turn + " turns remain for the research");
             System.out.println("this research will unlock:");
             int i = 1;
