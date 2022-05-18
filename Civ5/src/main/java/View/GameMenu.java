@@ -25,10 +25,7 @@ public class GameMenu {
         GameController.checkMyCivilization();
         do {
             String command = scanner.nextLine();
-
-            if(command.equals("EXIT GAME")){
-                System.exit(0);
-            }
+            if (command.equals("EXIT GAME")) System.exit(0);
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();
@@ -41,11 +38,9 @@ public class GameMenu {
 
     public static String nextCommand() {
         return scanner.nextLine();
-        //return null;
     }
 
     public static Tile showRangedAttackOptions(Military military) {
-        //return a tile based on scanner and inputs and military.tile
         return null;
     }
 
@@ -98,13 +93,9 @@ public class GameMenu {
 
     }
 
-    public static UnitType cityProductionMenu(City city) {// should add building in next phase
+    public static UnitType cityProductionMenu(City city) {
         return null;
     }
-
-//    public static UnitType showProductionOptions(City city){
-//
-//    }
 
     public static void showResearchOptions(Civilization civilization) {
 
@@ -132,7 +123,7 @@ public class GameMenu {
             int turn = 0;
             if (civilization.getScience() != 0)
                 turn = civilization.getLastCostUntilNewTechnologies().get(civilization.getInProgressTech()) / civilization.getScience();
-            if (turn == 0) System.out.println("N/A turns remain for the research");
+            if (civilization.getScience() == 0) System.out.println("N/A turns remain for the research");
             else System.out.println(turn + " turns remain for the research");
             System.out.println("this research will unlock:");
             int i = 1;
@@ -152,7 +143,6 @@ public class GameMenu {
 
     public static void showDiplomacyInfo(Civilization civilization) {
         System.out.println("Game Score: " + civilization.getScore());
-        //TODO diplomacy with others and calculate game score
     }
 
     private static void victoryProgressInfo() {
@@ -266,10 +256,10 @@ public class GameMenu {
                 if (isRiverValidToShow(I, J, civilization)) System.out.print(BLUE + "/" + RESET);
                 else System.out.print(RESET + "/");
                 System.out.print(Game.getTiles()[(i - 2) / 6][j * 2].getTypeForCiv(civilization, I, J).getColor());
-                showRoadAndRailRoadAndFoodAndProduction(I,J,true);
+                showRoadAndRailRoadAndFoodAndProduction(I, J, true);
                 System.out.print(getTypeFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getTypeForCiv(civilization, I, J)) + "," +
-                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()));//9 wh
-                showRoadAndRailRoadAndFoodAndProduction(I,J,false);
+                        getFeatureFirstChar(Game.getTiles()[(i - 2) / 6][2 * j].getFeature()));
+                showRoadAndRailRoadAndFoodAndProduction(I, J, false);
                 System.out.print(RESET);
             } else {
                 System.out.print("/         ");
@@ -282,23 +272,24 @@ public class GameMenu {
             else System.out.print("\\_____");
         }
     }
-    private static void showRoadAndRailRoadAndFoodAndProduction(int i,int j,boolean isAtLeft){
-        if(isAtLeft){
-            System.out.print("f"+Game.getTiles()[i][j].getFoodPerTurn());
-            if(Game.getTiles()[i][j].getRouteInProgress() != null){
-                if(Game.getTiles()[i][j].getRouteInProgress().getKey().equals("road"))System.out.print("r");
+
+    private static void showRoadAndRailRoadAndFoodAndProduction(int i, int j, boolean isAtLeft) {
+        if (isAtLeft) {
+            System.out.print("f" + Game.getTiles()[i][j].getFoodPerTurn());
+            if (Game.getTiles()[i][j].getRouteInProgress() != null) {
+                if (Game.getTiles()[i][j].getRouteInProgress().getKey().equals("road")) System.out.print("r");
                 else System.out.print("R");
-            }
+            } else System.out.print(" ");
+        } else {
+            if (Game.getTiles()[i][j].getRouteInProgress() != null &&
+                    Game.getTiles()[i][j].getRouteInProgress().getValue() != 0) System.out.print("&");
+            else if (Game.getTiles()[i][j].getRouteInProgress() != null &&
+                    Game.getTiles()[i][j].getRouteInProgress().getValue() == 0) System.out.print("$");
             else System.out.print(" ");
-        }else{
-            if(Game.getTiles()[i][j].getRouteInProgress() != null &&
-                    Game.getTiles()[i][j].getRouteInProgress().getValue() !=0) System.out.print("&");
-            else if(Game.getTiles()[i][j].getRouteInProgress() != null &&
-                    Game.getTiles()[i][j].getRouteInProgress().getValue() ==0) System.out.print("$");
-            else System.out.print(" ");
-            System.out.print("p"+Game.getTiles()[i][j].getProductionPerTurn());
+            System.out.print("p" + Game.getTiles()[i][j].getProductionPerTurn());
         }
     }
+
     private static void printLine6(int i, int j, Civilization civilization) {
         int I = (i - 5) / 6;
         int J = (2 * j + 1);
@@ -312,12 +303,12 @@ public class GameMenu {
         } else System.out.print("\\_____/");
         if (civilization.getTileVisionStatuses()[I][J] != TileStatus.FOGGY) {
             System.out.print(Game.getTiles()[I][J].getTypeForCiv(civilization, I, J).getColor());
-            showRoadAndRailRoadAndFoodAndProduction(I,J,true);
+            showRoadAndRailRoadAndFoodAndProduction(I, J, true);
             System.out.print(getTypeFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getTypeForCiv(civilization, I, J)) + "," +
-                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()));//7 wh
-            showRoadAndRailRoadAndFoodAndProduction(I,J,false);
+                    getFeatureFirstChar(Game.getTiles()[(i - 5) / 6][2 * j + 1].getFeature()));
+            showRoadAndRailRoadAndFoodAndProduction(I, J, false);
             System.out.print(RESET);
-        }else System.out.print("         ");
+        } else System.out.print("         ");
     }
 
     private static void printRoof() {
@@ -340,14 +331,14 @@ public class GameMenu {
         else return centerI - 1;
     }
 
-    public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {//TODO check if units are in correct tile//TODO fogy and ... added but not tested
+    public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {
         TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
 
         for (int i = 0; i < 20; i++)
             for (int j = 0; j < 20; j++)
                 civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
 
-        for (Unit unit : civilization.getUnits()) {//TODO test river
+        for (Unit unit : civilization.getUnits()) {
             ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
             if (!unit.getType().hasLimitedVisibility()) {
                 int clearTileLength = clearTiles.size();
@@ -387,7 +378,6 @@ public class GameMenu {
             height = 123;
             length = 10;
         }
-        //printRoof();
         for (int i = startingI; i < startingI + height; i++) {
             for (int j = startingJ; j < startingJ + length; j++) {
                 if (i % 6 == 0) {
@@ -450,8 +440,8 @@ public class GameMenu {
             else System.out.print("/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
             System.out.print(outputResource(civilization, i, j));
-            if(Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
-            else if(Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
+            if (Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
+            else if (Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
             else System.out.print(" ");
             for (int k = 0; k < 6 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
             if (i > 0 && isRiverValidToShow(i - 1, j + 1, civilization))
@@ -464,8 +454,8 @@ public class GameMenu {
             if (j > 0) showUnitAndMilitary(i, j - 1, true, civilization);
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
             System.out.print(outputResource(civilization, i, j));
-            if(Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
-            else if(Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
+            if (Game.getTiles()[i][j].canUseItsResource()) System.out.print("$");
+            else if (Game.getTiles()[i][j].getImprovementInProgress() != null) System.out.print("&");
             else System.out.print(" ");
             for (int k = 0; k < 5 - outputResource(civilization, i, j).length(); k++) System.out.print(' ');
 
@@ -478,7 +468,7 @@ public class GameMenu {
     private static String outputResource(Civilization civilization, int i, int j) {
         if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR) {
             if (Game.getTiles()[i][j].getResource() == Resource.JEWELERY) return "JEWEL";
-            else if(Game.getTiles()[i][j].getResource() == Resource.BOKHOOR) return "BOKHOO";
+            else if (Game.getTiles()[i][j].getResource() == Resource.BOKHOOR) return "BOKHOO";
             else if (Game.getTiles()[i][j].getResource() == Resource.NONE) return " ";
             else return Game.getTiles()[i][j].getResource().toString();
         } else {
@@ -486,7 +476,7 @@ public class GameMenu {
         }
     }
 
-    private static void showCitiesOnMap(int i, int j, Civilization civilization) {//TODO not tested
+    private static void showCitiesOnMap(int i, int j, Civilization civilization) {
         System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
         if (Game.getTiles()[i][j].getCity() != null &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
@@ -513,7 +503,6 @@ public class GameMenu {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "/" + RESET);
             else System.out.print("/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-            //String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             String loc = i + "," + j;
             System.out.print(loc);
             for (int k = 0; k < 5 - loc.length(); k++) System.out.print(' ');
@@ -530,7 +519,6 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
             System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-            //String loc =Game.getTiles()[i][j].getCenterX()+","+Game.getTiles()[i][j].getCenterY();
             String loc = i + "," + j;
             System.out.print(loc);
             for (int k = 0; k < 5 - loc.length(); k++) System.out.print(' ');
@@ -590,7 +578,7 @@ public class GameMenu {
         System.out.println("can't make garrison, no city available");
     }
 
-    public static void unitIsNot (String unitName) {
+    public static void unitIsNot(String unitName) {
         System.out.println("chosen unit is not " + unitName);
     }
 
@@ -695,7 +683,7 @@ public class GameMenu {
         System.out.println("civilization has no tech in progress; choose a research");
     }
 
-    public static void cityIsOccupied (String type) {
+    public static void cityIsOccupied(String type) {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
@@ -719,15 +707,15 @@ public class GameMenu {
         System.out.println("this tile already has " + improvementName);
     }
 
-    public static void tileIsNotInTerritory (Improvement improvement) {
+    public static void tileIsNotInTerritory(Improvement improvement) {
         System.out.println("can not build " + improvement.toString() + " here; tile is out of city limits");
     }
 
-    public static void pillageSuccessful (String improvement) {
+    public static void pillageSuccessful(String improvement) {
         System.out.println(improvement + " was successfully pillaged");
     }
 
-    public static void repairStarted (String improvement) {
+    public static void repairStarted(String improvement) {
         System.out.println("successfully started repairing " + improvement);
     }
 
@@ -739,15 +727,15 @@ public class GameMenu {
         System.out.println("can not range attack, city out of range");
     }
 
-    public static void rangedAttackToCitySuccessfully (City city) {
+    public static void rangedAttackToCitySuccessfully(City city) {
         System.out.println("ranged attack to " + city.getName() + " was a success");
     }
 
-    public static void cityCenterOutOfMeleeRange (City city) {
+    public static void cityCenterOutOfMeleeRange(City city) {
         System.out.println("can not attack to " + city.getName() + ", out of range");
     }
 
-    public static void cityHPIsZero (City city) {
+    public static void cityHPIsZero(City city) {
         System.out.println(city.getName() + " is zero");
     }
 
@@ -755,7 +743,7 @@ public class GameMenu {
         System.out.println("city conquer decision was invalid");
     }
 
-    public static void attachCitySuccessful (City city) {
+    public static void attachCitySuccessful(City city) {
         System.out.println(city.getName() + " attached successfully");
     }
 
@@ -763,7 +751,15 @@ public class GameMenu {
         System.out.println("can not attack to chosen tile, there are no enemy units/city");
     }
 
-    public static void buildRouteSuccessfully (String routeType) {
+    public static void buildRouteSuccessfully(String routeType) {
         System.out.println(routeType + " constructed successfully");
+    }
+
+    public static void workerStated (String improvement) {
+        System.out.println("worker unit started " + improvement);
+    }
+
+    public static void pillaged (String pillageTarget) {
+        System.out.println(pillageTarget + " got pillaged successfully");
     }
 }

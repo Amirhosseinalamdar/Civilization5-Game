@@ -30,13 +30,14 @@ public class GameController {
         for (Unit unit : civilization.getUnits())
             if (!unit.getStatus().equals(UnitStatus.DO_NOTHING) && !unit.getStatus().equals(UnitStatus.HEAL)
                     && !unit.getStatus().equals(UnitStatus.FORTIFY) && !unit.getStatus().equals(UnitStatus.SLEEP) &&
-                    !unit.getStatus().equals(UnitStatus.ALERT) && unit.getMovesInTurn() < unit.getMP()) {
+                    !unit.getStatus().equals(UnitStatus.ALERT) && !unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) &&
+                    !unit.getStatus().equals(UnitStatus.REPAIR) && !unit.getStatus().equals(UnitStatus.CLEAR_LAND) && unit.getMovesInTurn() < unit.getMP()) {
                 GameMenu.unitHasRemainingMove(unit);
                 return false;
             }
         for (City city : civilization.getCities())
             if (city.getInProgressUnit() == null) {
-                GameMenu.chooseProductionForCity(city.getName()); //TODO... SETTLER needs at least 2 citizens
+                GameMenu.chooseProductionForCity(city.getName());
                 return false;
             }
         if (civilization.getInProgressTech() == null && civilization.getCities().size() > 0) {
@@ -180,7 +181,7 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x"));
         for (Unit unit : civilization.getUnits()) {
             if (!unit.getType().isCivilian()) {
-                Military military = (Military)unit;
+                Military military = (Military) unit;
                 military.setCombatStrength(military.getCombatStrength() + x);
             }
         }
@@ -190,7 +191,7 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x"));
         for (Unit unit : civilization.getUnits()) {
             if (!unit.getType().isCivilian()) {
-                Military military = (Military)unit;
+                Military military = (Military) unit;
                 if (military.getRangedCombatStrength() > 0) {
                     military.setRangedCombatStrength(military.getRangedCombatStrength() + x);
                 }
@@ -373,7 +374,6 @@ public class GameController {
 
     private static void handleDiplomacyPanel() {
         GameMenu.showDiplomacyInfo(civilization);
-        //TODO can diplomacy with others
     }
 
     private static void handleEconomicOverview() {
@@ -531,7 +531,8 @@ public class GameController {
     public static int findBestHappiness() {
         int happiness = 0;
         for (User player : Game.getPlayers()) {
-            if (player.getCivilization().getHappiness() > happiness) happiness = player.getCivilization().getHappiness();
+            if (player.getCivilization().getHappiness() > happiness)
+                happiness = player.getCivilization().getHappiness();
         }
         return happiness;
     }
@@ -548,7 +549,8 @@ public class GameController {
     public static int findWorstHappiness() {
         int happiness = 1000000;
         for (User player : Game.getPlayers()) {
-            if (player.getCivilization().getHappiness() < happiness) happiness = player.getCivilization().getHappiness();
+            if (player.getCivilization().getHappiness() < happiness)
+                happiness = player.getCivilization().getHappiness();
         }
         return happiness;
     }

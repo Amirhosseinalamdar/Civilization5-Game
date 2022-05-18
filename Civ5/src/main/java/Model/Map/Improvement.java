@@ -25,19 +25,15 @@ public enum Improvement {
 
     TRADING_POST(8, new ArrayList<>(Arrays.asList(TerrainType.PLAIN, TerrainType.DESERT, TerrainType.GRASS, TerrainType.TUNDRA, TerrainType.HILL)), null, Technology.TRAPPING),
 
-//    MANUFACTORY(5, new ArrayList<>(Arrays.asList(TerrainType.PLAIN, TerrainType.DESERT, TerrainType.GRASS, TerrainType.TUNDRA, TerrainType.SNOW)), null, Technology.ENGINEERING),
-
-//    ROAD(null, null, null),
-
     NONE(0, null, null, null);
 
     private final int constructionTime;
     private final Technology prerequisiteTech;
-    private final ArrayList <TerrainType> prerequisiteTypes;
-    private final ArrayList <TerrainFeature> prerequisiteFeatures;
+    private final ArrayList<TerrainType> prerequisiteTypes;
+    private final ArrayList<TerrainFeature> prerequisiteFeatures;
 
 
-    Improvement (int constructionTime, ArrayList <TerrainType> prerequisiteTypes, ArrayList <TerrainFeature> prerequisiteFeatures, Technology prerequisiteTech) {
+    Improvement(int constructionTime, ArrayList<TerrainType> prerequisiteTypes, ArrayList<TerrainFeature> prerequisiteFeatures, Technology prerequisiteTech) {
         this.constructionTime = constructionTime;
         this.prerequisiteTech = prerequisiteTech;
         this.prerequisiteTypes = prerequisiteTypes;

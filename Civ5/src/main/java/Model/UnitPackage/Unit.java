@@ -18,7 +18,7 @@ public class Unit {
     public static double MAX_HEALTH = 10;
     protected Path path;
 
-    public Unit (UnitType unitType) {
+    public Unit(UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;
         this.path = new Path(null);
@@ -119,13 +119,11 @@ public class Unit {
         path = null;
     }
 
-    //TODO change civilization -> controller
-
-    public void setStatus (String string) {
+    public void setStatus(String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
         else if (string.equals("found city")) this.status = UnitStatus.FOUND_CITY;
-        else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION; //should it be?
+        else if (string.equals("cancel mission")) this.status = UnitStatus.CANCEL_MISSION;
         else if (string.equals("wake")) this.status = UnitStatus.WAKE;
         else if (string.equals("delete")) this.delete();
         else if (string.startsWith("repair")) this.status = UnitStatus.REPAIR;
@@ -138,10 +136,10 @@ public class Unit {
 
     private void delete() {
         this.kill();
-        civilization.setTotalGold(civilization.getTotalGold() + 5); //TODO... set this
+        civilization.setTotalGold(civilization.getTotalGold() + 5);
     }
 
-    public void updateMovesInTurn (Tile dest) {
+    public void updateMovesInTurn(Tile dest) {
         if (dest.isEnemyZoneOfControl(this.civilization)) {
             this.movesInTurn = MP;
             return;
@@ -154,10 +152,6 @@ public class Unit {
         if (this.type.equals(UnitType.SCOUT))
             this.movesInTurn -= dest.getFeature().getMovementCost();
     }
-
-    //    public void changeStatus (UnitStatus status) { ------> to controller
-//        this.status = status;
-//    }
 
     public boolean hasRemainingMoves() {
         return movesInTurn < MP;

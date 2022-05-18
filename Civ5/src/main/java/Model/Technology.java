@@ -54,10 +54,10 @@ public enum Technology {
     COMBUSTION(2200, new ArrayList<>(Arrays.asList(REPLACEABLE_PARTS, RAILROAD, DYNAMITE)), new ArrayList<>(Arrays.asList("Tank", "Panzer")));
 
     private final int cost;
-    private final ArrayList <Technology> parents;
-    private final ArrayList <String> unlocks;
+    private final ArrayList<Technology> parents;
+    private final ArrayList<String> unlocks;
 
-    Technology(int cost, ArrayList <Technology> parents, ArrayList <String> unlocks) {
+    Technology(int cost, ArrayList<Technology> parents, ArrayList<String> unlocks) {
         this.parents = parents;
         this.unlocks = unlocks;
         this.cost = cost;
@@ -67,7 +67,7 @@ public enum Technology {
         return cost;
     }
 
-    public ArrayList <Technology> getParents() {
+    public ArrayList<Technology> getParents() {
         return parents;
     }
 

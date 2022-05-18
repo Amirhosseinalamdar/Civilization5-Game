@@ -25,12 +25,10 @@ public class Tile {
     private Pair<String, Integer> routeInProgress;
     private Pair<String, Integer> removeInProgress;
     private boolean isRaided;
-    private City city; // age null bashe city nis agar na capitale citie
-    //    private City memberOfThisCity;//TODO initialize she pls
-    //private ArrayList<River> rivers;
+    private City city;
     private boolean isRiverAtLeft;
-    private int centerX; // vertical
-    private int centerY; // horizontal
+    private int centerX;
+    private int centerY;
     private int indexInMapI;
     private int indexInMapJ;
     private Citizen workingCitizen;
@@ -56,10 +54,6 @@ public class Tile {
         return workingCitizen;
     }
 
-//    //public City getMemberOfThisCity() {
-//        return memberOfThisCity;
-//    }
-
     public void setRiverAtLeft(boolean riverAtLeft) {
         isRiverAtLeft = riverAtLeft;
     }
@@ -84,8 +78,8 @@ public class Tile {
         int movementCost = this.movementCost;
         if (this.getRouteInProgress() != null) {
             if (this.getRouteInProgress().getValue() <= 0) {
-                if (this.getRouteInProgress().getKey().equals("road")) movementCost -= 1; //TODO... set this
-                else if (this.getRouteInProgress().getKey().equals("railroad")) movementCost -= 3; //TODO
+                if (this.getRouteInProgress().getKey().equals("road")) movementCost -= 1;
+                else if (this.getRouteInProgress().getKey().equals("railroad")) movementCost -= 3;
             }
         }
         return movementCost;
@@ -115,7 +109,7 @@ public class Tile {
         return removeInProgress;
     }
 
-    public void setRemoveInProgress (Pair<String, Integer> removeInProgress) {
+    public void setRemoveInProgress(Pair<String, Integer> removeInProgress) {
         this.removeInProgress = removeInProgress;
     }
 
@@ -179,11 +173,11 @@ public class Tile {
         this.type = type;
     }
 
-    public void setImprovementInProgress (Pair <Improvement, Integer> improvementInProgress) {
+    public void setImprovementInProgress(Pair<Improvement, Integer> improvementInProgress) {
         this.improvementInProgress = improvementInProgress;
     }
 
-    public void setRouteInProgress (Pair <String, Integer> routeInProgress) {
+    public void setRouteInProgress(Pair<String, Integer> routeInProgress) {
         this.routeInProgress = routeInProgress;
     }
 
@@ -192,12 +186,12 @@ public class Tile {
         return type;
     }
 
-    public void initializeTile(TerrainType type, TerrainFeature feature) {//first time init
+    public void initializeTile(TerrainType type, TerrainFeature feature) {
         this.goldPerTurn = type.getGold() + feature.getGold();
         this.foodPerTurn = type.getFood() + feature.getFood();
         this.productionPerTurn = type.getProduction() + feature.getProduction();
-        if(this.foodPerTurn<0) this.foodPerTurn =0;
-        if(this.productionPerTurn<0) this.productionPerTurn=0;
+        if (this.foodPerTurn < 0) this.foodPerTurn = 0;
+        if (this.productionPerTurn < 0) this.productionPerTurn = 0;
         this.combatEffect = type.getBattleEffect() + feature.getBattleEffect();
         this.movementCost = type.getMovementCost() + feature.getMovementCost();
     }
@@ -225,14 +219,14 @@ public class Tile {
     }
 
     public boolean isEnemyZoneOfControl(Civilization civilization) {
-        ArrayList <Tile> neighbors = this.getNeighbors();
+        ArrayList<Tile> neighbors = this.getNeighbors();
         for (Tile neighbor : neighbors)
             if (neighbor.getMilitary() != null && !neighbor.getMilitary().getCivilization().equals(civilization))
                 return true;
         return false;
     }
 
-    public ArrayList <Tile> getNeighbors() {
+    public ArrayList<Tile> getNeighbors() {
         ArrayList<Tile> neighbors = new ArrayList<>();
         int indexI = this.getIndexInMapI(), indexJ = this.getIndexInMapJ();
 
@@ -260,7 +254,7 @@ public class Tile {
         return type.equals(TerrainType.HILL) || feature.equals(TerrainFeature.JUNGLE) || feature.equals(TerrainFeature.FOREST);
     }
 
-    public boolean hasClearable (String clearable) {
+    public boolean hasClearable(String clearable) {
         if (clearable.equals("road"))
             return hasRoad();
         else if (clearable.equals("railroad"))
@@ -273,8 +267,7 @@ public class Tile {
         try {
             return routeInProgress.getKey().equals("road") &&
                     routeInProgress.getValue() == 0;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -283,18 +276,17 @@ public class Tile {
         try {
             return routeInProgress.getKey().equals("railroad") &&
                     routeInProgress.getValue() == 0;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
-    private boolean hasFeature (String forestOrJungle) {
+    private boolean hasFeature(String forestOrJungle) {
         return (forestOrJungle.equals("jungle") && feature.equals(TerrainFeature.JUNGLE)) ||
                 (forestOrJungle.equals("forest") && feature.equals(TerrainFeature.FOREST));
     }
 
-    public boolean isCenterOfCity (City city) {
+    public boolean isCenterOfCity(City city) {
         return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
     }
 }

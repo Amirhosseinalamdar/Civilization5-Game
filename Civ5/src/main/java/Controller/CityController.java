@@ -102,8 +102,6 @@ public class CityController {
                     return matcher;
                 GameMenu.indexOutOfArray();
             }
-            if ((matcher = Commands.getMatcher(command, Commands.SHOW_OUTPUT)) != null)
-                return matcher;
 
             if ((matcher = Commands.getMatcher(command, Commands.ATTACK)) != null) {
                 if (!GameController.invalidPos(Integer.parseInt(matcher.group("x")),
@@ -147,12 +145,12 @@ public class CityController {
     }
 
     private static void tryPurchaseUnit (UnitType unitType) {
-        int unitGoldCost = 100; //TODO... calculate cost of unit
+        int unitGoldCost = 100;
         if (!civilization.hasReachedTech(unitType.getPrerequisiteTech())) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
         }
-        if (unitGoldCost < civilization.getTotalGold()) {
+        if (unitGoldCost > civilization.getTotalGold()) {
             GameMenu.notEnoughGoldForUnit(unitType);
             return;
         }
@@ -236,8 +234,6 @@ public class CityController {
     }
 
     private static void purchaseTile(Tile targetTile) {
-        //view show options and check enough tiles //TODO
-        //purchase that option
         int necessaryAmountOfGoldForPurchase = targetTile.getGoldPerTurn() * 3 + targetTile.getProductionPerTurn() +
                 targetTile.getFoodPerTurn() * 2;
         if (civilization.getTotalGold() >= necessaryAmountOfGoldForPurchase) {
@@ -245,13 +241,9 @@ public class CityController {
             city.getTiles().add(targetTile);
             targetTile.setCity(city);
             civilization.getNotifications().add("new tile is purchased. tile x: "
-                    + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    turn: " + Game.getTime());
+                    + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    time: " + Game.getTime());
         } else
             GameMenu.notEnoughGoldForTilePurchase();
-    }
-
-    private void askForNewProduction(City city) {
-
     }
 
     public static void updateCityInfos(City city) {
@@ -343,9 +335,9 @@ public class CityController {
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
                     }
                     civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
-                            + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    turn: " + Game.getTime());
+                            + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getTime());
                     if (tile.getResource() != null) {
-                    civilization.getNotifications().add(tile.getResource() + " is achieved.    turn: " + Game.getTime());
+                    civilization.getNotifications().add(tile.getResource() + " is achieved.    time: " + Game.getTime());
                     }
                 }
             }
@@ -388,8 +380,8 @@ public class CityController {
         else {
             if (city.getProductionPerTurn() != 0) {
                 turn = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit()) / city.getProductionPerTurn();
-                output = "turns until producing" + city.getInProgressUnit().name() + " : " + turn + ".";
-            } else output = "turns until producing" + city.getInProgressUnit().name() + " : " + "-";
+                output = "turns until producing " + city.getInProgressUnit().name() + " : " + turn;
+            } else output = "turns until producing " + city.getInProgressUnit().name() + " : " + "-";
         }
         return output;
     }
@@ -403,7 +395,7 @@ public class CityController {
                 city.getCitizens().add(citizen);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 1.5));
                 city.setGainCitizenLastFood(city.getCitizenNecessityFood());
-                civilization.getNotifications().add("The " + city.getName() + "'s population is increased     turn: " + Game.getTime());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is increased     time: " + Game.getTime());
             }
             city.setTurnsUntilBirthCitizen(city.getGainCitizenLastFood() / city.getStoredFood());
         } else if (city.getStoredFood() == 0) city.setTurnsUntilBirthCitizen(0);
@@ -414,7 +406,7 @@ public class CityController {
                 city.getCitizens().remove(city.getCitizens().size() - 1);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 0.66));
                 city.setLostCitizenLastFood(city.getCitizenNecessityFood());
-                civilization.getNotifications().add("The " + city.getName() + "'s population is decreased     turn: " + Game.getTime());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is decreased     time: " + Game.getTime());
             }
             city.setTurnsUntilDeathCitizen(city.getLostCitizenLastFood() / city.getStoredFood());
         }
@@ -426,7 +418,7 @@ public class CityController {
             expandCity(city);
             city.setBorderExpansionCost((int) (city.getBorderExpansionCost() * 1.5));
             city.setBorderLastCost(city.getBorderExpansionCost());
-            civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     turn: " + Game.getTime());
+            civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     time: " + Game.getTime());
         }
         if ((city.getCitizens().size() + city.getStoredFood()) == 0) city.setTurnsUntilGrowthBorder(0);
         else city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));

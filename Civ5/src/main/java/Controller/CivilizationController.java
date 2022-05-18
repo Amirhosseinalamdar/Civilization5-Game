@@ -57,10 +57,6 @@ public class CivilizationController {
 
     }
 
-//    private void makeImprovement(Unit worker){
-//
-//    }
-
     private void updateTilesVisionStatus() {
 
     }
@@ -97,6 +93,7 @@ public class CivilizationController {
             if (set.getValue() > 0) unhappiness -= 4;
         }
         civilization.setHappiness(civilization.getHappiness() - unhappiness);
+        if (civilization.getHappiness() < 1) civilization.setHappiness(1);
     }
 
     private static void handleRoadsMaintenance() {
@@ -139,7 +136,7 @@ public class CivilizationController {
             i -= civilization.getScience();
             civilization.getLastCostUntilNewTechnologies().replace(civilization.getInProgressTech(), i);
             if (i <= 0) {
-                civilization.getNotifications().add(civilization.getInProgressTech().name() + "is now unlocked.     turn: " + Game.getTime());
+                civilization.getNotifications().add(civilization.getInProgressTech().name() + " is now unlocked.     time: " + Game.getTime());
                 civilization.setInProgressTech(null);
             }
         }
