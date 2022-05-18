@@ -106,6 +106,7 @@ public class CivilizationController {
                 if (tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() == 0) cost++;
         cost /= 2;
         civilization.setTotalGold(civilization.getTotalGold() - cost);
+        if (civilization.getTotalGold() < 0) civilization.setTotalGold(0);
     }
 
     private static void handleUnitsMaintenance() {
@@ -119,8 +120,13 @@ public class CivilizationController {
             for (Unit unit : civilization.getUnits()) {
                 if (!unit.getType().equals(UnitType.WORKER) && !unit.getType().equals(UnitType.SETTLER) &&
                         !unit.getType().equals(UnitType.WARRIOR)) {
-                    civilization.getUnits().remove(unit);
+                    civilization.setTotalScience(civilization.getScience() - 1);
+                    civilization.setHappiness(civilization.getHappiness() - 1);
                     cost--;
+                    if (civilization.getUnits().size() == 0) {
+                        cost = 0;
+                        break;
+                    }
                 }
             }
         }
@@ -181,7 +187,7 @@ public class CivilizationController {
         return output;
     }
 
-    public static void enterCityAsConqueror (City city) {
+    public static void enterCityAsConqueror(City city) {
         while (true) {
             String decision = GameMenu.nextCommand();
             if (decision.equals("do nothing")) return;
@@ -192,18 +198,18 @@ public class CivilizationController {
         }
     }
 
-    private static void puppetCity (City city) {
+    private static void puppetCity(City city) {
         city.setCityStatus(CityStatus.PUPPET);
         civilization.addCity(city);
     }
 
-    private static void attachCity (City city) {
+    private static void attachCity(City city) {
         city.setCivilization(civilization);
         civilization.getCities().add(city);
         GameMenu.attachCitySuccessful(city);
     }
 
-    private static void razeCity (City city) {
+    private static void razeCity(City city) {
         civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
         int firstPopulation = city.getCitizens().size();
         if (firstPopulation / 2 > 0)

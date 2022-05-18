@@ -1,0 +1,305 @@
+user login -u ehsan -p 1087
+play game -p1 hesi
+unit -c 9 7 -t noncombat
+found city
+shomal
+unit -c 9 7 -t combat
+move to -c 10 7
+next turn
+unit -c 10 7 -t combat
+move to -c 11 7
+next turn
+city -n shomal
+create -u WORKER
+next turn
+manage civilization
+new tech -n ARCHERY
+next turn
+unit -t noncombat -c 5 8
+found city
+tehran
+show global map
+unit -c 5 8 -t combat
+move to -c 3 3
+next turn
+city -c 5 8
+create -u SCOUT
+manage civilization
+new tech -n MINING
+next turn
+show map
+scroll -d right 5
+scroll -d right 5
+scroll -d down 5
+scroll -d down 5
+scroll -d left 5
+scroll -d left 1000
+scroll -d up 5
+scroll -d up 1000
+lock citizen on tile -c 10 8
+city -n shomal
+lock citizen on tile -c 10 8
+show cities banner
+next
+past
+commande chert
+exit banner
+show civilization output
+increase -g 50
+show research info screen
+show unit list panel
+commande chert
+show military overview
+show unit list panel
+unit -t combat -c 11 7
+move to -c 13 7
+show unit list panel
+close
+show city list panel
+commande chert
+city -n shomal
+create -u SWORDSMAN
+city -n shomal
+show city output
+show economic overview
+commande chert
+city -n shomal
+create -u ASGHAR
+purchase -t -c 10 9
+show global map
+show economic overview
+close
+increase -g 50
+increase -h 50
+increase -s 50
+increase -cHP 5
+commande chert
+increase -uh 5
+increase -ccs 5
+increase -crcs 5
+increase -uMP 1
+increase -ucs 5
+increase -urcs 5
+show demographics screen
+show notification history
+commande chert
+increase -t 10
+increase -t 9
+next turn
+unit -t combat -c 5 8
+alert
+next turn
+city -n tehran
+create -u WORKER
+next turn
+manage civilization
+new tech -n TANK
+manage civilization
+new tech -n COMBUSTION
+manage civilization
+new tech -n AGRICULTURE
+manage civilization
+new tech -n TRAPPING
+manage civilization
+new tech -n ANIMAL_HUSBANDRY
+next turn
+next turn
+unit -t combat -c 13 7
+do nothing
+alert
+show global map
+next turn
+manage civilization
+new tech -n MINING
+next turn
+unit -t combat -c 5 8
+move to -c 13 6
+next turn
+unit -t combat -c 3 3
+garrison
+move to -c 0 0
+unit -t noncombat -c 3 3
+unit -t combat -c 3 3
+sleep
+increase -t 10
+show global map
+increase -t 10
+show global map
+increase -t 10
+show global map
+next turn
+manage civilization
+new tech -n TRAPPING
+next turn
+next turn
+increase -t 6
+unit -t combat -c 13 7
+move to -c 12 7
+unit -t combat -c 13 7
+move to -c 14 8
+unit -t combat -c 13 7
+move to -c 10 8
+increase -t 10
+show global map
+increase -t 10
+show global map
+rande mikonam hame havijaro riz riz
+roo be jelo hamchenan moser
+show global naser kazemi
+alo naser khodeti
+next turn
+increase -t 1
+unit -c 9 7 -t noncombat
+move to -c 11 5
+next turn
+unit -c 13 7 -t combat
+move to -c 9 7
+next turn
+city -n shomal
+create -u ARCHER
+manage civilization
+new tech -n ARCHERY
+manage civilization
+new tech -n CALENDER
+manage civilization
+new tech -n POTTERY
+nex turn
+unit -c 13 6 -t noncombat
+unit -c 13 6 -t combat
+sleep
+next turn
+city -n tehran
+create -u TANK
+city -n mashad
+next turn
+city -n tehran
+create -u SCOUT
+manage civilization
+new tech -n WHEEL
+manage civilization
+new tech -n ANIMAL_HUSBANDRY
+next turn
+manage civilization
+new tech -n ANIMAL_HUSBANDRY
+unit -c 11 5 -t noncombat
+garrison
+cammande chert
+build improvement -t FARM
+unit -c 11 5 -t noncombat
+build improvement -t MINE
+manage civilization
+new tech -n MINING
+show research info screen
+increase -t 10
+show research info screen
+increase -t 2
+show civilization info
+increase -t 2
+show civilization output
+increase -g 1000
+increase -h 500
+unit -c 5 8 -t noncombat
+move to -c 3 6
+next turn
+unit -c 10 8 -t combat
+move to -c 3 6
+unit -c 9 7 -t noncombat
+move to -c 12 6
+city -n shomal
+create -u SETTLER
+manage civilization
+new tech -n CALENDER
+manage civilization
+new tech -n POTTERY
+next turn
+show global map
+show unit list panel
+close
+next turn
+show diplomacy info panel
+next turn
+unit -c 3 6 -t noncombat
+build improvement -t MINE
+city -n tehran
+purchase -t -c 3 6
+unit -c 3 6 -t noncombat
+build improvement -t MINE
+unit -c 5 8 -t combat
+sleep
+city -n tehran
+create -u SETTLER
+next turn
+increase -t 1
+increase -t 12
+city -n tehran
+show city output
+show cities banner
+exit banner
+city -n tehran
+lock citizen on tile -c 3 6
+unit -c 3 6 -t noncombat
+move to -c 5 7
+next turn
+manage civilization
+new tech -n WHEEL
+manage civilization
+new tech -n MASONRY
+next turn
+city -n shomal
+purchase -t -c 12 6
+unit -c 12 6 -t noncombat
+build improvement -t MINE
+manage civilization
+new tech -n BRONZE_WORKING
+next turn
+next turn
+next turn
+show global map
+unit -c 5 7 -t noncombat
+build improvement -t road
+unit -c 5 7 -t noncombat
+build improvement -t ROAD
+EXIT GAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

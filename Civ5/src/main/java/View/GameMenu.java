@@ -25,6 +25,10 @@ public class GameMenu {
         GameController.checkMyCivilization();
         do {
             String command = scanner.nextLine();
+
+            if(command.equals("EXIT GAME")){
+                System.exit(0);
+            }
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())
                     GameController.updateGame();

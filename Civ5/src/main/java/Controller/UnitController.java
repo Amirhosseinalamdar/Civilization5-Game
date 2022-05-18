@@ -384,7 +384,7 @@ public class UnitController {
     }
 
     private static boolean canBuildRoadHere() {
-        return civilization.hasReachedTech(Technology.WHEEL) && unit.getTile().getFeature().equals(TerrainFeature.ICE); //TODO
+        return civilization.hasReachedTech(Technology.WHEEL) && !unit.getTile().getFeature().equals(TerrainFeature.ICE); //TODO
     }
 
     private static boolean canBuildRailroadHere() {

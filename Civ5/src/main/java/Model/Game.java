@@ -47,10 +47,11 @@ public class Game {
         generateMap();
         for (User player : players) {
             player.newCivilization();
+            Random random = new Random(players.indexOf(player));
             int randomX, randomY;
             do {
-                randomX = (int) Math.floor(Math.random() * 20);
-                randomY = (int) Math.floor(Math.random() * 20);
+                randomX = random.nextInt(20);
+                randomY = random.nextInt(20);
             } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
@@ -72,7 +73,7 @@ public class Game {
 
     public static void generateMap() {
         map = new ArrayList<>();
-        Random random = new Random();
+        Random random = new Random(0);
         int centersParameter = 1;//TODO for graphics
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
@@ -149,7 +150,7 @@ public class Game {
     }
 
     private static void addResource() {
-        Random random = new Random();
+        Random random = new Random(0);
         int key;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
@@ -298,7 +299,7 @@ public class Game {
     }
 
     private static void generateRivers() {
-        Random random = new Random();
+        Random random = new Random(0);
         int howManyRivers = random.nextInt(4) + 1;
         for (int k = 0; k < howManyRivers; k++) {
             int i = random.nextInt(7) + 2;
