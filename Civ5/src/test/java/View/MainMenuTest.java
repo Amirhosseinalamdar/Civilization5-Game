@@ -2,6 +2,7 @@ package View;
 
 import Controller.UserController;
 import View.MainMenu;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,8 +16,8 @@ class MainMenuTest {
     @Test
     void run() throws FileNotFoundException {
         UserController.readDataFromJson("json.json");
-        File file = new File("C:/Users/user/Desktop/Civ 5/project-group-10/Civ5/src/test/java/test.txt");
-        Scanner scanner = new Scanner(file);
+        File file1 = new File("E:/Ehsan Uni/AP/Project/CIV/Civ5/src/test/java/test1.txt");
+        Scanner scanner = new Scanner(file1);
         MainMenu.run(scanner);
         UserController.writeDataToJson("json.json");
     }

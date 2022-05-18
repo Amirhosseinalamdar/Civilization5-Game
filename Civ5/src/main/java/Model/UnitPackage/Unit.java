@@ -34,16 +34,8 @@ public class Unit {
         return this.path;
     }
 
-    public void setType(UnitType type) {
-        this.type = type;
-    }
-
     public void setTile(Tile tile) {
         this.tile = tile;
-    }
-
-    public void setZonesOfControl(ArrayList<Tile> zonesOfControl) {
-        this.zonesOfControl = zonesOfControl;
     }
 
     public void setCivilization(Civilization civilization) {
@@ -62,14 +54,6 @@ public class Unit {
         this.health = health;
     }
 
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-    public void setMaintenance(int maintenance) {
-        this.maintenance = maintenance;
-    }
-
     public int getMovesInTurn() {
         return movesInTurn;
     }
@@ -80,10 +64,6 @@ public class Unit {
 
     public Tile getTile() {
         return tile;
-    }
-
-    public ArrayList<Tile> getZonesOfControl() {
-        return zonesOfControl;
     }
 
     public Civilization getCivilization() {
@@ -98,16 +78,8 @@ public class Unit {
         return health;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
     public UnitStatus getStatus() {
         return status;
-    }
-
-    public int getMaintenance() {
-        return maintenance;
     }
 
     protected UnitStatus status;
@@ -140,7 +112,10 @@ public class Unit {
     }
 
     public void updateMovesInTurn(Tile dest) {
-        if (dest.isEnemyZoneOfControl(this.civilization)) {
+        if (dest.isEnemyZoneOfControl(this.civilization)
+                || (tile.getIndexInMapJ() < dest.getIndexInMapJ() && dest.isRiverAtLeft())
+                || (tile.getIndexInMapJ() > dest.getIndexInMapJ() && tile.isRiverAtLeft())
+        ) {
             this.movesInTurn = MP;
             return;
         }
@@ -154,6 +129,7 @@ public class Unit {
     }
 
     public boolean hasRemainingMoves() {
+        if (movesInTurn >= MP) this.setStatus("active");
         return movesInTurn < MP;
     }
 }

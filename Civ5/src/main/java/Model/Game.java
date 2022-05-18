@@ -30,10 +30,6 @@ public class Game {
         return time;
     }
 
-    public static ArrayList<Tile> getMap() {
-        return map;
-    }
-
     public static void nextTurn() {
         turn++;
         turn %= players.size();
