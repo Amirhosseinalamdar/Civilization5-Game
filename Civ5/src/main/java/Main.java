@@ -9,7 +9,8 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         UserController.readDataFromJson("json.json");
-        MainMenu.run();
+        Scanner scanner = new Scanner(System.in);
+        MainMenu.run(scanner);
         UserController.writeDataToJson("json.json");
     }
 }
