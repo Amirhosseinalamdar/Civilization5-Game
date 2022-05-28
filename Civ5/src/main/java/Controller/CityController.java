@@ -295,7 +295,7 @@ public class CityController {
                 if (tile.getRouteInProgress().getValue() <= 0) continue;
                 int turn = tile.getRouteInProgress().getValue();
                 turn--;
-                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), turn));
+                tile.setRouteInProgress(new Pair<>(tile.getRouteInProgress().getKey(), turn));
             }
         }
     }

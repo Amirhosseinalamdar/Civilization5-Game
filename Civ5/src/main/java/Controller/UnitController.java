@@ -690,6 +690,10 @@ public class UnitController {
                 rangedAttackToCity(targetTile.getCity());
             if (unit.getType().isMeleeCombat())
                 meleeAttackToCity(targetTile.getCity());
+            if(unit != null) {
+                unit.setStatus("active");
+                unit.setMovesInTurn(unit.getMP());
+            }
         }
         else {
             System.out.println("next phase ;)");
@@ -734,16 +738,6 @@ public class UnitController {
     }
 
     private static void meleeAttackToCity (City city) {
-        Path bestPath = findBestPath(city.getTiles().get(0).getIndexInMapI(), city.getTiles().get(0).getIndexInMapJ());
-        Military test = new Military(unit.getType());
-        moveOnPath(test, bestPath);
-        if (bestPath == null || test.getStatus().equals(UnitStatus.HAS_PATH)) {
-            GameMenu.cityCenterOutOfMeleeRange(city);
-            return;
-        }
-        Tile destTile = bestPath.tiles.get(bestPath.tiles.size() - 1);
-        bestPath = findBestPath(destTile.getIndexInMapI(), destTile.getIndexInMapJ());
-        moveOnPath(unit, bestPath);
         unit.setHealth(unit.getHealth() - city.getCombatStrength() / 4);
         city.setHP(city.getHP() - ((Military)unit).getCombatStrength() / 10);
         if (unit.getHealth() <= 0) unit.kill();

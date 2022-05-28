@@ -259,47 +259,93 @@ unit -c 5 7 -t noncombat
 build improvement -t road
 unit -c 5 7 -t noncombat
 build improvement -t ROAD
-EXIT GAME
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+next turn
+next turn
+unit -c 3 6 -t combat
+sleep
+next turn
+show global map
+next turn
+unit -c 12 6 -t noncombat
+cancel mission
+show global map
+unit -c 12 6 -t noncombat
+build improvement -t MINE
+unit -c 3 6 -t combat
+pillage -i MINE
+show global map
+unit -c 3 6 -t combat
+move to -c 5 7
+next turn
+show unit list panel
+unit -c 5 7 -t noncombat
+move to -c 3 6
+next turn
+unit -c 3 6 -t combat
+move to -c 5 7
+next turn
+show global map
+unit -c 3 6 -t noncombat
+repair -i MINE
+next turn
+next turn
+unit -c 3 6 -t noncombat
+repair -i MINE
+show global map
+show cities banner
+exit banner
+unit -c 5 7 -t combat
+show unit list panel
+close
+next turn
+show unit list panel
+close
+show global map
+show city list panel
+close
+increase -t 28
+show city list panel
+close
+increase -t 2
+show city list panel
+close
+show global map
+unit -c 9 7 -t noncombat
+move to -c 10 12
+unit -c 5 7 -t combat
+attack to -c 5 8
+show unit list panel
+unit -c 5 7 -t combat
+heal
+sleep
+next turn
+unit -c 12 6 -t noncombat
+sleep
+city -n shomal
+create -u ARCHER
+manage civilization
+new tech -n WHEEL
+unit -c 9 8 -t noncombat
+found city
+unit -c 9 8 -t noncombat
+move to -c 9 10
+increase -t 2
+unit -c 9 8 -t noncombat
+move to -c 9 10
+increase -t 2
+unit -c 9 10 -t noncombat
+found city
+kabol
+show city list panel
+close
+next turn
+city -n kabol
+create -u WARRIOR
+increase -t 1
+show city list panel
+close
+city -n tehran
+attack to -c 5 7
+increase -t 1
+show unit list panel
+close

@@ -94,16 +94,25 @@ public class Civilization {
     }
 
     private CivSymbol initCivSymbol() {
-        if (!CivSymbol.WHITE.isTaken()) return CivSymbol.WHITE;
-        else if (!CivSymbol.PURPLE.isTaken()) return CivSymbol.PURPLE;
-        else if (!CivSymbol.BLUE.isTaken()) return CivSymbol.BLUE;
-        else if (!CivSymbol.RED.isTaken()) return CivSymbol.RED;
-        else if (!CivSymbol.BLACK.isTaken()) return CivSymbol.BLACK;
-        else {
+        if (!CivSymbol.WHITE.isTaken()){
+            CivSymbol.WHITE.setTaken(true);
+            return CivSymbol.WHITE;
+        } else if (!CivSymbol.PURPLE.isTaken()){
+            CivSymbol.PURPLE.setTaken(true);
+            return CivSymbol.PURPLE;
+        } else if (!CivSymbol.BLUE.isTaken()){
+            CivSymbol.BLUE.setTaken(true);
+            return CivSymbol.BLUE;
+        } else if (!CivSymbol.RED.isTaken()) {
+            CivSymbol.RED.setTaken(true);
+            return CivSymbol.RED;
+        }else if (!CivSymbol.BLACK.isTaken()) {
+            CivSymbol.BLACK.setTaken(true);
+            return CivSymbol.BLACK;
+        }else {
             System.out.println("not enough symbols");
             return null;
         }
-
     }
 
     public String getCivColor() {

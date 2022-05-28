@@ -478,7 +478,7 @@ public class GameMenu {
 
     private static void showCitiesOnMap(int i, int j, Civilization civilization) {
         System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-        if (Game.getTiles()[i][j].getCity() != null &&
+        if (Game.getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
             if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
                 String output = "*";
@@ -487,7 +487,7 @@ public class GameMenu {
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
             } else
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
-        } else if (Game.getTiles()[i][j].getCity() != null) {
+        } else if (Game.getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY) {
             if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
                 String output = Game.getTiles()[i][j].getCity().getName().concat("       ");
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
@@ -535,7 +535,8 @@ public class GameMenu {
         if (isEven) {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "\\" + RESET);
             else System.out.print("\\");
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            setColor(i,j);
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2);
             else System.out.print("       ");
@@ -543,11 +544,19 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
         } else {
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            setColor(i,j);
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2 + RESET);
             else System.out.print("       " + RESET);
         }
+    }
+
+    private static void setColor(int i,int j){
+        if(Game.getTiles()[i][j].getCivilian() != null )
+            System.out.print(Game.getTiles()[i][j].getCivilian().getCivilization().getCivColor());
+        else if(Game.getTiles()[i][j].getMilitary() != null)
+            System.out.print(Game.getTiles()[i][j].getMilitary().getCivilization().getCivColor());
     }
 
     public static void notYourUnit() {
