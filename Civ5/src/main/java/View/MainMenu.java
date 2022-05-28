@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 
 public class MainMenu {
 
-    public static void run() {
+    public static void run(Scanner scanner) {
         String command;
         ArrayList<User> players;
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         if (LoginMenu.run(scanner) == 1) return;
         while (true) {
             Matcher matcher;

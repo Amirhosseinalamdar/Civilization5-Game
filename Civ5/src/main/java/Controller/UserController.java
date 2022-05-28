@@ -131,7 +131,7 @@ public class UserController {
 
     public static void writeDataToJson(String fileName) {
         try {
-            FileWriter fileWriter = new FileWriter("json.json");
+            FileWriter fileWriter = new FileWriter(fileName);
             fileWriter.write(new Gson().toJson(allUsers));
             fileWriter.close();
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.GameController;
 import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -29,10 +30,6 @@ public class Game {
         return time;
     }
 
-    public static ArrayList<Tile> getMap() {
-        return map;
-    }
-
     public static void nextTurn() {
         turn++;
         turn %= players.size();
@@ -46,13 +43,12 @@ public class Game {
         generateMap();
         for (User player : players) {
             player.newCivilization();
-            int randomX, randomY;
             Random random = new Random(players.indexOf(player));
+            int randomX, randomY;
             do {
                 randomX = random.nextInt(20);
                 randomY = random.nextInt(20);
-            }
-            while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
+            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
             System.out.println("i am " + player.getUsername() + ", my first unit is on " +
@@ -259,7 +255,7 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
-            } else if (tiles[i][j].isRiverAtLeft() && key < 20) {
+            } else if(tiles[i][j].isRiverAtLeft() && key<20){
                 tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }

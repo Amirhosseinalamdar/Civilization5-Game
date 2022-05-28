@@ -33,19 +33,6 @@ public class Tile {
     private int indexInMapJ;
     private Citizen workingCitizen;
 
-
-    public void setFoodPerTurn(int foodPerTurn) {
-        this.foodPerTurn = foodPerTurn;
-    }
-
-    public void setGoldPerTurn(int goldPerTurn) {
-        this.goldPerTurn = goldPerTurn;
-    }
-
-    public void setProductionPerTurn(int productionPerTurn) {
-        this.productionPerTurn = productionPerTurn;
-    }
-
     public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;
     }
@@ -83,10 +70,6 @@ public class Tile {
             }
         }
         return movementCost;
-    }
-
-    public double getCombatEffect() {
-        return combatEffect;
     }
 
     public Military getMilitary() {
@@ -151,14 +134,6 @@ public class Tile {
 
     public void setCenterY(int centerY) {
         this.centerY = centerY;
-    }
-
-    public int getCenterX() {
-        return centerX;
-    }
-
-    public int getCenterY() {
-        return centerY;
     }
 
     public void setMilitary(Military military) {

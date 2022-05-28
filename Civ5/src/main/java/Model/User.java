@@ -43,12 +43,4 @@ public class User {
     public Civilization getCivilization() {
         return civilization;
     }
-
-    public int getScore() {
-        return score;
-    }
-
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
 }

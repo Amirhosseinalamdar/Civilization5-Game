@@ -478,7 +478,7 @@ public class GameMenu {
 
     private static void showCitiesOnMap(int i, int j, Civilization civilization) {
         System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-        if (Game.getTiles()[i][j].getCity() != null &&
+        if (Game.getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY &&
                 Game.getTiles()[i][j].getCity() == Game.getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
             if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
                 String output = "*";
@@ -487,7 +487,7 @@ public class GameMenu {
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
             } else
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
-        } else if (Game.getTiles()[i][j].getCity() != null) {
+        } else if (Game.getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY) {
             if (Game.getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getTiles()[i][j])) {
                 String output = Game.getTiles()[i][j].getCity().getName().concat("       ");
                 System.out.print(Game.getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
@@ -535,7 +535,8 @@ public class GameMenu {
         if (isEven) {
             if (isRiverValidToShow(i, j, civilization)) System.out.print(BLUE + "\\" + RESET);
             else System.out.print("\\");
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            setColor(i, j);
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2);
             else System.out.print("       ");
@@ -543,11 +544,19 @@ public class GameMenu {
                 System.out.print(BLUE + "/" + RESET);
             else System.out.print(RESET + "/");
         } else {
-            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor() + civilization.getCivColor());
+            System.out.print(Game.getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+            setColor(i, j);
             if (civilization.getTileVisionStatuses()[i][j] == TileStatus.CLEAR)
                 System.out.print(output1 + "," + output2 + RESET);
             else System.out.print("       " + RESET);
         }
+    }
+
+    private static void setColor(int i, int j) {
+        if (Game.getTiles()[i][j].getCivilian() != null)
+            System.out.print(Game.getTiles()[i][j].getCivilian().getCivilization().getCivColor());
+        else if (Game.getTiles()[i][j].getMilitary() != null)
+            System.out.print(Game.getTiles()[i][j].getMilitary().getCivilization().getCivColor());
     }
 
     public static void notYourUnit() {
@@ -695,12 +704,12 @@ public class GameMenu {
         System.out.println("can not build road here");
     }
 
-    public static void cantBuildRailroadHere() {
-        System.out.println("can not build railroad here");
+    public static void invalidClearingTarget() {
+        System.out.println("tile doesn't have this feature to be cleared");
     }
 
-    public static void unrelatedImprovementToResource() {
-        System.out.println("can not build this improvement; its related resource is not here");
+    public static void cantBuildRailroadHere() {
+        System.out.println("can not build railroad here");
     }
 
     public static void tileAlreadyHas(String improvementName) {
@@ -731,10 +740,6 @@ public class GameMenu {
         System.out.println("ranged attack to " + city.getName() + " was a success");
     }
 
-    public static void cityCenterOutOfMeleeRange(City city) {
-        System.out.println("can not attack to " + city.getName() + ", out of range");
-    }
-
     public static void cityHPIsZero(City city) {
         System.out.println(city.getName() + " is zero");
     }
@@ -751,15 +756,12 @@ public class GameMenu {
         System.out.println("can not attack to chosen tile, there are no enemy units/city");
     }
 
-    public static void buildRouteSuccessfully(String routeType) {
-        System.out.println(routeType + " constructed successfully");
-    }
 
-    public static void workerStated (String improvement) {
+    public static void workerStated(String improvement) {
         System.out.println("worker unit started " + improvement);
     }
 
-    public static void pillaged (String pillageTarget) {
+    public static void pillaged(String pillageTarget) {
         System.out.println(pillageTarget + " got pillaged successfully");
     }
 }

@@ -31,7 +31,7 @@ public class CityController {
         Matcher matcher = getCityDecision();
 
         if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex()) ||
-            matcher.pattern().toString().equals(Commands.PURCHASE_UNIT.getRegex())) {
+                matcher.pattern().toString().equals(Commands.PURCHASE_UNIT.getRegex())) {
             UnitType unitType = getUnitTypeFromString(matcher.group("unitName"));
             if (unitType == null) {
                 GameMenu.invalidUnitType();
@@ -39,15 +39,11 @@ public class CityController {
             }
             if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
             else tryPurchaseUnit(unitType);
-        }
-
-        else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
+        } else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
             Tile targetTile = Game.getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
-        }
-
-        else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
+        } else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
@@ -62,21 +58,15 @@ public class CityController {
                 return;
             }
             lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
-        }
-
-        else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
+        } else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (canCityAttackTo(Game.getTiles()[x][y])) {
                 rangeAttackToUnit(Game.getTiles()[x][y].getMilitary());
             }
-        }
-
-        else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
+        } else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
             GameMenu.showCityOutput(city);
-        }
-
-        else System.out.println("city controller, invalid command");
+        } else System.out.println("city controller, invalid command");
     }
 
     public static Matcher getCityDecision() {
@@ -117,7 +107,7 @@ public class CityController {
         }
     }
 
-    private static boolean canCityAttackTo (Tile targetTile) {
+    private static boolean canCityAttackTo(Tile targetTile) {
         boolean tileWithin2radius = false;
         for (Tile tile : city.getTiles()) {
             if (targetTile.equals(tile)) {
@@ -144,7 +134,7 @@ public class CityController {
                 !targetTile.getMilitary().getCivilization().equals(civilization);
     }
 
-    private static void tryPurchaseUnit (UnitType unitType) {
+    private static void tryPurchaseUnit(UnitType unitType) {
         int unitGoldCost = 100;
         if (!civilization.hasReachedTech(unitType.getPrerequisiteTech())) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
@@ -155,7 +145,7 @@ public class CityController {
             return;
         }
         if ((unitType.isCivilian() && city.getTiles().get(0).getCivilian() != null) ||
-                city.getTiles().get(0).getMilitary() != null){
+                (city.getTiles().get(0).getMilitary() != null && !unitType.isCivilian())) {
             GameMenu.cityIsOccupied(unitType.toString());
             return;
         }
@@ -166,8 +156,7 @@ public class CityController {
             city.getTiles().get(0).setCivilian(civilian);
             civilian.setTile(city.getTiles().get(0));
             civilian.setCivilization(civilization);
-        }
-        else {
+        } else {
             Military military = new Military(unitType);
             civilization.addUnit(military);
             city.getTiles().get(0).setMilitary(military);
@@ -281,36 +270,40 @@ public class CityController {
         updateBorder(city);
         updateProduction(city);
         updateBuildingImprovement(city);
-        updateRemovingImprovement(city);
+        updateRemovingProgress();
         updateRoads(city);
-
     }
 
     private static void updateRoads(City city) {
-        for (Tile tile : city.getTiles()) {
-            if (tile.getRouteInProgress() != null
-                    && (tile.getRouteInProgress().getKey().equals("road") || tile.getRouteInProgress().getKey().equals("railroad"))
-                    && tile.getCivilian() != null && tile.getCivilian().getType().equals(UnitType.WORKER)
-                    && (tile.getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || tile.getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
-                if (tile.getRouteInProgress().getValue() <= 0) continue;
-                int turn = tile.getRouteInProgress().getValue();
+        for (Unit unit : civilization.getUnits()) {
+            if (unit.getTile().getRouteInProgress() != null
+                    && (unit.getTile().getRouteInProgress().getKey().equals("road") || unit.getTile().getRouteInProgress().getKey().equals("railroad"))
+                    && unit.getTile().getCivilian() != null && unit.getTile().getCivilian().getType().equals(UnitType.WORKER)
+                    && (unit.getTile().getCivilian().getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) || unit.getTile().getCivilian().getStatus().equals(UnitStatus.REPAIR))) {
+                int turn = unit.getTile().getRouteInProgress().getValue();
                 turn--;
-                tile.setImprovementInProgress(new Pair<>(tile.getImprovementInProgress().getKey(), turn));
+                unit.getTile().setRouteInProgress(new Pair<>(unit.getTile().getRouteInProgress().getKey(), turn));
+                if (unit.getTile().getRouteInProgress().getValue() == 0) {
+                    unit.getTile().getCivilian().setStatus("active");
+                }
             }
         }
     }
 
-    private static void updateRemovingImprovement(City city) {
-        for (Tile tile : city.getTiles()) {
-            if (tile.getRemoveInProgress() != null && tile.getCivilian() != null
-                    && tile.getCivilian().getType().equals(UnitType.WORKER)
-                    && tile.getCivilian().getStatus().equals(UnitStatus.CLEAR_LAND)) {
-                int turn = tile.getRemoveInProgress().getValue();
+    private static void updateRemovingProgress() {
+        for (Unit unit : civilization.getUnits()) {
+            if (unit.getTile().getRemoveInProgress() != null && unit.getTile().getCivilian() != null
+                    && unit.getTile().getCivilian().getType().equals(UnitType.WORKER)
+                    && unit.getTile().getCivilian().getStatus().equals(UnitStatus.CLEAR_LAND)) {
+                int turn = unit.getTile().getRemoveInProgress().getValue();
                 turn--;
-                tile.setRemoveInProgress(new Pair<>(tile.getRouteInProgress().getKey(), turn));
+                unit.getTile().setRemoveInProgress(new Pair<>(unit.getTile().getRemoveInProgress().getKey(), turn));
                 if (turn == 0) {
-                    tile.getCivilian().setStatus("active");
-                    tile.setFeature(TerrainFeature.NONE);
+                    unit.getTile().getCivilian().setStatus("active");
+                    if (unit.getTile().getRemoveInProgress().getKey().equals("forest") || unit.getTile().getRemoveInProgress().getKey().equals("jungle"))
+                        unit.getTile().setFeature(TerrainFeature.NONE);
+                    else unit.getTile().setRouteInProgress(null);
+                    unit.getTile().setRemoveInProgress(null);
                 }
             }
         }
@@ -337,7 +330,7 @@ public class CityController {
                     civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
                             + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getTime());
                     if (tile.getResource() != null) {
-                    civilization.getNotifications().add(tile.getResource() + " is achieved.    time: " + Game.getTime());
+                        civilization.getNotifications().add(tile.getResource() + " is achieved.    time: " + Game.getTime());
                     }
                 }
             }
@@ -421,7 +414,8 @@ public class CityController {
             civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     time: " + Game.getTime());
         }
         if ((city.getCitizens().size() + city.getStoredFood()) == 0) city.setTurnsUntilGrowthBorder(0);
-        else city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
+        else
+            city.setTurnsUntilGrowthBorder(city.getBorderLastCost() / (city.getCitizens().size() + city.getStoredFood()));
     }
 
     public static void expandCity(City city) {
@@ -439,7 +433,8 @@ public class CityController {
             n = random.nextInt(tiles.size());
             for (Tile tileNeighbor : tiles.get(n).getNeighbors()) {
                 if (tileNeighbor.getCity() == null && (tileNeighbor.getCivilian() == null || tileNeighbor.getCivilian().getCivilization() != city.getCivilization()) &&
-                        (tileNeighbor.getMilitary() == null || tileNeighbor.getMilitary().getCivilization() != city.getCivilization())) return tileNeighbor;
+                        (tileNeighbor.getMilitary() == null || tileNeighbor.getMilitary().getCivilization() != city.getCivilization()))
+                    return tileNeighbor;
             }
             tiles.remove(n);
         }
@@ -450,7 +445,7 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit (UnitType unitType) {
+    private static void tryCreateUnit(UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -464,8 +459,7 @@ public class CityController {
                 GameMenu.cityIsOccupied(city.getTiles().get(0).getCivilian().getType().toString());
                 return;
             }
-        }
-        else {
+        } else {
             if (city.getTiles().get(0).getMilitary() != null) {
                 GameMenu.cityIsOccupied(city.getTiles().get(0).getMilitary().getType().toString());
                 return;
@@ -474,8 +468,7 @@ public class CityController {
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             System.out.println("already in progress... remaining cost: " + remainingCost);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
         city.setInProgressUnit(unitType);
@@ -497,7 +490,7 @@ public class CityController {
         return false;
     }
 
-    private static void rangeAttackToUnit (Military targetUnit) {
+    private static void rangeAttackToUnit(Military targetUnit) {
         targetUnit.setHealth(targetUnit.getHealth() - (city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
         if (targetUnit.getHealth() <= 0) targetUnit.kill();
     }
