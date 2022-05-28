@@ -424,7 +424,6 @@ public class UnitController {
         }
         Pair <String, Integer> pair = new Pair<>(routeType, calcTurnsFor(routeType));
         unit.getTile().setRouteInProgress(pair);
-        GameMenu.buildRouteSuccessfully(routeType);
         unit.setMovesInTurn(unit.getMP());
         GameMenu.workerStated("building" + routeType);
     }
@@ -717,20 +716,15 @@ public class UnitController {
 
     private static boolean cityIsOutOfRange (City city) {
         ArrayList<Tile> unitInRangeTiles = new ArrayList<>(unit.getTile().getNeighbors());
-        int beginIndex = 0;
-        for (int i = 0; i < unit.getType().getRange(); i++) {
-            for (Tile tile : unitInRangeTiles)
-                if (tile.isCenterOfCity(city))
-                    return true;
+        for (int i = 0; i < unit.getType().getRange() - 1; i++) {
             int sizeHolder = unitInRangeTiles.size();
-            for (int j = beginIndex; j < sizeHolder; j++)
+            for (int j = 0; j < sizeHolder; j++)
                 unitInRangeTiles.addAll(unitInRangeTiles.get(j).getNeighbors());
-            beginIndex = sizeHolder;
         }
         for (Tile tile : unitInRangeTiles)
             if (tile.isCenterOfCity(city))
-                return true;
-        return false;
+                return false;
+        return true;
     }
 
     private static void meleeAttackToCity (City city) {
