@@ -148,8 +148,8 @@ public class CivilizationController {
         try {
             if (civTechs.get(newTech) <= 0) System.out.println("you already have this tech :)");
             else {
-                System.out.println("tech is in progress;" + turnsForNewTech());
                 civilization.setInProgressTech(newTech);
+                System.out.println("tech is in progress;" + turnsForNewTech());
             }
             return false;
         } catch (Exception e1) {
@@ -188,10 +188,21 @@ public class CivilizationController {
         while (true) {
             String decision = GameMenu.nextCommand();
             if (decision.equals("do nothing")) return;
-            else if (decision.equals("attach")) attachCity(city);
-            else if (decision.equals("puppet")) puppetCity(city);
-            else if (decision.equals("raze")) razeCity(city);
-            else GameMenu.invalidDecisionForConqueredCity();
+            else if (decision.equals("attach")) {
+                attachCity(city);
+                return;
+            }
+            else if (decision.equals("puppet")) {
+                puppetCity(city);
+                return;
+            }
+            else if (decision.equals("raze")) {
+                razeCity(city);
+                return;
+            }
+            else {
+                GameMenu.invalidDecisionForConqueredCity();
+            }
         }
     }
 

@@ -137,10 +137,6 @@ public class Civilization {
         this.cities.add(city);
     }
 
-    public void setTileVisionStatuses(int i, int j, TileStatus type) {
-        this.tileVisionStatuses[i][j] = type;
-    }
-
     public int getTotalGold() {
         return totalGold;
     }

@@ -38,10 +38,6 @@ public class Military extends Unit {
         civilization.getUnits().remove(this);
     }
 
-    public void setReady(boolean ready) {
-        isReady = ready;
-    }
-
     public void upgrade() {
     }
 
@@ -55,10 +51,6 @@ public class Military extends Unit {
     public double getRangedCombatStrength() {
         if (this.tile.getType().equals(TerrainType.HILL)) return rangedCombatStrength + 2;
         return rangedCombatStrength;
-    }
-
-    public int getRange() {
-        return range;
     }
 
     public void setCombatStrength(double combatStrength) {
