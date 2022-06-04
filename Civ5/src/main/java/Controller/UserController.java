@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class UserController {
     private static ArrayList<User> allUsers;
@@ -112,6 +114,14 @@ public class UserController {
             loggedInUser.setPassword(newPassword);
         }
         return output;
+    }
+
+    public static ArrayList<User> getBestUsers() {
+        ArrayList<User> sorted = new ArrayList<>(allUsers);
+        if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
+        Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
+        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
+        return sorted;
     }
 
     public static void readDataFromJson() {

@@ -10,6 +10,7 @@ public class User {
     private Civilization civilization;
     private boolean isLoggedIn;
     private int score;
+    private String time;
 
     public User(String username, String password, String nickname, boolean isLoggedIn, int score) {
         Random random = new Random();
@@ -33,6 +34,10 @@ public class User {
         this.score = score;
     }
 
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -51,6 +56,10 @@ public class User {
 
     public int getScore() {
         return score;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public Civilization getCivilization() {
