@@ -1,29 +1,9 @@
 [
   {
     "username": "ehsan",
-    "password": "1087",
+    "password": "1234",
     "nickname": "ehsanino",
-    "isLoggedIn": false,
-    "score": 0
-  },
-  {
-    "username": "hesi",
-    "password": "chosi",
-    "nickname": "esi",
-    "isLoggedIn": false,
-    "score": 0
-  },
-  {
-    "username": "ali",
-    "password": "ali",
-    "nickname": "ali",
-    "isLoggedIn": false,
-    "score": 0
-  },
-  {
-    "username": "hasan",
-    "password": "hasan",
-    "nickname": "hasan",
+    "iconAddress": "file:/E:/Ehsan%20Uni/AP/Project/CIV/Civ5/target/classes/pictures/Icons/4.png",
     "isLoggedIn": false,
     "score": 0
   }

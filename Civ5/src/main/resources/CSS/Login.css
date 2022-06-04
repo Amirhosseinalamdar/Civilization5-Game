@@ -1,0 +1,17 @@
+AnchorPane{
+    -fx-background-image: url(../pictures/Backgrounds/18.png);
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 1600px 900px;
+}
+#button:hover {
+    -fx-text-fill: #382603;
+    -fx-font-size: 40px;
+    -fx-font-family: "Tw Cen MT";
+}
+TextField{
+    -fx-border-radius: 20;
+    -fx-border-color: #382603;
+    -fx-border-width: 2;
+    -fx-background-color: #886c50;
+    -fx-background-radius: 20;
+}
