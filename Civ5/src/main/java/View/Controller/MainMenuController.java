@@ -12,7 +12,11 @@ public class MainMenuController {
     @FXML
     private Label gameMenu;
     @FXML
-    private Label chatroom;
+    private Label publicChat;
+    @FXML
+    private Label privateChat;
+    @FXML
+    private Label room;
     @FXML
     private Label scoreboard;
     @FXML
@@ -25,9 +29,19 @@ public class MainMenuController {
         NavigationTransition.fadeTransition(gameMenu, ""); //TODO set name of game menu fxml file
     }
 
-    public void Chatroom(MouseEvent mouseEvent) {
+    public void publicChat(MouseEvent mouseEvent) {
         Main.clickSound();
-        NavigationTransition.fadeTransition(chatroom, ""); //TODO set name of chatroom fxml file
+        NavigationTransition.fadeTransition(publicChat, ""); //TODO set name of publicChat fxml file
+    }
+
+    public void privateChat(MouseEvent mouseEvent) {
+        Main.clickSound();
+        NavigationTransition.fadeTransition(privateChat, ""); //TODO set name of privateChat fxml file
+    }
+
+    public void room(MouseEvent mouseEvent) {
+        Main.clickSound();
+        NavigationTransition.fadeTransition(room, ""); //TODO set name of room fxml file
     }
 
     public void scoreboardMenu(MouseEvent mouseEvent) {

@@ -91,8 +91,7 @@ public class UserController {
         return false;
     }
 
-    public static String changeNickname(Matcher matcher) {
-        String newNickname = matcher.group("nickname");
+    public static String changeNickname(String newNickname) {
         String output;
         if (isNicknameExist(newNickname))
             output = "user with nickname " + newNickname + " already exists";
@@ -103,12 +102,10 @@ public class UserController {
         return output;
     }
 
-    public static String changePassword(Matcher matcher) {
-        String currentPassword = matcher.group("currentPassword");
-        String newPassword = matcher.group("newPassword");
+    public static String changePassword(String currentPassword, String newPassword) {
         String output;
-        if (!loggedInUser.getPassword().equals(currentPassword)) output = "current password is invalid";
-        else if (loggedInUser.getPassword().equals(newPassword)) output = "please enter a new password";
+        if (!loggedInUser.getPassword().equals(currentPassword)) output = "error current: current password is invalid";
+        else if (loggedInUser.getPassword().equals(newPassword)) output = "error new: please enter a new password";
         else {
             output = "password changed successfully!";
             loggedInUser.setPassword(newPassword);
