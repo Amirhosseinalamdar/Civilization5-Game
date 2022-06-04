@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@../CSS/Login.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.LoginMenuController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@../CSS/Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.LoginMenuController">
    <children>
       <Label id="button" fx:id="login" alignment="CENTER" contentDisplay="CENTER" layoutX="119.0" layoutY="537.0" onMouseClicked="#loginUser" prefHeight="39.0" prefWidth="111.0" text="Login" textFill="#7c5d1e">
          <font>
@@ -16,7 +16,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <Label id="button" fx:id="register" alignment="CENTER" contentDisplay="CENTER" layoutX="431.0" layoutY="537.0" onMouseClicked="#registerUser" prefHeight="42.0" prefWidth="144.0" text="Register" textFill="#7c5d1e">
+      <Label id="button" alignment="CENTER" contentDisplay="CENTER" layoutX="522.0" layoutY="537.0" onMouseClicked="#registerUser" prefHeight="42.0" prefWidth="144.0" text="Register" textFill="#7c5d1e">
          <font>
             <Font name="Tw Cen MT" size="38.0" />
          </font>
@@ -24,37 +24,37 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <TextField fx:id="passwordLogin" alignment="CENTER" layoutX="101.0" layoutY="404.0" onKeyPressed="#changeVisibility2" prefHeight="48.0" prefWidth="166.0" promptText="Password">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </TextField>
       <TextField fx:id="usernameLogin" alignment="CENTER" layoutX="99.0" layoutY="331.0" onKeyPressed="#changeVisibility2" prefHeight="48.0" prefWidth="166.0" promptText="Username">
          <font>
             <Font size="20.0" />
          </font>
       </TextField>
-      <TextField fx:id="usernameRegister" alignment="CENTER" layoutX="417.0" layoutY="295.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Username">
+      <TextField fx:id="passwordLogin" alignment="CENTER" layoutX="101.0" layoutY="404.0" onKeyPressed="#changeVisibility2" prefHeight="48.0" prefWidth="166.0" promptText="Password">
          <font>
             <Font size="20.0" />
          </font>
       </TextField>
-      <TextField fx:id="nicknameRegister" alignment="CENTER" layoutX="417.0" layoutY="366.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Nickname">
+      <TextField fx:id="usernameRegister" alignment="CENTER" layoutX="508.0" layoutY="295.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Username">
          <font>
             <Font size="20.0" />
          </font>
       </TextField>
-      <TextField fx:id="passwordRegister" alignment="CENTER" layoutX="417.0" layoutY="431.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Password">
+      <TextField fx:id="nicknameRegister" alignment="CENTER" layoutX="508.0" layoutY="366.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Nickname">
          <font>
             <Font size="20.0" />
          </font>
       </TextField>
-      <Label fx:id="invalidRegister" alignment="CENTER" layoutX="260.0" layoutY="492.0" prefHeight="45.0" prefWidth="498.0" textFill="RED">
+      <TextField fx:id="passwordRegister" alignment="CENTER" layoutX="508.0" layoutY="431.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="166.0" promptText="Password">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label fx:id="invalidRegister" alignment="CENTER" layoutX="351.0" layoutY="492.0" prefHeight="45.0" prefWidth="498.0" textFill="RED">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="invalidLogin" alignment="CENTER" layoutY="480.0" prefHeight="45.0" prefWidth="374.0" textFill="RED">
+      <Label fx:id="invalidLogin" alignment="CENTER" layoutY="492.0" prefHeight="45.0" prefWidth="374.0" textFill="RED">
          <font>
             <Font size="20.0" />
          </font>

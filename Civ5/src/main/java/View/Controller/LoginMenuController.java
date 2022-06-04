@@ -2,21 +2,15 @@ package View.Controller;
 
 import App.Main;
 import Controller.UserController;
-import javafx.animation.FadeTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import Transiton.NavigationTransition;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
 
 public class LoginMenuController {
 
-    @FXML
-    private Label register;
     @FXML
     private Label login;
     @FXML
@@ -35,6 +29,7 @@ public class LoginMenuController {
     private TextField passwordRegister;
 
     public void registerUser(MouseEvent mouseEvent) {
+        Main.clickSound();
         invalidRegister.setVisible(false);
         invalidLogin.setVisible(false);
         usernameRegister.setStyle("-fx-border-color: #382603");
@@ -56,6 +51,7 @@ public class LoginMenuController {
     }
 
     public void loginUser(MouseEvent mouseEvent) {
+        Main.clickSound();
         invalidRegister.setVisible(false);
         invalidLogin.setVisible(false);
         usernameLogin.setStyle("-fx-border-color: #382603");
@@ -65,20 +61,7 @@ public class LoginMenuController {
             invalidLogin.setVisible(true);
             usernameLogin.setStyle("-fx-border-color: red");
             passwordLogin.setStyle("-fx-border-color: red");
-        } else {
-            FadeTransition fadeTransition = new FadeTransition();
-            fadeTransition.setDuration(Duration.millis(500));
-            fadeTransition.setFromValue(1);
-            fadeTransition.setToValue(0);
-            fadeTransition.setNode(login);
-            fadeTransition.play();
-            fadeTransition.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    Main.changeScene("MainMenu");
-                }
-            });
-        }
+        } else NavigationTransition.fadeTransition(login, "MainMenu");
     }
 
     public void changeVisibility1(KeyEvent keyEvent) {

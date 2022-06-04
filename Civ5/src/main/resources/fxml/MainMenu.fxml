@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@../CSS/Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.MainMenuController">
+   <children>
+      <Label id="button" fx:id="logout" alignment="CENTER" contentDisplay="CENTER" layoutX="304.0" layoutY="513.0" onMouseClicked="#logout" prefHeight="39.0" prefWidth="111.0" text="Logout" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" fx:id="profile" alignment="CENTER" contentDisplay="CENTER" layoutX="285.0" layoutY="453.0" onMouseClicked="#profileMenu" prefHeight="42.0" prefWidth="144.0" text="Profile" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" fx:id="gameMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="248.0" layoutY="273.0" onMouseClicked="#gameMenu" prefHeight="42.0" prefWidth="223.0" text="Game Menu" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" alignment="CENTER" contentDisplay="CENTER" layoutX="263.0" layoutY="613.0" onMouseClicked="#exitGame" prefHeight="42.0" prefWidth="193.0" text="Exit" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" fx:id="chatroom" alignment="CENTER" contentDisplay="CENTER" layoutX="261.0" layoutY="333.0" onMouseClicked="#Chatroom" prefHeight="42.0" prefWidth="193.0" text="Chatroom" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" fx:id="scoreboard" alignment="CENTER" contentDisplay="CENTER" layoutX="263.0" layoutY="393.0" onMouseClicked="#scoreboardMenu" prefHeight="42.0" prefWidth="193.0" text="Scoreboard" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+   </children>
+</AnchorPane>

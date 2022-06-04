@@ -24,19 +24,16 @@ public class UserController {
         UserController.loggedInUser = loggedInUser;
     }
 
-    public static String registerUser(Matcher matcher) {
-        String username = matcher.group("username");
-        String nickname = matcher.group("nickname");
-        String password = matcher.group("password");
+    public static String registerUser(String username, String nickname, String password) {
         String output = "";
         if (allUsers == null) allUsers = new ArrayList<>();
         else {
             for (User allUser : allUsers) {
                 if (allUser.getUsername().equals(username)) {
-                    output = "user with username " + username + " already exists";
+                    output = "error username: user with username " + username + " already exists";
                     break;
                 } else if (allUser.getNickname().equals(nickname)) {
-                    output = "user with nickname " + nickname + " already exists";
+                    output = "error nickname: user with nickname " + nickname + " already exists";
                     break;
                 }
             }
@@ -49,9 +46,7 @@ public class UserController {
         return output;
     }
 
-    public static String logUserIn(Matcher matcher) {
-        String username = matcher.group("username");
-        String password = matcher.group("password");
+    public static String logUserIn(String username, String password) {
         String output = "";
         for (User allUser : allUsers) {
             if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
@@ -60,7 +55,7 @@ public class UserController {
                 break;
             }
         }
-        if (output.isEmpty()) output = "username and password didn't match!";
+        if (output.isEmpty()) output = "error: username and password didn't match!";
         return output;
     }
 
@@ -119,9 +114,9 @@ public class UserController {
         return output;
     }
 
-    public static void readDataFromJson(String fileName) {
+    public static void readDataFromJson() {
         try {
-            String json = new String(Files.readAllBytes(Paths.get(fileName)));
+            String json = new String(Files.readAllBytes(Paths.get("json.json")));
             allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
             }.getType());
         } catch (IOException e) {
@@ -129,9 +124,9 @@ public class UserController {
         }
     }
 
-    public static void writeDataToJson(String fileName) {
+    public static void writeDataToJson() {
         try {
-            FileWriter fileWriter = new FileWriter(fileName);
+            FileWriter fileWriter = new FileWriter("json.json");
             fileWriter.write(new Gson().toJson(allUsers));
             fileWriter.close();
         } catch (IOException e) {
