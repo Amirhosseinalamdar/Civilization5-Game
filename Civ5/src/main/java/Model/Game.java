@@ -1,6 +1,5 @@
 package Model;
 
-import Controller.GameController;
 import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
