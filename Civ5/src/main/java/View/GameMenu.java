@@ -2,13 +2,22 @@ package View;
 
 import Controller.CityController;
 import Controller.GameController;
+import Controller.UserController;
 import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import net.bytebuddy.description.method.MethodDescription;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -21,6 +30,20 @@ public class GameMenu {
 
     public static void startGame(ArrayList<User> players, Scanner scanner) {
         Game.generateGame(players);
+        try {
+            ArrayList <User> jsonPlayers = new Gson().fromJson(new String(Files.readAllBytes(Paths.get("Game.json"))), new TypeToken<List<User>>() {
+            }.getType());
+            System.out.println("json players: " + jsonPlayers);
+            jsonPlayers.addAll(players);
+            FileWriter fw = new FileWriter("Game.json");
+            fw.write(new Gson().toJson(jsonPlayers));
+//            fw.write(new Gson().toJson(Game.getTiles()));
+            fw.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("hey bro");
+        }
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         do {

@@ -4,6 +4,7 @@ import Controller.UserController;
 import Model.Game;
 import Model.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
