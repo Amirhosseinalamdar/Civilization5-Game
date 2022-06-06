@@ -119,7 +119,7 @@ public class GameController {
     private static void cheatTurn(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x"));
         for (int i = 0; i < x - 1; i++) {
-            Game.nextTurn();
+            Game.getInstance().nextTurn();
             checkMyCivilization();
             checkControllersCivilization();
             CivilizationController.updateCivilization();
@@ -207,25 +207,25 @@ public class GameController {
             return null;
         }
         if (matcher.group("unitType").equals("combat")) {
-            if (Game.getTiles()[x][y].getMilitary() == null) {
+            if (Game.getInstance().getTiles()[x][y].getMilitary() == null) {
                 GameMenu.invalidChosenUnit();
                 return null;
             }
-            if (!Game.getTiles()[x][y].getMilitary().getCivilization().equals(civilization)) {
+            if (!Game.getInstance().getTiles()[x][y].getMilitary().getCivilization().equals(civilization)) {
                 GameMenu.notYourUnit();
                 return null;
             }
-            return Game.getTiles()[x][y].getMilitary();
+            return Game.getInstance().getTiles()[x][y].getMilitary();
         } else if (matcher.group("unitType").equals("noncombat")) {
-            if (Game.getTiles()[x][y].getCivilian() == null) {
+            if (Game.getInstance().getTiles()[x][y].getCivilian() == null) {
                 GameMenu.invalidChosenUnit();
                 return null;
             }
-            if (!Game.getTiles()[x][y].getCivilian().getCivilization().equals(civilization)) {
+            if (!Game.getInstance().getTiles()[x][y].getCivilian().getCivilization().equals(civilization)) {
                 GameMenu.notYourUnit();
                 return null;
             }
-            return Game.getTiles()[x][y].getCivilian();
+            return Game.getInstance().getTiles()[x][y].getCivilian();
         }
         return null;
     }
@@ -237,11 +237,11 @@ public class GameController {
                 GameMenu.indexOutOfArray();
                 return null;
             }
-            if (Game.getTiles()[x][y].getCity() == null || !Game.getTiles()[x][y].isCenterOfCity(Game.getTiles()[x][y].getCity())) {
+            if (Game.getInstance().getTiles()[x][y].getCity() == null || !Game.getInstance().getTiles()[x][y].isCenterOfCity(Game.getInstance().getTiles()[x][y].getCity())) {
                 GameMenu.invalidPosForCity();
                 return null;
             }
-            return Game.getTiles()[x][y].getCity();
+            return Game.getInstance().getTiles()[x][y].getCity();
         } catch (IllegalArgumentException i) {
             for (City city : civilization.getCities())
                 if (city.getName().equals(matcher.group("name"))) return city;
@@ -255,7 +255,7 @@ public class GameController {
     }
 
     public static void checkMyCivilization() {
-        civilization = Game.getPlayers().get(Game.getTurn()).getCivilization();
+        civilization = Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getCivilization();
         checkControllersCivilization();
     }
 
@@ -266,10 +266,10 @@ public class GameController {
     }
 
     public static void updateGame() {
-        Game.nextTurn();
+        Game.getInstance().nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
-        User player = Game.getPlayers().get(Game.getTurn());
+        User player = Game.getInstance().getPlayers().get(Game.getInstance().getTurn());
         System.out.println("turn: " + player.getUsername());
         for (Unit unit : player.getCivilization().getUnits()) {
             unit.setMovesInTurn(0);
@@ -397,7 +397,7 @@ public class GameController {
 
     public static int findBestCity() {
         int size = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getCities().size() > size) size = player.getCivilization().getCities().size();
         }
         return size;
@@ -405,16 +405,16 @@ public class GameController {
 
     public static int findAverageCity() {
         int size = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             size += player.getCivilization().getCities().size();
         }
-        size = size / Game.getPlayers().size();
+        size = size / Game.getInstance().getPlayers().size();
         return size;
     }
 
     public static int findWorstCity() {
         int size = 10000;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getCities().size() < size) size = player.getCivilization().getCities().size();
         }
         return size;
@@ -422,7 +422,7 @@ public class GameController {
 
     public static int findRankInCities() {
         int rank = 1;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getCities().size() > civilization.getCities().size()) rank++;
         }
         return rank;
@@ -430,7 +430,7 @@ public class GameController {
 
     public static int findBestGold() {
         int gold = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getTotalGold() > gold) gold = player.getCivilization().getTotalGold();
         }
         return gold;
@@ -438,16 +438,16 @@ public class GameController {
 
     public static int findAverageGold() {
         int gold = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             gold += player.getCivilization().getTotalGold();
         }
-        gold = gold / Game.getPlayers().size();
+        gold = gold / Game.getInstance().getPlayers().size();
         return gold;
     }
 
     public static int findWorstGold() {
         int gold = 1000000;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getTotalGold() < gold) gold = player.getCivilization().getTotalGold();
         }
         return gold;
@@ -455,7 +455,7 @@ public class GameController {
 
     public static int findRankInGolds() {
         int rank = 1;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getTotalGold() > civilization.getTotalGold()) rank++;
         }
         return rank;
@@ -463,7 +463,7 @@ public class GameController {
 
     public static int findBestUnit() {
         int size = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getUnits().size() > size) size = player.getCivilization().getUnits().size();
         }
         return size;
@@ -471,16 +471,16 @@ public class GameController {
 
     public static int findAverageUnit() {
         int size = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             size += player.getCivilization().getUnits().size();
         }
-        size = size / Game.getPlayers().size();
+        size = size / Game.getInstance().getPlayers().size();
         return size;
     }
 
     public static int findWorstUnit() {
         int size = 10000;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getUnits().size() < size) size = player.getCivilization().getUnits().size();
         }
         return size;
@@ -488,7 +488,7 @@ public class GameController {
 
     public static int findRankInUnits() {
         int rank = 1;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getUnits().size() > civilization.getUnits().size()) rank++;
         }
         return rank;
@@ -496,7 +496,7 @@ public class GameController {
 
     public static int findBestScience() {
         int science = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getScience() > science) science = player.getCivilization().getScience();
         }
         return science;
@@ -504,16 +504,16 @@ public class GameController {
 
     public static int findAverageScience() {
         int science = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             science += player.getCivilization().getScience();
         }
-        science = science / Game.getPlayers().size();
+        science = science / Game.getInstance().getPlayers().size();
         return science;
     }
 
     public static int findWorstScience() {
         int science = 1000000;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getScience() < science) science = player.getCivilization().getScience();
         }
         return science;
@@ -521,7 +521,7 @@ public class GameController {
 
     public static int findRankInScience() {
         int rank = 1;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getScience() > civilization.getScience()) rank++;
         }
         return rank;
@@ -530,7 +530,7 @@ public class GameController {
 
     public static int findBestHappiness() {
         int happiness = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getHappiness() > happiness)
                 happiness = player.getCivilization().getHappiness();
         }
@@ -539,16 +539,16 @@ public class GameController {
 
     public static int findAverageHappiness() {
         int happiness = 0;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             happiness += player.getCivilization().getHappiness();
         }
-        happiness = happiness / Game.getPlayers().size();
+        happiness = happiness / Game.getInstance().getPlayers().size();
         return happiness;
     }
 
     public static int findWorstHappiness() {
         int happiness = 1000000;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getHappiness() < happiness)
                 happiness = player.getCivilization().getHappiness();
         }
@@ -557,7 +557,7 @@ public class GameController {
 
     public static int findRankInHappiness() {
         int rank = 1;
-        for (User player : Game.getPlayers()) {
+        for (User player : Game.getInstance().getPlayers()) {
             if (player.getCivilization().getHappiness() > civilization.getHappiness()) rank++;
         }
         return rank;

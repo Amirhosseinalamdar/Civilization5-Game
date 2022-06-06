@@ -207,12 +207,12 @@ public class Tile {
 
         for (int i = indexI - 1; i <= indexI + 1; i += 2) {
             if (GameController.invalidPos(i, indexJ)) continue;
-            neighbors.add(Game.getTiles()[i][indexJ]);
+            neighbors.add(Game.getInstance().getTiles()[i][indexJ]);
         }
 
         for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
             if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
+            neighbors.add(Game.getInstance().getTiles()[indexI][j]);
         }
 
         if (indexJ % 2 == 0) indexI--;
@@ -220,7 +220,7 @@ public class Tile {
 
         for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
             if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getTiles()[indexI][j]);
+            neighbors.add(Game.getInstance().getTiles()[indexI][j]);
         }
         return neighbors;
     }

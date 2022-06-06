@@ -41,7 +41,7 @@ public class UnitController {
         } else if (unit.getStatus().equals(UnitStatus.ATTACK)) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             if (unit.hasRemainingMoves()) {
-                if (canAttackTo(Game.getTiles()[x][y])) attack(Game.getTiles()[x][y]);
+                if (canAttackTo(Game.getInstance().getTiles()[x][y])) attack(Game.getInstance().getTiles()[x][y]);
                 else GameMenu.invalidTileForAttack();
             } else GameMenu.notEnoughMoves();
         } else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
@@ -460,7 +460,7 @@ public class UnitController {
 
     private static void moveUnit(int destIndexI, int destIndexJ) {
 
-        if (tileIsImpassable(Game.getTiles()[destIndexI][destIndexJ], unit)) {
+        if (tileIsImpassable(Game.getInstance().getTiles()[destIndexI][destIndexJ], unit)) {
             GameMenu.impassableTile();
             return;
         }
@@ -504,7 +504,7 @@ public class UnitController {
         ArrayList<Path> paths = new ArrayList<>();
         generateFirstPaths(paths, unit.getTile());
         for (Path path : paths)
-            if (path.tiles.get(0).equals(Game.getTiles()[destIndexI][destIndexJ]))
+            if (path.tiles.get(0).equals(Game.getInstance().getTiles()[destIndexI][destIndexJ]))
                 return path;
         while (paths.size() > 0) {
             Path path = paths.get(0);
@@ -522,7 +522,7 @@ public class UnitController {
                 if (isRouteRepetitive) continue;
                 Path child = new Path(path);
                 child.tiles.add(neighborTile);
-                if (neighborTile.equals(Game.getTiles()[destIndexI][destIndexJ]))
+                if (neighborTile.equals(Game.getInstance().getTiles()[destIndexI][destIndexJ]))
                     return child;
                 paths.add(child);
             }
@@ -581,14 +581,14 @@ public class UnitController {
         for (int i = indexI - 1; i <= indexI + 1; i += 2) {
             if (GameController.invalidPos(i, indexJ)) continue;
             Path path = new Path(null);
-            path.tiles.add(Game.getTiles()[i][indexJ]);
+            path.tiles.add(Game.getInstance().getTiles()[i][indexJ]);
             paths.add(path);
         }
 
         for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
             if (GameController.invalidPos(indexI, j)) continue;
             Path path = new Path(null);
-            path.tiles.add(Game.getTiles()[indexI][j]);
+            path.tiles.add(Game.getInstance().getTiles()[indexI][j]);
             paths.add(path);
         }
 
@@ -598,7 +598,7 @@ public class UnitController {
         for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
             if (GameController.invalidPos(indexI, j)) continue;
             Path path = new Path(null);
-            path.tiles.add(Game.getTiles()[indexI][j]);
+            path.tiles.add(Game.getInstance().getTiles()[indexI][j]);
             paths.add(path);
         }
 
@@ -640,7 +640,7 @@ public class UnitController {
     }
 
     private static boolean cityNameAlreadyExists(String cityName) {
-        for (User player : Game.getPlayers())
+        for (User player : Game.getInstance().getPlayers())
             for (City city : player.getCivilization().getCities())
                 if (city.getName().equals(cityName)) return true;
         return false;
