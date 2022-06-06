@@ -26,6 +26,10 @@ public class UserController {
         UserController.loggedInUser = loggedInUser;
     }
 
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public static String registerUser(String username, String nickname, String password) {
         String output = "";
         if (allUsers == null) allUsers = new ArrayList<>();

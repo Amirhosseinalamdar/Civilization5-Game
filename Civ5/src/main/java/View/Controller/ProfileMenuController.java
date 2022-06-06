@@ -6,8 +6,13 @@ import Transiton.NavigationTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class ProfileMenuController {
     @FXML
@@ -21,7 +26,25 @@ public class ProfileMenuController {
     @FXML
     private Label invalidNickname;
     @FXML
+    private ImageView icon0;
+    @FXML
+    private ImageView icon1;
+    @FXML
+    private ImageView icon2;
+    @FXML
+    private ImageView icon3;
+    @FXML
+    private ImageView icon4;
+    @FXML
+    private ImageView icon5;
+    @FXML
+    private Label iconChanged;
+    @FXML
     private Label back;
+
+    public void initialize(MouseEvent mouseEvent) {
+        icon0.setImage(new Image(UserController.getLoggedInUser().getIconAddress()));
+    }
 
     public void changePassword(MouseEvent mouseEvent) {
         Main.clickSound();
@@ -67,6 +90,32 @@ public class ProfileMenuController {
     public void changeVisibility2(KeyEvent keyEvent) {
         invalidNickname.setVisible(false);
         newNickname.setStyle("-fx-border-color: #382603");
+    }
+
+    public void changeIcon(MouseEvent mouseEvent) {
+        ImageView imageView = (ImageView) mouseEvent.getTarget();
+        if (imageView.getId().equals("icon1")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/0.png").toExternalForm());
+        else if (imageView.getId().equals("icon2")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/2.png").toExternalForm());
+        else if (imageView.getId().equals("icon3")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/1.png").toExternalForm());
+        else if (imageView.getId().equals("icon4")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/3.png").toExternalForm());
+        else if (imageView.getId().equals("icon5")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/4.png").toExternalForm());
+        icon0.setImage(new Image(UserController.getLoggedInUser().getIconAddress()));
+        iconChanged.setText("icon changed successfully!");
+        iconChanged.setStyle("-fx-text-fill: #017301");
+        iconChanged.setVisible(true);
+    }
+
+    public void changeIconByFile(MouseEvent mouseEvent) {
+        iconChanged.setVisible(false);
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            UserController.getLoggedInUser().setIconAddress(file.toURI().toString());
+            icon0.setImage(new Image(UserController.getLoggedInUser().getIconAddress()));
+            iconChanged.setText("icon changed successfully!");
+            iconChanged.setStyle("-fx-text-fill: #017301");
+            iconChanged.setVisible(true);
+        }
     }
 
     public void back(MouseEvent mouseEvent) {

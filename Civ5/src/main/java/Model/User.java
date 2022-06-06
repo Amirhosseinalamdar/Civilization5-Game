@@ -34,6 +34,10 @@ public class User {
         this.score = score;
     }
 
+    public void setIconAddress(String iconAddress) {
+        this.iconAddress = iconAddress;
+    }
+
     public void setTime(String time) {
         this.time = time;
     }
