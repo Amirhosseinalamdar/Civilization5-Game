@@ -7,24 +7,39 @@ import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Civilization {
+    @Expose(serialize = true, deserialize = true)
     private int score;
+    @Expose(serialize = true, deserialize = true)
     private int totalGold;
+    @Expose(serialize = true, deserialize = true)
     private ArrayList<City> cities;
+    @Expose(serialize = true, deserialize = true)
     private ArrayList<Unit> units;
+    @Expose(serialize = true, deserialize = true)
     private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];
+    @Expose(serialize = true, deserialize = true)
     private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
+    @Expose(serialize = true, deserialize = true)
     private Technology inProgressTech;
+    @Expose(serialize = true, deserialize = true)
     private int science;
+    @Expose(serialize = true, deserialize = true)
     private int happiness;
+    @Expose(serialize = true, deserialize = true)
     private final CivSymbol civColor;
+    @Expose(serialize = true, deserialize = true)
     private int showingCenterI;
+    @Expose(serialize = true, deserialize = true)
     private int showingCenterJ;
+    @Expose(serialize = true, deserialize = true)
     private ArrayList<String> notifications;
+    @Expose(serialize = true, deserialize = true)
     private HashMap<Resource, Integer> luxuryResources;
 
     public Civilization() {

@@ -7,7 +7,11 @@ import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,12 +22,27 @@ public class GameMenu {
         GameMenu.scanner = scanner;
     }
 
-    public static void startGame(ArrayList<User> players, Scanner scanner) {
-        Game.getInstance().generateGame(players);
+    private static void loadGame() {
+        try {
+            String json = new String(Files.readAllBytes(Paths.get("Game.json")));
+            Game.loadInstance(new Gson().fromJson(json, Game.class));
+            Game.getInstance().createRelations();
+        }
+        catch (Exception ignored){
+            System.out.println("ignored");
+        }
+    }
+
+    public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode) {
+        if (saveCode < 0)
+            Game.getInstance().generateGame(players);
+        else
+            loadGame();
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         do {
             String command = scanner.nextLine();
+            if (command.equals("save")) GameController.saveGameToJson();
             if (command.equals("EXIT GAME")) System.exit(0);
             if (command.equals("next turn")) {
                 if (GameController.noTaskRemaining())

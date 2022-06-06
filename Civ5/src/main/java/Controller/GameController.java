@@ -10,7 +10,11 @@ import Model.UnitPackage.UnitStatus;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
@@ -277,6 +281,7 @@ public class GameController {
             UnitController.doRemainingMissions();
         }
         CivilizationController.updateCivilization();
+//        if (Game.getInstance().getTurn() == 0) saveGameToJson(); //TODO... duration must come from GamePage
     }
 
     public static boolean gameIsOver() {
@@ -561,5 +566,19 @@ public class GameController {
             if (player.getCivilization().getHappiness() > civilization.getHappiness()) rank++;
         }
         return rank;
+    }
+
+    public static void saveGameToJson() {
+        System.out.println("bruh im here");
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        String json = gson.toJson(Game.getInstance());
+        try {
+            FileWriter fileWriter = new FileWriter("Game.json");
+            fileWriter.write(json);
+            fileWriter.close();
+        }
+        catch (IOException i) {
+            i.printStackTrace();
+        }
     }
 }

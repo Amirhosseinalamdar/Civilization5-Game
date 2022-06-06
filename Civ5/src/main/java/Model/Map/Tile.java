@@ -6,32 +6,55 @@ import Model.Game;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import com.google.gson.annotations.Expose;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 
 public class Tile {
+    @Expose(serialize = true, deserialize = true)
     private TerrainType type;
+    @Expose(serialize = true, deserialize = true)
     private TerrainFeature feature;
+    @Expose(serialize = true, deserialize = true)
     private Resource resource;
+    @Expose(serialize = true, deserialize = true)
     private int foodPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int goldPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int productionPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int movementCost;
+    @Expose(serialize = true, deserialize = true)
     private double combatEffect;
+    @Expose(serialize = false, deserialize = false)
     private Military military;
+    @Expose(serialize = false, deserialize = false)
     private Unit civilian;
+    @Expose(serialize = true, deserialize = true)
     private Pair<Improvement, Integer> improvementInProgress;
+    @Expose(serialize = true, deserialize = true)
     private Pair<String, Integer> routeInProgress;
+    @Expose(serialize = true, deserialize = true)
     private Pair<String, Integer> removeInProgress;
+    @Expose(serialize = true, deserialize = true)
     private boolean isRaided;
+    @Expose(deserialize = false, serialize = false)
     private City city;
+    @Expose(serialize = true, deserialize = true)
     private boolean isRiverAtLeft;
+    @Expose(serialize = true, deserialize = true)
     private int centerX;
+    @Expose(serialize = true, deserialize = true)
     private int centerY;
+    @Expose(serialize = true, deserialize = true)
     private int indexInMapI;
+    @Expose(serialize = true, deserialize = true)
     private int indexInMapJ;
+    @Expose(serialize = true, deserialize = true)
     private Citizen workingCitizen;
+
 
     public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;

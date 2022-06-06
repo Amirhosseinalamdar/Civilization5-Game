@@ -1,28 +1,35 @@
 package Model;
 
 import Controller.UnitController;
-import Model.Map.Resource;
-import Model.Map.TerrainFeature;
-import Model.Map.TerrainType;
-import Model.Map.Tile;
+import Model.Map.*;
+import Model.UnitPackage.Military;
+import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
+    @Expose(deserialize = false, serialize = false)
     private static Game instance;
+    @Expose(serialize = true, deserialize = true)
+    private ArrayList<User> players = new ArrayList<>();
+    @Expose(serialize = true, deserialize = true)
+    private int turn;
+    @Expose(serialize = true, deserialize = true)
+    private int time;
+    @Expose(serialize = true, deserialize = true)
+    private Tile[][] tiles = new Tile[20][20];
 
     public static Game getInstance() {
         if (instance == null) instance = new Game();
         return instance;
     }
-
-    private ArrayList<User> players = new ArrayList<>();
-    private int turn;
-    private int time;
-    private ArrayList<Tile> map;
-    private Tile[][] tiles = new Tile[20][20];
 
     public ArrayList<User> getPlayers() {
         return players;
@@ -43,7 +50,7 @@ public class Game {
     }
 
     public void generateGame(ArrayList<User> users) {
-        players = users;
+        players = new ArrayList<>(users);
         turn = 0;
         time = 1;
         generateMap();
@@ -66,6 +73,51 @@ public class Game {
         }
     }
 
+    public static void loadInstance(Game game) {
+        instance = game;
+    }
+
+    public void createRelations() {
+        for (User player : players) {
+            ArrayList <Unit> units = player.getCivilization().getUnits();
+            for (int i = 0; i < units.size(); i++)
+                for (int j = i + 1; j < units.size(); j++)
+                    if ((units.get(i).getTile().getIndexInMapI() ==
+                        units.get(j).getTile().getIndexInMapI()) &&
+                            (units.get(i).getTile().getIndexInMapJ() ==
+                             units.get(j).getTile().getIndexInMapJ()))
+                        units.get(j).setTile(units.get(i).getTile());
+            for (int i = 0; i < units.size(); i++) {
+                Unit unit = units.get(i);
+                unit.setCivilization(player.getCivilization());
+                if (unit.getType().isCivilian()) {
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
+                }
+                else {
+                    Military military = new Military(unit.getType());
+                    military.setMP(unit.getMP());
+                    military.setHealth(unit.getHealth());
+                    military.setTile(unit.getTile());
+                    military.setMovesInTurn(unit.getMovesInTurn());
+                    military.setCivilization(unit.getCivilization());
+                    military.setStatus("active");
+                    units.remove(unit);
+                    units.add(military);
+                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
+                }
+            }
+            for (City city : player.getCivilization().getCities()) {
+                for (Tile tile : city.getTiles()) {
+                    city.setCivilization(player.getCivilization());
+                    tile.setCity(city);
+                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
+                }
+            }
+            System.out.println(player.getUsername());
+        }
+    }
+
     private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
         ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
         visibleTiles.addAll(warriorTile.getNeighbors());
@@ -74,7 +126,6 @@ public class Game {
     }
 
     public void generateMap() {
-        map = new ArrayList<>();
         Random random = new Random(0);
         int centersParameter = 1;
         for (int i = 0; i < 20; i++) {
@@ -144,7 +195,6 @@ public class Game {
                 }
                 if (tiles[i][j].getFeature() == null) tiles[i][j].setFeature(TerrainFeature.NONE);
                 if (tiles[i][j].getResource() == null) tiles[i][j].setResource(Resource.NONE);
-                map.add(tiles[i][j]);
                 tiles[i][j].initializeTile(tiles[i][j].getType(), tiles[i][j].getFeature());
             }
         }
