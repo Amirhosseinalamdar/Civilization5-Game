@@ -20,9 +20,9 @@ public class ProfileMenu {
                     (matcher = Commands.getMatcher(command, Commands.CHANGE_PASSWORD4)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.CHANGE_PASSWORD5)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.CHANGE_PASSWORD6)) != null) {
-                System.out.println(UserController.changePassword(matcher));
+//                System.out.println(UserController.changePassword(matcher));
             } else if ((matcher = Commands.getMatcher(command, Commands.CHANGE_NICKNAME)) != null) {
-                System.out.println(UserController.changeNickname(matcher));
+//                System.out.println(UserController.changeNickname(matcher));
             } else if ((matcher = Commands.getMatcher(command, Commands.ENTER_MENU)) != null) {
                 if (matcher.group("menuName").equals("Main Menu")) {
                     System.out.println("use \"exit menu\" command");

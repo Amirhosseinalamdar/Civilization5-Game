@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onMouseEntered="#showScoreboard" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../CSS/Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.ScoreboardMenuController">
+   <children>
+      <Label id="button" fx:id="back" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="782.0" onMouseClicked="#back" prefHeight="42.0" prefWidth="193.0" text="Back" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <VBox fx:id="vbox1" layoutX="150.0" layoutY="343.0" prefHeight="262.0" prefWidth="150.0" spacing="15" />
+      <VBox fx:id="vbox2" layoutX="355.0" layoutY="343.0" prefHeight="262.0" prefWidth="150.0" spacing="15" />
+      <VBox fx:id="vbox3" layoutX="450.0" layoutY="343.0" prefHeight="262.0" prefWidth="150.0" spacing="15" />
+      <ImageView fx:id="icon1" blendMode="MULTIPLY" fitHeight="45.0" fitWidth="45.0" layoutX="85.0" layoutY="338.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon2" blendMode="MULTIPLY" fitHeight="45.0" fitWidth="45.0" layoutX="85.0" layoutY="377.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon3" blendMode="MULTIPLY" fitHeight="45.0" fitWidth="45.0" layoutX="85.0" layoutY="415.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>

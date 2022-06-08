@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class UserController {
     private static ArrayList<User> allUsers;
@@ -24,19 +26,20 @@ public class UserController {
         UserController.loggedInUser = loggedInUser;
     }
 
-    public static String registerUser(Matcher matcher) {
-        String username = matcher.group("username");
-        String nickname = matcher.group("nickname");
-        String password = matcher.group("password");
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static String registerUser(String username, String nickname, String password) {
         String output = "";
         if (allUsers == null) allUsers = new ArrayList<>();
         else {
             for (User allUser : allUsers) {
                 if (allUser.getUsername().equals(username)) {
-                    output = "user with username " + username + " already exists";
+                    output = "error username: user with username " + username + " already exists";
                     break;
                 } else if (allUser.getNickname().equals(nickname)) {
-                    output = "user with nickname " + nickname + " already exists";
+                    output = "error nickname: user with nickname " + nickname + " already exists";
                     break;
                 }
             }
@@ -49,9 +52,7 @@ public class UserController {
         return output;
     }
 
-    public static String logUserIn(Matcher matcher) {
-        String username = matcher.group("username");
-        String password = matcher.group("password");
+    public static String logUserIn(String username, String password) {
         String output = "";
         for (User allUser : allUsers) {
             if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
@@ -60,7 +61,7 @@ public class UserController {
                 break;
             }
         }
-        if (output.isEmpty()) output = "username and password didn't match!";
+        if (output.isEmpty()) output = "error: username and password didn't match!";
         return output;
     }
 
@@ -94,8 +95,7 @@ public class UserController {
         return false;
     }
 
-    public static String changeNickname(Matcher matcher) {
-        String newNickname = matcher.group("nickname");
+    public static String changeNickname(String newNickname) {
         String output;
         if (isNicknameExist(newNickname))
             output = "user with nickname " + newNickname + " already exists";
@@ -106,12 +106,10 @@ public class UserController {
         return output;
     }
 
-    public static String changePassword(Matcher matcher) {
-        String currentPassword = matcher.group("currentPassword");
-        String newPassword = matcher.group("newPassword");
+    public static String changePassword(String currentPassword, String newPassword) {
         String output;
-        if (!loggedInUser.getPassword().equals(currentPassword)) output = "current password is invalid";
-        else if (loggedInUser.getPassword().equals(newPassword)) output = "please enter a new password";
+        if (!loggedInUser.getPassword().equals(currentPassword)) output = "error current: current password is invalid";
+        else if (loggedInUser.getPassword().equals(newPassword)) output = "error new: please enter a new password";
         else {
             output = "password changed successfully!";
             loggedInUser.setPassword(newPassword);
@@ -119,9 +117,17 @@ public class UserController {
         return output;
     }
 
-    public static void readDataFromJson(String fileName) {
+    public static ArrayList<User> getBestUsers() {
+        ArrayList<User> sorted = new ArrayList<>(allUsers);
+        if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
+        Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
+        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
+        return sorted;
+    }
+
+    public static void readDataFromJson() {
         try {
-            String json = new String(Files.readAllBytes(Paths.get(fileName)));
+            String json = new String(Files.readAllBytes(Paths.get("json.json")));
             allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
             }.getType());
         } catch (IOException e) {
@@ -129,9 +135,9 @@ public class UserController {
         }
     }
 
-    public static void writeDataToJson(String fileName) {
+    public static void writeDataToJson() {
         try {
-            FileWriter fileWriter = new FileWriter(fileName);
+            FileWriter fileWriter = new FileWriter("json.json");
             fileWriter.write(new Gson().toJson(allUsers));
             fileWriter.close();
         } catch (IOException e) {
