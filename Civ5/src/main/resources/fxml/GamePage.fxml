@@ -22,13 +22,13 @@
     <VBox layoutX="667" layoutY="210" spacing="70" styleClass="vboxBlur" prefHeight="487" maxWidth="268" fx:id="background">
         <VBox spacing="10">
             <Rectangle width="268" height="30" styleClass="vboxBlur"/>
-            <Label prefWidth="268" text="Start New Game" styleClass="startGameButton" alignment="CENTER">
+            <Label fx:id="newGame" prefWidth="268" text="Start New Game" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Start your civilization from scratch!"/></tooltip>
             </Label>
             <Label prefWidth="268" text="Send Invitation" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Request a match with the player you want!"/></tooltip>
             </Label>
-            <Label prefWidth="268" text="Choose Players" styleClass="startGameButton" alignment="CENTER">
+            <Label prefWidth="268" text="Choose Players" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#choosePlayers">
                 <tooltip><Tooltip text="Choose your opponents manually!"/></tooltip>
             </Label>
         </VBox>

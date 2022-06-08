@@ -26,7 +26,7 @@ public class MainMenuController {
 
     public void gameMenu(MouseEvent mouseEvent) {
         Main.clickSound();
-        NavigationTransition.fadeTransition(gameMenu, ""); //TODO set name of game menu fxml file
+        NavigationTransition.fadeTransition(gameMenu, "GamePage"); //TODO set name of game menu fxml file
     }
 
     public void publicChat(MouseEvent mouseEvent) {
