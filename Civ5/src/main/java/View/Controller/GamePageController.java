@@ -1,18 +1,13 @@
 package View.Controller;
 
-import Controller.GameController;
 import View.GameMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GamePageController {
@@ -39,6 +34,16 @@ public class GamePageController {
     public void choosePlayers() {
         try {
             Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/PlayerListPage.fxml")));
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (Exception ignored){}
+    }
+    public void loadGame() {
+        try {
+            Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/LoadPage.fxml")));
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(scene);

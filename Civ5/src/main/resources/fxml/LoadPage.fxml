@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<?import java.net.URL?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.PlayerListPageController"
+      fx:controller="View.Controller.LoadPageController"
       prefHeight="600.0" prefWidth="400.0">
     <ImageView fitHeight="600" fitWidth="400">
         <Image url="@../Images/GamePage/playerlist.jpg"/>
     </ImageView>
-    <VBox layoutX="15" layoutY="75" spacing="25" fx:id="list"/>
-    <Label fx:id="ok" layoutY="540" layoutX="180" text="OK" styleClass="startGameButton"/>
 
-    <stylesheets>
-        <URL value="@../css/GamePageStyle.css"/>
-    </stylesheets>
+    <VBox fx:id="box" spacing="10" layoutX="15" layoutY="75"/>
 </Pane>

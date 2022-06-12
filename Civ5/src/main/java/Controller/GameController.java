@@ -13,6 +13,7 @@ import View.GameMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -572,13 +573,23 @@ public class GameController {
         System.out.println("bruh im here");
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         String json = gson.toJson(Game.getInstance());
-        try {
-            FileWriter fileWriter = new FileWriter("Game.json");
-            fileWriter.write(json);
-            fileWriter.close();
-        }
-        catch (IOException i) {
-            i.printStackTrace();
+        for (int i = 0; i < 5; i++) {
+            try {
+                File file = new File("Game" + i + ".json");
+                if (file.exists() && i != 4) continue;
+                try {
+                    FileWriter fileWriter = new FileWriter("Game" + i + ".json");
+                    fileWriter.write(json);
+                    fileWriter.close();
+                }
+                catch (IOException io) {
+                    io.printStackTrace();
+                }
+                break;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

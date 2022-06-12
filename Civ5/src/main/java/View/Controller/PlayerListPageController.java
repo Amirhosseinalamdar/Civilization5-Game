@@ -2,9 +2,6 @@ package View.Controller;
 
 import Controller.UserController;
 import Model.User;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

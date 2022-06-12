@@ -34,7 +34,7 @@
         </VBox>
 
         <VBox spacing="5">
-            <Label prefWidth="268" text="Load Game" styleClass="startGameButton" alignment="CENTER">
+            <Label prefWidth="268" text="Load Game" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#loadGame">
                 <tooltip><Tooltip text="Load one of your previous saves and continue!"/></tooltip>
             </Label>
             <Line/><Line/>

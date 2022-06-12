@@ -22,9 +22,9 @@ public class GameMenu {
         GameMenu.scanner = scanner;
     }
 
-    private static void loadGame() {
+    private static void loadGame (int saveCode) {
         try {
-            String json = new String(Files.readAllBytes(Paths.get("Game.json")));
+            String json = new String(Files.readAllBytes(Paths.get("Game" + saveCode + ".json")));
             Game.loadInstance(new Gson().fromJson(json, Game.class));
             Game.getInstance().createRelations();
         }
@@ -37,7 +37,7 @@ public class GameMenu {
         if (saveCode < 0)
             Game.getInstance().generateGame(players);
         else
-            loadGame();
+            loadGame(saveCode);
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         do {
