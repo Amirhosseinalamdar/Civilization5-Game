@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class UserController {
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
+    }
+
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
