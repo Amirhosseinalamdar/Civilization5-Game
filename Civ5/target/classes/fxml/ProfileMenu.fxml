@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onMouseEntered="#initialize" prefHeight="900.0" prefWidth="1600.0" stylesheets="@../CSS/Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.ProfileMenuController">
+   <children>
+      <Label id="button" alignment="CENTER" contentDisplay="CENTER" layoutX="510.0" layoutY="295.0" onMouseClicked="#changeNickname" prefHeight="42.0" prefWidth="144.0" text="Change" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <TextField fx:id="newNickname" alignment="CENTER" layoutX="481.0" layoutY="182.0" onKeyPressed="#changeVisibility2" prefHeight="48.0" prefWidth="200.0" promptText="New Nickname">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label fx:id="invalidNickname" alignment="CENTER" layoutX="356.0" layoutY="250.0" prefHeight="45.0" prefWidth="457.0" textFill="RED">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="invalidPassword" alignment="CENTER" layoutX="14.0" layoutY="250.0" prefHeight="45.0" prefWidth="340.0" textFill="RED">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label id="button" alignment="CENTER" contentDisplay="CENTER" layoutX="103.0" layoutY="295.0" onMouseClicked="#changePassword" prefHeight="42.0" prefWidth="144.0" text="Change" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <TextField fx:id="currentPassword" alignment="CENTER" layoutX="89.0" layoutY="109.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="200.0" promptText="Current Password">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <TextField fx:id="newPassword" alignment="CENTER" layoutX="89.0" layoutY="182.0" onKeyPressed="#changeVisibility1" prefHeight="48.0" prefWidth="200.0" promptText="New Password">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </TextField>
+      <Label id="button" fx:id="back" alignment="CENTER" contentDisplay="CENTER" layoutX="25.0" layoutY="792.0" onMouseClicked="#back" prefHeight="42.0" prefWidth="193.0" text="Back" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <Label id="button" alignment="CENTER" contentDisplay="CENTER" layoutX="457.0" layoutY="540.0" onMouseClicked="#changeIconByFile" prefHeight="42.0" prefWidth="248.0" text="Browse Icon" textFill="#7c5d1e">
+         <font>
+            <Font name="Tw Cen MT" size="38.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Label>
+      <ImageView fx:id="icon0" blendMode="MULTIPLY" fitHeight="60.0" fitWidth="60.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="icon5" blendMode="MULTIPLY" fitHeight="60.0" fitWidth="60.0" layoutX="365.0" layoutY="530.0" onMouseClicked="#changeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Pictures/Icons/4.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="icon3" blendMode="MULTIPLY" fitHeight="60.0" fitWidth="60.0" layoutX="205.0" layoutY="530.0" onMouseClicked="#changeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Pictures/Icons/1.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="icon1" blendMode="MULTIPLY" fitHeight="60.0" fitWidth="60.0" layoutX="45.0" layoutY="530.0" onMouseClicked="#changeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Pictures/Icons/0.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="icon2" blendMode="MULTIPLY" fitHeight="65.0" fitWidth="65.0" layoutX="125.0" layoutY="525.0" onMouseClicked="#changeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Pictures/Icons/2.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="icon4" blendMode="MULTIPLY" fitHeight="68.0" fitWidth="68.0" layoutX="285.0" layoutY="530.0" onMouseClicked="#changeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Pictures/Icons/3.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="iconChanged" alignment="CENTER" layoutX="249.0" layoutY="614.0" prefHeight="45.0" prefWidth="340.0" textFill="RED">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

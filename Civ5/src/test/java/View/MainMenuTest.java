@@ -15,10 +15,10 @@ class MainMenuTest {
 
     @Test
     void run() throws FileNotFoundException {
-        UserController.readDataFromJson("json.json");
+        UserController.readDataFromJson();
         File file1 = new File("E:/Ehsan Uni/AP/Project/CIV/Civ5/src/test/java/test1.txt");
         Scanner scanner = new Scanner(file1);
         MainMenu.run(scanner);
-        UserController.writeDataToJson("json.json");
+        UserController.writeDataToJson();
     }
 }

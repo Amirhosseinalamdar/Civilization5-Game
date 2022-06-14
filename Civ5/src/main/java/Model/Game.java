@@ -6,18 +6,36 @@ import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
 import javafx.scene.layout.VBox;
+import Model.Map.*;
+import Model.UnitPackage.Military;
+import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
-    private static ArrayList<User> players = new ArrayList<>();
-    private static int turn;
-    private static int time;
-    private static ArrayList<Tile> map;
-    private static Tile[][] tiles = new Tile[20][20];
-    public static ArrayList<User> getPlayers() {
+    @Expose(deserialize = false, serialize = false)
+    private static Game instance;
+    @Expose(serialize = true, deserialize = true)
+    private ArrayList<User> players = new ArrayList<>();
+    @Expose(serialize = true, deserialize = true)
+    private int turn;
+    @Expose(serialize = true, deserialize = true)
+    private int time;
+    @Expose(serialize = true, deserialize = true)
+    private Tile[][] tiles = new Tile[20][20];
+
+    public static Game getInstance() {
+        if (instance == null) instance = new Game();
+        return instance;
+    }
+
+    public ArrayList<User> getPlayers() {
         return players;
     }
 

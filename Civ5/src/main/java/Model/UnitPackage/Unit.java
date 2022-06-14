@@ -3,20 +3,33 @@ package Model.UnitPackage;
 import Model.Civilization;
 import Model.Map.Path;
 import Model.Map.Tile;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
 public class Unit {
+    @Expose(serialize = true, deserialize = true)
     protected UnitType type;
+    @Expose(serialize = true, deserialize = true)
     protected Tile tile;
-    protected ArrayList<Tile> zonesOfControl;
+    @Expose(deserialize = false, serialize = false)
     protected Civilization civilization;
+    @Expose(serialize = true, deserialize = true)
     protected int MP;
+    @Expose(serialize = true, deserialize = true)
     protected int movesInTurn;
+    @Expose(serialize = true, deserialize = true)
     protected double health;
+    @Expose(serialize = true, deserialize = true)
     protected int cost;
+    @Expose(serialize = true, deserialize = true)
     public static double MAX_HEALTH = 10;
+    @Expose(serialize = true, deserialize = true)
     protected Path path;
+    @Expose(serialize = true, deserialize = true)
+    protected UnitStatus status;
+    @Expose(serialize = true, deserialize = true)
+    protected int maintenance;
 
     public Unit(UnitType unitType) {
         this.type = unitType;
@@ -81,9 +94,6 @@ public class Unit {
     public UnitStatus getStatus() {
         return status;
     }
-
-    protected UnitStatus status;
-    protected int maintenance;
 
     public void kill() {
         tile.setCivilian(null);

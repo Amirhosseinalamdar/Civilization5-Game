@@ -1,51 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import java.net.URL?>
-<?import javafx.collections.FXCollections?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="View.Controller.GamePageController"
       prefHeight="900.0" prefWidth="1600.0">
     <ImageView fitWidth="1600" fitHeight="900">
-        <Image url="@../Images/GamePage/civ5_brave_new_world_large.jpg"/>
+        <Image url="@../Images/GamePage/background.jpg"/>
+    </ImageView>
+    <ImageView layoutX="598" layoutY="100">
+        <Image url="@../Images/GamePage/frame.png"/>
     </ImageView>
 
-    <VBox layoutX="100" layoutY="200" spacing="50">
-        <VBox spacing="-2">
-            <Label text="Start New Game" styleClass="startGameButton">
+    <VBox layoutX="667" layoutY="210" spacing="70" styleClass="vboxBlur" prefHeight="487" maxWidth="268" fx:id="background">
+        <VBox spacing="10">
+            <Rectangle width="268" height="30" styleClass="vboxBlur"/>
+            <Label fx:id="newGame" prefWidth="268" text="Start New Game" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Start your civilization from scratch!"/></tooltip>
             </Label>
-            <Label text="Send Invitation" styleClass="startGameButton">
+            <Label prefWidth="268" text="Send Invitation" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Request a match with the player you want!"/></tooltip>
             </Label>
-            <Label text="Choose Players" styleClass="startGameButton">
+            <Label prefWidth="268" text="Choose Players" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#choosePlayers">
                 <tooltip><Tooltip text="Choose your opponents manually!"/></tooltip>
             </Label>
         </VBox>
 
-        <VBox spacing="10">
-            <Label text="Load Game" styleClass="startGameButton">
+        <VBox spacing="5">
+            <Label prefWidth="268" text="Load Game" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#loadGame">
                 <tooltip><Tooltip text="Load one of your previous saves and continue!"/></tooltip>
             </Label>
-            <HBox spacing="10">
-                <Label text="Auto Save After: " styleClass="startGameText"/>
-                <ChoiceBox translateY="15">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Each Turn"/>
-                            <String fx:value="Each 5 Turns"/>
-                            <String fx:value="Each 10 Turns"/>
-                        </FXCollections>
-                    </items>
-                </ChoiceBox>
+            <Line/><Line/>
+            <Label prefWidth="268" text="Auto Save After:" styleClass="startGameText" alignment="CENTER">
+                <tooltip><Tooltip text="Choose durations of auto-saving manually!"/></tooltip>
+            </Label>
+            <HBox spacing="15">
+                <Label prefWidth="268" alignment="CENTER" fx:id="autoSaveDuration" styleClass="startGameButton" onMouseClicked="#next"/>
             </HBox>
         </VBox>
     </VBox>

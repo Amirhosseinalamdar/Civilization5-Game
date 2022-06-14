@@ -40,14 +40,14 @@ public class CityController {
             if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
             else tryPurchaseUnit(unitType);
         } else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
-            Tile targetTile = Game.getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
+            Tile targetTile = Game.getInstance().getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
             if (tileIsPurchasable(targetTile))
                 purchaseTile(targetTile);
         } else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
-                    lockCitizenOnTile(citizen, Game.getTiles()[x][y]);
+                    lockCitizenOnTile(citizen, Game.getInstance().getTiles()[x][y]);
                     return;
                 }
             GameMenu.noUnemployedCitizenAvailable();
@@ -57,11 +57,11 @@ public class CityController {
                 GameMenu.citizenLockError();
                 return;
             }
-            lockCitizenOnTile(workingCitizen, Game.getTiles()[x][y]);
+            lockCitizenOnTile(workingCitizen, Game.getInstance().getTiles()[x][y]);
         } else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-            if (canCityAttackTo(Game.getTiles()[x][y])) {
-                rangeAttackToUnit(Game.getTiles()[x][y].getMilitary());
+            if (canCityAttackTo(Game.getInstance().getTiles()[x][y])) {
+                rangeAttackToUnit(Game.getInstance().getTiles()[x][y].getMilitary());
             }
         } else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
@@ -182,7 +182,7 @@ public class CityController {
                 GameMenu.indexOutOfArray();
                 return null;
             }
-            Citizen citizen = Game.getTiles()[x][y].getWorkingCitizen();
+            Citizen citizen = Game.getInstance().getTiles()[x][y].getWorkingCitizen();
             if (citizen == null) return null;
             if (citizen.getCity().equals(city)) return citizen;
             GameMenu.citizenNotYours();
@@ -230,7 +230,7 @@ public class CityController {
             city.getTiles().add(targetTile);
             targetTile.setCity(city);
             civilization.getNotifications().add("new tile is purchased. tile x: "
-                    + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    time: " + Game.getTime());
+                    + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    time: " + Game.getInstance().getTime());
         } else
             GameMenu.notEnoughGoldForTilePurchase();
     }
@@ -328,9 +328,9 @@ public class CityController {
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
                     }
                     civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
-                            + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getTime());
+                            + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getInstance().getTime());
                     if (tile.getResource() != null) {
-                        civilization.getNotifications().add(tile.getResource() + " is achieved.    time: " + Game.getTime());
+                        civilization.getNotifications().add(tile.getResource() + " is achieved.    time: " + Game.getInstance().getTime());
                     }
                 }
             }
@@ -388,7 +388,7 @@ public class CityController {
                 city.getCitizens().add(citizen);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 1.5));
                 city.setGainCitizenLastFood(city.getCitizenNecessityFood());
-                civilization.getNotifications().add("The " + city.getName() + "'s population is increased     time: " + Game.getTime());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is increased     time: " + Game.getInstance().getTime());
             }
             city.setTurnsUntilBirthCitizen(city.getGainCitizenLastFood() / city.getStoredFood());
         } else if (city.getStoredFood() == 0) city.setTurnsUntilBirthCitizen(0);
@@ -399,7 +399,7 @@ public class CityController {
                 city.getCitizens().remove(city.getCitizens().size() - 1);
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 0.66));
                 city.setLostCitizenLastFood(city.getCitizenNecessityFood());
-                civilization.getNotifications().add("The " + city.getName() + "'s population is decreased     time: " + Game.getTime());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is decreased     time: " + Game.getInstance().getTime());
             }
             city.setTurnsUntilDeathCitizen(city.getLostCitizenLastFood() / city.getStoredFood());
         }
@@ -411,7 +411,7 @@ public class CityController {
             expandCity(city);
             city.setBorderExpansionCost((int) (city.getBorderExpansionCost() * 1.5));
             city.setBorderLastCost(city.getBorderExpansionCost());
-            civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     time: " + Game.getTime());
+            civilization.getNotifications().add("The " + city.getName() + "'s border is expanded     time: " + Game.getInstance().getTime());
         }
         if ((city.getCitizens().size() + city.getStoredFood()) == 0) city.setTurnsUntilGrowthBorder(0);
         else

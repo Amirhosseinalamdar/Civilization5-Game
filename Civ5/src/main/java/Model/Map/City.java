@@ -4,33 +4,57 @@ import Controller.GameController;
 import Model.Civilization;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class City {
+    @Expose(serialize = true, deserialize = true)
     private ArrayList<Tile> tiles;
+    @Expose(serialize = false, deserialize = false)
     private Civilization civilization;
+    @Expose(serialize = true, deserialize = true)
     private int storedFood;
+    @Expose(serialize = true, deserialize = true)
     private int goldPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int foodPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int productionPerTurn;
+    @Expose(serialize = true, deserialize = true)
     private int sciencePerTurn;
+    @Expose(serialize = true, deserialize = true)
     private HashMap<UnitType, Integer> lastCostsUntilNewProductions;
+    @Expose(serialize = true, deserialize = true)
     private UnitType inProgressUnit;
+    @Expose(serialize = true, deserialize = true)
     private ArrayList<Citizen> citizens;
+    @Expose(serialize = true, deserialize = true)
     private int turnsUntilBirthCitizen;
+    @Expose(serialize = true, deserialize = true)
     private int turnsUntilDeathCitizen;
+    @Expose(serialize = true, deserialize = true)
     private int citizenNecessityFood;
+    @Expose(serialize = true, deserialize = true)
     private int gainCitizenLastFood;
+    @Expose(serialize = true, deserialize = true)
     private int lostCitizenLastFood;
+    @Expose(serialize = true, deserialize = true)
     private int turnsUntilGrowthBorder;
+    @Expose(serialize = true, deserialize = true)
     private int borderExpansionCost;
+    @Expose(serialize = true, deserialize = true)
     private int borderLastCost;
+    @Expose(serialize = true, deserialize = true)
     private double HP;
+    @Expose(serialize = true, deserialize = true)
     private double combatStrength;
+    @Expose(serialize = true, deserialize = true)
     private double rangedCombatStrength;
+    @Expose(serialize = true, deserialize = true)
     private CityStatus cityStatus;
+    @Expose(serialize = true, deserialize = true)
     private final String name;
 
     public City(Civilization civilization, Tile centerTile, String name) {

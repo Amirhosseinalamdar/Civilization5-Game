@@ -136,7 +136,7 @@ public class CivilizationController {
             i -= civilization.getScience();
             civilization.getLastCostUntilNewTechnologies().replace(civilization.getInProgressTech(), i);
             if (i <= 0) {
-                civilization.getNotifications().add(civilization.getInProgressTech().name() + " is now unlocked.     time: " + Game.getTime());
+                civilization.getNotifications().add(civilization.getInProgressTech().name() + " is now unlocked.     time: " + Game.getInstance().getTime());
                 civilization.setInProgressTech(null);
             }
         }
