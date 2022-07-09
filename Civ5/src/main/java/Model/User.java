@@ -22,6 +22,10 @@ public class User {
         this.score = score;
     }
 
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }

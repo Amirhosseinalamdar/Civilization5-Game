@@ -1,0 +1,23 @@
+
+#sendButton{
+    -fx-font-family: "Tw Cen MT";
+    -fx-background-color: #4faecc;
+    -fx-background-radius: 20px;
+    -fx-font-size: 25;
+
+}
+#textInput{
+    -fx-font-family: "Tw Cen MT";
+    -fx-background-color: lightBlue;
+    -fx-background-radius: 20px;
+    -fx-font-size: 20;
+}
+.Pane{
+    -fx-background-color: #2c2f3c;
+}
+#back{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 20;
+    -fx-background-color: #9494e5;
+    -fx-background-radius: 20;
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Box?>
+<Pane prefHeight="900" prefWidth="1600" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="View.Controller.PrivateChatController" styleClass="Pane">
+    <ScrollPane layoutX="-1" >
+        <VBox prefWidth="1600" fx:id="chatBox" prefHeight="847" spacing="10"
+              styleClass="Pane"/>
+    </ScrollPane>
+    <Button layoutX="1490" layoutY="10" prefWidth="100" prefHeight="70" id="back" text="back" onMouseClicked="#back"/>
+    <HBox layoutX="00" layoutY="850" spacing="20">
+        <TextField prefHeight="50" prefWidth="1400" text="enter your message" id="textInput" fx:id="textField" onKeyTyped="#type"/>
+        <Button id="sendButton" prefHeight="50" prefWidth="160" text="send" fx:id="sendButton" onMouseClicked="#sendMsg"/>
+    </HBox>
+    <stylesheets>
+        <URL value="@../css/PublicChatStyle.css"/>
+    </stylesheets>
+</Pane>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="View.Controller.GamePageController"
+      prefHeight="900.0" prefWidth="1600.0">
+    <ImageView fitWidth="1600" fitHeight="900">
+        <Image url="@../Images/GamePage/civ5_brave_new_world_large.jpg"/>
+    </ImageView>
+
+    <VBox layoutX="100" layoutY="200" spacing="50">
+        <VBox spacing="-2">
+            <Label text="Start New Game" styleClass="startGameButton">
+                <tooltip><Tooltip text="Start your civilization from scratch!"/></tooltip>
+            </Label>
+            <Label text="Send Invitation" styleClass="startGameButton">
+                <tooltip><Tooltip text="Request a match with the player you want!"/></tooltip>
+            </Label>
+            <Label text="Choose Players" styleClass="startGameButton">
+                <tooltip><Tooltip text="Choose your opponents manually!"/></tooltip>
+            </Label>
+        </VBox>
+
+        <VBox spacing="10">
+            <Label text="Load Game" styleClass="startGameButton">
+                <tooltip><Tooltip text="Load one of your previous saves and continue!"/></tooltip>
+            </Label>
+            <HBox spacing="10">
+                <Label text="Auto Save After: " styleClass="startGameText"/>
+                <ChoiceBox translateY="15">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Each Turn"/>
+                            <String fx:value="Each 5 Turns"/>
+                            <String fx:value="Each 10 Turns"/>
+                        </FXCollections>
+                    </items>
+                </ChoiceBox>
+            </HBox>
+        </VBox>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@../css/GamePageStyle.css"/>
+    </stylesheets>
+</Pane>

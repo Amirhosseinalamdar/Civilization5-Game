@@ -1,11 +1,11 @@
 package Model;
 
-import Controller.GameController;
 import Controller.UnitController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
+import javafx.scene.layout.VBox;
 
 
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ public class Game {
     private static int time;
     private static ArrayList<Tile> map;
     private static Tile[][] tiles = new Tile[20][20];
-
     public static ArrayList<User> getPlayers() {
         return players;
     }
@@ -34,6 +33,12 @@ public class Game {
         turn++;
         turn %= players.size();
         if (Game.getTurn() == 0) time++;
+    }
+    public static User getLoggedInUser(){
+        for(User key:players){
+            if(key.isLoggedIn()) return key;
+        }
+        return null;
     }
 
     public static void generateGame(ArrayList<User> users) {
