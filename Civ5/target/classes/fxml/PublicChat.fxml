@@ -17,6 +17,6 @@
         <Button id="sendButton" prefHeight="50" prefWidth="160" text="send" fx:id="sendButton" onMouseClicked="#sendMsg"/>
     </HBox>
     <stylesheets>
-        <URL value="@../css/PublicChatStyle.css"/>
+        <URL value="@../CSS/PublicChatStyle.css"/>
     </stylesheets>
 </Pane>
