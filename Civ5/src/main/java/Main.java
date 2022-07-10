@@ -17,7 +17,7 @@ import java.util.*;
 
 public class Main extends Application{
     public static void main(String[] args) {
-        UserController.readDataFromJson("json.json");
+        UserController.readDataFromJson();
 //        Scanner scanner = new Scanner(System.in);
 //        MainMenu.run(scanner);
 //        UserController.writeDataToJson("json.json");
