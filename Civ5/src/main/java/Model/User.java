@@ -1,15 +1,25 @@
 package Model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Random;
 
 public class User {
+    @Expose(serialize = true, deserialize = true)
     private String username;
+    @Expose(serialize = true, deserialize = true)
     private String password;
+    @Expose(serialize = true, deserialize = true)
     private String nickname;
+    @Expose(serialize = true, deserialize = true)
     private String iconAddress;
+    @Expose(serialize = true, deserialize = true)
     private Civilization civilization;
+    @Expose(serialize = true, deserialize = true)
     private boolean isLoggedIn;
+    @Expose(serialize = true, deserialize = true)
     private int score;
+    @Expose(serialize = true, deserialize = true)
     private String time;
 
     public User(String username, String password, String nickname, boolean isLoggedIn, int score) {
@@ -20,6 +30,10 @@ public class User {
         this.iconAddress = this.getClass().getResource("/pictures/Icons/" + random.nextInt(5) + ".png").toExternalForm();
         this.isLoggedIn = isLoggedIn;
         this.score = score;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 
     public boolean isLoggedIn() {

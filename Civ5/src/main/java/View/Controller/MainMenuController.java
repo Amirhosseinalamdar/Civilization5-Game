@@ -26,17 +26,18 @@ public class MainMenuController {
 
     public void gameMenu(MouseEvent mouseEvent) {
         Main.clickSound();
-        NavigationTransition.fadeTransition(gameMenu, ""); //TODO set name of game menu fxml file
+        NavigationTransition.fadeTransition(gameMenu, "GamePage"); //TODO set name of game menu fxml file
     }
 
     public void publicChat(MouseEvent mouseEvent) {
         Main.clickSound();
-        NavigationTransition.fadeTransition(publicChat, ""); //TODO set name of publicChat fxml file
+        NavigationTransition.fadeTransition(publicChat, "PublicChat"); //TODO set name of publicChat fxml file
     }
 
     public void privateChat(MouseEvent mouseEvent) {
         Main.clickSound();
-        NavigationTransition.fadeTransition(privateChat, ""); //TODO set name of privateChat fxml file
+        NavigationTransition.fadeTransition(privateChat, "ChooseChat"); //TODO set name of privateChat fxml file
+
     }
 
     public void room(MouseEvent mouseEvent) {

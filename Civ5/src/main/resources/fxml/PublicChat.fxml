@@ -11,7 +11,7 @@
         <VBox prefWidth="1600" fx:id="chatBox" prefHeight="847" spacing="10"
               styleClass="Pane"/>
     </ScrollPane>
-        <Button layoutX="1490" layoutY="10" prefWidth="100" prefHeight="70" id="back" text="back" onMouseClicked="#back"/>
+        <Button layoutX="1490" layoutY="10" prefWidth="100" prefHeight="70" id="back" text="back" onMouseClicked="#back" fx:id="backButton"/>
     <HBox  layoutY="850" spacing="20">
         <TextField prefHeight="50" prefWidth="1400" text="enter your message" id="textInput" fx:id="textField" onKeyTyped="#type"/>
         <Button id="sendButton" prefHeight="50" prefWidth="160" text="send" fx:id="sendButton" onMouseClicked="#sendMsg"/>

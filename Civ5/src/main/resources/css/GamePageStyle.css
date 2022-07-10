@@ -1,17 +1,19 @@
+.vboxBlur{
+    -fx-background-color: rgba(0, 0, 0, 0.53);
+    -fx-fill: transparent;
+}
 .startGameButton {
     -fx-font-family: 'Tw Cen MT';
-    -fx-text-fill: #fed75a;
-    -fx-font-size: 50;
+    -fx-text-fill: #dbdbb1;
+    -fx-font-size: 37;
     -fx-background-color: transparent;
     -fx-background-radius: 10;
     -fx-arc-height: 5;
     -fx-arc-width: 5;
-    -fx-border-color: rgba(0, 0, 0, 0.69);
-    -fx-border-width: 2;
 }
 .startGameButton:hover{
-    -fx-background-color: rgb(174, 171, 164);
-    -fx-text-fill: #fed75a;
+    -fx-background-color: #f2f2ef;
+    -fx-text-fill: #508e96;
     -fx-cursor: hand;
 }
 .tooltip{
@@ -20,8 +22,8 @@
 }
 .startGameText{
     -fx-font-family: 'Tw Cen MT';
-    -fx-text-fill: #fed75a;
-    -fx-font-size: 50;
+    -fx-text-fill: #dbdbb1;
+    -fx-font-size: 37;
     -fx-background-color: transparent;
     -fx-background-radius: 10;
     -fx-arc-height: 5;
@@ -38,15 +40,15 @@
     -fx-mark-color: rgba(0, 0, 0, 0.23);
 }
 .choice-box .context-menu {
-    -fx-background-color: rgb(99, 116, 83);
+    -fx-background-color: rgb(174, 171, 164);;
     -fx-background-radius: 5;
 }
 .choice-box .menu-item:focused {
-    -fx-background-color: rgb(99, 116, 83);
+    -fx-background-color: #95c7ea;
     -fx-background-radius: 5;
-    -fx-border-color: rgb(95, 131, 35);
+    -fx-border-color: #8ea2a3;
     -fx-border-width: 2;
     -fx-border-radius: 5;
 }
-.choice-box .menu-item > .label { -fx-text-fill: rgb(174, 171, 164); }
+.choice-box .menu-item > .label { -fx-text-fill: #bbd3d7 }
 .choice-box > .label{ -fx-text-fill: black;}

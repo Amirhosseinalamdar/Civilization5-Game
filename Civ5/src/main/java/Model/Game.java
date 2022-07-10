@@ -1,47 +1,67 @@
 package Model;
 
 import Controller.UnitController;
+import Controller.UserController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
 import javafx.scene.layout.VBox;
+import Model.Map.*;
+import Model.UnitPackage.Military;
+import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitType;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
-    private static ArrayList<User> players = new ArrayList<>();
-    private static int turn;
-    private static int time;
-    private static ArrayList<Tile> map;
-    private static Tile[][] tiles = new Tile[20][20];
-    public static ArrayList<User> getPlayers() {
+    @Expose(deserialize = false, serialize = false)
+    private static Game instance;
+    @Expose(serialize = true, deserialize = true)
+    private ArrayList<User> players = new ArrayList<>();
+    @Expose(serialize = true, deserialize = true)
+    private int turn;
+    @Expose(serialize = true, deserialize = true)
+    private int time;
+    @Expose(serialize = true, deserialize = true)
+    private Tile[][] tiles = new Tile[20][20];
+    private ArrayList<Tile> map = new ArrayList<>();
+
+    public static Game getInstance() {
+        if (instance == null) instance = new Game();
+        return instance;
+    }
+
+    public ArrayList<User> getPlayers() {
         return players;
     }
 
-    public static int getTurn() {
+    public int getTurn() {
         return turn;
     }
 
-    public static int getTime() {
+    public int getTime() {
         return time;
     }
 
-    public static void nextTurn() {
+    public void nextTurn() {
         turn++;
         turn %= players.size();
-        if (Game.getTurn() == 0) time++;
+        if (getTurn() == 0) time++;
     }
-    public static User getLoggedInUser(){
+    public User getLoggedInUser(){
         for(User key:players){
             if(key.isLoggedIn()) return key;
         }
-        return null;
+        return UserController.getLoggedInUser();
     }
 
-    public static void generateGame(ArrayList<User> users) {
+    public void generateGame(ArrayList<User> users) {
         players = users;
         turn = 0;
         time = 1;
@@ -65,14 +85,14 @@ public class Game {
         }
     }
 
-    private static void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
+    private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
         ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
         visibleTiles.addAll(warriorTile.getNeighbors());
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }
 
-    public static void generateMap() {
+    public void generateMap() {
         map = new ArrayList<>();
         Random random = new Random(0);
         int centersParameter = 1;
@@ -103,7 +123,7 @@ public class Game {
         completeMap(tiles);
     }
 
-    private static int setProbability(TerrainType type) {
+    private int setProbability(TerrainType type) {
         if (type == TerrainType.MOUNTAIN) return 50;
         else if (type == TerrainType.HILL) return 30;
         else if (type == TerrainType.SNOW) return 70;
@@ -111,7 +131,7 @@ public class Game {
         return 90;
     }
 
-    private static int setProbabilityDecrement(TerrainType type) {
+    private int setProbabilityDecrement(TerrainType type) {
         if (type == TerrainType.MOUNTAIN) return 40;
         else if (type == TerrainType.HILL) return 70;
         else if (type == TerrainType.SNOW) return 30;
@@ -119,7 +139,7 @@ public class Game {
         return 17;
     }
 
-    public static void completeMap(Tile[][] tiles) {
+    public void completeMap(Tile[][] tiles) {
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 if (tiles[i][j].getType() == null) {
@@ -150,7 +170,7 @@ public class Game {
         addResource();
     }
 
-    private static void addResource() {
+    private void addResource() {
         Random random = new Random(0);
         int key;
         for (int i = 0; i < 20; i++) {
@@ -225,7 +245,7 @@ public class Game {
         }
     }
 
-    private static void addCounter(int[] counter, TerrainType type) {
+    private void addCounter(int[] counter, TerrainType type) {
         if (type == TerrainType.DESERT) counter[0]++;
         else if (type == TerrainType.GRASS) counter[1]++;
         else if (type == TerrainType.HILL) counter[2]++;
@@ -236,7 +256,7 @@ public class Game {
         else counter[0]++;
     }
 
-    private static TerrainType getType(int key) {
+    private TerrainType getType(int key) {
         if (key == 0) return TerrainType.DESERT;
         else if (key == 1) return TerrainType.GRASS;
         else if (key == 2) return TerrainType.HILL;
@@ -246,7 +266,7 @@ public class Game {
         else return TerrainType.SNOW;
     }
 
-    private static void generateGroup(int i, int j, Tile[][] tiles, TerrainType type, int probability, Random random, int probabilityDecrement) {
+    private void generateGroup(int i, int j, Tile[][] tiles, TerrainType type, int probability, Random random, int probabilityDecrement) {
         tiles[i][j].setType(type);
         int key = random.nextInt(100);
         if (key < 50 && tiles[i][j].getFeature() == null) {
@@ -297,7 +317,7 @@ public class Game {
         }
     }
 
-    private static void generateRivers() {
+    private void generateRivers() {
         Random random = new Random(0);
         int howManyRivers = random.nextInt(4) + 1;
         for (int k = 0; k < howManyRivers; k++) {
@@ -310,11 +330,55 @@ public class Game {
         }
     }
 
-    private static boolean checkIAndJ(int i, int j) {
+    private boolean checkIAndJ(int i, int j) {
         return i <= 19 && i >= 0 && j <= 19 && j >= 0;
     }
 
-    public static Tile[][] getTiles() {
+    public Tile[][] getTiles() {
         return tiles;
+    }
+    public static void loadInstance(Game game) {
+        instance = game;
+    }
+
+    public void createRelations() {
+        for (User player : players) {
+            ArrayList <Unit> units = player.getCivilization().getUnits();
+            for (int i = 0; i < units.size(); i++)
+                for (int j = i + 1; j < units.size(); j++)
+                    if ((units.get(i).getTile().getIndexInMapI() ==
+                            units.get(j).getTile().getIndexInMapI()) &&
+                            (units.get(i).getTile().getIndexInMapJ() ==
+                                    units.get(j).getTile().getIndexInMapJ()))
+                        units.get(j).setTile(units.get(i).getTile());
+            for (int i = 0; i < units.size(); i++) {
+                Unit unit = units.get(i);
+                unit.setCivilization(player.getCivilization());
+                if (unit.getType().isCivilian()) {
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
+                }
+                else {
+                    Military military = new Military(unit.getType());
+                    military.setMP(unit.getMP());
+                    military.setHealth(unit.getHealth());
+                    military.setTile(unit.getTile());
+                    military.setMovesInTurn(unit.getMovesInTurn());
+                    military.setCivilization(unit.getCivilization());
+                    military.setStatus("active");
+                    units.remove(unit);
+                    units.add(military);
+                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
+                }
+            }
+            for (City city : player.getCivilization().getCities()) {
+                for (Tile tile : city.getTiles()) {
+                    city.setCivilization(player.getCivilization());
+                    tile.setCity(city);
+                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
+                }
+            }
+            System.out.println(player.getUsername());
+        }
     }
 }
