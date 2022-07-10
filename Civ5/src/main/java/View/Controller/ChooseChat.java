@@ -24,12 +24,14 @@ public class ChooseChat {
     public void startChat(MouseEvent mouseEvent) throws IOException {
         for(User user: UserController.getAllUsers()){
             if(user.getUsername().equals(textField.getText())){
-                if(DataBase.getInstance().getPrivateChatByUsers(user.getUsername(), "ehsan")!=null){//TODO login user
+                if(DataBase.getInstance().getPrivateChatByUsers(user.getUsername(),
+                        Game.getInstance().getLoggedInUser().getUsername())!=null){
                     DataBase.getInstance().setCurrentPrivateChat(
                             (DataBase.getInstance().getPrivateChatByUsers
-                                    (textField.getText(), "ehsan")));
+                                    (textField.getText(), Game.getInstance().getLoggedInUser().getUsername())));
                 }else{
-                    PrivateChat privateChat = new PrivateChat(textField.getText(), user.getUsername());
+                    PrivateChat privateChat = new PrivateChat(textField.getText(),
+                            Game.getInstance().getLoggedInUser().getUsername());
                     DataBase.getInstance().getPrivateChats().add(privateChat);
                     DataBase.getInstance().setCurrentPrivateChat(privateChat);
                 }

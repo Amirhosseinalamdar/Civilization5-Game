@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Game;
 import Model.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -62,6 +63,7 @@ public class UserController {
             if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
                 output = "user logged in successfully!";
                 loggedInUser = allUser;
+                allUser.setLoggedIn(true);
                 break;
             }
         }
@@ -71,6 +73,7 @@ public class UserController {
 
     public static String logUserOut() {
         loggedInUser = null;
+        Game.getInstance().getLoggedInUser().setLoggedIn(false);
         return "user logged out successfully!";
     }
 

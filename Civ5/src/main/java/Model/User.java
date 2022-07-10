@@ -32,6 +32,10 @@ public class User {
         this.score = score;
     }
 
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
     public boolean isLoggedIn() {
         return isLoggedIn;
     }

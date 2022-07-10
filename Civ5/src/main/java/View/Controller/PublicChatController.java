@@ -1,7 +1,9 @@
 package View.Controller;
 
+import App.Main;
 import Model.Chat.PublicChat;
 import Model.Game;
+import Transiton.NavigationTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
@@ -24,9 +26,12 @@ public class PublicChatController {
     public VBox chatBox;
 
     public Button sendButton;
+    public Button backButton;
 
     public PublicChatController(){
         this.chatBox = PublicChat.getInstance().getChatBox();
+        System.out.println(chatBox);
+        System.out.println("here");
     }
 
     public void sendMsg(MouseEvent mouseEvent) {
@@ -46,8 +51,8 @@ public class PublicChatController {
     }
     private void addMsgInfo(){
         String sender;
-        if(Game.getLoggedInUser() == null) sender = "Null";
-        else sender = Game.getLoggedInUser().getUsername();
+        if(Game.getInstance().getLoggedInUser() == null) sender = "Null";
+        else sender = Game.getInstance().getLoggedInUser().getUsername();
         if(sender.length() > 10){
             sender = sender.substring(0,7);
             sender.concat("...");
@@ -90,6 +95,7 @@ public class PublicChatController {
     }
 
     public void back(MouseEvent mouseEvent) {
-        //TODO go to last menu
+        Main.clickSound();
+        NavigationTransition.fadeTransition(backButton, "MainMenu");
     }
 }
