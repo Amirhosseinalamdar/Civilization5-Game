@@ -55,6 +55,11 @@ public class Tile {
     @Expose(serialize = true, deserialize = true)
     private Citizen workingCitizen;
 
+    private boolean isRuined;
+
+    public boolean isRuined() {
+        return isRuined;
+    }
 
     public void setWorkingCitizen(Citizen citizen) {
         this.workingCitizen = citizen;
