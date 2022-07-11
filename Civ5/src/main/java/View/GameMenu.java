@@ -22,10 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
 
 public class GameMenu {
-    static Scanner scanner;
+    private static Scanner scanner;
+    private static MapController gameMapController;
 
     public static void setScanner(Scanner scanner) {
         GameMenu.scanner = scanner;
@@ -55,6 +57,7 @@ public class GameMenu {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
             Parent root = fxmlLoader.load();
             MapController mapController = (MapController)fxmlLoader.getController();
+            gameMapController = mapController;
             Scene scene = new Scene(root);
             scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
@@ -90,6 +93,11 @@ public class GameMenu {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static void showMap(){
+        gameMapController.showMap();
     }
 
     public static String nextCommand() {
