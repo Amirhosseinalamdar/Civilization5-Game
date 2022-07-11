@@ -149,6 +149,16 @@ public class MapController {
                     imageView1.setY(105 * (i - xStartingIndex) + 40);
                     backgroundPane.getChildren().add(imageView1);
                 }
+                if (tile.getCivilian() != null) {
+                    tile.getCivilian().setX(tile.getX() + 65);
+                    tile.getCivilian().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getCivilian());
+                }
+                if (tile.getMilitary() != null) {
+                    tile.getMilitary().setX(tile.getX() + 10);
+                    tile.getMilitary().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getMilitary());
+                }
             }
             flag2 = true;
         }
