@@ -91,4 +91,8 @@ public class User {
     public Civilization getCivilization() {
         return civilization;
     }
+
+    public void setCivilization(Civilization civilization) {
+        this.civilization = civilization;
+    }
 }

@@ -1,11 +1,15 @@
 package Model;
 
+import App.Main;
 import Controller.UnitController;
 import Controller.UserController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import Model.Map.*;
 import Model.UnitPackage.Military;
@@ -13,13 +17,18 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import javafx.stage.Stage;
 
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
+    @Expose(deserialize = true, serialize = true)
+    private int mapSize = 20;
     @Expose(deserialize = false, serialize = false)
     private static Game instance;
     @Expose(serialize = true, deserialize = true)
@@ -29,8 +38,12 @@ public class Game {
     @Expose(serialize = true, deserialize = true)
     private int time;
     @Expose(serialize = true, deserialize = true)
-    private Tile[][] tiles = new Tile[20][20];
+    private Tile[][] tiles = new Tile[mapSize][mapSize];
+
+
+
     private ArrayList<Tile> map = new ArrayList<>();
+
 
     public static Game getInstance() {
         if (instance == null) instance = new Game();
@@ -40,6 +53,16 @@ public class Game {
     public ArrayList<User> getPlayers() {
         return players;
     }
+
+    public int getMapSize() {
+        return mapSize;
+    }
+
+    public void setMapSize(int mapSize) {
+        this.mapSize = mapSize;
+    }
+
+
 
     public int getTurn() {
         return turn;
@@ -54,14 +77,16 @@ public class Game {
         turn %= players.size();
         if (getTurn() == 0) time++;
     }
-    public User getLoggedInUser(){
-        for(User key:players){
-            if(key.isLoggedIn()) return key;
+
+    public User getLoggedInUser() {
+        for (User key : players) {
+            if (key.isLoggedIn()) return key;
         }
         return UserController.getLoggedInUser();
     }
 
     public void generateGame(ArrayList<User> users) {
+
         players = users;
         turn = 0;
         time = 1;
@@ -71,8 +96,8 @@ public class Game {
             Random random = new Random(players.indexOf(player));
             int randomX, randomY;
             do {
-                randomX = random.nextInt(20);
-                randomY = random.nextInt(20);
+                randomX = random.nextInt(this.mapSize);
+                randomY = random.nextInt(this.mapSize);
             } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
@@ -83,6 +108,19 @@ public class Game {
                     warriorTile.getIndexInMapI() + ", " + warriorTile.getIndexInMapJ());
             makeFirstTilesVisible(player.getCivilization(), settlerTile, warriorTile);
         }
+//        Main.changeScene("Map");
+//        Main.stage.show();
+//        try {
+//            Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/Map.fxml"));
+//            Stage stage = new Stage();
+//            Scene scene = new Scene(root);
+//            stage.setScene(scene);
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
     }
 
     private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
@@ -94,10 +132,10 @@ public class Game {
 
     public void generateMap() {
         map = new ArrayList<>();
-        Random random = new Random(0);
+        Random random = new Random();
         int centersParameter = 1;
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 tiles[i][j] = new Tile();
                 tiles[i][j].setIndexInMapI(i);
                 tiles[i][j].setIndexInMapJ(j);
@@ -111,8 +149,8 @@ public class Game {
             }
         }
         generateRivers();
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 if (tiles[i][j].getType() != null) continue;
                 TerrainType type = getType(random.nextInt(7));
                 int probabilityDecrement = setProbabilityDecrement(type);
@@ -140,8 +178,8 @@ public class Game {
     }
 
     public void completeMap(Tile[][] tiles) {
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 if (tiles[i][j].getType() == null) {
                     int[] counter = new int[7];
                     addCounter(counter, tiles[i + 1][j].getType());
@@ -171,10 +209,10 @@ public class Game {
     }
 
     private void addResource() {
-        Random random = new Random(0);
+        Random random = new Random();
         int key;
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 key = random.nextInt(100);
                 if (tiles[i][j].getFeature() == TerrainFeature.FOREST) {
                     if (key < 10) tiles[i][j].setResource(Resource.BANANA);
@@ -280,7 +318,7 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
-            } else if(tiles[i][j].isRiverAtLeft() && key<20){
+            } else if (tiles[i][j].isRiverAtLeft() && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }
@@ -318,7 +356,7 @@ public class Game {
     }
 
     private void generateRivers() {
-        Random random = new Random(0);
+        Random random = new Random();
         int howManyRivers = random.nextInt(4) + 1;
         for (int k = 0; k < howManyRivers; k++) {
             int i = random.nextInt(7) + 2;
@@ -337,13 +375,14 @@ public class Game {
     public Tile[][] getTiles() {
         return tiles;
     }
+
     public static void loadInstance(Game game) {
         instance = game;
     }
 
     public void createRelations() {
         for (User player : players) {
-            ArrayList <Unit> units = player.getCivilization().getUnits();
+            ArrayList<Unit> units = player.getCivilization().getUnits();
             for (int i = 0; i < units.size(); i++)
                 for (int j = i + 1; j < units.size(); j++)
                     if ((units.get(i).getTile().getIndexInMapI() ==
@@ -357,8 +396,7 @@ public class Game {
                 if (unit.getType().isCivilian()) {
                     tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
                     tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
-                }
-                else {
+                } else {
                     Military military = new Military(unit.getType());
                     military.setMP(unit.getMP());
                     military.setHealth(unit.getHealth());

@@ -22,7 +22,7 @@ public class Civilization {
     @Expose(serialize = true, deserialize = true)
     private ArrayList<Unit> units;
     @Expose(serialize = true, deserialize = true)
-    private TileStatus[][] tileVisionStatuses = new TileStatus[20][20];
+    private TileStatus[][] tileVisionStatuses = new TileStatus[Game.getInstance().getMapSize()][Game.getInstance().getMapSize()];
     @Expose(serialize = true, deserialize = true)
     private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
     @Expose(serialize = true, deserialize = true)
@@ -48,8 +48,8 @@ public class Civilization {
         notifications = new ArrayList<>();
         lastCostUntilNewTechnologies = new HashMap<>();
         luxuryResources = new HashMap<>();
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
+        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
         this.civColor = initCivSymbol();
         this.showingCenterI = 1;

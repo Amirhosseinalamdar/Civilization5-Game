@@ -1,8 +1,10 @@
 package App;
 
 import Controller.UserController;
+import Model.Game;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
@@ -16,6 +18,16 @@ public class Main extends Application {
     public static Scene scene;
     public static AudioClip music;
 
+
+    public static void main(String[] args) {
+        UserController.readDataFromJson();
+//        Scanner scanner = new Scanner(System.in);
+        launch();
+//        MainMenu.run(scanner);
+
+        UserController.writeDataToJson();
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         Main.stage = stage;
@@ -26,15 +38,10 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+
     }
 
-    public static void main(String[] args) {
-        UserController.readDataFromJson();
-//        Scanner scanner = new Scanner(System.in);
-        launch();
-//        MainMenu.run(scanner);
-        UserController.writeDataToJson();
-    }
+
 
     public static void clickSound() {
         Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());

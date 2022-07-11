@@ -21,9 +21,9 @@ public class GamePageController {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
         newGame.setOnMouseClicked(event -> {
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+//            Node source = (Node) event.getSource();
+//            Stage stage = (Stage) source.getScene().getWindow();
+//            stage.close();
             GameMenu.startGame(PlayerListPageController.getPlayers(), new Scanner(System.in), -1);
         });
     }
@@ -39,7 +39,9 @@ public class GamePageController {
             stage.setScene(scene);
             stage.show();
         }
-        catch (Exception ignored){}
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
     public void loadGame() {
         try {
