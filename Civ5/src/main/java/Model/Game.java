@@ -4,14 +4,9 @@ import Controller.UnitController;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
-import Model.UnitPackage.UnitType;
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Game {

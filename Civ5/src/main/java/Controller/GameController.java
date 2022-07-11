@@ -3,7 +3,6 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
-import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
@@ -16,8 +15,6 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
 
 public class GameController {

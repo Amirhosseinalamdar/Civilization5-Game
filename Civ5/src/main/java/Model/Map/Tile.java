@@ -159,7 +159,7 @@ public class Tile {
         this.centerY = centerY;
     }
 
-    public void setMilitary(Military military) {
+    public void setMilitary (Military military) {
         this.military = military;
     }
 

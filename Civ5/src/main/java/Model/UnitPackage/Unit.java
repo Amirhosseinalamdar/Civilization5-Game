@@ -52,6 +52,8 @@ public class Unit {
     }
 
     public void setCivilization(Civilization civilization) {
+        if (this.civilization != null)
+            this.civilization.getUnits().remove(this);
         this.civilization = civilization;
     }
 
