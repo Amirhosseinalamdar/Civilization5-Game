@@ -4,10 +4,12 @@ import Model.Civilization;
 import Model.Map.Path;
 import Model.Map.Tile;
 import com.google.gson.annotations.Expose;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
-public class Unit {
+public class Unit extends ImageView {
     @Expose(serialize = true, deserialize = true)
     protected UnitType type;
     @Expose(serialize = true, deserialize = true)
@@ -37,6 +39,10 @@ public class Unit {
         this.path = new Path(null);
         this.MP = unitType.getMP();
         this.health = MAX_HEALTH;
+        System.out.println("/Images/" + unitType);
+        this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
+        this.setFitWidth(50);
+        this.setFitHeight(50);
     }
 
     public void setPath(Path path) {
@@ -48,7 +54,16 @@ public class Unit {
     }
 
     public void setTile(Tile tile) {
+        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
         this.tile = tile;
+        if (type.isCivilian()) {
+            this.setX(tile.getX() + 65);
+            this.setY(tile.getY() + 40);
+        }
+        else {
+            this.setX(tile.getX() + 10);
+            this.setY(tile.getY() + 40);
+        }
     }
 
     public void setCivilization(Civilization civilization) {

@@ -17,13 +17,16 @@ import java.util.regex.Pattern;
 public class UnitController {
     private static Civilization civilization;
     private static Unit unit;
+    private static String command;
 
     public static void changeCivilization(Civilization civilization) {
         UnitController.civilization = civilization;
     }
 
-    public static void setUnit(Unit unit) {
+    public static void setUnit (Unit unit, String command) {
         UnitController.unit = unit;
+        UnitController.command = command;
+        handleUnitOptions();
     }
 
     public static void handleUnitOptions() {
@@ -133,7 +136,7 @@ public class UnitController {
         Matcher matcher;
 
         while (true) {
-            String command = GameMenu.nextCommand();
+//            String command = GameMenu.nextCommand();
 
             if (command.equals("back")) {
                 matcher = Pattern.compile(command).matcher(command);
@@ -465,6 +468,8 @@ public class UnitController {
             return;
         }
 
+        System.out.println("yo imma move bitch!");
+
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
         if (chosenPath == null) return;
@@ -593,13 +598,13 @@ public class UnitController {
             paths.add(path);
         }
 
-        if (indexJ % 2 == 0) indexI--;
-        else indexI++;
+        if (indexI % 2 == 0) indexJ--;
+        else indexJ++;
 
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
+        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
+            if (GameController.invalidPos(i, indexJ)) continue;
             Path path = new Path(null);
-            path.tiles.add(Game.getInstance().getTiles()[indexI][j]);
+            path.tiles.add(Game.getInstance().getTiles()[i][indexJ]);
             paths.add(path);
         }
 

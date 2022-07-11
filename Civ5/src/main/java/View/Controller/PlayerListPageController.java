@@ -16,7 +16,7 @@ public class PlayerListPageController {
     private static ArrayList <User> players;
     public void initialize() {
         players = new ArrayList<>();
-        ArrayList <User> allUsers = UserController.getBestUsers();
+        ArrayList <User> allUsers = UserController.getAllUsers();
         allUsers.remove(UserController.getLoggedInUser());
         for (User user : allUsers) {
             Label label = new Label();

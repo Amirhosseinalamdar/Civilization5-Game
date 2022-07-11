@@ -21,10 +21,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         UserController.readDataFromJson();
-//        Scanner scanner = new Scanner(System.in);
         launch();
-//        MainMenu.run(scanner);
-
         UserController.writeDataToJson();
     }
 
@@ -44,9 +41,9 @@ public class Main extends Application {
 
 
     public static void clickSound() {
-        Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
+//        Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//        mediaPlayer.play();
     }
 
     public static void changeScene(String name) {

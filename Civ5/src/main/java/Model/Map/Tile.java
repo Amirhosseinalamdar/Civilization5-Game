@@ -7,11 +7,12 @@ import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import com.google.gson.annotations.Expose;
+import javafx.scene.image.ImageView;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 
-public class Tile {
+public class Tile extends ImageView {
     @Expose(serialize = true, deserialize = true)
     private TerrainType type;
     @Expose(serialize = true, deserialize = true)
@@ -238,12 +239,12 @@ public class Tile {
             neighbors.add(Game.getInstance().getTiles()[indexI][j]);
         }
 
-        if (indexJ % 2 == 0) indexI--;
-        else indexI++;
+        if (indexI % 2 == 0) indexJ--;
+        else indexJ++;
 
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
-            neighbors.add(Game.getInstance().getTiles()[indexI][j]);
+        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
+            if (GameController.invalidPos(i, indexJ)) continue;
+            neighbors.add(Game.getInstance().getTiles()[i][indexJ]);
         }
         return neighbors;
     }

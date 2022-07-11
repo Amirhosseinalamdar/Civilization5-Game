@@ -127,19 +127,21 @@ public class UserController {
         ArrayList<User> sorted = new ArrayList<>(allUsers);
         if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
         Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
-        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
-//        sorted.sort(comparator);
+//        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
+        sorted.sort(comparator);
         return sorted;
     }
 
     public static void readDataFromJson() {
-        try {
-            String json = new String(Files.readAllBytes(Paths.get("json.json")));
-            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
-            }.getType());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+            allUsers = new ArrayList<>(Arrays.asList(new User("1", "1", "1", false, 0),
+                    new User("2", "2", "2", false, 0),new User("3", "3", "3", false, 0)));
+//            String json = new String(Files.readAllBytes(Paths.get("json.json")));
+//            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
+//            }.getType());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void writeDataToJson() {
