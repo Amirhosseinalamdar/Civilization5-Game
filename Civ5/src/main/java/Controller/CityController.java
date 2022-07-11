@@ -426,7 +426,7 @@ public class CityController {
     }
 
     private static Tile findAppropriateTile(City city) {
-        Random random = new Random(0);
+        Random random = new Random();
         int n;
         ArrayList<Tile> tiles = new ArrayList<>(city.getTiles());
         while (tiles.size() > 0) {

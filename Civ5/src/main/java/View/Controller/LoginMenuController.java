@@ -2,6 +2,7 @@ package View.Controller;
 
 import App.Main;
 import Controller.UserController;
+import Model.Game;
 import Transiton.NavigationTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -61,7 +62,10 @@ public class LoginMenuController {
             invalidLogin.setVisible(true);
             usernameLogin.setStyle("-fx-border-color: red");
             passwordLogin.setStyle("-fx-border-color: red");
-        } else NavigationTransition.fadeTransition(login, "MainMenu");
+        } else{
+
+            NavigationTransition.fadeTransition(login, "MainMenu");
+        }
     }
 
     public void changeVisibility1(KeyEvent keyEvent) {

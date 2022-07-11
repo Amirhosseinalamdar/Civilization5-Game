@@ -1,6 +1,11 @@
 package Model;
 
 import Controller.UnitController;
+import Controller.UserController;
+import Model.Map.Resource;
+import Model.Map.TerrainFeature;
+import Model.Map.TerrainType;
+import Model.Map.Tile;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
@@ -10,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
+    @Expose(deserialize = true, serialize = true)
+    private int mapSize = 20;
     @Expose(deserialize = false, serialize = false)
     private static Game instance;
     @Expose(serialize = true, deserialize = true)
@@ -19,7 +26,12 @@ public class Game {
     @Expose(serialize = true, deserialize = true)
     private int time;
     @Expose(serialize = true, deserialize = true)
-    private Tile[][] tiles = new Tile[20][20];
+    private Tile[][] tiles = new Tile[mapSize][mapSize];
+
+
+
+    private ArrayList<Tile> map = new ArrayList<>();
+
 
     public static Game getInstance() {
         if (instance == null) instance = new Game();
@@ -29,6 +41,16 @@ public class Game {
     public ArrayList<User> getPlayers() {
         return players;
     }
+
+    public int getMapSize() {
+        return mapSize;
+    }
+
+    public void setMapSize(int mapSize) {
+        this.mapSize = mapSize;
+    }
+
+
 
     public int getTurn() {
         return turn;
@@ -41,11 +63,19 @@ public class Game {
     public void nextTurn() {
         turn++;
         turn %= players.size();
-        if (turn == 0) time++;
+        if (getTurn() == 0) time++;
+    }
+
+    public User getLoggedInUser() {
+        for (User key : players) {
+            if (key.isLoggedIn()) return key;
+        }
+        return UserController.getLoggedInUser();
     }
 
     public void generateGame(ArrayList<User> users) {
-        players = new ArrayList<>(users);
+
+        players = users;
         turn = 0;
         time = 1;
         generateMap();
@@ -54,8 +84,8 @@ public class Game {
             Random random = new Random(players.indexOf(player));
             int randomX, randomY;
             do {
-                randomX = random.nextInt(20);
-                randomY = random.nextInt(20);
+                randomX = random.nextInt(this.mapSize);
+                randomY = random.nextInt(this.mapSize);
             } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
@@ -121,10 +151,11 @@ public class Game {
     }
 
     public void generateMap() {
-        Random random = new Random(0);
+        map = new ArrayList<>();
+        Random random = new Random();
         int centersParameter = 1;
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 tiles[i][j] = new Tile();
                 tiles[i][j].setIndexInMapI(i);
                 tiles[i][j].setIndexInMapJ(j);
@@ -138,8 +169,8 @@ public class Game {
             }
         }
         generateRivers();
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 if (tiles[i][j].getType() != null) continue;
                 TerrainType type = getType(random.nextInt(7));
                 int probabilityDecrement = setProbabilityDecrement(type);
@@ -167,8 +198,8 @@ public class Game {
     }
 
     public void completeMap(Tile[][] tiles) {
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 if (tiles[i][j].getType() == null) {
                     int[] counter = new int[7];
                     addCounter(counter, tiles[i + 1][j].getType());
@@ -190,6 +221,7 @@ public class Game {
                 }
                 if (tiles[i][j].getFeature() == null) tiles[i][j].setFeature(TerrainFeature.NONE);
                 if (tiles[i][j].getResource() == null) tiles[i][j].setResource(Resource.NONE);
+                map.add(tiles[i][j]);
                 tiles[i][j].initializeTile(tiles[i][j].getType(), tiles[i][j].getFeature());
             }
         }
@@ -197,10 +229,10 @@ public class Game {
     }
 
     private void addResource() {
-        Random random = new Random(0);
+        Random random = new Random();
         int key;
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < this.mapSize; i++) {
+            for (int j = 0; j < this.mapSize; j++) {
                 key = random.nextInt(100);
                 if (tiles[i][j].getFeature() == TerrainFeature.FOREST) {
                     if (key < 10) tiles[i][j].setResource(Resource.BANANA);
@@ -306,7 +338,7 @@ public class Game {
                 tiles[i][j].setFeature(TerrainFeature.ICE);
             } else if (type == TerrainType.DESERT && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.OASIS);
-            } else if(tiles[i][j].isRiverAtLeft() && key<20){
+            } else if (tiles[i][j].isRiverAtLeft() && key < 20) {
                 tiles[i][j].setFeature(TerrainFeature.DELTA);
             }
         }
@@ -344,7 +376,7 @@ public class Game {
     }
 
     private void generateRivers() {
-        Random random = new Random(0);
+        Random random = new Random();
         int howManyRivers = random.nextInt(4) + 1;
         for (int k = 0; k < howManyRivers; k++) {
             int i = random.nextInt(7) + 2;

@@ -32,6 +32,18 @@ public class User {
         this.score = score;
     }
 
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void newCivilization() {
+        this.civilization = new Civilization();
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -80,7 +92,7 @@ public class User {
         return civilization;
     }
 
-    public void newCivilization() {
-        this.civilization = new Civilization();
+    public void setCivilization(Civilization civilization) {
+        this.civilization = civilization;
     }
 }

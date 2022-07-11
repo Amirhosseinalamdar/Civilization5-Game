@@ -1,20 +1,24 @@
 package Controller;
 
+import Model.Game;
 import Model.User;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class UserController {
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
+    }
+
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
@@ -58,6 +62,7 @@ public class UserController {
             if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
                 output = "user logged in successfully!";
                 loggedInUser = allUser;
+                allUser.setLoggedIn(true);
                 break;
             }
         }
@@ -67,6 +72,7 @@ public class UserController {
 
     public static String logUserOut() {
         loggedInUser = null;
+        Game.getInstance().getLoggedInUser().setLoggedIn(false);
         return "user logged out successfully!";
     }
 
@@ -122,6 +128,7 @@ public class UserController {
         if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
         Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
         sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
+//        sorted.sort(comparator);
         return sorted;
     }
 
@@ -136,9 +143,14 @@ public class UserController {
     }
 
     public static void writeDataToJson() {
+        for (User allUser : allUsers) {
+            allUser.setCivilization(null);
+            allUser.setLoggedIn(false);
+        }
         try {
+            String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(allUsers);
             FileWriter fileWriter = new FileWriter("json.json");
-            fileWriter.write(new Gson().toJson(allUsers));
+            fileWriter.write(json);
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
