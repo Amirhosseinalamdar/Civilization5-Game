@@ -63,7 +63,7 @@ public class GameMenu {
             gameMapController = mapController;
             Scene scene = new Scene(root);
             setMapNavigation(scene,mapController);
-//            setUnitMovement(mapController);
+            setUnitMovement(mapController);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e) {
@@ -108,28 +108,7 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
-                    if (mapController.getChosenUnit() == null) {
-                        if (tile.getCivilian() == null) {
-                            if (tile.getMilitary() == null) return;
-                            mapController.setChosenUnit(tile.getMilitary());
-                        } else {
-                            if (tile.getMilitary() != null) {
-                                if (mapController.getChosenUnit() != null && mapController.getChosenUnit().equals(tile.getMilitary()))
-                                    mapController.setChosenUnit(tile.getCivilian());
-                                else mapController.setChosenUnit(tile.getMilitary());
-                            } else mapController.setChosenUnit(tile.getCivilian());
-                        }
-
-                        if (!mapController.getChosenUnit().getCivilization().equals(GameController.getCivilization()))
-                            mapController.setChosenUnit(null);
-
-                        if(mapController.getChosenUnit() != null) {
-                            mapController.showUnitAvatar();
-                            if(mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
-                            else mapController.showMilitaryOptions();
-                        }
-                    }
-                    else {
+                    if (mapController.getChosenUnit() != null) {
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {

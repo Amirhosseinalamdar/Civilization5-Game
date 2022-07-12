@@ -69,21 +69,6 @@ public class Unit extends ImageView {
                     else mapController.showMilitaryOptions();
                 }
             }
-            else {
-                UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-                UnitController.handleUnitOptions();
-                if (mapController.getChosenUnit().getType().isCivilian()) {
-                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
-                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                }
-                else {
-                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
-                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                }
-                mapController.setChosenUnit(null);
-                mapController.hideUnitAvatar();
-                mapController.hideUnitOptions();
-            }
         });
     }
 
