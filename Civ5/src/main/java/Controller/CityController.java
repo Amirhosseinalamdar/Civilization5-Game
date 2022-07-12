@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Map.Building;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
@@ -12,6 +13,7 @@ import View.GameMenu;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 
@@ -66,8 +68,117 @@ public class CityController {
         } else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
             GameMenu.showCityOutput(city);
+        } else if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex()) ||
+                matcher.pattern().toString().equals(Commands.PURCHASE_BUILDING.getRegex())) {
+            Building building = getBuildingFromString(matcher.group("buildingName"));
+            if (building == null) {
+                GameMenu.invalidBuildingName();
+                return;
+            }
+            if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex())) tryCreateBuilding(building);
+            else tryPurchaseBuilding(building);
         } else System.out.println("city controller, invalid command");
     }
+
+    private static void tryCreateBuilding(Building building) {
+        if (!hasReachedTechForBuilding(building)) {
+            GameMenu.unreachedTech(building.getPrerequisiteTech());
+            return;
+        }
+        if (hasNotBuiltBuildingForBuilding(building)) {
+            GameMenu.unreachedBuilding(building.getPrerequisiteBuildings());
+            return;
+        }
+        if (checkResource(building)) {
+            GameMenu.cantBuild();
+            return;
+        }
+        try {
+            int remainingCost = city.getBuildings().get(building);
+            if (remainingCost == 0) System.out.println("this building is already built");
+            else System.out.println("already in progress... remaining cost: " + remainingCost);
+        } catch (Exception e) {
+            city.getBuildings().put(building, building.getCost());
+        }
+        city.setInProgressBuilding(building);
+    }
+
+    private static boolean hasNotBuiltBuildingForBuilding(Building building) {
+        for (Building prerequisiteBuilding : building.getPrerequisiteBuildings()) {
+            try {
+                if (city.getBuildings().get(prerequisiteBuilding) <= 0) return false;
+            } catch (Exception ignored) {
+            }
+        }
+        return true;
+    }
+
+    private static boolean checkResource(Building building) {
+        if (building.equals(Building.WATER_MILL) || building.equals(Building.GARDEN)) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.isRiverAtLeft()) return false;
+            }
+            return true;
+        } else if (building.equals(Building.CIRCUS) || building.equals(Building.STABLE)) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.getResource().equals(Resource.HORSE)) return false;
+            }
+            return true;
+        } else if (building.equals(Building.FORGE)) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.getResource().equals(Resource.IRON)) return false;
+            }
+            return true;
+        } else if (building.equals(Building.WINDMILL)) {
+            for (Tile tile : city.getTiles()) {
+                if (tile.getType().equals(TerrainType.HILL)) return true;
+            }
+            return false;
+        } else if (building.equals(Building.FACTORY)) {
+            for (Resource resource : civilization.getResources()) {
+                if (resource.equals(Resource.COAL)) return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static void tryPurchaseBuilding(Building building) {
+        int buildingGoldCost = 2 * building.getCost();
+        if (!civilization.hasReachedTech(building.getPrerequisiteTech())) {
+            GameMenu.unreachedTech(building.getPrerequisiteTech());
+            return;
+        }
+        if (checkResource(building)) {
+            GameMenu.cantBuild();
+            return;
+        }
+        if (hasNotBuiltBuildingForBuilding(building)) {
+            GameMenu.unreachedBuilding(building.getPrerequisiteBuildings());
+            return;
+        }
+        if (buildingGoldCost > civilization.getTotalGold()) {
+            GameMenu.notEnoughGoldForUnit(building.toString());
+            return;
+        }
+        if (city.getBuildings().get(building) != null) {
+            int remainingCost = city.getBuildings().get(building);
+            if (remainingCost <= 0) System.out.println("this building is already built");
+            else {
+                civilization.setTotalGold(civilization.getTotalGold() - buildingGoldCost);
+                city.getBuildings().replace(building, 0);
+                civilization.getNotifications().add(city.getInProgressBuilding() + " is built in city: "
+                        + city.getName() + ".    time: " + Game.getInstance().getTime());
+                if (city.getInProgressBuilding().equals(building)) city.setInProgressBuilding(null);
+            }
+        } else {
+            civilization.setTotalGold(civilization.getTotalGold() - buildingGoldCost);
+            city.getBuildings().put(building, 0);
+            civilization.getNotifications().add(city.getInProgressBuilding() + " is built in city: "
+                    + city.getName() + ".    time: " + Game.getInstance().getTime());
+        }
+    }
+
 
     public static Matcher getCityDecision() {
         Matcher matcher;
@@ -141,7 +252,7 @@ public class CityController {
             return;
         }
         if (unitGoldCost > civilization.getTotalGold()) {
-            GameMenu.notEnoughGoldForUnit(unitType);
+            GameMenu.notEnoughGoldForUnit(unitType.toString());
             return;
         }
         if ((unitType.isCivilian() && city.getTiles().get(0).getCivilian() != null) ||
@@ -206,6 +317,14 @@ public class CityController {
         }
     }
 
+    private static Building getBuildingFromString(String string) {
+        try {
+            return Building.valueOf(string);
+        } catch (IllegalArgumentException i) {
+            return null;
+        }
+    }
+
     private static boolean tileIsPurchasable(Tile targetTile) {
         boolean isNeighbor = false;
         for (Tile tile : city.getTiles()) {
@@ -259,9 +378,20 @@ public class CityController {
         city.setProductionPerTurn(production);
         city.setGoldPerTurn(gold);
         city.setSciencePerTurn(science);
+        updateCityBuildingsEffects(city);
         city.updateStoredFood();
     }
 
+    private static void updateCityBuildingsEffects(City city) {
+        for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
+            if (set.getValue() <= 0) {
+                city.setFoodPerTurn(city.getFoodPerTurn() + set.getKey().getFoodAdder() + (int)(set.getKey().getFoodMultiplier() * city.getFoodPerTurn()));
+                city.setSciencePerTurn(city.getSciencePerTurn() + set.getKey().getScienceAdder() + (int)(set.getKey().getScienceMultiplier() * city.getSciencePerTurn()));
+                city.setGoldPerTurn(city.getGoldPerTurn() + (int)(set.getKey().getGoldMultiplier() * city.getGoldPerTurn()));
+                city.setProductionPerTurn(city.getProductionPerTurn() + (int)(set.getKey().getProductionMultiplier() * city.getProductionPerTurn()));
+            }
+        }
+    }
 
     public static void updateCity(City city) {
         if (city.getHP() < 20) city.setHP(city.getHP() + 1);
@@ -269,12 +399,30 @@ public class CityController {
         handlePopulation(city);
         updateBorder(city);
         updateProduction(city);
+        updateBuildBuildings(city);
         updateBuildingImprovement(city);
         updateRemovingProgress();
-        updateRoads(city);
+        updateRoads();
     }
 
-    private static void updateRoads(City city) {
+    private static void updateBuildBuildings(City city) {
+        if (city.getInProgressBuilding() != null) {
+            int i = city.getBuildings().get(city.getInProgressBuilding());
+            i -= city.getProductionPerTurn();
+            city.getBuildings().replace(city.getInProgressBuilding(), i);
+            if (i <= 0) {
+                city.getBuildings().replace(city.getInProgressBuilding(), 0);
+                civilization.getNotifications().add(city.getInProgressBuilding() + " is built in city: "
+                        + city.getName() + ".    time: " + Game.getInstance().getTime());
+                if (city.getInProgressBuilding().equals(Building.WALLS)) city.setHP(city.getHP() + 5);
+                else if (city.getInProgressBuilding().equals(Building.CASTLE)) city.setHP(city.getHP() + 8);
+                else if (city.getInProgressBuilding().equals(Building.MILITARY_BASE)) city.setHP(city.getHP() + 12);
+                city.setInProgressBuilding(null);
+            }
+        }
+    }
+
+    private static void updateRoads() {
         for (Unit unit : civilization.getUnits()) {
             if (unit.getTile().getRouteInProgress() != null
                     && (unit.getTile().getRouteInProgress().getKey().equals("road") || unit.getTile().getRouteInProgress().getKey().equals("railroad"))
@@ -477,6 +625,14 @@ public class CityController {
     private static boolean hasReachedTechForUnit(UnitType unitType) {
         try {
             return civilization.getLastCostUntilNewTechnologies().get(unitType.getPrerequisiteTech()) <= 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean hasReachedTechForBuilding(Building building) {
+        try {
+            return civilization.getLastCostUntilNewTechnologies().get(building.getPrerequisiteTech()) <= 0;
         } catch (Exception e) {
             return false;
         }

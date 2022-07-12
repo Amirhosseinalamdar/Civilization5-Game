@@ -1,6 +1,5 @@
 package Model.Map;
 
-import Controller.GameController;
 import Model.Civilization;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
@@ -26,6 +25,10 @@ public class City {
     private int sciencePerTurn;
     @Expose(serialize = true, deserialize = true)
     private HashMap<UnitType, Integer> lastCostsUntilNewProductions;
+    @Expose(serialize = true, deserialize = true)
+    private HashMap<Building, Integer> buildings;
+    @Expose(serialize = true, deserialize = true)
+    private Building inProgressBuilding;
     @Expose(serialize = true, deserialize = true)
     private UnitType inProgressUnit;
     @Expose(serialize = true, deserialize = true)
@@ -59,6 +62,7 @@ public class City {
 
     public City(Civilization civilization, Tile centerTile, String name) {
         lastCostsUntilNewProductions = new HashMap<>();
+        buildings = new HashMap<>();
         tiles = new ArrayList<>();
         tiles.add(centerTile);
         tiles.addAll(centerTile.getNeighbors());
@@ -87,6 +91,18 @@ public class City {
         this.name = name;
         this.foodPerTurn = 1;
         this.productionPerTurn = 1;
+    }
+
+    public HashMap<Building, Integer> getBuildings() {
+        return buildings;
+    }
+
+    public Building getInProgressBuilding() {
+        return inProgressBuilding;
+    }
+
+    public void setInProgressBuilding(Building inProgressBuilding) {
+        this.inProgressBuilding = inProgressBuilding;
     }
 
     public void setInProgressUnit(UnitType unitType) {

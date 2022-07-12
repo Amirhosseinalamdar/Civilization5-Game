@@ -1,10 +1,10 @@
 package Controller;
 
+import Model.Map.Building;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
 import Model.Technology;
-import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
@@ -12,7 +12,7 @@ import View.GameMenu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class CivilizationController {
@@ -78,9 +78,23 @@ public class CivilizationController {
         civilization.setTotalGold(civilization.getTotalGold() + gold);
         handleUnitsMaintenance();
         handleRoadsMaintenance();
+        handleBuildingsMaintenance();
         civilization.increaseScore(score);
         updateInProgressTech();
         updateHappiness();
+    }
+
+    private static void handleBuildingsMaintenance() {
+        int cost = 0;
+        for (City city : civilization.getCities()) {
+            for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
+                if (set.getValue() <= 0) {
+                    cost += set.getKey().getMaintenance();
+                }
+            }
+        }
+        civilization.setTotalGold(civilization.getTotalGold() - cost);
+        if (civilization.getTotalGold() < 0) civilization.setTotalGold(0);
     }
 
     private static void updateHappiness() {
@@ -88,6 +102,11 @@ public class CivilizationController {
         for (City city : civilization.getCities()) {
             if (city.getCityStatus().equals(CityStatus.PUPPET)) unhappiness++;
             unhappiness += city.getCitizens().size();
+            for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
+                if (set.getValue() <= 0) {
+                    unhappiness -= set.getKey().getHappinessAdder();
+                }
+            }
         }
         for (HashMap.Entry<Resource, Integer> set : civilization.getLuxuryResources().entrySet()) {
             if (set.getValue() > 0) unhappiness -= 4;

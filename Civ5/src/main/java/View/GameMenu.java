@@ -11,7 +11,6 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Controller.MapController;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,8 +21,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
 
 public class GameMenu {
@@ -719,6 +716,10 @@ public class GameMenu {
         System.out.println("unit type is invalid");
     }
 
+    public static void invalidBuildingName() {
+        System.out.println("building name is invalid");
+    }
+
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
     }
@@ -757,6 +758,10 @@ public class GameMenu {
 
     public static void notEnoughResource() {
         System.out.println("you don't have enough resource");
+    }
+
+    public static void cantBuild() {
+        System.out.println("you can't build this building here");
     }
 
     public static void invalidTechName() {
@@ -800,8 +805,8 @@ public class GameMenu {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
-    public static void notEnoughGoldForUnit(UnitType unitType) {
-        System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
+    public static void notEnoughGoldForUnit(String string) {
+        System.out.println("cant purchase " + string + "; not enough gold");
     }
 
     public static void cantBuildRoadHere() {
@@ -867,5 +872,9 @@ public class GameMenu {
 
     public static void pillaged(String pillageTarget) {
         System.out.println(pillageTarget + " got pillaged successfully");
+    }
+
+    public static void unreachedBuilding(ArrayList<Building> prerequisiteBuildings) {
+        System.out.println("you haven't reached " + prerequisiteBuildings.toString() + " yet");
     }
 }
