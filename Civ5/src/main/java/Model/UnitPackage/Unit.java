@@ -51,10 +51,6 @@ public class Unit extends ImageView {
         this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
         this.setFitWidth(50);
         this.setFitHeight(50);
-        Pane backgroundPane = GameMenu.getGameMapController().getBackgroundPane();
-        setOnMouseClicked(event -> {
-
-        });
     }
 
     public void setPath(Path path) {

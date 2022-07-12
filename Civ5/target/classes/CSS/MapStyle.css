@@ -1,0 +1,10 @@
+.nextTurn{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 25;
+    -fx-background-color: rgba(255, 215, 0, 0.51);
+    -fx-text-fill: black;
+}
+.nextTurn:hover{
+    -fx-background-color: gold;
+    -fx-cursor: hand;
+}

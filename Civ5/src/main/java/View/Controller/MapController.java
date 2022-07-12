@@ -1,7 +1,6 @@
 package View.Controller;
 
 import Controller.GameController;
-import Controller.UnitController;
 import Model.Game;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -9,6 +8,8 @@ import Model.Map.TerrainType;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,11 @@ public class MapController {
     private ImageView unitAvatarImageView;
     private Label movesLabel;
     private Unit chosenUnit;
+
+    private ImageView chooseResearch;
+    private ImageView chooseProduction;
+    @FXML
+    private Button nextTurn;
 
     public Pane getBackgroundPane() {
         return backgroundPane;
@@ -85,6 +91,13 @@ public class MapController {
         showUnits();
         showStatusBar();
         showUserPanelDownLeft();
+        Button nextTurn = new Button("Next Turn");
+        nextTurn.setLayoutX(1450);
+        nextTurn.setLayoutY(820);
+        nextTurn.getStylesheets().add("css/MapStyle.css");
+        nextTurn.getStyleClass().add("nextTurn");
+        nextTurn.setOnMouseClicked(event -> nextTurn());
+        backgroundPane.getChildren().add(nextTurn);
     }
     public void showTileContentIfNeeded(){
         if(tileImageViews.size() > 0){//not tested
@@ -329,7 +342,11 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(citizenImageViews);
     }
-    public void hideCitizen(){
+    public void hideCitizen() {
         backgroundPane.getChildren().removeAll(citizenImageViews);
+    }
+
+    public void nextTurn() {
+        GameController.updateGame();
     }
 }

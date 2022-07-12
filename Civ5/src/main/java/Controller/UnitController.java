@@ -29,7 +29,6 @@ public class UnitController {
     public static void setUnit (Unit unit, String command) {
         UnitController.unit = unit;
         UnitController.command = command;
-        handleUnitOptions();
     }
 
     public static void handleUnitOptions() {
@@ -249,6 +248,11 @@ public class UnitController {
             }
 
             System.out.println("unit decision wasn't valid");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -667,6 +671,7 @@ public class UnitController {
 
     public static void doRemainingMissions() {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH)) {
+            System.out.println("brotha had path to complete!");
             continuePath();
             return;
         }

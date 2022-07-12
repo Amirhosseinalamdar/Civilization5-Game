@@ -59,7 +59,7 @@ public class GameMenu {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
             Parent root = fxmlLoader.load();
-            MapController mapController = (MapController)fxmlLoader.getController();
+            MapController mapController = fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
             setMapNavigation(scene,mapController);
@@ -108,6 +108,7 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() == null) {
+                        System.out.println("is null bitch");
                         if (tile.getCivilian() == null) {
                             if (tile.getMilitary() == null) return;
                             mapController.setChosenUnit(tile.getMilitary());
@@ -118,12 +119,17 @@ public class GameMenu {
                                 else mapController.setChosenUnit(tile.getMilitary());
                             } else mapController.setChosenUnit(tile.getCivilian());
                         }
-                        if(mapController.getChosenUnit() != null){
+
+                        if (!mapController.getChosenUnit().getCivilization().equals(GameController.getCivilization()))
+                            mapController.setChosenUnit(null);
+
+                        if(mapController.getChosenUnit() != null)
                             mapController.showUnitAvatar();
-                        }
                     }
                     else {
+                        System.out.println("gonna move bitch");
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
                             mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
