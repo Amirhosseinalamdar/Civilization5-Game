@@ -445,6 +445,7 @@ public class MapController {
             });
             hBox.getChildren().add(imageViews[i]);
         }
+
         unitOptionsNodes.add(hBox);
     }
     public void hideUnitOptions(){
