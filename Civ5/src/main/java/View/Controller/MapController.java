@@ -64,6 +64,23 @@ public class MapController {
         showMap();
     }
 
+    public void showCity(Tile tile, int i, int j) {
+        if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
+            ImageView imageView;
+            if (tile.getCity().getBuildings().size() >= 30) imageView = new ImageView(new Image("Pictures/City/6.png"));
+            else if (tile.getCity().getBuildings().size() >= 24) imageView = new ImageView(new Image("Pictures/City/5.png"));
+            else if (tile.getCity().getBuildings().size() >= 18) imageView = new ImageView(new Image("Pictures/City/4.png"));
+            else if (tile.getCity().getBuildings().size() >= 12) imageView = new ImageView(new Image("Pictures/City/3.png"));
+            else if (tile.getCity().getBuildings().size() >= 6) imageView = new ImageView(new Image("Pictures/City/2.png"));
+            else imageView = new ImageView(new Image("Pictures/City/1.png"));
+            imageView.setFitHeight(60);
+            imageView.setFitWidth(60);
+            imageView.setX(120 * (j-yStartingIndex) + (i%2) * 60 + 30);
+            imageView.setY(105 * (i-xStartingIndex) + 40);
+            backgroundPane.getChildren().add(imageView);
+        }
+    }
+
     public void showMap() {
         boolean flag1 = true;
         boolean flag2 = true;
@@ -81,6 +98,7 @@ public class MapController {
                 showTile(tile,i,j);
                 showRiverAndDelta(tile,i,j);
                 showResourceAndImprovements(tile,i,j);
+                showCity(tile, i, j);
                 showRuins(tile,i,j);
             }
             flag2 = true;
