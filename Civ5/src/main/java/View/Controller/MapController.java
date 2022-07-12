@@ -1,5 +1,6 @@
 package View.Controller;
 
+import Controller.GameController;
 import Controller.UnitController;
 import Model.Game;
 import Model.Map.Resource;
@@ -8,6 +9,7 @@ import Model.Map.TerrainType;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,7 +24,8 @@ import java.util.Collections;
 public class MapController {
     @FXML
     private Pane backgroundPane;
-
+    private ImageView unitAvatarImageView;
+    private Label movesLabel;
     private Unit chosenUnit;
 
     public Pane getBackgroundPane() {
@@ -85,6 +88,7 @@ public class MapController {
         showTileContentIfNeeded();
         showUnits();
         showStatusBar();
+        showUserPanelDownLeft();
     }
     public void showTileContentIfNeeded(){
         if(tileImageViews.size() > 0){//not tested
@@ -92,6 +96,38 @@ public class MapController {
         }
         if(citizenImageViews.size() > 0){
             showCitizens();
+        }
+    }
+    public void showUserPanelDownLeft(){
+        ImageView imageView = new ImageView(new Image("Pictures/Panels/myCiv.png"));
+        imageView.setFitHeight(250);
+        imageView.setX(0);
+        imageView.setY(900 - imageView.getLayoutBounds().getHeight());
+        backgroundPane.getChildren().add(imageView);
+        if(chosenUnit != null){
+            showUnitAvatar();
+        }
+    }
+    public void showUnitAvatar(){
+        String picture = chosenUnit.getType().toString();
+        unitAvatarImageView = new ImageView(new Image("Images/units/"+picture+".png"));
+        unitAvatarImageView.setFitHeight(160);
+        unitAvatarImageView.setFitWidth(160);
+        unitAvatarImageView.setX(30);
+        unitAvatarImageView.setY(675);
+        backgroundPane.getChildren().add(unitAvatarImageView);
+        String remainingMoves = String.valueOf(chosenUnit.getMP() - chosenUnit.getMovesInTurn());
+        String totalMoves = String.valueOf(chosenUnit.getMP());
+        movesLabel = new Label("remaining moves: "+remainingMoves+"/"+totalMoves);
+        movesLabel.setStyle("-fx-text-fill: white; -fx-font-size: 30;");
+        movesLabel.setLayoutX(20);
+        movesLabel.setLayoutY(835);
+        backgroundPane.getChildren().add(movesLabel);
+    }
+    public void hideUnitAvatar(){
+        if(unitAvatarImageView != null && backgroundPane.getChildren().contains(unitAvatarImageView)) {
+            backgroundPane.getChildren().remove(unitAvatarImageView);
+            backgroundPane.getChildren().remove(movesLabel);
         }
     }
     public void showTile(Tile tile,int i, int j){
@@ -183,25 +219,32 @@ public class MapController {
     public void showStatusBar(){//TODO ADD TEXT BOXES
         ImageView imageView = new ImageView(new Image("Pictures/Panels/statusBar.png"));
         backgroundPane.getChildren().add(imageView);
-        ImageView[] imageViews = new ImageView[5];
+        ImageView[] imageViews = new ImageView[4];
         imageViews[0] = new ImageView(new Image("Pictures/Panels/Science.png"));
         imageViews[1] = new ImageView(new Image("Pictures/Panels/Gold.png"));
         imageViews[2] = new ImageView(new Image("Pictures/Panels/Happiness.png"));
-        imageViews[3] = new ImageView(new Image("Pictures/Panels/Food.png"));
-        imageViews[4] = new ImageView(new Image("Pictures/Panels/Turn.png"));
+        imageViews[3] = new ImageView(new Image("Pictures/Panels/Turn.png"));
         for(int i=0;i<imageViews.length;i++){
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
             imageViews[i].setY(10);
             imageViews[i].setX(40 + 140 * i);
-            if(i == 4) imageViews[i].setX(imageViews[i].getX() + 700);
+            if(i == 3) imageViews[i].setX(imageViews[i].getX() + 700);
             backgroundPane.getChildren().add(imageViews[i]);
         }
-        imageView = new ImageView(new Image("Pictures/Panels/myCiv.png"));
-        imageView.setFitHeight(250);
-        imageView.setX(0);
-        imageView.setY(900 - imageView.getLayoutBounds().getHeight());
-        backgroundPane.getChildren().add(imageView);
+
+        Label[] labels = new Label[4];
+        labels[0] = new Label(String.valueOf(GameController.getCivilization().getScience()));
+        labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
+        labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
+        labels[3] = new Label(String.valueOf(Game.getInstance().getTurn()));
+        for(int i=0;i<labels.length;i++){
+            labels[i].setLayoutY(5);
+            labels[i].setLayoutX(40 + 140 * i + 50);
+            labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30;");
+            if(i == 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
+            backgroundPane.getChildren().add(labels[i]);
+        }
 
     }
     public void showTilesFoodProductionGold() {//not tested
@@ -259,11 +302,9 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(tileImageViews);
     }
-
     public void hideTilesFoodProductionGold(){//not tested
         backgroundPane.getChildren().removeAll(tileImageViews);
     }
-
     public void showCitizens(){
         citizenImageViews = new ArrayList<>();
         boolean flag1 = true;
@@ -292,7 +333,6 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(citizenImageViews);
     }
-
     public void hideCitizen(){
         backgroundPane.getChildren().removeAll(citizenImageViews);
     }
