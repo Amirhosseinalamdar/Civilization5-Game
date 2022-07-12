@@ -377,6 +377,18 @@ public class MapController {
     }
     private void settlerExclusiveOptions(HBox hBox){
         ImageView imageView = new ImageView(new Image("Pictures/unitIcons/CityState.png"));
+        imageView.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                imageView.setOpacity(0.3);
+            }
+        });
+        imageView.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                imageView.setOpacity(1);
+            }
+        });
         imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -417,8 +429,21 @@ public class MapController {
         imageViews[2] = new ImageView(new Image("Pictures/unitIcons/Stop.png"));
         imageViews[3] = new ImageView(new Image("Pictures/unitIcons/DisbandUnit.png"));
         for(int i=0;i<imageViews.length;i++){
+            int a = i;
             imageViews[i].setFitHeight(70);
             imageViews[i].setFitWidth(70);
+            imageViews[i].setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    imageViews[a].setOpacity(0.3);
+                }
+            });
+            imageViews[i].setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    imageViews[a].setOpacity(1);
+                }
+            });
             hBox.getChildren().add(imageViews[i]);
         }
         unitOptionsNodes.add(hBox);
