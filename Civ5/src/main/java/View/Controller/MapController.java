@@ -94,8 +94,14 @@ public class MapController {
                     }
                     else {
                         UnitController.setUnit(chosenUnit, "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-                        chosenUnit.setX(chosenUnit.getTile().getX() + 50);
-                        chosenUnit.setY(chosenUnit.getTile().getY() + 60);
+                        if (chosenUnit.getType().isCivilian()) {
+                            chosenUnit.setX(chosenUnit.getTile().getX() + 65);
+                            chosenUnit.setY(chosenUnit.getTile().getY() + 40);
+                        }
+                        else {
+                            chosenUnit.setX(chosenUnit.getTile().getX() + 10);
+                            chosenUnit.setY(chosenUnit.getTile().getY() + 40);
+                        }
                         chosenUnit = null;
                     }
                 });

@@ -1,8 +1,10 @@
 package Model.UnitPackage;
 
+import Controller.UnitController;
 import Model.Civilization;
 import Model.Map.Path;
 import Model.Map.Tile;
+import View.Controller.MapController;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
