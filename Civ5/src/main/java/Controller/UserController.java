@@ -143,9 +143,11 @@ public class UserController {
     }
 
     public static void writeDataToJson() {
-        for (User allUser : allUsers) {
-            allUser.setCivilization(null);
-            allUser.setLoggedIn(false);
+        if (allUsers != null) {
+            for (User allUser : allUsers) {
+                allUser.setCivilization(null);
+                allUser.setLoggedIn(false);
+            }
         }
         try {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(allUsers);

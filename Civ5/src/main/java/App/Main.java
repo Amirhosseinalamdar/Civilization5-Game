@@ -6,6 +6,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -20,7 +24,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        UserController.readDataFromJson();
+//        UserController.readDataFromJson();
         launch();
         UserController.writeDataToJson();
     }
@@ -35,7 +39,6 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
-
     }
 
 

@@ -36,6 +36,7 @@ public class MapController {
     private int yStartingIndex = 1;
     private ArrayList<ImageView> tileImageViews = new ArrayList<>();
     private ArrayList<ImageView> citizenImageViews = new ArrayList<>();
+
     public int getxStartingIndex() {
         return xStartingIndex;
     }
@@ -67,16 +68,19 @@ public class MapController {
     public void showCity(Tile tile, int i, int j) {
         if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
             ImageView imageView;
-            if (tile.getCity().getBuildings().size() >= 30) imageView = new ImageView(new Image("Pictures/City/6.png"));
-            else if (tile.getCity().getBuildings().size() >= 24) imageView = new ImageView(new Image("Pictures/City/5.png"));
-            else if (tile.getCity().getBuildings().size() >= 18) imageView = new ImageView(new Image("Pictures/City/4.png"));
-            else if (tile.getCity().getBuildings().size() >= 12) imageView = new ImageView(new Image("Pictures/City/3.png"));
-            else if (tile.getCity().getBuildings().size() >= 6) imageView = new ImageView(new Image("Pictures/City/2.png"));
-            else imageView = new ImageView(new Image("Pictures/City/1.png"));
+            if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 30)
+                imageView = new ImageView(new Image("Pictures/City/4.jpg"));
+            else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 23)
+                imageView = new ImageView(new Image("Pictures/City/3.jpg"));
+            else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 15)
+                imageView = new ImageView(new Image("Pictures/City/2.jpg"));
+            else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 7)
+                imageView = new ImageView(new Image("Pictures/City/1.jpg"));
+            else imageView = new ImageView(new Image("Pictures/City/0.jpg"));
             imageView.setFitHeight(60);
             imageView.setFitWidth(60);
-            imageView.setX(120 * (j-yStartingIndex) + (i%2) * 60 + 30);
-            imageView.setY(105 * (i-xStartingIndex) + 40);
+            imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 30);
+            imageView.setY(105 * (i - xStartingIndex) + 40);
             backgroundPane.getChildren().add(imageView);
         }
     }
@@ -95,11 +99,11 @@ public class MapController {
                 }
                 flag2 = false;
                 Tile tile = Game.getInstance().getTiles()[i][j];
-                showTile(tile,i,j);
-                showRiverAndDelta(tile,i,j);
-                showResourceAndImprovements(tile,i,j);
+                showTile(tile, i, j);
+                showRiverAndDelta(tile, i, j);
+                showResourceAndImprovements(tile, i, j);
                 showCity(tile, i, j);
-                showRuins(tile,i,j);
+                showRuins(tile, i, j);
             }
             flag2 = true;
         }
@@ -108,27 +112,30 @@ public class MapController {
         showStatusBar();
         showUserPanelDownLeft();
     }
-    public void showTileContentIfNeeded(){
-        if(tileImageViews.size() > 0){//not tested
+
+    public void showTileContentIfNeeded() {
+        if (tileImageViews.size() > 0) {//not tested
             showTilesFoodProductionGold();
         }
-        if(citizenImageViews.size() > 0){
+        if (citizenImageViews.size() > 0) {
             showCitizens();
         }
     }
-    public void showUserPanelDownLeft(){
+
+    public void showUserPanelDownLeft() {
         ImageView imageView = new ImageView(new Image("Pictures/Panels/myCiv.png"));
         imageView.setFitHeight(250);
         imageView.setX(0);
         imageView.setY(900 - imageView.getLayoutBounds().getHeight());
         backgroundPane.getChildren().add(imageView);
-        if(chosenUnit != null){
+        if (chosenUnit != null) {
             showUnitAvatar();
         }
     }
-    public void showUnitAvatar(){
+
+    public void showUnitAvatar() {
         String picture = chosenUnit.getType().toString();
-        unitAvatarImageView = new ImageView(new Image("Images/units/"+picture+".png"));
+        unitAvatarImageView = new ImageView(new Image("Images/units/" + picture + ".png"));
         unitAvatarImageView.setFitHeight(160);
         unitAvatarImageView.setFitWidth(160);
         unitAvatarImageView.setX(30);
@@ -136,19 +143,21 @@ public class MapController {
         backgroundPane.getChildren().add(unitAvatarImageView);
         String remainingMoves = String.valueOf(chosenUnit.getMP() - chosenUnit.getMovesInTurn());
         String totalMoves = String.valueOf(chosenUnit.getMP());
-        movesLabel = new Label("remaining moves: "+remainingMoves+"/"+totalMoves);
+        movesLabel = new Label("remaining moves: " + remainingMoves + "/" + totalMoves);
         movesLabel.setStyle("-fx-text-fill: white; -fx-font-size: 30;");
         movesLabel.setLayoutX(20);
         movesLabel.setLayoutY(835);
         backgroundPane.getChildren().add(movesLabel);
     }
-    public void hideUnitAvatar(){
-        if(unitAvatarImageView != null && backgroundPane.getChildren().contains(unitAvatarImageView)) {
+
+    public void hideUnitAvatar() {
+        if (unitAvatarImageView != null && backgroundPane.getChildren().contains(unitAvatarImageView)) {
             backgroundPane.getChildren().remove(unitAvatarImageView);
             backgroundPane.getChildren().remove(movesLabel);
         }
     }
-    public void showTile(Tile tile,int i, int j){
+
+    public void showTile(Tile tile, int i, int j) {
         String picture;
         if (tile.getFeature() == TerrainFeature.MARSH) {
             if (tile.getType() == TerrainType.PLAIN) picture = "PLAIN_MARSH";
@@ -156,15 +165,16 @@ public class MapController {
         } else if (tile.getFeature() != TerrainFeature.NONE && tile.getFeature() != TerrainFeature.DELTA)
             picture = tile.getFeature().toString();
         else picture = tile.getType().toString();
-        tile.setImage(new Image("Pictures/tiles/"+picture+".png"));
-        tile.setX(120 * (j-yStartingIndex) + (i%2) * 60);
-        tile.setY(105 * (i-xStartingIndex));
+        tile.setImage(new Image("Pictures/tiles/" + picture + ".png"));
+        tile.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
+        tile.setY(105 * (i - xStartingIndex));
         tile.setFitHeight(140);
         tile.setFitWidth(120);
         backgroundPane.getChildren().add(tile);
     }
-    public void showRiverAndDelta(Tile tile, int i, int j){
-        if(tile.getFeature() == TerrainFeature.DELTA){
+
+    public void showRiverAndDelta(Tile tile, int i, int j) {
+        if (tile.getFeature() == TerrainFeature.DELTA) {
             ImageView imageView1 = new ImageView(new Image("Pictures/tiles/DELTA.png"));
             imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView1.setY(105 * (i - xStartingIndex));
@@ -180,7 +190,8 @@ public class MapController {
             backgroundPane.getChildren().add(imageView2);
         }
     }
-    public void showResourceAndImprovements(Tile tile, int i, int  j){
+
+    public void showResourceAndImprovements(Tile tile, int i, int j) {
         if (tile.getResource() != Resource.NONE) {
             ImageView imageView1 = new ImageView
                     (new Image("Pictures/resources/" + tile.getResource().toString() + ".png"));
@@ -207,7 +218,8 @@ public class MapController {
             backgroundPane.getChildren().add(improvementImage);
         }
     }
-    public void showRuins(Tile tile, int i, int j){
+
+    public void showRuins(Tile tile, int i, int j) {
         if (tile.isRuined()) {
             ImageView imageView1 = new ImageView(new Image("Pictures/tiles/ruins.png"));
             imageView1.setFitWidth(80);
@@ -217,9 +229,10 @@ public class MapController {
             backgroundPane.getChildren().add(imageView1);
         }
     }
-    public void showUnits(){
-        for(int i=0;i<Game.getInstance().getMapSize();i++){
-            for(int j=0;j<Game.getInstance().getMapSize();j++){
+
+    public void showUnits() {
+        for (int i = 0; i < Game.getInstance().getMapSize(); i++) {
+            for (int j = 0; j < Game.getInstance().getMapSize(); j++) {
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 if (tile.getCivilian() != null) {
                     tile.getCivilian().setX(tile.getX() + 65);
@@ -234,7 +247,8 @@ public class MapController {
             }
         }
     }
-    public void showStatusBar(){//TODO ADD TEXT BOXES
+
+    public void showStatusBar() {//TODO ADD TEXT BOXES
         ImageView imageView = new ImageView(new Image("Pictures/Panels/statusBar.png"));
         backgroundPane.getChildren().add(imageView);
         ImageView[] imageViews = new ImageView[4];
@@ -242,12 +256,12 @@ public class MapController {
         imageViews[1] = new ImageView(new Image("Pictures/Panels/Gold.png"));
         imageViews[2] = new ImageView(new Image("Pictures/Panels/Happiness.png"));
         imageViews[3] = new ImageView(new Image("Pictures/Panels/Turn.png"));
-        for(int i=0;i<imageViews.length;i++){
+        for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
             imageViews[i].setY(10);
             imageViews[i].setX(40 + 140 * i);
-            if(i == 3) imageViews[i].setX(imageViews[i].getX() + 700);
+            if (i == 3) imageViews[i].setX(imageViews[i].getX() + 700);
             backgroundPane.getChildren().add(imageViews[i]);
         }
 
@@ -256,15 +270,16 @@ public class MapController {
         labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
         labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
         labels[3] = new Label(String.valueOf(Game.getInstance().getTurn()));
-        for(int i=0;i<labels.length;i++){
+        for (int i = 0; i < labels.length; i++) {
             labels[i].setLayoutY(5);
             labels[i].setLayoutX(40 + 140 * i + 50);
             labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30;");
-            if(i == 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
+            if (i == 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
             backgroundPane.getChildren().add(labels[i]);
         }
 
     }
+
     public void showTilesFoodProductionGold() {//not tested
         tileImageViews = new ArrayList<>();
         boolean flag1 = true;
@@ -320,10 +335,12 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(tileImageViews);
     }
-    public void hideTilesFoodProductionGold(){//not tested
+
+    public void hideTilesFoodProductionGold() {//not tested
         backgroundPane.getChildren().removeAll(tileImageViews);
     }
-    public void showCitizens(){
+
+    public void showCitizens() {
         citizenImageViews = new ArrayList<>();
         boolean flag1 = true;
         boolean flag2 = true;
@@ -338,7 +355,7 @@ public class MapController {
                 }
                 flag2 = false;
                 Tile tile = Game.getInstance().getTiles()[i][j];
-                if(tile.getWorkingCitizen() != null) {
+                if (tile.getWorkingCitizen() != null) {
                     ImageView imageView = new ImageView(new Image("Pictures/tiles/Population.png"));
                     imageView.setFitWidth(30);
                     imageView.setFitHeight(30);
@@ -351,7 +368,8 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(citizenImageViews);
     }
-    public void hideCitizen(){
+
+    public void hideCitizen() {
         backgroundPane.getChildren().removeAll(citizenImageViews);
     }
 }

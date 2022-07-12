@@ -15,7 +15,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -59,6 +65,21 @@ public class GameMenu {
             MapController mapController = (MapController)fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
+            KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+            Runnable rn = ()-> {
+                try {
+                    FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
+                    Parent root1 = fxmlLoader1.load();
+                    Stage stage1 = new Stage();
+                    Scene scene1 = new Scene(root1);
+                    stage1.setTitle("Cheat Box");
+                    stage1.setScene(scene1);
+                    stage1.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            };
+            scene.getAccelerators().put(kc, rn);
             setMapNavigation(scene,mapController);
             setUnitMovement(mapController);
             Main.stage.setScene(scene);
