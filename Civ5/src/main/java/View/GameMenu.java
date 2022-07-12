@@ -63,7 +63,7 @@ public class GameMenu {
             gameMapController = mapController;
             Scene scene = new Scene(root);
             setMapNavigation(scene,mapController);
-            setUnitMovement(mapController);
+//            setUnitMovement(mapController);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e) {
@@ -106,6 +106,7 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
+                    System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() == null) {
                         if (tile.getCivilian() == null) {

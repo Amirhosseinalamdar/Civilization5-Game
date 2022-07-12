@@ -1,6 +1,7 @@
 package View.Controller;
 
 import Controller.GameController;
+import Controller.UnitController;
 import Model.Game;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -10,15 +11,12 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
@@ -32,11 +30,6 @@ public class MapController {
     private Label movesLabel;
     private Unit chosenUnit;
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
-
-    private ImageView chooseResearch;
-    private ImageView chooseProduction;
-    @FXML
-    private Button nextTurn;
 
     public Pane getBackgroundPane() {
         return backgroundPane;
@@ -100,13 +93,7 @@ public class MapController {
         showUnits();
         showStatusBar();
         showUserPanelDownLeft();
-        Button nextTurn = new Button("Next Turn");
-        nextTurn.setLayoutX(1450);
-        nextTurn.setLayoutY(820);
-        nextTurn.getStylesheets().add("css/MapStyle.css");
-        nextTurn.getStyleClass().add("nextTurn");
-        nextTurn.setOnMouseClicked(event -> nextTurn());
-        backgroundPane.getChildren().add(nextTurn);
+        showChangeTurnSymbols();
     }
     public void showCities(Tile tile, int i, int j){
         if(tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)){
@@ -389,22 +376,19 @@ public class MapController {
     }
     private void settlerExclusiveOptions(HBox hBox){
         ImageView imageView = new ImageView(new Image("Pictures/unitIcons/CityState.png"));
-        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
-                UnitController.handleUnitOptions();
-                ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
-                imageView1.setFitWidth(100);
-                imageView1.setFitHeight(100);
-                imageView1.setX(chosenUnit.getX() - 45);
-                imageView1.setY(chosenUnit.getY() - 10);
-                backgroundPane.getChildren().add(imageView1);
-                backgroundPane.getChildren().remove(chosenUnit);
-                hideUnitOptions();
-                hideUnitAvatar();
-                chosenUnit = null;
-            }
+        imageView.setOnMouseClicked(event -> {
+            UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
+            UnitController.handleUnitOptions();
+            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+            imageView1.setFitWidth(100);
+            imageView1.setFitHeight(100);
+            imageView1.setX(chosenUnit.getX() - 45);
+            imageView1.setY(chosenUnit.getY() - 10);
+            backgroundPane.getChildren().add(imageView1);
+            backgroundPane.getChildren().remove(chosenUnit);
+            hideUnitOptions();
+            hideUnitAvatar();
+            chosenUnit = null;
         });
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
@@ -437,6 +421,53 @@ public class MapController {
     }
     public void hideUnitOptions(){
         backgroundPane.getChildren().removeAll(unitOptionsNodes);
+    }
+
+    private void showChangeTurnSymbols() {
+        Button nextTurn = new Button("Next Turn");
+        nextTurn.setLayoutX(1450);
+        nextTurn.setLayoutY(820);
+        nextTurn.getStylesheets().add("css/MapStyle.css");
+        nextTurn.getStyleClass().add("nextTurn");
+        nextTurn.setOnMouseClicked(event -> nextTurn());
+        backgroundPane.getChildren().add(nextTurn);
+
+        if (!techIconMustBeShown()) {
+            ImageView techImgView = new ImageView(new Image("/Images/Map/research.png"));
+            techImgView.setX(1480);
+            techImgView.setY(730);
+            techImgView.setFitWidth(80);
+            techImgView.setFitHeight(80);
+            techImgView.setStyle("-fx-cursor: hand;");
+            techImgView.setOnMouseEntered(event -> {
+                techImgView.setX(techImgView.getX() - 5);
+                techImgView.setY(techImgView.getY() - 5);
+                techImgView.setFitWidth(90);
+                techImgView.setFitHeight(90);
+            });
+            techImgView.setOnMouseExited(event -> {
+                techImgView.setX(techImgView.getX() + 5);
+                techImgView.setY(techImgView.getY() + 5);
+                techImgView.setFitWidth(80);
+                techImgView.setFitHeight(80);
+            });
+            techImgView.setOnMouseClicked(event -> {
+                System.out.println("work in progress!!!!");
+            });
+            backgroundPane.getChildren().add(techImgView);
+        }
+
+        if (productionIconMustBeShown()) {
+
+        }
+    }
+
+    private boolean techIconMustBeShown() {
+        return GameController.getCivilization().getInProgressTech() == null && GameController.getCivilization().getCities().size() > 0;
+    }
+
+    private boolean productionIconMustBeShown() {
+        return true;
     }
 
 }

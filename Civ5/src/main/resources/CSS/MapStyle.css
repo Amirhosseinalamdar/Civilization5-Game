@@ -1,8 +1,12 @@
 .nextTurn{
     -fx-font-family: "Tw Cen MT";
     -fx-font-size: 25;
-    -fx-background-color: rgba(255, 215, 0, 0.51);
+    -fx-background-color: rgba(255, 215, 0, 0.33);
     -fx-text-fill: black;
+    -fx-border-width: 1.8;
+    -fx-border-color: black;
+    -fx-border-radius: 5;
+    -fx-background-radius: 8;
 }
 .nextTurn:hover{
     -fx-background-color: gold;
