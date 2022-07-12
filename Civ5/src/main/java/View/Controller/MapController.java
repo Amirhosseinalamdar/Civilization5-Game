@@ -10,7 +10,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -132,8 +134,32 @@ public class MapController {
         if(citizenImageViews.size() > 0){
             showCitizens();
         }
+        showStatusBar();
     }
+    public void showStatusBar(){//TODO ADD TEXT BOXES
+        ImageView imageView = new ImageView(new Image("Pictures/Panels/statusBar.png"));
+        backgroundPane.getChildren().add(imageView);
+        ImageView[] imageViews = new ImageView[5];
+        imageViews[0] = new ImageView(new Image("Pictures/Panels/Science.png"));
+        imageViews[1] = new ImageView(new Image("Pictures/Panels/Gold.png"));
+        imageViews[2] = new ImageView(new Image("Pictures/Panels/Happiness.png"));
+        imageViews[3] = new ImageView(new Image("Pictures/Panels/Food.png"));
+        imageViews[4] = new ImageView(new Image("Pictures/Panels/Turn.png"));
+        for(int i=0;i<imageViews.length;i++){
+            imageViews[i].setFitHeight(40);
+            imageViews[i].setFitWidth(40);
+            imageViews[i].setY(10);
+            imageViews[i].setX(40 + 140 * i);
+            if(i == 4) imageViews[i].setX(imageViews[i].getX() + 700);
+            backgroundPane.getChildren().add(imageViews[i]);
+        }
+        imageView = new ImageView(new Image("Pictures/Panels/myCiv.png"));
+        imageView.setFitHeight(250);
+        imageView.setX(0);
+        imageView.setY(900 - imageView.getLayoutBounds().getHeight());
+        backgroundPane.getChildren().add(imageView);
 
+    }
     public void showTilesFoodProductionGold() {//not tested
         tileImageViews = new ArrayList<>();
         boolean flag1 = true;
