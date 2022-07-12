@@ -1,29 +1,17 @@
 package Model;
 
-import App.Main;
 import Controller.UnitController;
 import Controller.UserController;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
-import Model.UnitPackage.UnitType;
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import javafx.stage.Stage;
 
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
@@ -108,19 +96,51 @@ public class Game {
                     warriorTile.getIndexInMapI() + ", " + warriorTile.getIndexInMapJ());
             makeFirstTilesVisible(player.getCivilization(), settlerTile, warriorTile);
         }
-//        Main.changeScene("Map");
-//        Main.stage.show();
-//        try {
-//            Parent root = FXMLLoader.load(this.getClass().getResource("/fxml/Map.fxml"));
-//            Stage stage = new Stage();
-//            Scene scene = new Scene(root);
-//            stage.setScene(scene);
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    }
 
+    public static void loadInstance(Game game) {
+        instance = game;
+    }
 
+    public void createRelations() {
+        for (User player : players) {
+            ArrayList <Unit> units = player.getCivilization().getUnits();
+            for (int i = 0; i < units.size(); i++)
+                for (int j = i + 1; j < units.size(); j++)
+                    if ((units.get(i).getTile().getIndexInMapI() ==
+                        units.get(j).getTile().getIndexInMapI()) &&
+                            (units.get(i).getTile().getIndexInMapJ() ==
+                             units.get(j).getTile().getIndexInMapJ()))
+                        units.get(j).setTile(units.get(i).getTile());
+            for (int i = 0; i < units.size(); i++) {
+                Unit unit = units.get(i);
+                unit.setCivilization(player.getCivilization());
+                if (unit.getType().isCivilian()) {
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
+                }
+                else {
+                    Military military = new Military(unit.getType());
+                    military.setMP(unit.getMP());
+                    military.setHealth(unit.getHealth());
+                    military.setTile(unit.getTile());
+                    military.setMovesInTurn(unit.getMovesInTurn());
+                    military.setCivilization(unit.getCivilization());
+                    military.setStatus("active");
+                    units.remove(unit);
+                    units.add(military);
+                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
+                }
+            }
+            for (City city : player.getCivilization().getCities()) {
+                for (Tile tile : city.getTiles()) {
+                    city.setCivilization(player.getCivilization());
+                    tile.setCity(city);
+                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
+                }
+            }
+            System.out.println(player.getUsername());
+        }
     }
 
     private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
@@ -374,49 +394,5 @@ public class Game {
 
     public Tile[][] getTiles() {
         return tiles;
-    }
-
-    public static void loadInstance(Game game) {
-        instance = game;
-    }
-
-    public void createRelations() {
-        for (User player : players) {
-            ArrayList<Unit> units = player.getCivilization().getUnits();
-            for (int i = 0; i < units.size(); i++)
-                for (int j = i + 1; j < units.size(); j++)
-                    if ((units.get(i).getTile().getIndexInMapI() ==
-                            units.get(j).getTile().getIndexInMapI()) &&
-                            (units.get(i).getTile().getIndexInMapJ() ==
-                                    units.get(j).getTile().getIndexInMapJ()))
-                        units.get(j).setTile(units.get(i).getTile());
-            for (int i = 0; i < units.size(); i++) {
-                Unit unit = units.get(i);
-                unit.setCivilization(player.getCivilization());
-                if (unit.getType().isCivilian()) {
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
-                } else {
-                    Military military = new Military(unit.getType());
-                    military.setMP(unit.getMP());
-                    military.setHealth(unit.getHealth());
-                    military.setTile(unit.getTile());
-                    military.setMovesInTurn(unit.getMovesInTurn());
-                    military.setCivilization(unit.getCivilization());
-                    military.setStatus("active");
-                    units.remove(unit);
-                    units.add(military);
-                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
-                }
-            }
-            for (City city : player.getCivilization().getCities()) {
-                for (Tile tile : city.getTiles()) {
-                    city.setCivilization(player.getCivilization());
-                    tile.setCity(city);
-                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
-                }
-            }
-            System.out.println(player.getUsername());
-        }
     }
 }

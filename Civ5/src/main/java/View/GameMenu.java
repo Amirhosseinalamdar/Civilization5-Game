@@ -45,8 +45,6 @@ public class GameMenu {
     }
 
     public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode) {
-
-
         if (saveCode < 0)
             Game.getInstance().generateGame(players);
         else

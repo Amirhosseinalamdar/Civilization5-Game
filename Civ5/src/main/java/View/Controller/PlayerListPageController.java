@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PlayerListPageController {
     public VBox list;
@@ -17,7 +16,8 @@ public class PlayerListPageController {
     private static ArrayList <User> players;
     public void initialize() {
         players = new ArrayList<>();
-        ArrayList <User> allUsers = UserController.getBestUsers();
+        ArrayList <User> allUsers = UserController.getAllUsers();
+        allUsers.remove(UserController.getLoggedInUser());
         for (User user : allUsers) {
             Label label = new Label();
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +
@@ -64,6 +64,7 @@ public class PlayerListPageController {
     }
 
     public static ArrayList<User> getPlayers() {
+        players.add(0, UserController.getLoggedInUser());
         return players;
     }
 }

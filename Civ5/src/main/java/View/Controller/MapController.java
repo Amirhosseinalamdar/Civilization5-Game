@@ -1,14 +1,16 @@
 package View.Controller;
 
-import App.Main;
+import Controller.UnitController;
 import Model.Game;
-import Model.Map.*;
-import javafx.event.EventHandler;
+import Model.Map.Resource;
+import Model.Map.TerrainFeature;
+import Model.Map.TerrainType;
+import Model.Map.Tile;
+import Model.UnitPackage.Unit;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -20,15 +22,17 @@ import java.util.Collections;
 public class MapController {
     @FXML
     private Pane backgroundPane;
-    private int xStartingIndex = 1;
-    private int yStartingIndex = 1;
-    private ArrayList<ImageView> tileImageViews = new ArrayList<>();
-    private ArrayList<ImageView> citizenImageViews = new ArrayList<>();
+
+    private Unit chosenUnit;
+
     public Pane getBackgroundPane() {
         return backgroundPane;
     }
 
-
+    private int xStartingIndex = 1;
+    private int yStartingIndex = 1;
+    private ArrayList<ImageView> tileImageViews = new ArrayList<>();
+    private ArrayList<ImageView> citizenImageViews = new ArrayList<>();
 
     public int getxStartingIndex() {
         return xStartingIndex;
@@ -48,7 +52,6 @@ public class MapController {
 
     public void initialize() {
         showMap();
-
     }
 
     public void showMap() {
@@ -72,11 +75,35 @@ public class MapController {
                 } else if (tile.getFeature() != TerrainFeature.NONE && tile.getFeature() != TerrainFeature.DELTA)
                     picture = tile.getFeature().toString();
                 else picture = tile.getType().toString();
-                ImageView imageView = new ImageView(new Image("Pictures/tiles/" + picture + ".png"));
-                imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
-                imageView.setY(105 * (i - xStartingIndex));
-                backgroundPane.getChildren().add(imageView);
-                if (tile.getFeature() == TerrainFeature.DELTA) {
+                tile.setImage(new Image("Pictures/tiles/"+picture+".png"));
+                tile.setX(120 * (j-yStartingIndex) + (i%2) * 60);
+                tile.setY(105 * (i-xStartingIndex));
+                tile.setFitHeight(140);
+                tile.setFitWidth(120);
+                tile.setOnMouseClicked(event -> {
+                    System.out.println("clicked");
+                    if (chosenUnit == null) {
+                        if (tile.getCivilian() == null) {
+                            if (tile.getMilitary() == null) return;
+                            chosenUnit = tile.getMilitary();
+                        } else {
+                            if (tile.getMilitary() != null) {
+                                if (chosenUnit != null && chosenUnit.equals(tile.getMilitary()))
+                                    chosenUnit = tile.getCivilian();
+                                else chosenUnit = tile.getMilitary();
+                            } else chosenUnit = tile.getCivilian();
+                        }
+                    }
+                    else {
+                        UnitController.setUnit(chosenUnit, "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        chosenUnit.setX(chosenUnit.getTile().getX() + 50);
+                        chosenUnit.setY(chosenUnit.getTile().getY() + 60);
+                        chosenUnit = null;
+                    }
+                });
+                backgroundPane.getChildren().add(tile);
+
+                if(tile.getFeature() == TerrainFeature.DELTA){
                     ImageView imageView1 = new ImageView(new Image("Pictures/tiles/DELTA.png"));
                     imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
                     imageView1.setY(105 * (i - xStartingIndex));
@@ -123,6 +150,16 @@ public class MapController {
                     imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 30);
                     imageView1.setY(105 * (i - xStartingIndex) + 40);
                     backgroundPane.getChildren().add(imageView1);
+                }
+                if (tile.getCivilian() != null) {
+                    tile.getCivilian().setX(tile.getX() + 65);
+                    tile.getCivilian().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getCivilian());
+                }
+                if (tile.getMilitary() != null) {
+                    tile.getMilitary().setX(tile.getX() + 10);
+                    tile.getMilitary().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getMilitary());
                 }
             }
             flag2 = true;
@@ -197,6 +234,19 @@ public class MapController {
                     IProduction.setY(105 * (i - xStartingIndex) + 10);
                     tileImageViews.add(IProduction);
                 }
+
+                if (tile.getMilitary() != null) {
+                    tile.getMilitary().setX(tile.getX() + 10);
+                    tile.getMilitary().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getMilitary());
+                }
+
+                if (tile.getCivilian() != null) {
+                    tile.getCivilian().setX(tile.getX() + 65);
+                    tile.getCivilian().setY(tile.getY() + 40);
+                    backgroundPane.getChildren().add(tile.getCivilian());
+                }
+
             }
             flag2 = true;
         }

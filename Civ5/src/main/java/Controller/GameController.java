@@ -3,7 +3,6 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.City;
-import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
@@ -16,8 +15,6 @@ import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -63,7 +60,7 @@ public class GameController {
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
-            UnitController.setUnit(chosenUnit);
+            UnitController.setUnit(chosenUnit, "");
             UnitController.handleUnitOptions();
         } else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
@@ -278,7 +275,7 @@ public class GameController {
         System.out.println("turn: " + player.getUsername());
         for (Unit unit : player.getCivilization().getUnits()) {
             unit.setMovesInTurn(0);
-            UnitController.setUnit(unit);
+            UnitController.setUnit(unit, "");
             UnitController.doRemainingMissions();
         }
         CivilizationController.updateCivilization();
@@ -344,7 +341,7 @@ public class GameController {
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
                 Unit chosenUnit = getUnitFromCommand(matcher);
                 if (chosenUnit != null) {
-                    UnitController.setUnit(chosenUnit);
+                    UnitController.setUnit(chosenUnit, "");
                     UnitController.handleUnitOptions();
                 }
                 break;
