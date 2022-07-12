@@ -120,10 +120,13 @@ public class GameMenu {
                         }
                         if(mapController.getChosenUnit() != null){
                             mapController.showUnitAvatar();
+                            if(mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
+                            else mapController.showMilitaryOptions();
                         }
                     }
                     else {
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
                             mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
@@ -134,6 +137,7 @@ public class GameMenu {
                         }
                         mapController.setChosenUnit(null);
                         mapController.hideUnitAvatar();
+                        mapController.hideUnitOptions();
                     }
                 });
             }
@@ -724,6 +728,7 @@ public class GameMenu {
 
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
+        //TODO red border
     }
 
     public static void cityAlreadyHasTile() {

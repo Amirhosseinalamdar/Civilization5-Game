@@ -26,7 +26,7 @@ public class UnitController {
     public static void setUnit (Unit unit, String command) {
         UnitController.unit = unit;
         UnitController.command = command;
-        handleUnitOptions();
+//        handleUnitOptions();
     }
 
     public static void handleUnitOptions() {
@@ -636,10 +636,10 @@ public class UnitController {
 
     private static void foundCity() {
         System.out.println("please choose name: ");
-        String cityName = GameMenu.nextCommand();
+        String cityName = "Qazvin";
         while (cityNameAlreadyExists(cityName)) {
             GameMenu.cityNameAlreadyExists();
-            cityName = GameMenu.nextCommand();
+            cityName = "shomal";
         }
         new City(civilization, unit.getTile(), cityName);
         unit.kill();
