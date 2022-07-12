@@ -69,7 +69,6 @@ public class GameMenu {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
     public static void setMapNavigation(Scene scene,MapController mapController){
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -119,6 +118,9 @@ public class GameMenu {
                                 else mapController.setChosenUnit(tile.getMilitary());
                             } else mapController.setChosenUnit(tile.getCivilian());
                         }
+                        if(mapController.getChosenUnit() != null){
+                            mapController.showUnitAvatar();
+                        }
                     }
                     else {
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
@@ -131,6 +133,7 @@ public class GameMenu {
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
                         }
                         mapController.setChosenUnit(null);
+                        mapController.hideUnitAvatar();
                     }
                 });
             }
