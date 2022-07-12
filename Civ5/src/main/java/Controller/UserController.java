@@ -15,10 +15,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class UserController {
-    public static ArrayList<User> getAllUsers() {
-        return allUsers;
-    }
-
     private static ArrayList<User> allUsers;
     private static User loggedInUser;
 
@@ -28,6 +24,10 @@ public class UserController {
 
     public static void setLoggedInUser(User loggedInUser) {
         UserController.loggedInUser = loggedInUser;
+    }
+
+    public static ArrayList<User> getAllUsers() {
+        return allUsers;
     }
 
     public static User getLoggedInUser() {
