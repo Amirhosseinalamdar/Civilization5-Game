@@ -1,11 +1,20 @@
 package Model.UnitPackage;
 
+import Controller.GameController;
+import Controller.UnitController;
 import Model.Civilization;
+import Model.Game;
 import Model.Map.Path;
 import Model.Map.Tile;
+import View.Controller.MapController;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -43,6 +52,39 @@ public class Unit extends ImageView {
         this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
         this.setFitWidth(50);
         this.setFitHeight(50);
+        setOnMouseEntered(event -> {
+            setStyle("-fx-cursor: hand;");
+        });
+        setOnMouseClicked(event -> {
+            System.out.println("clicked duh");
+            MapController mapController = GameMenu.getGameMapController();
+            if (mapController.getChosenUnit() == null) {
+                mapController.setChosenUnit(this);
+                if (!civilization.equals(GameController.getCivilization()))
+                    mapController.setChosenUnit(null);
+
+                if (mapController.getChosenUnit() != null) {
+                    mapController.showUnitAvatar();
+                    if (mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
+                    else mapController.showMilitaryOptions();
+                }
+            }
+            else {
+                UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                UnitController.handleUnitOptions();
+                if (mapController.getChosenUnit().getType().isCivilian()) {
+                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                }
+                else {
+                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                }
+                mapController.setChosenUnit(null);
+                mapController.hideUnitAvatar();
+                mapController.hideUnitOptions();
+            }
+        });
     }
 
     public void setPath(Path path) {

@@ -59,11 +59,11 @@ public class GameMenu {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
             Parent root = fxmlLoader.load();
-            MapController mapController = (MapController)fxmlLoader.getController();
+            MapController mapController = fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
             setMapNavigation(scene,mapController);
-            setUnitMovement(mapController);
+//            setUnitMovement(mapController);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e) {
@@ -106,6 +106,7 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
+                    System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() == null) {
                         if (tile.getCivilian() == null) {
@@ -118,7 +119,11 @@ public class GameMenu {
                                 else mapController.setChosenUnit(tile.getMilitary());
                             } else mapController.setChosenUnit(tile.getCivilian());
                         }
-                        if(mapController.getChosenUnit() != null){
+
+                        if (!mapController.getChosenUnit().getCivilization().equals(GameController.getCivilization()))
+                            mapController.setChosenUnit(null);
+
+                        if(mapController.getChosenUnit() != null) {
                             mapController.showUnitAvatar();
                             if(mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
                             else mapController.showMilitaryOptions();

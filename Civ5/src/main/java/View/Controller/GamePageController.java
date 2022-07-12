@@ -21,9 +21,6 @@ public class GamePageController {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
         newGame.setOnMouseClicked(event -> {
-//            Node source = (Node) event.getSource();
-//            Stage stage = (Stage) source.getScene().getWindow();
-//            stage.close();
             GameMenu.startGame(PlayerListPageController.getPlayers(), new Scanner(System.in), -1);
         });
     }

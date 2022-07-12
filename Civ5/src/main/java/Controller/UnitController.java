@@ -11,6 +11,9 @@ import View.GameMenu;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +29,6 @@ public class UnitController {
     public static void setUnit (Unit unit, String command) {
         UnitController.unit = unit;
         UnitController.command = command;
-//        handleUnitOptions();
     }
 
     public static void handleUnitOptions() {
@@ -555,7 +557,58 @@ public class UnitController {
         if (chosenPath.tiles.size() > 0) {
             unit.setStatus("has path");
             unit.setPath(chosenPath);
-        } else unit.setStatus("active");
+        } else {
+            unit.setStatus("active");
+            if (unit.getTile().isRuined()) {
+                unit.getTile().setRuined(false);
+                int rand = new Random().nextInt(5);
+                switch (rand) { //TODO... popups
+                    case 0:
+                        civilization.setTotalGold(unit.getCivilization().getTotalGold() + 20);
+                        break;
+                    case 1:
+                        for (Technology tech : Technology.values())
+                            if (!civilization.hasReachedTech(tech) && civilization.hasPrerequisitesOf(tech)) {
+                                civilization.getLastCostUntilNewTechnologies().put(tech, 0);
+                                break;
+                            }
+                        break;
+                    case 2:
+                        int counter = 10;
+                        for (int i = 0; i < Game.getInstance().getMapSize(); i++) {
+                            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+                                if (civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY)) {
+                                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
+                                    counter--;
+                                    if (counter == 0) break;
+                                }
+                            if (counter == 0) break;
+                        }
+                        break;
+                    case 3:
+                        ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
+                        Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
+                        allCities.sort(cmp);
+                        City city = allCities.get(0);
+                        for (int i = 0; i < 2; i++) {
+                            Citizen citizen = new Citizen(city, null);
+                            city.getCitizens().add(citizen);
+                        }
+                        city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 2.25));
+                        city.setGainCitizenLastFood(city.getCitizenNecessityFood());
+                        civilization.getNotifications().add("The " + city.getName() + "'s population is increased (from ruins)     time: " + Game.getInstance().getTime());
+                        break;
+                    case 4:
+                        if (unit.getType().isCivilian()) break;
+                        Unit settler = new Unit(UnitType.SETTLER);
+                        settler.setCivilization(civilization);
+                        civilization.getUnits().add(settler);
+                        settler.setTile(unit.getTile());
+                        unit.getTile().setCivilian(settler);
+                        break;
+                }
+            }
+        }
     }
 
     private static void changeTileVisionStatus(Tile tile, TileStatus newStatus) {
@@ -613,6 +666,7 @@ public class UnitController {
 
     public static void doRemainingMissions() {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH)) {
+            System.out.println("brotha had path to complete!");
             continuePath();
             return;
         }
