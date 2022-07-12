@@ -3,6 +3,7 @@ package View;
 import App.Main;
 import Controller.CityController;
 import Controller.GameController;
+import Controller.UnitController;
 import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
@@ -28,6 +29,10 @@ import java.util.Scanner;
 public class GameMenu {
     private static Scanner scanner;
     private static MapController gameMapController;
+
+    public static MapController getGameMapController() {
+        return gameMapController;
+    }
 
     public static void setScanner(Scanner scanner) {
         GameMenu.scanner = scanner;
@@ -57,35 +62,8 @@ public class GameMenu {
             MapController mapController = (MapController)fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
-            scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    if(event.getCode().getName().equals("Right") &&
-                            mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
-                        mapController.setyStartingIndex(1+mapController.getyStartingIndex());
-                        mapController.getBackgroundPane().getChildren().
-                                removeAll(mapController.getBackgroundPane().getChildren());
-                        mapController.showMap();
-                    }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
-                        mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
-                        mapController.getBackgroundPane().getChildren().
-                                removeAll(mapController.getBackgroundPane().getChildren());
-                        mapController.showMap();
-                    }else if(event.getCode().getName().equals("Down") &&
-                            mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
-                        mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
-                        mapController.getBackgroundPane().getChildren().
-                                removeAll(mapController.getBackgroundPane().getChildren());
-                        mapController.showMap();
-                    }else if(event.getCode().getName().equals("Up") &&
-                            mapController.getxStartingIndex() > 1){
-                        mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
-                        mapController.getBackgroundPane().getChildren().
-                                removeAll(mapController.getBackgroundPane().getChildren());
-                        mapController.showMap();
-                    }
-                }
-            });
+            setMapNavigation(scene,mapController);
+            setUnitMovement(mapController);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e) {
@@ -93,7 +71,71 @@ public class GameMenu {
         }
 
     }
-
+    public static void setMapNavigation(Scene scene,MapController mapController){
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().getName().equals("Right") &&
+                        mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
+                    mapController.setyStartingIndex(1+mapController.getyStartingIndex());
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
+                    mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Down") &&
+                        mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
+                    mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Up") &&
+                        mapController.getxStartingIndex() > 1){
+                    mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }
+            }
+        });
+    }
+    public static void setUnitMovement(MapController mapController){
+        for(int i=0;i<Game.getInstance().getMapSize();i++){
+            for(int j=0;j<Game.getInstance().getMapSize();j++){
+                Tile tile = Game.getInstance().getTiles()[i][j];
+                tile.setOnMouseClicked(event -> {
+                    System.out.println("clicked");
+                    if (mapController.getChosenUnit() == null) {
+                        if (tile.getCivilian() == null) {
+                            if (tile.getMilitary() == null) return;
+                            mapController.setChosenUnit(tile.getMilitary());
+                        } else {
+                            if (tile.getMilitary() != null) {
+                                if (mapController.getChosenUnit() != null && mapController.getChosenUnit().equals(tile.getMilitary()))
+                                    mapController.setChosenUnit(tile.getCivilian());
+                                else mapController.setChosenUnit(tile.getMilitary());
+                            } else mapController.setChosenUnit(tile.getCivilian());
+                        }
+                    }
+                    else {
+                        UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        if (mapController.getChosenUnit().getType().isCivilian()) {
+                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        }
+                        else {
+                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        }
+                        mapController.setChosenUnit(null);
+                    }
+                });
+            }
+        }
+    }
     public static void showMap(){
         gameMapController.showMap();
     }

@@ -1,11 +1,14 @@
 package Model.Map;
 
 import Controller.GameController;
+import Controller.UnitController;
 import Model.Civilization;
 import Model.Game;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import View.Controller.MapController;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
@@ -57,6 +60,7 @@ public class Tile extends ImageView {
     private Citizen workingCitizen;
 
     private boolean isRuined;
+
 
     public boolean isRuined() {
         return isRuined;
