@@ -42,14 +42,11 @@ public class Military extends Unit {
         civilization.getUnits().remove(this);
     }
 
-    public void upgrade() {
-    }
-
     public double getCombatStrength() {
         if ((this.status.equals(UnitStatus.FORTIFY) && this.type.hasDefensiveBonus()) ||
                 this.tile.getType().equals(TerrainType.HILL))
             return combatStrength + 2;
-        return combatStrength;
+        return combatStrength * (1 + tile.getFeature().getBattleEffect() + tile.getType().getBattleEffect());
     }
 
     public double getRangedCombatStrength() {
@@ -57,11 +54,11 @@ public class Military extends Unit {
         return rangedCombatStrength;
     }
 
-    public void setCombatStrength(double combatStrength) {
+    public void setCombatStrength (double combatStrength) {
         this.combatStrength = combatStrength;
     }
 
-    public void setRangedCombatStrength(double rangedCombatStrength) {
+    public void setRangedCombatStrength (double rangedCombatStrength) {
         this.rangedCombatStrength = rangedCombatStrength;
     }
 

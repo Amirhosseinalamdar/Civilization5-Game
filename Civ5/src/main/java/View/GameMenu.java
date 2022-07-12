@@ -1,22 +1,38 @@
 package View;
 
+import App.Main;
 import Controller.CityController;
 import Controller.GameController;
+import Controller.UnitController;
 import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
+import View.Controller.MapController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
 
 public class GameMenu {
-    static Scanner scanner;
+    private static Scanner scanner;
+    private static MapController gameMapController;
+
+    public static MapController getGameMapController() {
+        return gameMapController;
+    }
 
     public static void setScanner(Scanner scanner) {
         GameMenu.scanner = scanner;
@@ -40,18 +56,88 @@ public class GameMenu {
             loadGame(saveCode);
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
-        do {
-            String command = scanner.nextLine();
-            if (command.equals("save")) GameController.saveGameToJson();
-            if (command.equals("EXIT GAME")) System.exit(0);
-            if (command.equals("next turn")) {
-                if (GameController.noTaskRemaining())
-                    GameController.updateGame();
-            } else {
-                GameController.checkMyCivilization();
-                GameController.doTurn(command);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
+            Parent root = fxmlLoader.load();
+            MapController mapController = (MapController)fxmlLoader.getController();
+            gameMapController = mapController;
+            Scene scene = new Scene(root);
+            setMapNavigation(scene,mapController);
+            setUnitMovement(mapController);
+            Main.stage.setScene(scene);
+            Main.stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public static void setMapNavigation(Scene scene,MapController mapController){
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode().getName().equals("Right") &&
+                        mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
+                    mapController.setyStartingIndex(1+mapController.getyStartingIndex());
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
+                    mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Down") &&
+                        mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
+                    mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }else if(event.getCode().getName().equals("Up") &&
+                        mapController.getxStartingIndex() > 1){
+                    mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
+                    mapController.getBackgroundPane().getChildren().
+                            removeAll(mapController.getBackgroundPane().getChildren());
+                    mapController.showMap();
+                }
             }
-        } while (scanner.hasNextLine());
+        });
+    }
+    public static void setUnitMovement(MapController mapController){
+        for(int i=0;i<Game.getInstance().getMapSize();i++){
+            for(int j=0;j<Game.getInstance().getMapSize();j++){
+                Tile tile = Game.getInstance().getTiles()[i][j];
+                tile.setOnMouseClicked(event -> {
+                    System.out.println("clicked");
+                    if (mapController.getChosenUnit() == null) {
+                        if (tile.getCivilian() == null) {
+                            if (tile.getMilitary() == null) return;
+                            mapController.setChosenUnit(tile.getMilitary());
+                        } else {
+                            if (tile.getMilitary() != null) {
+                                if (mapController.getChosenUnit() != null && mapController.getChosenUnit().equals(tile.getMilitary()))
+                                    mapController.setChosenUnit(tile.getCivilian());
+                                else mapController.setChosenUnit(tile.getMilitary());
+                            } else mapController.setChosenUnit(tile.getCivilian());
+                        }
+                    }
+                    else {
+                        UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        if (mapController.getChosenUnit().getType().isCivilian()) {
+                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        }
+                        else {
+                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        }
+                        mapController.setChosenUnit(null);
+                    }
+                });
+            }
+        }
+    }
+    public static void showMap(){
+        gameMapController.showMap();
     }
 
     public static String nextCommand() {
@@ -352,8 +438,8 @@ public class GameMenu {
     public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {
         TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
 
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
+        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
 
         for (Unit unit : civilization.getUnits()) {
@@ -377,8 +463,8 @@ public class GameMenu {
                 civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
         }
 
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
+        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
                         && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
                     civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;

@@ -40,6 +40,10 @@ public class User {
         return isLoggedIn;
     }
 
+    public void newCivilization() {
+        this.civilization = new Civilization();
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -88,7 +92,7 @@ public class User {
         return civilization;
     }
 
-    public void newCivilization() {
-        this.civilization = new Civilization();
+    public void setCivilization(Civilization civilization) {
+        this.civilization = civilization;
     }
 }

@@ -17,13 +17,16 @@ import java.util.regex.Pattern;
 public class UnitController {
     private static Civilization civilization;
     private static Unit unit;
+    private static String command;
 
     public static void changeCivilization(Civilization civilization) {
         UnitController.civilization = civilization;
     }
 
-    public static void setUnit(Unit unit) {
+    public static void setUnit (Unit unit, String command) {
         UnitController.unit = unit;
+        UnitController.command = command;
+        handleUnitOptions();
     }
 
     public static void handleUnitOptions() {
@@ -133,7 +136,7 @@ public class UnitController {
         Matcher matcher;
 
         while (true) {
-            String command = GameMenu.nextCommand();
+//            String command = GameMenu.nextCommand();
 
             if (command.equals("back")) {
                 matcher = Pattern.compile(command).matcher(command);
@@ -464,6 +467,9 @@ public class UnitController {
             GameMenu.impassableTile();
             return;
         }
+
+        System.out.println("yo imma move bitch!");
+
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
         if (chosenPath == null) return;
@@ -592,13 +598,13 @@ public class UnitController {
             paths.add(path);
         }
 
-        if (indexJ % 2 == 0) indexI--;
-        else indexI++;
+        if (indexI % 2 == 0) indexJ--;
+        else indexJ++;
 
-        for (int j = indexJ - 1; j <= indexJ + 1; j += 2) {
-            if (GameController.invalidPos(indexI, j)) continue;
+        for (int i = indexI - 1; i <= indexI + 1; i += 2) {
+            if (GameController.invalidPos(i, indexJ)) continue;
             Path path = new Path(null);
-            path.tiles.add(Game.getInstance().getTiles()[indexI][j]);
+            path.tiles.add(Game.getInstance().getTiles()[i][indexJ]);
             paths.add(path);
         }
 
@@ -650,7 +656,8 @@ public class UnitController {
         if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity()) &&
                 !tile.getCity().getCivilization().equals(civilization))
             return true;
-        return tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(civilization);
+        return (tile.getMilitary() != null || tile.getCivilian() != null) &&
+                !tile.getMilitary().getCivilization().equals(civilization);
     }
 
     private static void attack(Tile targetTile) {
@@ -660,12 +667,22 @@ public class UnitController {
             if (unit.getType().isMeleeCombat())
                 meleeAttackToCity(targetTile.getCity());
         } else {
-            System.out.println("next phase ;)");
+            if (unit.getType().isRangeCombat())
+                rangedAttackToUnit(targetTile);
+            if (unit.getType().isMeleeCombat())
+                meleeAttackToUnit(targetTile);
         }
     }
 
-    private static void rangedAttackToUnit(Unit defendingUnit) {
-
+    private static void rangedAttackToUnit(Tile targetTile) {
+        if (targetTile.getMilitary() == null) {
+            targetTile.getCivilian().kill();
+            return;
+        }
+        Military me = (Military)unit;
+        targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
+        if (targetTile.getMilitary().getHealth() <= 0)
+            targetTile.getMilitary().kill();
     }
 
     private static void rangedAttackToCity(City city) {
@@ -713,7 +730,26 @@ public class UnitController {
         }
     }
 
-    private static void meleeAttackToUnit(Unit defendingUnit) {
+    private static void meleeAttackToUnit (Tile targetTile) {
+        if (targetTile.getMilitary() == null) {
+            targetTile.getCivilian().setCivilization(unit.getCivilization());
+            unit.getCivilization().addUnit(targetTile.getCivilian());
+            return;
+        }
+        Military enemy = targetTile.getMilitary();
+        Military me = (Military)unit;
 
+        me.setHealth(me.getHealth() - enemy.getCombatStrength() / 4);
+        enemy.setHealth(enemy.getHealth() - me.getCombatStrength() / 4);
+
+        if (enemy.getHealth() <= 0) {
+            int i = enemy.getTile().getIndexInMapI(), j = enemy.getTile().getIndexInMapJ();
+            enemy.kill();
+            me.setMovesInTurn(me.getMP() - 1);
+            moveUnit(i, j);
+        }
+
+        if (me.getHealth() <= 0)
+            me.kill();
     }
 }
