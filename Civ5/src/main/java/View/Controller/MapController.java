@@ -371,7 +371,6 @@ public class MapController {
         hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 10;");
         unitOptionsNodes.add(hBox);
         backgroundPane.getChildren().addAll(unitOptionsNodes);
-
     }
     private void workerExclusiveOptions(HBox hBox){
     }
