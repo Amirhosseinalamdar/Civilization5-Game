@@ -272,4 +272,8 @@ public class City {
         else if (inProgressUnit != null && inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
     }
+
+    public int getCitizensNumber() {
+        return citizens.size();
+    }
 }

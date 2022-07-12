@@ -2,12 +2,18 @@ package Model.UnitPackage;
 
 import Controller.UnitController;
 import Model.Civilization;
+import Model.Game;
 import Model.Map.Path;
 import Model.Map.Tile;
 import View.Controller.MapController;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -45,6 +51,10 @@ public class Unit extends ImageView {
         this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
         this.setFitWidth(50);
         this.setFitHeight(50);
+        Pane backgroundPane = GameMenu.getGameMapController().getBackgroundPane();
+        setOnMouseClicked(event -> {
+
+        });
     }
 
     public void setPath(Path path) {

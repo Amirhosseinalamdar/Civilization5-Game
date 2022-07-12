@@ -1,6 +1,5 @@
 package View.Controller;
 
-import Controller.UnitController;
 import Model.Game;
 import Model.Map.Resource;
 import Model.Map.TerrainFeature;
@@ -10,13 +9,9 @@ import Model.UnitPackage.Unit;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class MapController {
