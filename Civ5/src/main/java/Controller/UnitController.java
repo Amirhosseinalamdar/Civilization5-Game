@@ -248,11 +248,6 @@ public class UnitController {
             }
 
             System.out.println("unit decision wasn't valid");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -695,10 +690,10 @@ public class UnitController {
 
     private static void foundCity() {
         System.out.println("please choose name: ");
-        String cityName = GameMenu.nextCommand();
+        String cityName = "Qazvin";
         while (cityNameAlreadyExists(cityName)) {
             GameMenu.cityNameAlreadyExists();
-            cityName = GameMenu.nextCommand();
+            cityName = "shomal";
         }
         new City(civilization, unit.getTile(), cityName);
         unit.kill();

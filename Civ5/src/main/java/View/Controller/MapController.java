@@ -7,12 +7,19 @@ import Model.Map.TerrainFeature;
 import Model.Map.TerrainType;
 import Model.Map.Tile;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
+import Model.UnitPackage.UnitType;
+import View.Commands;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
@@ -24,6 +31,7 @@ public class MapController {
     private ImageView unitAvatarImageView;
     private Label movesLabel;
     private Unit chosenUnit;
+    private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
 
     private ImageView chooseResearch;
     private ImageView chooseProduction;
@@ -83,6 +91,7 @@ public class MapController {
                 showTile(tile,i,j);
                 showRiverAndDelta(tile,i,j);
                 showResourceAndImprovements(tile,i,j);
+                showCities(tile,i,j);
                 showRuins(tile,i,j);
             }
             flag2 = true;
@@ -98,6 +107,16 @@ public class MapController {
         nextTurn.getStyleClass().add("nextTurn");
         nextTurn.setOnMouseClicked(event -> nextTurn());
         backgroundPane.getChildren().add(nextTurn);
+    }
+    public void showCities(Tile tile, int i, int j){
+        if(tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)){
+            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+            imageView1.setFitWidth(100);
+            imageView1.setFitHeight(100);
+            imageView1.setX(tile.getX() + 20);
+            imageView1.setY(tile.getY() + 30);
+            backgroundPane.getChildren().add(imageView1);
+        }
     }
     public void showTileContentIfNeeded(){
         if(tileImageViews.size() > 0){//not tested
@@ -115,7 +134,10 @@ public class MapController {
         backgroundPane.getChildren().add(imageView);
         if(chosenUnit != null){
             showUnitAvatar();
+            if(chosenUnit.getType().isCivilian()) showCivilianOptions();
+            else showMilitaryOptions();
         }
+        System.out.println(imageView.getLayoutBounds().getWidth());
     }
     public void showUnitAvatar(){
         String picture = chosenUnit.getType().toString();
@@ -349,4 +371,72 @@ public class MapController {
     public void nextTurn() {
         GameController.updateGame();
     }
+
+    public void showCivilianOptions() {
+        unitOptionsNodes = new ArrayList<>();
+        showCivAndMilSameOptions();
+        HBox hBox = new HBox();
+        hBox.setLayoutY(900 - 70 - 70);
+        hBox.setLayoutX(456);
+        if(chosenUnit.getType() == UnitType.WORKER) workerExclusiveOptions(hBox);
+        else settlerExclusiveOptions(hBox);
+        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 10;");
+        unitOptionsNodes.add(hBox);
+        backgroundPane.getChildren().addAll(unitOptionsNodes);
+
+    }
+    private void workerExclusiveOptions(HBox hBox){
+    }
+    private void settlerExclusiveOptions(HBox hBox){
+        ImageView imageView = new ImageView(new Image("Pictures/unitIcons/CityState.png"));
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
+                UnitController.handleUnitOptions();
+                ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+                imageView1.setFitWidth(100);
+                imageView1.setFitHeight(100);
+                imageView1.setX(chosenUnit.getX() - 45);
+                imageView1.setY(chosenUnit.getY() - 10);
+                backgroundPane.getChildren().add(imageView1);
+                backgroundPane.getChildren().remove(chosenUnit);
+                hideUnitOptions();
+                hideUnitAvatar();
+                chosenUnit = null;
+            }
+        });
+        imageView.setFitWidth(70);
+        imageView.setFitHeight(70);
+        hBox.getChildren().add(imageView);
+    }
+    public void showMilitaryOptions() {
+        unitOptionsNodes = new ArrayList<>();
+        showCivAndMilSameOptions();
+        backgroundPane.getChildren().addAll(unitOptionsNodes);
+    }
+    private void showCivAndMilSameOptions(){
+        HBox hBox = new HBox();
+        hBox.setSpacing(20);
+        hBox.setLayoutY(900 - 70);
+        hBox.setLayoutX(456);
+        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 20 0;");
+        ImageView[] imageViews = new ImageView[4];
+        imageViews[0] = new ImageView(new Image("Pictures/unitIcons/Load.png"));
+        imageViews[1] = new ImageView(new Image("Pictures/unitIcons/Sleep.png"));
+        if(chosenUnit.getStatus() == UnitStatus.SLEEP)
+            imageViews[1] = new ImageView(new Image("Pictures/unitIcons/Quickstart.png"));
+        imageViews[2] = new ImageView(new Image("Pictures/unitIcons/Stop.png"));
+        imageViews[3] = new ImageView(new Image("Pictures/unitIcons/DisbandUnit.png"));
+        for(int i=0;i<imageViews.length;i++){
+            imageViews[i].setFitHeight(70);
+            imageViews[i].setFitWidth(70);
+            hBox.getChildren().add(imageViews[i]);
+        }
+        unitOptionsNodes.add(hBox);
+    }
+    public void hideUnitOptions(){
+        backgroundPane.getChildren().removeAll(unitOptionsNodes);
+    }
+
 }

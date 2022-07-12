@@ -108,7 +108,6 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() == null) {
-                        System.out.println("is null bitch");
                         if (tile.getCivilian() == null) {
                             if (tile.getMilitary() == null) return;
                             mapController.setChosenUnit(tile.getMilitary());
@@ -123,11 +122,13 @@ public class GameMenu {
                         if (!mapController.getChosenUnit().getCivilization().equals(GameController.getCivilization()))
                             mapController.setChosenUnit(null);
 
-                        if(mapController.getChosenUnit() != null)
+                        if(mapController.getChosenUnit() != null) {
                             mapController.showUnitAvatar();
+                            if(mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
+                            else mapController.showMilitaryOptions();
+                        }
                     }
                     else {
-                        System.out.println("gonna move bitch");
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
@@ -140,6 +141,7 @@ public class GameMenu {
                         }
                         mapController.setChosenUnit(null);
                         mapController.hideUnitAvatar();
+                        mapController.hideUnitOptions();
                     }
                 });
             }
@@ -730,6 +732,7 @@ public class GameMenu {
 
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
+        //TODO red border
     }
 
     public static void cityAlreadyHasTile() {
