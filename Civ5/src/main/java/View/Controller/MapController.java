@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -504,22 +505,16 @@ public class MapController {
     }
 
     private void workerExclusiveOptions(HBox hBox) {
+//        ImageView imageView = new ImageView(new Image("Pictures/Icons/mine_default.png"));
+//        setImageViewOpacity(imageView);
+//        imageView.setFitHeight(70);
+//        imageView.setFitHeight(70);
+//        hBox.getChildren().add(imageView);
     }
 
     private void settlerExclusiveOptions(HBox hBox) {
-        ImageView imageView = new ImageView(new Image("Pictures/unitIcons/CityState.png"));
-        imageView.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                imageView.setOpacity(0.3);
-            }
-        });
-        imageView.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                imageView.setOpacity(1);
-            }
-        });
+        ImageView imageView = new ImageView(new Image("Pictures/Icons/build_city_default.png"));
+        setImageViewOpacity(imageView);
         imageView.setOnMouseClicked(event -> {
             int before = UnitController.getCivilization().getCities().size();
             UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
