@@ -79,7 +79,7 @@ public class Game {
         generateMap();
         for (User player : players) {
             player.newCivilization();
-            Random random = new Random(players.indexOf(player));
+            Random random = new Random(/*players.indexOf(player)*/);
             int randomX, randomY;
             do {
                 randomX = random.nextInt(this.mapSize);
@@ -144,6 +144,8 @@ public class Game {
     private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
         ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
         visibleTiles.addAll(warriorTile.getNeighbors());
+        visibleTiles.add(warriorTile);
+        if(warriorTile != settlerTile) visibleTiles.add(settlerTile);
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }

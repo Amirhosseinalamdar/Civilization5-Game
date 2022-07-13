@@ -77,25 +77,20 @@ public class GameMenu {
                 if(event.getCode().getName().equals("Right") &&
                         mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
                     mapController.setyStartingIndex(1+mapController.getyStartingIndex());
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
                     mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Down") &&
                         mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
                     mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Up") &&
                         mapController.getxStartingIndex() > 1){
                     mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
                     mapController.showMap();
                 }
             }
@@ -120,8 +115,7 @@ public class GameMenu {
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
                         }
                         mapController.setChosenUnit(null);
-                        mapController.hideUnitAvatar();
-                        mapController.hideUnitOptions();
+                        mapController.showMap();
                     }
                 });
             }
@@ -429,36 +423,36 @@ public class GameMenu {
     public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {
         TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
 
-        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
-            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
-                civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
-
-        for (Unit unit : civilization.getUnits()) {
-            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
-            if (!unit.getType().hasLimitedVisibility()) {
-                int clearTileLength = clearTiles.size();
-                for (int i = 0; i < clearTileLength; i++)
-                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
-            }
-            for (Tile tileNeighbor : clearTiles)
-                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
-        }
-
-        for (City city : civilization.getCities()) {
-            ArrayList<Tile> clearTiles = new ArrayList<>();
-            for (Tile tile : city.getTiles()) {
-                clearTiles.add(tile);
-                clearTiles.addAll(tile.getNeighbors());
-            }
-            for (Tile tileNeighbor : clearTiles)
-                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
-        }
-
-        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
-            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
-                if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
-                        && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
-                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
+//        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+//            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+//                civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
+//
+//        for (Unit unit : civilization.getUnits()) {
+//            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
+//            if (!unit.getType().hasLimitedVisibility()) {
+//                int clearTileLength = clearTiles.size();
+//                for (int i = 0; i < clearTileLength; i++)
+//                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
+//            }
+//            for (Tile tileNeighbor : clearTiles)
+//                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+//        }
+//
+//        for (City city : civilization.getCities()) {
+//            ArrayList<Tile> clearTiles = new ArrayList<>();
+//            for (Tile tile : city.getTiles()) {
+//                clearTiles.add(tile);
+//                clearTiles.addAll(tile.getNeighbors());
+//            }
+//            for (Tile tileNeighbor : clearTiles)
+//                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+//        }
+//
+//        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+//            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+//                if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
+//                        && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
+//                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
 
         int startingJ = calculateStartingJ(centerJ) / 2;
         int startingI = calculateStartingI(centerI) * 6;
