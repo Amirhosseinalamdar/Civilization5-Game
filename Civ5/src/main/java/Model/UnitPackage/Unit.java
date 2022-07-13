@@ -68,11 +68,15 @@ public class Unit extends ImageView {
                     if (mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
                     else mapController.showMilitaryOptions();
                 }
-            }else{
-                if(mapController.getChosenUnit().equals(this)) {
+            }
+            else {
+                if (mapController.getChosenUnit().equals(this)) {
                     mapController.setChosenUnit(null);
                     mapController.showMap();
                 }
+                else if (civilization.equals(GameController.getCivilization()))
+                    mapController.setChosenUnit(this);
+                mapController.showMap();
             }
         });
     }

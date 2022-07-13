@@ -27,6 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -145,7 +146,6 @@ public class MapController {
         }
         showTileContentIfNeeded();
         showUnits();
-//        showFogStatus();
         showStatusBar();
         showUserPanelDownLeft();
         showChangeTurnSymbols();
@@ -456,6 +456,7 @@ public class MapController {
         hideUnitAvatar();
         hideUnitOptions();
         chosenUnit = null;
+        showMap();
     }
 
     public void showCivilianOptions() {
@@ -527,6 +528,8 @@ public class MapController {
             public void handle(MouseEvent event) {
                 UnitController.setUnit(chosenUnit,Commands.DO_NOTHING.getRegex());
                 UnitController.handleUnitOptions();
+                chosenUnit = null;
+                showMap();
             }
         });
         imageViews[1].setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -535,9 +538,13 @@ public class MapController {
                 if(chosenUnit.getStatus() == UnitStatus.SLEEP){
                     UnitController.setUnit(chosenUnit,Commands.WAKE_UNIT.getRegex());
                     UnitController.handleUnitOptions();
+                    chosenUnit = null;
+                    showMap();
                 }else{
                     UnitController.setUnit(chosenUnit,Commands.SLEEP_UNIT.getRegex());
                     UnitController.handleUnitOptions();
+                    chosenUnit = null;
+                    showMap();
                 }
             }
         });
@@ -546,6 +553,8 @@ public class MapController {
             public void handle(MouseEvent event) {
                 UnitController.setUnit(chosenUnit,Commands.CANCEL_MISSION.getRegex());
                 UnitController.handleUnitOptions();
+                chosenUnit = null;
+                showMap();
             }
         });
         imageViews[3].setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -600,7 +609,17 @@ public class MapController {
             techImgView.setStyle("-fx-cursor: hand;");
             setMouseClicksForIcon(techImgView);
             techImgView.setOnMouseClicked(event -> {
-
+                try {
+                    Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/ChooseResearchPage.fxml")));
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.show();
+                }
+                catch (IOException e) {
+                    System.out.println("failed to load research fxml");
+                    e.printStackTrace();
+                }
             });
             backgroundPane.getChildren().add(techImgView);
         }
@@ -610,6 +629,7 @@ public class MapController {
             ImageView prodImgView = new ImageView(new Image("/Images/Map/production.png"));
             prodImgView.setX(1480);
             prodImgView.setY(640);
+            prodImgView.setStyle("-fx-cursor: hand;");
             Tooltip.install(prodImgView, new Tooltip(c.getName()));
             setMouseClicksForIcon(prodImgView);
             backgroundPane.getChildren().add(prodImgView);

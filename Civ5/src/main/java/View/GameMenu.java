@@ -8,6 +8,7 @@ import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Controller.MapController;
 import com.google.gson.Gson;
@@ -103,7 +104,7 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
-                    if (mapController.getChosenUnit() != null) {
+                    if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)) {
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
