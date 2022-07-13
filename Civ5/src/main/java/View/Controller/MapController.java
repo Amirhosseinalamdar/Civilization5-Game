@@ -12,9 +12,12 @@ import Model.UnitPackage.UnitType;
 import View.Commands;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -22,7 +25,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -68,6 +74,7 @@ public class MapController {
     }
 
     public void initialize() {
+        backgroundPane.setOnMouseClicked(event -> System.out.println(event.getX() + " " + event.getY()));
         showMap();
     }
 
@@ -143,6 +150,7 @@ public class MapController {
         }
         showTileContentIfNeeded();
         showUnits();
+//        showFogStatus();
         showStatusBar();
         showUserPanelDownLeft();
         showChangeTurnSymbols();
@@ -562,6 +570,8 @@ public class MapController {
             public void handle(MouseEvent event) {
                 UnitController.setUnit(chosenUnit, Commands.DO_NOTHING.getRegex());
                 UnitController.handleUnitOptions();
+                chosenUnit = null;
+                showMap();
             }
         });
         imageViews[1].setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -570,9 +580,13 @@ public class MapController {
                 if (chosenUnit.getStatus() == UnitStatus.SLEEP) {
                     UnitController.setUnit(chosenUnit, Commands.WAKE_UNIT.getRegex());
                     UnitController.handleUnitOptions();
-                } else {
-                    UnitController.setUnit(chosenUnit, Commands.SLEEP_UNIT.getRegex());
+                    chosenUnit = null;
+                    showMap();
+                }else{
+                    UnitController.setUnit(chosenUnit,Commands.SLEEP_UNIT.getRegex());
                     UnitController.handleUnitOptions();
+                    chosenUnit = null;
+                    showMap();
                 }
             }
         });
@@ -581,6 +595,8 @@ public class MapController {
             public void handle(MouseEvent event) {
                 UnitController.setUnit(chosenUnit, Commands.CANCEL_MISSION.getRegex());
                 UnitController.handleUnitOptions();
+                chosenUnit = null;
+                showMap();
             }
         });
         imageViews[3].setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -617,42 +633,66 @@ public class MapController {
         nextTurn.setOnMouseClicked(event -> nextTurn());
         backgroundPane.getChildren().add(nextTurn);
 
-        if (!techIconMustBeShown()) {
+        if (techIconMustBeShown()) {
             ImageView techImgView = new ImageView(new Image("/Images/Map/research.png"));
             techImgView.setX(1480);
             techImgView.setY(730);
-            techImgView.setFitWidth(80);
-            techImgView.setFitHeight(80);
             techImgView.setStyle("-fx-cursor: hand;");
-            techImgView.setOnMouseEntered(event -> {
-                techImgView.setX(techImgView.getX() - 5);
-                techImgView.setY(techImgView.getY() - 5);
-                techImgView.setFitWidth(90);
-                techImgView.setFitHeight(90);
-            });
-            techImgView.setOnMouseExited(event -> {
-                techImgView.setX(techImgView.getX() + 5);
-                techImgView.setY(techImgView.getY() + 5);
-                techImgView.setFitWidth(80);
-                techImgView.setFitHeight(80);
-            });
+            setMouseClicksForIcon(techImgView);
             techImgView.setOnMouseClicked(event -> {
-                System.out.println("work in progress!!!!");
+                try {
+                    Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/ChooseResearchPage.fxml")));
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.show();
+                }
+                catch (IOException e) {
+                    System.out.println("failed to load research fxml");
+                    e.printStackTrace();
+                }
             });
             backgroundPane.getChildren().add(techImgView);
         }
 
-        if (productionIconMustBeShown()) {
-
+        City c;
+        if ((c = productionIconMustBeShown()) != null) {
+            ImageView prodImgView = new ImageView(new Image("/Images/Map/production.png"));
+            prodImgView.setX(1480);
+            prodImgView.setY(640);
+            prodImgView.setStyle("-fx-cursor: hand;");
+            Tooltip.install(prodImgView, new Tooltip(c.getName()));
+            setMouseClicksForIcon(prodImgView);
+            backgroundPane.getChildren().add(prodImgView);
         }
+    }
+
+    private void setMouseClicksForIcon (ImageView imageView) {
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        imageView.setOnMouseEntered(event -> {
+            imageView.setX(imageView.getX() - 5);
+            imageView.setY(imageView.getY() - 5);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(90);
+        });
+        imageView.setOnMouseExited(event -> {
+            imageView.setX(imageView.getX() + 5);
+            imageView.setY(imageView.getY() + 5);
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+        });
     }
 
     private boolean techIconMustBeShown() {
         return GameController.getCivilization().getInProgressTech() == null && GameController.getCivilization().getCities().size() > 0;
     }
 
-    private boolean productionIconMustBeShown() {
-        return true;
+    private City productionIconMustBeShown() {
+        for (City city : GameController.getCivilization().getCities())
+            if (city.getInProgressUnit() == null)
+                return city;
+        return null;
     }
 
 }
