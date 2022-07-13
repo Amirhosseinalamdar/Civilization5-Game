@@ -3,22 +3,24 @@ package View.Controller;
 import Controller.GameController;
 import Controller.UnitController;
 import Model.Game;
-import Model.Map.Resource;
-import Model.Map.TerrainFeature;
-import Model.Map.TerrainType;
-import Model.Map.Tile;
+import Model.Map.*;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -64,6 +66,7 @@ public class MapController {
     }
 
     public void initialize() {
+        backgroundPane.setOnMouseClicked(event -> System.out.println(event.getX() + " " + event.getY()));
         showMap();
     }
 
@@ -431,42 +434,55 @@ public class MapController {
         nextTurn.setOnMouseClicked(event -> nextTurn());
         backgroundPane.getChildren().add(nextTurn);
 
-        if (!techIconMustBeShown()) {
+        if (techIconMustBeShown()) {
             ImageView techImgView = new ImageView(new Image("/Images/Map/research.png"));
             techImgView.setX(1480);
             techImgView.setY(730);
-            techImgView.setFitWidth(80);
-            techImgView.setFitHeight(80);
             techImgView.setStyle("-fx-cursor: hand;");
-            techImgView.setOnMouseEntered(event -> {
-                techImgView.setX(techImgView.getX() - 5);
-                techImgView.setY(techImgView.getY() - 5);
-                techImgView.setFitWidth(90);
-                techImgView.setFitHeight(90);
-            });
-            techImgView.setOnMouseExited(event -> {
-                techImgView.setX(techImgView.getX() + 5);
-                techImgView.setY(techImgView.getY() + 5);
-                techImgView.setFitWidth(80);
-                techImgView.setFitHeight(80);
-            });
+            setMouseClicksForIcon(techImgView);
             techImgView.setOnMouseClicked(event -> {
-                System.out.println("work in progress!!!!");
+
             });
             backgroundPane.getChildren().add(techImgView);
         }
 
-        if (productionIconMustBeShown()) {
-
+        City c;
+        if ((c = productionIconMustBeShown()) != null) {
+            ImageView prodImgView = new ImageView(new Image("/Images/Map/production.png"));
+            prodImgView.setX(1480);
+            prodImgView.setY(640);
+            Tooltip.install(prodImgView, new Tooltip(c.getName()));
+            setMouseClicksForIcon(prodImgView);
+            backgroundPane.getChildren().add(prodImgView);
         }
+    }
+
+    private void setMouseClicksForIcon (ImageView imageView) {
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(80);
+        imageView.setOnMouseEntered(event -> {
+            imageView.setX(imageView.getX() - 5);
+            imageView.setY(imageView.getY() - 5);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(90);
+        });
+        imageView.setOnMouseExited(event -> {
+            imageView.setX(imageView.getX() + 5);
+            imageView.setY(imageView.getY() + 5);
+            imageView.setFitWidth(80);
+            imageView.setFitHeight(80);
+        });
     }
 
     private boolean techIconMustBeShown() {
         return GameController.getCivilization().getInProgressTech() == null && GameController.getCivilization().getCities().size() > 0;
     }
 
-    private boolean productionIconMustBeShown() {
-        return true;
+    private City productionIconMustBeShown() {
+        for (City city : GameController.getCivilization().getCities())
+            if (city.getInProgressUnit() == null)
+                return city;
+        return null;
     }
 
 }
