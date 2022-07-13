@@ -31,6 +31,10 @@ public class UnitController {
         UnitController.command = command;
     }
 
+    public static Civilization getCivilization() {
+        return civilization;
+    }
+
     public static void handleUnitOptions() {
         Matcher matcher = getUnitDecision();
 

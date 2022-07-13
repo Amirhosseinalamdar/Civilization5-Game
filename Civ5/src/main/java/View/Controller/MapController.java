@@ -214,6 +214,7 @@ public class MapController {
     }
     public void showTile(Tile tile,int i, int j){
         Image image = new Image("Pictures/tiles/cloud.png");
+            ColorAdjust colorAdjust = new ColorAdjust();
         String picture;
         if(GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.FOGGY){
             tile.setImage(image);
@@ -221,6 +222,8 @@ public class MapController {
             tile.setFitHeight(image.getHeight());
             tile.setX(120 * (j-yStartingIndex) + (i%2) * 60 - 10);
             tile.setY(105 * (i-xStartingIndex));
+            colorAdjust.setBrightness(0);
+            tile.setEffect(colorAdjust);
             backgroundPane.getChildren().add(tile);
             return;
         }
@@ -236,20 +239,25 @@ public class MapController {
         tile.setFitHeight(140);
         tile.setFitWidth(120);
         if(GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.DISCOVERED){
-            ColorAdjust colorAdjust = new ColorAdjust();
             colorAdjust.setBrightness(-0.4);
+            tile.setEffect(colorAdjust);
+        }else{
+            colorAdjust.setBrightness(0);
             tile.setEffect(colorAdjust);
         }
         backgroundPane.getChildren().add(tile);
     }
     public void showRiverAndDelta(Tile tile, int i, int j){
+            ColorAdjust colorAdjust = new ColorAdjust();
         if(tile.getFeature() == TerrainFeature.DELTA){
             ImageView imageView1 = new ImageView(new Image("Pictures/tiles/DELTA.png"));
             imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView1.setY(105 * (i - xStartingIndex));
             if(GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.DISCOVERED){
-                ColorAdjust colorAdjust = new ColorAdjust();
                 colorAdjust.setBrightness(-0.4);
+                tile.setEffect(colorAdjust);
+            }else {
+                colorAdjust.setBrightness(0);
                 tile.setEffect(colorAdjust);
             }
             backgroundPane.getChildren().add(imageView1);
@@ -262,8 +270,10 @@ public class MapController {
             imageView2.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView2.setY(105 * (i - xStartingIndex));
             if(GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.DISCOVERED){
-                ColorAdjust colorAdjust = new ColorAdjust();
                 colorAdjust.setBrightness(-0.4);
+                tile.setEffect(colorAdjust);
+            }else{
+                colorAdjust.setBrightness(0);
                 tile.setEffect(colorAdjust);
             }
             backgroundPane.getChildren().add(imageView2);
@@ -450,6 +460,7 @@ public class MapController {
         hideUnitAvatar();
         hideUnitOptions();
         chosenUnit = null;
+        showMap();
     }
 
     public void showCivilianOptions() {
@@ -481,18 +492,22 @@ public class MapController {
             }
         });
         imageView.setOnMouseClicked(event -> {
+            int before = UnitController.getCivilization().getCities().size();
             UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
             UnitController.handleUnitOptions();
-            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
-            imageView1.setFitWidth(100);
-            imageView1.setFitHeight(100);
-            imageView1.setX(chosenUnit.getX() - 45);
-            imageView1.setY(chosenUnit.getY() - 10);
-            backgroundPane.getChildren().add(imageView1);
-            backgroundPane.getChildren().remove(chosenUnit);
-            hideUnitOptions();
-            hideUnitAvatar();
-            chosenUnit = null;
+            int after = UnitController.getCivilization().getCities().size();
+            if(after == before + 1) {
+                ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+                imageView1.setFitWidth(100);
+                imageView1.setFitHeight(100);
+                imageView1.setX(chosenUnit.getX() - 45);
+                imageView1.setY(chosenUnit.getY() - 10);
+                backgroundPane.getChildren().add(imageView1);
+                backgroundPane.getChildren().remove(chosenUnit);
+                hideUnitOptions();
+                hideUnitAvatar();
+                chosenUnit = null;
+            }
         });
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
