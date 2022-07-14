@@ -28,7 +28,7 @@ public class ChooseResearchPageController {
         Label head = new Label("Technologies");
         head.setPrefSize(400, 40);
         head.setAlignment(Pos.CENTER);
-        head.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: #05058c; -fx-alignment: center;");
+        head.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: #040457; -fx-alignment: center;");
         bigBox.getChildren().add(head);
         ArrayList <Technology> availableTechs = new ArrayList<>();
         if (civilization.getInProgressTech() != null) availableTechs.add(civilization.getInProgressTech());
@@ -62,7 +62,7 @@ public class ChooseResearchPageController {
         colorAdjust.setBrightness(-0.2);
         VBox box = new VBox();
         Tooltip tooltip = new Tooltip(tech.toString());
-        ImageView techImgView = new ImageView(new Image("/Images/TechIcons/" + tech.toString().toLowerCase() + ".png"));
+        ImageView techImgView = new ImageView(new Image("/Pictures/TechIcons/" + tech.toString().toLowerCase() + ".png"));
         techImgView.setFitWidth(130);
         techImgView.setFitHeight(130);
         techImgView.setEffect(colorAdjust);

@@ -131,15 +131,16 @@ public class UserController {
     }
 
     public static void readDataFromJson() {
-//        try {
-            allUsers = new ArrayList<>(Arrays.asList(new User("1", "1", "1", false, 0),
-                    new User("2", "2", "2", false, 0),new User("3", "3", "3", false, 0)));
-//            String json = new String(Files.readAllBytes(Paths.get("json.json")));
-//            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
-//            }.getType());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+//            allUsers = new ArrayList<>(Arrays.asList(new User("1", "1", "1", false, 0),
+//                    new User("2", "2", "2", false, 0),new User("3", "3", "3", false, 0)));
+            String json = new String(Files.readAllBytes(Paths.get("json.json")));
+            allUsers = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, new TypeToken<List<User>>() {
+            }.getType());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void writeDataToJson() {

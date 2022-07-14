@@ -603,7 +603,7 @@ public class MapController {
         backgroundPane.getChildren().add(nextTurn);
 
         if (techIconMustBeShown()) {
-            ImageView techImgView = new ImageView(new Image("/Images/Map/research.png"));
+            ImageView techImgView = new ImageView(new Image("/Pictures/Map/research.png"));
             techImgView.setX(1480);
             techImgView.setY(730);
             techImgView.setStyle("-fx-cursor: hand;");
@@ -626,12 +626,25 @@ public class MapController {
 
         City c;
         if ((c = productionIconMustBeShown()) != null) {
-            ImageView prodImgView = new ImageView(new Image("/Images/Map/production.png"));
+            ImageView prodImgView = new ImageView(new Image("/Pictures/Map/production.png"));
             prodImgView.setX(1480);
             prodImgView.setY(640);
             prodImgView.setStyle("-fx-cursor: hand;");
             Tooltip.install(prodImgView, new Tooltip(c.getName()));
             setMouseClicksForIcon(prodImgView);
+            prodImgView.setOnMouseClicked(event -> {
+                try {
+                    Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/ChooseProduction.fxml")));
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.show();
+                }
+                catch (IOException e) {
+                    System.out.println("failed to load production fxml");
+                    e.printStackTrace();
+                }
+            });
             backgroundPane.getChildren().add(prodImgView);
         }
     }
