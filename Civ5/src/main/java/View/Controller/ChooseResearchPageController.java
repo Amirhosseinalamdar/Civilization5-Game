@@ -76,6 +76,10 @@ public class ChooseResearchPageController {
         });
         techImgView.setOnMouseClicked(event -> {
             civilization.setInProgressTech(tech);
+            int remainingCost = tech.getCost();
+            if (civilization.getLastCostUntilNewTechnologies().containsKey(tech))
+                remainingCost = civilization.getLastCostUntilNewTechnologies().get(tech);
+            civilization.getLastCostUntilNewTechnologies().put(tech, remainingCost);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();

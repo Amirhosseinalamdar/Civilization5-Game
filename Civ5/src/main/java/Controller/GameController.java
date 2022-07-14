@@ -2,10 +2,12 @@ package Controller;
 
 import Model.Civilization;
 import Model.Game;
+import Model.Map.Building;
 import Model.Map.City;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
+import Model.UnitPackage.UnitType;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
@@ -38,7 +40,7 @@ public class GameController {
                 return false;
             }
         for (City city : civilization.getCities())
-            if (city.getInProgressUnit() == null) {
+            if (city.getInProgressUnit() == null && canCityHaveProduction(city)) {
                 GameMenu.chooseProductionForCity(city.getName());
                 return false;
             }
@@ -47,6 +49,17 @@ public class GameController {
             return false;
         }
         return true;
+    }
+
+    public static boolean canCityHaveProduction (City city) {
+        CityController.setCity(city, "");
+        for (UnitType unitType : UnitType.values())
+            if (CityController.canCreateUnit(unitType))
+                return true;
+        for (Building building : Building.values())
+            if (CityController.canConstructBuilding(building))
+                return true;
+        return false;
     }
 
     public static void doTurn(String command) {
