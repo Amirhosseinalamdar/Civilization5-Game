@@ -342,7 +342,7 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
-        if (tile.canUseItsResource()) {
+        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() == 0) {
             ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
             improvementImage.setFitWidth(60);
@@ -543,11 +543,11 @@ public class MapController {
         improvementButton(imageViews,"LUMBER_MILL");
         improvementButton(imageViews,"PLANTATION");
         improvementButton(imageViews,"QUARRY");
-        improvementButton(imageViews,"TRADING_OUTPOST");
+        improvementButton(imageViews,"TRADING_POST");
         for (ImageView imageView : imageViews) {
             setImageViewOpacity(imageView);
-            imageView.setX(70);
-            imageView.setY(70);
+            imageView.setFitWidth(70);
+            imageView.setFitHeight(70);
         }
         hBox.getChildren().addAll(imageViews);
     }
@@ -685,7 +685,10 @@ public class MapController {
         HBox hBox = new HBox();
         hBox.setLayoutY(900 - 70 - 70);
         hBox.setLayoutX(456);
-        if (chosenUnit.getType() == UnitType.WORKER) workerExclusiveOptions(hBox);
+        if (chosenUnit.getType() == UnitType.WORKER){
+            workerExclusiveOptions(hBox);
+            System.out.println("are chaghal");
+        }
         else settlerExclusiveOptions(hBox);
         hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 0 0;");
         unitOptionsNodes.add(hBox);
