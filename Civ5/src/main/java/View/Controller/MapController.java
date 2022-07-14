@@ -27,7 +27,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -680,6 +682,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Research");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/research.png"));
                     stage.show();
                 }
                 catch (IOException e) {
@@ -705,6 +710,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Production");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/production.png"));
                     stage.show();
                 }
                 catch (IOException e) {

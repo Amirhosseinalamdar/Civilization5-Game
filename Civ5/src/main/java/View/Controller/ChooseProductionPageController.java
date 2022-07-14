@@ -68,8 +68,10 @@ public class ChooseProductionPageController {
         colorAdjust.setSaturation(-1);
         Tooltip tooltip = new Tooltip(unitType.toString());
         ImageView unitImgView = new ImageView(new Image("/Pictures/units/" + unitType + ".png"));
+        double width = unitImgView.getImage().getWidth(), height = unitImgView.getImage().getHeight();
+        System.out.println("w = " + width + ", h = " + height);
         unitImgView.setFitWidth(130);
-        unitImgView.setFitHeight(130);
+        unitImgView.setFitHeight(130 * (height / width));
         unitImgView.setEffect(colorAdjust);
         unitImgView.setOnMouseEntered(event -> {
             colorAdjust.setSaturation(0);
