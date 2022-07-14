@@ -11,12 +11,12 @@
       fx:controller="View.Controller.PlayerListPageController"
       prefHeight="600.0" prefWidth="400.0">
     <ImageView fitHeight="600" fitWidth="400">
-        <Image url="@../Images/GamePage/playerlist.jpg"/>
+        <Image url="@../Pictures/GamePage/playerlist.jpg"/>
     </ImageView>
     <VBox layoutX="15" layoutY="75" spacing="25" fx:id="list"/>
     <Label fx:id="ok" layoutY="540" layoutX="180" text="OK" styleClass="startGameButton"/>
 
     <stylesheets>
-        <URL value="@../CSS/GamePageStyle.css"/>
+        <URL value="@../css/GamePageStyle.css"/>
     </stylesheets>
 </Pane>

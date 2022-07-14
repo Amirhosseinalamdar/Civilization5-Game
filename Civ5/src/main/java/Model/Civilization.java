@@ -203,4 +203,10 @@ public class Civilization {
             return false;
         }
     }
+
+    public boolean hasPrerequisitesOf (Technology tech) {
+        for (Technology parent : tech.getParents())
+            if (!this.hasReachedTech(parent)) return false;
+        return true;
+    }
 }

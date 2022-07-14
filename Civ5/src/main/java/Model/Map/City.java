@@ -3,6 +3,7 @@ package Model.Map;
 import Model.Civilization;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -287,5 +288,9 @@ public class City {
         if (food < 0) storedFood = food;
         else if (inProgressUnit != null && inProgressUnit.equals(UnitType.SETTLER)) storedFood = 0;
         else storedFood = food;
+    }
+
+    public int getCitizensNumber() {
+        return citizens.size();
     }
 }

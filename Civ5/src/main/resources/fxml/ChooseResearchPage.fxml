@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<Pane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="View.Controller.ChooseResearchPageController"
+      prefHeight="600.0" prefWidth="400.0">
+    <ImageView fitWidth="400" fitHeight="600">
+        <Image url="@../Pictures/TechIcons/background.jpg"/>
+    </ImageView>
+    <VBox fx:id="bigBox"/>
+</Pane>

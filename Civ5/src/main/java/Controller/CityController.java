@@ -20,13 +20,15 @@ import java.util.regex.Matcher;
 public class CityController {
     private static Civilization civilization;
     private static City city;
+    private static String command;
 
     public static void changeCivilization(Civilization civilization) {
         CityController.civilization = civilization;
     }
 
-    public static void setCity(City city) {
+    public static void setCity(City city, String command) {
         CityController.city = city;
+        CityController.command = command;
     }
 
     public static void handleCityOptions() {
@@ -593,7 +595,7 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit(UnitType unitType) {
+    private static void tryCreateUnit (UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -620,6 +622,26 @@ public class CityController {
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
         }
         city.setInProgressUnit(unitType);
+    }
+
+    public static boolean canCreateUnit (UnitType unitType) {
+        if (!hasReachedTechForUnit(unitType))
+            return false;
+        if (!hasEnoughResources(unitType))
+            return false;
+        if (unitType.isCivilian())
+            if (city.getTiles().get(0).getCivilian() != null)
+                return false;
+        else
+            if (city.getTiles().get(0).getMilitary() != null)
+                return false;
+        try {
+            int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
+            System.out.println("already in progress... remaining cost: " + remainingCost);
+            return false;
+        } catch (Exception ignored) {
+        }
+        return true;
     }
 
     private static boolean hasReachedTechForUnit(UnitType unitType) {

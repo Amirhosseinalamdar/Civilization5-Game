@@ -50,8 +50,6 @@ public class Game {
         this.mapSize = mapSize;
     }
 
-
-
     public int getTurn() {
         return turn;
     }
@@ -81,7 +79,7 @@ public class Game {
         generateMap();
         for (User player : players) {
             player.newCivilization();
-            Random random = new Random(players.indexOf(player));
+            Random random = new Random(/*players.indexOf(player)*/);
             int randomX, randomY;
             do {
                 randomX = random.nextInt(this.mapSize);
@@ -146,6 +144,8 @@ public class Game {
     private void makeFirstTilesVisible(Civilization civilization, Tile settlerTile, Tile warriorTile) {
         ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
         visibleTiles.addAll(warriorTile.getNeighbors());
+        visibleTiles.add(warriorTile);
+        if(warriorTile != settlerTile) visibleTiles.add(settlerTile);
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }
@@ -179,6 +179,18 @@ public class Game {
             }
         }
         completeMap(tiles);
+        Random rand = new Random();
+        for (int i = 0; i < mapSize; i++)
+            for (int j = 0; j < mapSize; j++)
+                if (rand.nextInt(50) == 0 && canBeRuined(i, j)) {
+                    System.out.println("ruining " + i + " " + j);
+                    tiles[i][j].setRuined(true);
+                }
+    }
+
+    private boolean canBeRuined (int i, int j) {
+        return tiles[i][j].getType() != TerrainType.OCEAN && tiles[i][j].getType() != TerrainType.MOUNTAIN &&
+                tiles[i][j].getFeature() != TerrainFeature.ICE;
     }
 
     private int setProbability(TerrainType type) {

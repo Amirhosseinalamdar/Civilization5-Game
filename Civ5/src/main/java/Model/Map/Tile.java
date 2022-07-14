@@ -58,7 +58,7 @@ public class Tile extends ImageView {
     private int indexInMapJ;
     @Expose(serialize = true, deserialize = true)
     private Citizen workingCitizen;
-
+    @Expose(serialize = true, deserialize = true)
     private boolean isRuined;
 
 
@@ -296,5 +296,9 @@ public class Tile extends ImageView {
 
     public boolean isCenterOfCity(City city) {
         return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
+    }
+
+    public void setRuined (boolean isRuined) {
+        this.isRuined = isRuined;
     }
 }

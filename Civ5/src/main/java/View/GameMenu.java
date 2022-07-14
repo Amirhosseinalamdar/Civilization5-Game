@@ -8,6 +8,7 @@ import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Controller.MapController;
 import com.google.gson.Gson;
@@ -62,7 +63,7 @@ public class GameMenu {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
             Parent root = fxmlLoader.load();
-            MapController mapController = (MapController)fxmlLoader.getController();
+            MapController mapController = fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
             KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
@@ -95,25 +96,20 @@ public class GameMenu {
                 if(event.getCode().getName().equals("Right") &&
                         mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
                     mapController.setyStartingIndex(1+mapController.getyStartingIndex());
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
                     mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Down") &&
                         mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
                     mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
+
                     mapController.showMap();
                 }else if(event.getCode().getName().equals("Up") &&
                         mapController.getxStartingIndex() > 1){
                     mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
-                    mapController.getBackgroundPane().getChildren().
-                            removeAll(mapController.getBackgroundPane().getChildren());
                     mapController.showMap();
                 }
             }
@@ -124,24 +120,11 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
+                    System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
-                    if (mapController.getChosenUnit() == null) {
-                        if (tile.getCivilian() == null) {
-                            if (tile.getMilitary() == null) return;
-                            mapController.setChosenUnit(tile.getMilitary());
-                        } else {
-                            if (tile.getMilitary() != null) {
-                                if (mapController.getChosenUnit() != null && mapController.getChosenUnit().equals(tile.getMilitary()))
-                                    mapController.setChosenUnit(tile.getCivilian());
-                                else mapController.setChosenUnit(tile.getMilitary());
-                            } else mapController.setChosenUnit(tile.getCivilian());
-                        }
-                        if(mapController.getChosenUnit() != null){
-                            mapController.showUnitAvatar();
-                        }
-                    }
-                    else {
+                    if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)) {
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                        UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
                             mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
@@ -151,7 +134,7 @@ public class GameMenu {
                             mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
                         }
                         mapController.setChosenUnit(null);
-                        mapController.hideUnitAvatar();
+                        mapController.showMap();
                     }
                 });
             }
@@ -459,36 +442,36 @@ public class GameMenu {
     public static void showMap(Civilization civilization, int centerI, int centerJ, boolean global) {
         TileStatus[][] previousStatuses = civilization.getTileVisionStatuses().clone();
 
-        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
-            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
-                civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
-
-        for (Unit unit : civilization.getUnits()) {
-            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
-            if (!unit.getType().hasLimitedVisibility()) {
-                int clearTileLength = clearTiles.size();
-                for (int i = 0; i < clearTileLength; i++)
-                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
-            }
-            for (Tile tileNeighbor : clearTiles)
-                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
-        }
-
-        for (City city : civilization.getCities()) {
-            ArrayList<Tile> clearTiles = new ArrayList<>();
-            for (Tile tile : city.getTiles()) {
-                clearTiles.add(tile);
-                clearTiles.addAll(tile.getNeighbors());
-            }
-            for (Tile tileNeighbor : clearTiles)
-                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
-        }
-
-        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
-            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
-                if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
-                        && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
-                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
+//        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+//            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+//                civilization.getTileVisionStatuses()[i][j] = TileStatus.FOGGY;
+//
+//        for (Unit unit : civilization.getUnits()) {
+//            ArrayList<Tile> clearTiles = new ArrayList<>((unit.getTile().getNeighbors()));
+//            if (!unit.getType().hasLimitedVisibility()) {
+//                int clearTileLength = clearTiles.size();
+//                for (int i = 0; i < clearTileLength; i++)
+//                    clearTiles.addAll((clearTiles.get(i).getNeighbors()));
+//            }
+//            for (Tile tileNeighbor : clearTiles)
+//                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+//        }
+//
+//        for (City city : civilization.getCities()) {
+//            ArrayList<Tile> clearTiles = new ArrayList<>();
+//            for (Tile tile : city.getTiles()) {
+//                clearTiles.add(tile);
+//                clearTiles.addAll(tile.getNeighbors());
+//            }
+//            for (Tile tileNeighbor : clearTiles)
+//                civilization.getTileVisionStatuses()[tileNeighbor.getIndexInMapI()][tileNeighbor.getIndexInMapJ()] = TileStatus.CLEAR;
+//        }
+//
+//        for (int i = 0; i < Game.getInstance().getMapSize(); i++)
+//            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+//                if ((previousStatuses[i][j].equals(TileStatus.CLEAR) || previousStatuses[i][j].equals(TileStatus.DISCOVERED))
+//                        && civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY))
+//                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
 
         int startingJ = calculateStartingJ(centerJ) / 2;
         int startingI = calculateStartingI(centerI) * 6;
@@ -746,6 +729,7 @@ public class GameMenu {
 
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
+        //TODO red border
     }
 
     public static void cityAlreadyHasTile() {

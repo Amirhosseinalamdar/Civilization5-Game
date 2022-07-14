@@ -13,10 +13,10 @@
       fx:controller="View.Controller.GamePageController"
       prefHeight="900.0" prefWidth="1600.0">
     <ImageView fitWidth="1600" fitHeight="900">
-        <Image url="@../Images/GamePage/background.jpg"/>
+        <Image url="@../Pictures/GamePage/background.jpg"/>
     </ImageView>
     <ImageView layoutX="598" layoutY="100">
-        <Image url="@../Images/GamePage/frame.png"/>
+        <Image url="@../Pictures/GamePage/frame.png"/>
     </ImageView>
 
     <VBox layoutX="667" layoutY="210" spacing="70" styleClass="vboxBlur" prefHeight="487" maxWidth="268" fx:id="background">

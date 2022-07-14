@@ -1,11 +1,20 @@
 package Model.UnitPackage;
 
+import Controller.GameController;
+import Controller.UnitController;
 import Model.Civilization;
+import Model.Game;
 import Model.Map.Path;
 import Model.Map.Tile;
+import View.Controller.MapController;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
@@ -39,10 +48,37 @@ public class Unit extends ImageView {
         this.path = new Path(null);
         this.MP = unitType.getMP();
         this.health = MAX_HEALTH;
-        System.out.println("/Images/" + unitType);
-        this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
+        System.out.println("/Pictures/" + unitType);
+        this.setImage(new Image(this.getClass().getResource("/Pictures/units/" + unitType + ".png").toExternalForm()));
         this.setFitWidth(50);
         this.setFitHeight(50);
+        setOnMouseEntered(event -> {
+            setStyle("-fx-cursor: hand;");
+        });
+        setOnMouseClicked(event -> {
+            System.out.println("clicked duh");
+            MapController mapController = GameMenu.getGameMapController();
+            if (mapController.getChosenUnit() == null) {
+                mapController.setChosenUnit(this);
+                if (!civilization.equals(GameController.getCivilization()))
+                    mapController.setChosenUnit(null);
+
+                if (mapController.getChosenUnit() != null) {
+                    mapController.showUnitAvatar();
+                    if (mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
+                    else mapController.showMilitaryOptions();
+                }
+            }
+            else {
+                if (mapController.getChosenUnit().equals(this)) {
+                    mapController.setChosenUnit(null);
+                    mapController.showMap();
+                }
+                else if (civilization.equals(GameController.getCivilization()))
+                    mapController.setChosenUnit(this);
+                mapController.showMap();
+            }
+        });
     }
 
     public void setPath(Path path) {
