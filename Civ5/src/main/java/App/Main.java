@@ -24,7 +24,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-//        UserController.readDataFromJson();
+        UserController.readDataFromJson();
         launch();
         UserController.writeDataToJson();
     }

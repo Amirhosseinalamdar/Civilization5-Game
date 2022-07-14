@@ -58,12 +58,14 @@ public class UserController {
 
     public static String logUserIn(String username, String password) {
         String output = "";
-        for (User allUser : allUsers) {
-            if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
-                output = "user logged in successfully!";
-                loggedInUser = allUser;
-                allUser.setLoggedIn(true);
-                break;
+        if (allUsers != null) {
+            for (User allUser : allUsers) {
+                if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
+                    output = "user logged in successfully!";
+                    loggedInUser = allUser;
+                    allUser.setLoggedIn(true);
+                    break;
+                }
             }
         }
         if (output.isEmpty()) output = "error: username and password didn't match!";
@@ -124,18 +126,22 @@ public class UserController {
     }
 
     public static ArrayList<User> getBestUsers() {
-        ArrayList<User> sorted = new ArrayList<>(allUsers);
-        if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
+        ArrayList<User> sorted = new ArrayList<>();
+        for (User allUser : allUsers) {
+            if (allUser.getTime() != null) sorted.add(allUser);
+        }
         Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
-        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
-        sorted.sort(comparator);
+        if (!sorted.isEmpty()) {
+            sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
+            sorted.sort(comparator);
+        }
         return sorted;
     }
 
     public static void readDataFromJson() {
         try {
             String json = new String(Files.readAllBytes(Paths.get("json.json")));
-            allUsers = new Gson().fromJson(json, new TypeToken<List<User>>() {
+            allUsers = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, new TypeToken<List<User>>() {
             }.getType());
         } catch (IOException e) {
             e.printStackTrace();
