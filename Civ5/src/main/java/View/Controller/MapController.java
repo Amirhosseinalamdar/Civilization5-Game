@@ -758,16 +758,9 @@ public class MapController {
             UnitController.handleUnitOptions();
             int after = UnitController.getCivilization().getCities().size();
             if (after == before + 1) {
-                ImageView imageView1 = new ImageView(ImageBase.CITY_0.getImage());
-                imageView1.setFitWidth(100);
-                imageView1.setFitHeight(100);
-                imageView1.setX(chosenUnit.getX() - 45);
-                imageView1.setY(chosenUnit.getY() - 10);
-                backgroundPane.getChildren().add(imageView1);
                 backgroundPane.getChildren().remove(chosenUnit);
-                hideUnitOptions();
-                hideUnitAvatar();
                 chosenUnit = null;
+                showMap();
             }
         });
         imageView.setFitWidth(70);
