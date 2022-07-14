@@ -197,7 +197,7 @@ public class UnitController {
 
             if ((matcher = Commands.getMatcher(command, Commands.GARRISON)) != null) {
                 if (unit instanceof Military) {
-                    if (militaryIsInCityTiles())
+                    if (militaryIsInCityTiles(unit))
                         return matcher;
                     else
                         GameMenu.cantMakeGarrison();
@@ -255,7 +255,7 @@ public class UnitController {
         }
     }
 
-    private static boolean militaryIsInCityTiles() {
+    public static boolean militaryIsInCityTiles(Unit unit) {
         for (City city : civilization.getCities())
             for (Tile tile : city.getTiles())
                 if (tile.equals(unit.getTile()))

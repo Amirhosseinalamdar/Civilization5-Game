@@ -180,7 +180,15 @@ public enum ImageBase {
     ROAD_ICON(new Image("Pictures/unitIcons/road.png")),
     SLEEP_ICON(new Image("Pictures/unitIcons/Sleep.png")),
     STOP_ICON(new Image("Pictures/unitIcons/Stop.png")),
-    TRADING_OUTPOST_ICON(new Image("Pictures/unitIcons/tradingOutpost.png"));
+    TRADING_OUTPOST_ICON(new Image("Pictures/unitIcons/tradingOutpost.png")),
+
+    ALERT_ICON(new Image("Pictures/unitIcons/military/alert.png")),
+    ATTACK_ICON(new Image("Pictures/unitIcons/military/attack.png")),
+    FORTIFY_ICON(new Image("Pictures/unitIcons/military/fortify.png")),
+    GARRISON_ICON(new Image("Pictures/unitIcons/military/garrison.png")),
+    HEAL_ICON(new Image("Pictures/unitIcons/military/heal.png")),
+    PILLAGE_ICON(new Image("Pictures/unitIcons/military/Pillage.png")),
+    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png"));
 
 
 

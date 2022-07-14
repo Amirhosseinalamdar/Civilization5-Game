@@ -5,6 +5,7 @@ import Controller.GameController;
 import Controller.UnitController;
 import Model.*;
 import Model.Map.*;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
@@ -32,6 +33,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class MapController {
@@ -749,9 +751,44 @@ public class MapController {
 
     public void showMilitaryOptions() {
         unitOptionsNodes = new ArrayList<>();
+        HBox hBox = new HBox();
         showCivAndMilSameOptions();
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+//        setMilitaryDecisionButtons(imageViews,"ATTACK");
+        setMilitaryDecisionButtons(imageViews,"ALERT");
+        setMilitaryDecisionButtons(imageViews,"FORTIFY");
+        if(UnitController.militaryIsInCityTiles(chosenUnit))
+            setMilitaryDecisionButtons(imageViews,"GARRISON");
+        if(chosenUnit.getHealth() < Unit.MAX_HEALTH)
+            setMilitaryDecisionButtons(imageViews,"HEAL");
+        if(chosenUnit.getTile().getImprovementInProgress() != null || chosenUnit.getTile().getRouteInProgress() != null)//TODO ERFAN DAGHIGH CHECK KON SHRTESHO
+            setMilitaryDecisionButtons(imageViews,"PILLAGE");
+        if(chosenUnit.getType().isSiege())
+            setMilitaryDecisionButtons(imageViews,"SETUP_RANDED");
+        hBox.setLayoutY(900 - 70 - 70);
+        hBox.setLayoutX(456);
+        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 0 0;");
+        hBox.getChildren().addAll(imageViews);
+        unitOptionsNodes.add(hBox);
         backgroundPane.getChildren().addAll(unitOptionsNodes);
     }
+    private void setMilitaryDecisionButtons(ArrayList<ImageView> imageViews,String string){
+        ImageView imageView = new ImageView(ImageBase.valueOf(string+"_ICON").getImage());
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                UnitController.setUnit(chosenUnit,Commands.valueOf(string).getRegex());//TODO SHOW ERR TO USER
+                UnitController.handleUnitOptions();
+                showMap();
+            }
+        });
+        imageView.setFitWidth(70);
+        imageView.setFitHeight(70);
+        setImageViewOpacity(imageView);
+        imageViews.add(imageView);
+    }
+
+
     public void showCivilianOptions(){
         unitOptionsNodes = new ArrayList<>();
         showCivAndMilSameOptions();
