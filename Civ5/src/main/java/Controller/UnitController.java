@@ -590,6 +590,7 @@ public class UnitController {
                         }
                         break;
                     case 3:
+                        if (civilization.getCities().size() == 0) break;
                         ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
                         Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
                         allCities.sort(cmp);

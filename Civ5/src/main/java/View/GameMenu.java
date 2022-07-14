@@ -20,8 +20,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -122,7 +120,7 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
-                    if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)) {
+                    if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
