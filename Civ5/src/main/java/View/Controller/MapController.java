@@ -161,11 +161,6 @@ public class MapController {
                         showRuins(tile, i, j);
                     }
                 }
-                showTile(tile, i, j);
-                showRiverAndDelta(tile, i, j);
-                showResourceAndImprovements(tile, i, j);
-                showCity(tile, i, j);
-                showRuins(tile, i, j);
             }
             flag2 = true;
         }
@@ -226,7 +221,7 @@ public class MapController {
 
     public void showUnitAvatar() {
         String picture = chosenUnit.getType().toString();
-        unitAvatarImageView = new ImageView(new Image("Images/units/" + picture + ".png"));
+        unitAvatarImageView = new ImageView(new Image("Pictures/units/" + picture + ".png"));
         unitAvatarImageView.setFitHeight(160);
         unitAvatarImageView.setFitWidth(160);
         unitAvatarImageView.setX(30);
@@ -250,7 +245,7 @@ public class MapController {
     public void showTile(Tile tile,int i, int j){
         Image image = new Image("Pictures/tiles/cloud.png");
         String picture;
-        if(GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.FOGGY){
+        if (GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.FOGGY) {
             tile.setImage(image);
             tile.setFitWidth(image.getWidth());
             tile.setFitHeight(image.getHeight());

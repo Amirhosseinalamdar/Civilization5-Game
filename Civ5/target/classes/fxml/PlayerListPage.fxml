@@ -17,6 +17,6 @@
     <Label fx:id="ok" layoutY="540" layoutX="180" text="OK" styleClass="startGameButton"/>
 
     <stylesheets>
-        <URL value="@../CSS/GamePageStyle.css"/>
+        <URL value="@../css/GamePageStyle.css"/>
     </stylesheets>
 </Pane>
