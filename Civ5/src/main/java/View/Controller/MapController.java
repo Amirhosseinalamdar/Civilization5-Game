@@ -342,14 +342,15 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
-        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() == 0) {
+        if (tile.getImprovementInProgress() != null) {
             ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
             improvementImage.setFitWidth(60);
             improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
             improvementImage.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(improvementImage);
-        } else if (tile.getImprovementInProgress() != null) {
+        }
+        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0) {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
