@@ -23,8 +23,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -120,14 +122,14 @@ public class MapController {
         if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
             ImageView imageView;
             if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 30)
-                imageView = new ImageView(new Image("Pictures/City/4.jpg"));
+                imageView = new ImageView(ImageBase.CITY_4.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 23)
-                imageView = new ImageView(new Image("Pictures/City/3.jpg"));
+                imageView = new ImageView(ImageBase.CITY_3.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 15)
-                imageView = new ImageView(new Image("Pictures/City/2.jpg"));
+                imageView = new ImageView(ImageBase.CITY_2.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 7)
-                imageView = new ImageView(new Image("Pictures/City/1.jpg"));
-            else imageView = new ImageView(new Image("Pictures/City/0.jpg"));
+                imageView = new ImageView(ImageBase.CITY_1.getImage());
+            else imageView = new ImageView(ImageBase.CITY_0.getImage());
             imageView.setFitHeight(60);
             imageView.setFitWidth(60);
             imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 30);
@@ -380,12 +382,22 @@ public class MapController {
                 if (GameController.getCivilization().getTileVisionStatuses()[i][j] != TileStatus.CLEAR) continue;
                 if (tile.getCivilian() != null) {
                     tile.getCivilian().setX(tile.getX() + 65);
-                    tile.getCivilian().setY(tile.getY() + 40);
+                    tile.getCivilian().setY(tile.getY() + 70);
+                    Circle circle = new Circle(tile.getCivilian().getX() + tile.getCivilian().getLayoutBounds().getWidth()/2,
+                            tile.getCivilian().getY() + tile.getCivilian().getLayoutBounds().getHeight()/2,
+                            (tile.getCivilian().getLayoutBounds().getHeight()+tile.getCivilian().getLayoutBounds().getWidth())/4,
+                            tile.getCivilian().getCivilization().getColor());
+                    backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getCivilian());
                 }
                 if (tile.getMilitary() != null) {
                     tile.getMilitary().setX(tile.getX() + 10);
-                    tile.getMilitary().setY(tile.getY() + 40);
+                    tile.getMilitary().setY(tile.getY() + 70);
+                    Circle circle = new Circle(tile.getMilitary().getX() + tile.getMilitary().getLayoutBounds().getWidth()/2,
+                            tile.getMilitary().getY() + tile.getMilitary().getLayoutBounds().getHeight()/2,
+                            (tile.getMilitary().getLayoutBounds().getHeight()+tile.getMilitary().getLayoutBounds().getWidth())/4
+                            ,tile.getMilitary().getCivilization().getColor());
+                    backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getMilitary());
                 }
             }

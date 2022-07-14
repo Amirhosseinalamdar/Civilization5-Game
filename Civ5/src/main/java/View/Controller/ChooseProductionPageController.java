@@ -67,7 +67,7 @@ public class ChooseProductionPageController {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setSaturation(-1);
         Tooltip tooltip = new Tooltip(unitType.toString());
-        ImageView unitImgView = new ImageView(new Image("/Pictures/units/" + unitType + ".png"));
+        ImageView unitImgView = new ImageView(unitType.getImage());
         unitImgView.setFitWidth(130);
         unitImgView.setFitHeight(130);
         unitImgView.setEffect(colorAdjust);

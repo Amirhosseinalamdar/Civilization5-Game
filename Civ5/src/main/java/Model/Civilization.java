@@ -8,6 +8,7 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import com.google.gson.annotations.Expose;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class Civilization {
     @Expose(serialize = true, deserialize = true)
     private int happiness;
     @Expose(serialize = true, deserialize = true)
-    private final CivSymbol civColor;
+    private final Color color;
     @Expose(serialize = true, deserialize = true)
     private int showingCenterI;
     @Expose(serialize = true, deserialize = true)
@@ -51,7 +52,7 @@ public class Civilization {
         for (int i = 0; i < Game.getInstance().getMapSize(); i++)
             for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.civColor = initCivSymbol();
+        this.color = initCivSymbol();
         this.showingCenterI = 1;
         this.showingCenterJ = 2;
         lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
@@ -108,30 +109,30 @@ public class Civilization {
         this.showingCenterJ = showingCenterJ;
     }
 
-    private CivSymbol initCivSymbol() {
-        if (!CivSymbol.WHITE.isTaken()){
-            CivSymbol.WHITE.setTaken(true);
-            return CivSymbol.WHITE;
-        } else if (!CivSymbol.PURPLE.isTaken()){
-            CivSymbol.PURPLE.setTaken(true);
-            return CivSymbol.PURPLE;
-        } else if (!CivSymbol.BLUE.isTaken()){
+    private Color initCivSymbol() {
+        if (!CivSymbol.BLUE.isTaken()){
             CivSymbol.BLUE.setTaken(true);
-            return CivSymbol.BLUE;
-        } else if (!CivSymbol.RED.isTaken()) {
+            return CivSymbol.BLUE.getColor();
+        } else if (!CivSymbol.RED.isTaken()){
             CivSymbol.RED.setTaken(true);
-            return CivSymbol.RED;
+            return CivSymbol.RED.getColor();
+        } else if (!CivSymbol.GREEN.isTaken()){
+            CivSymbol.GREEN.setTaken(true);
+            return CivSymbol.GREEN.getColor();
+        } else if (!CivSymbol.WHITE.isTaken()) {
+            CivSymbol.WHITE.setTaken(true);
+            return CivSymbol.WHITE.getColor();
         }else if (!CivSymbol.BLACK.isTaken()) {
             CivSymbol.BLACK.setTaken(true);
-            return CivSymbol.BLACK;
+            return CivSymbol.BLACK.getColor();
         }else {
             System.out.println("not enough symbols");
             return null;
         }
     }
 
-    public String getCivColor() {
-        return civColor.getSymbol();
+    public Color getColor() {
+        return color;
     }
 
     public void createSettlerAndWarriorOnTile(Tile tile) {
