@@ -48,8 +48,8 @@ public class Unit extends ImageView {
         this.path = new Path(null);
         this.MP = unitType.getMP();
         this.health = MAX_HEALTH;
-        System.out.println("/Images/" + unitType);
-        this.setImage(new Image(this.getClass().getResource("/Images/units/" + unitType + ".png").toExternalForm()));
+        System.out.println("/Pictures/" + unitType);
+        this.setImage(new Image(this.getClass().getResource("/Pictures/units/" + unitType + ".png").toExternalForm()));
         this.setFitWidth(50);
         this.setFitHeight(50);
         setOnMouseEntered(event -> {

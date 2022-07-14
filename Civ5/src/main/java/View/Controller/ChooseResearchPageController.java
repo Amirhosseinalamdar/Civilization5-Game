@@ -62,7 +62,7 @@ public class ChooseResearchPageController {
         colorAdjust.setBrightness(-0.2);
         VBox box = new VBox();
         Tooltip tooltip = new Tooltip(tech.toString());
-        ImageView techImgView = new ImageView(new Image("/Images/TechIcons/" + tech.toString().toLowerCase() + ".png"));
+        ImageView techImgView = new ImageView(new Image("/Pictures/TechIcons/" + tech.toString().toLowerCase() + ".png"));
         techImgView.setFitWidth(130);
         techImgView.setFitHeight(130);
         techImgView.setEffect(colorAdjust);

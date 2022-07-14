@@ -4,6 +4,7 @@ import Controller.GameController;
 import Controller.UnitController;
 import Model.Civilization;
 import Model.Game;
+import Model.ImageBase;
 import Model.Map.*;
 import Model.TileStatus;
 import Model.UnitPackage.Unit;
@@ -150,7 +151,6 @@ public class MapController {
         }
         showTileContentIfNeeded();
         showUnits();
-//        showFogStatus();
         showStatusBar();
         showUserPanelDownLeft();
         showChangeTurnSymbols();
@@ -160,7 +160,7 @@ public class MapController {
     private void showTileInfoButton() {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(-0.85);
-        ImageView imageView = new ImageView(new Image("Pictures/Icons/Hexagon.png"));
+        ImageView imageView = new ImageView(new Image("Pictures/Icons/Hexagon.png"));//TODO
         imageView.setEffect(colorAdjust);
         imageView.setX(1390);
         imageView.setY(825);
@@ -203,7 +203,7 @@ public class MapController {
 
     public void showCities(Tile tile, int i, int j) {
         if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
-            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+            ImageView imageView1 = new ImageView(ImageBase.CITY_0.getImage());
             imageView1.setFitWidth(100);
             imageView1.setFitHeight(100);
             imageView1.setX(tile.getX() + 20);
@@ -222,7 +222,7 @@ public class MapController {
     }
 
     public void showUserPanelDownLeft() {
-        ImageView imageView = new ImageView(new Image("Pictures/Panels/myCiv.png"));
+        ImageView imageView = new ImageView(ImageBase.LEFT_DOWN_PANEL_BOX.getImage());
         imageView.setFitHeight(250);
         imageView.setX(0);
         imageView.setY(900 - imageView.getLayoutBounds().getHeight());
@@ -236,8 +236,7 @@ public class MapController {
     }
 
     public void showUnitAvatar() {
-        String picture = chosenUnit.getType().toString();
-        unitAvatarImageView = new ImageView(new Image("Images/units/" + picture + ".png"));
+        unitAvatarImageView = new ImageView(chosenUnit.getType().getImage());
         unitAvatarImageView.setFitHeight(160);
         unitAvatarImageView.setFitWidth(160);
         unitAvatarImageView.setX(30);
@@ -260,10 +259,10 @@ public class MapController {
     }
 
     public void showTile(Tile tile, int i, int j) {
-        Image image = new Image("Pictures/tiles/cloud.png");
+        Image image;
         ColorAdjust colorAdjust = new ColorAdjust();
-        String picture;
         if (GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.FOGGY) {
+            image = ImageBase.CLOUD.getImage();
             tile.setImage(image);
             tile.setFitWidth(image.getWidth());
             tile.setFitHeight(image.getHeight());
@@ -275,12 +274,12 @@ public class MapController {
             return;
         }
         if (tile.getFeature() == TerrainFeature.MARSH) {
-            if (tile.getType() == TerrainType.PLAIN) picture = "PLAIN_MARSH";
-            else picture = "GRASS_MARSH";
+            if (tile.getType() == TerrainType.PLAIN) image = ImageBase.PLAIN_MARSH.getImage();
+            else image = ImageBase.GRASS_MARSH.getImage();
         } else if (tile.getFeature() != TerrainFeature.NONE && tile.getFeature() != TerrainFeature.DELTA)
-            picture = tile.getFeature().toString();
-        else picture = tile.getType().toString();
-        tile.setImage(new Image("Pictures/tiles/" + picture + ".png"));
+            image = tile.getFeature().getImage();
+        else image = tile.getType().getImage();
+        tile.setImage(image);
         tile.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
         tile.setY(105 * (i - xStartingIndex));
         tile.setFitHeight(140);
@@ -301,17 +300,17 @@ public class MapController {
     public void showRiverAndDelta(Tile tile, int i, int j) {
         ColorAdjust colorAdjust = new ColorAdjust();
         if (tile.getFeature() == TerrainFeature.DELTA) {
-            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/DELTA.png"));
+            ImageView imageView1 = new ImageView(ImageBase.DELTA.getImage());
             imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView1.setY(105 * (i - xStartingIndex));
             setDiscoveredTileBrightness(tile,i,j,colorAdjust);
             backgroundPane.getChildren().add(imageView1);
         }
         if (tile.isRiverAtLeft()) {
-            String str;
-            if (i % 2 == 1) str = "RIVER_LL";
-            else str = "RIVER_L";
-            ImageView imageView2 = new ImageView(new Image("Pictures/tiles/" + str + ".png"));
+            Image image;
+            if (i % 2 == 1) image = ImageBase.RIVER_O.getImage();
+            else image = ImageBase.RIVER_E.getImage();
+            ImageView imageView2 = new ImageView(image);
             imageView2.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView2.setY(105 * (i - xStartingIndex));
             setDiscoveredTileBrightness(tile,i,j,colorAdjust);
@@ -322,7 +321,7 @@ public class MapController {
     public void showResourceAndImprovements(Tile tile, int i, int j) {
         if (tile.getResource() != Resource.NONE) {
             ImageView imageView1 = new ImageView
-                    (new Image("Pictures/resources/" + tile.getResource().toString() + ".png"));
+                    (tile.getResource().getImage());
             imageView1.setFitWidth(60);
             imageView1.setFitHeight(60);
             imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 10);
@@ -330,15 +329,14 @@ public class MapController {
             backgroundPane.getChildren().add(imageView1);
         }
         if (tile.canUseItsResource()) {
-            ImageView improvementImage = new ImageView(new Image("Pictures/improvments/"
-                    + tile.getResource().getPrerequisiteImprovement().toString() + ".png"));
+            ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
             improvementImage.setFitWidth(60);
             improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
             improvementImage.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(improvementImage);
         } else if (tile.getImprovementInProgress() != null) {
-            ImageView improvementImage = new ImageView(new Image("Pictures/improvments/inProgress.png"));
+            ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
             improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 20);
@@ -349,7 +347,7 @@ public class MapController {
 
     public void showRuins(Tile tile, int i, int j) {
         if (tile.isRuined()) {
-            ImageView imageView1 = new ImageView(new Image("Pictures/tiles/ruins.png"));
+            ImageView imageView1 = new ImageView(ImageBase.RUINS.getImage());
             imageView1.setFitWidth(80);
             imageView1.setFitHeight(80);
             imageView1.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 30);
@@ -378,13 +376,13 @@ public class MapController {
     }
 
     public void showStatusBar() {//TODO ADD TEXT BOXES
-        ImageView imageView = new ImageView(new Image("Pictures/Panels/statusBar.png"));
+        ImageView imageView = new ImageView(ImageBase.STATUSBAR_BOX.getImage());
         backgroundPane.getChildren().add(imageView);
         ImageView[] imageViews = new ImageView[4];
-        imageViews[0] = new ImageView(new Image("Pictures/Panels/Science.png"));
-        imageViews[1] = new ImageView(new Image("Pictures/Panels/Gold.png"));
-        imageViews[2] = new ImageView(new Image("Pictures/Panels/Happiness.png"));
-        imageViews[3] = new ImageView(new Image("Pictures/Panels/Turn.png"));
+        imageViews[0] = new ImageView(ImageBase.SCIENCE_ICON.getImage());
+        imageViews[1] = new ImageView(ImageBase.GOLD_ICON.getImage());
+        imageViews[2] = new ImageView(ImageBase.HAPPINESS_ICON.getImage());
+        imageViews[3] = new ImageView(ImageBase.TURN_ICON.getImage());
         for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
@@ -426,22 +424,19 @@ public class MapController {
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 if (GameController.getCivilization().getTileVisionStatuses()[i][j] != TileStatus.CLEAR) continue;
                 if (tile.getFoodPerTurn() > 0) {
-                    String food = "Food" + String.valueOf(tile.getFoodPerTurn()) + ".png";
-                    ImageView IFood = new ImageView(new Image("Pictures/tiles/" + food));
+                    ImageView IFood = new ImageView(chooseFoodLevelImage(tile.getFoodPerTurn()));
                     IFood.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 10);
                     IFood.setY(105 * (i - xStartingIndex) + 50);
                     tileImageViews.add(IFood);
                 }
                 if (tile.getGoldPerTurn() > 0) {
-                    String gold = "Gold" + String.valueOf(tile.getGoldPerTurn()) + ".png";
-                    ImageView IGold = new ImageView(new Image("Pictures/tiles/" + gold));
+                    ImageView IGold = new ImageView(chooseGoldLevelImage(tile.getGoldPerTurn()));
                     IGold.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
                     IGold.setY(105 * (i - xStartingIndex) + 70);
                     tileImageViews.add(IGold);
                 }
                 if (tile.getProductionPerTurn() > 0) {
-                    String production = "Production" + String.valueOf(tile.getProductionPerTurn()) + ".png";
-                    ImageView IProduction = new ImageView(new Image("Pictures/tiles/" + production));
+                    ImageView IProduction = new ImageView(chooseProductionLevelImage(tile.getProductionPerTurn()));
                     IProduction.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 40);
                     IProduction.setY(105 * (i - xStartingIndex) + 10);
                     tileImageViews.add(IProduction);
@@ -451,7 +446,27 @@ public class MapController {
         }
         backgroundPane.getChildren().addAll(tileImageViews);
     }
-
+    private Image chooseFoodLevelImage(int key){
+        if(key == 1) return ImageBase.FOOD_1.getImage();
+        else if(key == 2) return ImageBase.FOOD_2.getImage();
+        else if(key == 3) return ImageBase.FOOD_3.getImage();
+        else if(key == 4) return ImageBase.FOOD_4.getImage();
+        else return null;
+    }
+    private Image chooseProductionLevelImage(int key){
+        if(key == 1) return ImageBase.PRODUCTION_1.getImage();
+        else if(key == 2) return ImageBase.PRODUCTION_2.getImage();
+        else if(key == 3) return ImageBase.PRODUCTION_3.getImage();
+        else if(key == 4) return ImageBase.PRODUCTION_4.getImage();
+        else return null;
+    }
+    private Image chooseGoldLevelImage(int key){
+        if(key == 1) return ImageBase.GOLD_1.getImage();
+        else if(key == 2) return ImageBase.GOLD_2.getImage();
+        else if(key == 3) return ImageBase.GOLD_3.getImage();
+        else if(key == 4) return ImageBase.GOLD_4.getImage();
+        else return null;
+    }
     public void hideTilesFoodProductionGold() {//not tested
         backgroundPane.getChildren().removeAll(tileImageViews);
         tileImageViews.removeAll(tileImageViews);
@@ -473,10 +488,10 @@ public class MapController {
                 flag2 = false;
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 if (tile.getWorkingCitizen() != null) {
-                    ImageView imageView = new ImageView(new Image("Pictures/tiles/Population.png"));
+                    ImageView imageView = new ImageView(ImageBase.POPULATION.getImage());
                     imageView.setFitWidth(30);
                     imageView.setFitHeight(30);
-                    imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 40);
+                    imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 50);
                     imageView.setY(105 * (i - xStartingIndex) + 50);
                     citizenImageViews.add(imageView);
                 }
@@ -513,15 +528,15 @@ public class MapController {
     }
 
     private void workerExclusiveOptions(HBox hBox) {
-//        ImageView imageView = new ImageView(new Image("Pictures/Icons/mine_default.png"));
-//        setImageViewOpacity(imageView);
-//        imageView.setFitHeight(70);
-//        imageView.setFitHeight(70);
-//        hBox.getChildren().add(imageView);
+        ImageView imageView = new ImageView(ImageBase.MINE_ICON.getImage());
+        setImageViewOpacity(imageView);
+        imageView.setFitHeight(70);
+        imageView.setFitHeight(70);
+        hBox.getChildren().add(imageView);
     }
 
     private void settlerExclusiveOptions(HBox hBox) {
-        ImageView imageView = new ImageView(new Image("Pictures/Icons/build_city_default.png"));
+        ImageView imageView = new ImageView(ImageBase.FOUND_CITY_ICON.getImage());
         setImageViewOpacity(imageView);
         imageView.setOnMouseClicked(event -> {
             int before = UnitController.getCivilization().getCities().size();
@@ -529,7 +544,7 @@ public class MapController {
             UnitController.handleUnitOptions();
             int after = UnitController.getCivilization().getCities().size();
             if (after == before + 1) {
-                ImageView imageView1 = new ImageView(new Image("Pictures/tiles/City0.png"));
+                ImageView imageView1 = new ImageView(ImageBase.CITY_0.getImage());
                 imageView1.setFitWidth(100);
                 imageView1.setFitHeight(100);
                 imageView1.setX(chosenUnit.getX() - 45);
@@ -559,12 +574,12 @@ public class MapController {
         hBox.setLayoutX(456);
         hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 20 0;");
         ImageView[] imageViews = new ImageView[4];
-        imageViews[0] = new ImageView(new Image("Pictures/unitIcons/Load.png"));
-        imageViews[1] = new ImageView(new Image("Pictures/unitIcons/Sleep.png"));
+        imageViews[0] = new ImageView(ImageBase.DO_NOTHING_ICON.getImage());
+        imageViews[1] = new ImageView(ImageBase.SLEEP_ICON.getImage());
         if (chosenUnit.getStatus() == UnitStatus.SLEEP)
-            imageViews[1] = new ImageView(new Image("Pictures/unitIcons/Quickstart.png"));
-        imageViews[2] = new ImageView(new Image("Pictures/unitIcons/Stop.png"));
-        imageViews[3] = new ImageView(new Image("Pictures/unitIcons/DisbandUnit.png"));
+            imageViews[1] = new ImageView(ImageBase.ACTIVE_ICON.getImage());
+        imageViews[2] = new ImageView(ImageBase.STOP_ICON.getImage());
+        imageViews[3] = new ImageView(ImageBase.KILL_ICON.getImage());
         imageViews[0].setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -634,7 +649,7 @@ public class MapController {
         backgroundPane.getChildren().add(nextTurn);
 
         if (techIconMustBeShown()) {
-            ImageView techImgView = new ImageView(new Image("/Images/Map/research.png"));
+            ImageView techImgView = new ImageView(ImageBase.CHOOSE_RESEARCH_ICON.getImage());
             techImgView.setX(1480);
             techImgView.setY(730);
             techImgView.setStyle("-fx-cursor: hand;");
@@ -657,7 +672,7 @@ public class MapController {
 
         City c;
         if ((c = productionIconMustBeShown()) != null) {
-            ImageView prodImgView = new ImageView(new Image("/Images/Map/production.png"));
+            ImageView prodImgView = new ImageView(ImageBase.CHOOSE_PRODUCTION_ICON.getImage());
             prodImgView.setX(1480);
             prodImgView.setY(640);
             prodImgView.setStyle("-fx-cursor: hand;");

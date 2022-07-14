@@ -13,7 +13,7 @@
       fx:controller="View.Controller.ChooseResearchPageController"
       prefHeight="600.0" prefWidth="400.0">
     <ImageView fitWidth="400" fitHeight="600">
-        <Image url="@../Images/TechIcons/background.jpg"/>
+        <Image url="@../Pictures/TechIcons/background.jpg"/>
     </ImageView>
     <VBox fx:id="bigBox"/>
 </Pane>
