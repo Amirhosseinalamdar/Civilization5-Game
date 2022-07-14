@@ -364,7 +364,7 @@ public class UnitController {
         return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
-    private static boolean canBuildImprovementHere(Improvement improvement) {
+    public static boolean canBuildImprovementHere(Improvement improvement) {
         if (!civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
             GameMenu.unreachedTech(improvement.getPrerequisiteTech());
             return false;
@@ -376,11 +376,11 @@ public class UnitController {
         return true;
     }
 
-    private static boolean canBuildRoadHere() {
+    public static boolean canBuildRoadHere() {
         return civilization.hasReachedTech(Technology.WHEEL) && !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
-    private static boolean canBuildRailroadHere() {
+    public static boolean canBuildRailroadHere() {
         return civilization.hasReachedTech(Technology.RAILROAD);
     }
 

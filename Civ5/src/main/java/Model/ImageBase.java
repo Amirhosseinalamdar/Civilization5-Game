@@ -179,8 +179,8 @@ public enum ImageBase {
     RAIL_ROAD_ICON(new Image("Pictures/unitIcons/railRoad.png")),
     ROAD_ICON(new Image("Pictures/unitIcons/road.png")),
     SLEEP_ICON(new Image("Pictures/unitIcons/Sleep.png")),
-    STOP_ICON(new Image("Pictures/unitIcons/Stop.png"));
-
+    STOP_ICON(new Image("Pictures/unitIcons/Stop.png")),
+    TRADING_OUTPOST_ICON(new Image("Pictures/unitIcons/tradingOutpost.png"));
 
 
 
