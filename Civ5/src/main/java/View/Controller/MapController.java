@@ -1,5 +1,6 @@
 package View.Controller;
 
+import Controller.CityController;
 import Controller.GameController;
 import Controller.UnitController;
 import Model.*;
@@ -23,6 +24,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
@@ -38,6 +44,7 @@ public class MapController {
     private ImageView unitAvatarImageView;
     private Label movesLabel;
     private Unit chosenUnit;
+    private City chosenCity;
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
 
     public Pane getBackgroundPane() {
@@ -74,7 +81,9 @@ public class MapController {
     }
 
     public void initialize() {
-        backgroundPane.setOnMouseClicked(event -> System.out.println(event.getX() + " " + event.getY()));
+        backgroundPane.setOnMouseClicked(event -> {
+            System.out.println(event.getX() + " " + event.getY());
+        });
         showMap();
     }
 
@@ -170,9 +179,82 @@ public class MapController {
         showTileContentIfNeeded();
         showUnits();
         showStatusBar();
-        showUserPanelDownLeft();
         showChangeTurnSymbols();
         showTileInfoButton();
+        showChosenCityPanel();
+    }
+
+    private void showChosenCityPanel() {
+        if (chosenCity == null) return;
+        openCityPanel(chosenCity);
+    }
+
+    private void openCityPanel (City city) {
+        System.out.println("lol opened");
+        Color color = new Color(0,1,0.4,0.2);
+        for (Tile tile : city.getTiles()) {
+            double x = tile.getX(), y = tile.getY();
+            Polygon polygon = new Polygon();
+            polygon.setFill(color);
+            polygon.getPoints().addAll(
+                    x + 60, y,
+                    x, y + 33,
+                    x, y + 100,
+                    x + 60, y + 136,
+                    x + 120, y + 100,
+                    x + 120, y + 33);
+            backgroundPane.getChildren().add(polygon);
+        }
+        tileImageViews.clear();
+        tileImageViews.addAll(city.getTiles());
+        showTilesFoodProductionGold();
+        showCitizens();
+        initCloseButtonForCityPanel();
+
+        VBox vBox = new VBox();
+        vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
+        vBox.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 10;");
+
+        CityController.setCity(city, "");
+        ArrayList <UnitType> units = new ArrayList<>();
+        ArrayList <Building> buildings = new ArrayList<>();
+        for (UnitType unitType : UnitType.values()) if (CityController.canCreateUnit(unitType)) units.add(unitType);
+        for (Building building : Building.values()) if (CityController.canConstructBuilding(building)) buildings.add(building);
+
+        Label unitsLabel = new Label("Units:");
+        unitsLabel.setStyle("-fx-font-size: 20; -fx-font-family: 'Tw Cen MT';");
+        vBox.getChildren().add(unitsLabel);
+
+        for (int i = 0; i < units.size(); i++) {
+            UnitType unitType = units.get(i);
+            ImageView imgView1 = new ImageView(unitType.getImage());
+            HBox hBox = new HBox(7);
+            hBox.getChildren().add(imgView1);
+            if (i < units.size() - 1) {
+                i++;
+                unitType = units.get(i);
+                ImageView imgView2 = new ImageView(unitType.getImage());
+                hBox.getChildren().add(imgView2);
+            }
+            vBox.getChildren().add(hBox);
+        }
+
+        backgroundPane.getChildren().add(vBox);
+    }
+
+    private void initCloseButtonForCityPanel() {
+        Button exit = new Button("close");
+        exit.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 20; -fx-background-color: none; -fx-border-radius: 5;");
+        exit.setLayoutX(20);
+        exit.setLayoutY(500);
+        exit.setOnMouseClicked(mouseEvent -> {
+            chosenCity = null;
+            tileImageViews.clear();
+            hideCitizen();
+            hideTilesFoodProductionGold();
+            showMap();
+        });
+        backgroundPane.getChildren().add(exit);
     }
 
     private void showTileInfoButton() {
@@ -226,6 +308,10 @@ public class MapController {
             imageView1.setFitHeight(100);
             imageView1.setX(tile.getX() + 20);
             imageView1.setY(tile.getY() + 30);
+            tile.setOnMouseClicked(mouseEvent -> {
+                chosenCity = tile.getCity();
+                showMap();
+            });
             backgroundPane.getChildren().add(imageView1);
         }
     }
@@ -245,11 +331,11 @@ public class MapController {
         imageView.setX(0);
         imageView.setY(900 - imageView.getLayoutBounds().getHeight());
         backgroundPane.getChildren().add(imageView);
-        if (chosenUnit != null) {
-            showUnitAvatar();
-            if (chosenUnit.getType().isCivilian()) showCivilianOptions();
-            else showMilitaryOptions();
-        }
+//        if (chosenUnit != null) {
+//            showUnitAvatar();
+//            if (chosenUnit.getType().isCivilian()) showCivilianOptions();
+//            else showMilitaryOptions();
+//        }
         System.out.println(imageView.getLayoutBounds().getWidth());
     }
 
@@ -837,6 +923,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Research");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/research.png"));
                     stage.show();
                 }
                 catch (IOException e) {
@@ -862,6 +951,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Production");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/production.png"));
                     stage.show();
                 }
                 catch (IOException e) {
