@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.CheatController">
+    <ScrollPane layoutX="-1">
+        <VBox fx:id="cheatBox" prefHeight="474.0" prefWidth="800" spacing="5" styleClass="Pane" />
+    </ScrollPane>
+    <HBox layoutX="00" layoutY="425" spacing="10" />
+     <TextField id="textInput" fx:id="textField" layoutY="434.0" onKeyTyped="#type" prefHeight="25" prefWidth="700" promptText="enter your cheat" />
+     <Button id="sendButton" layoutX="701.0" layoutY="432.0" onMouseClicked="#cheat" prefHeight="37.0" prefWidth="96.0" text="Cheat">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+      <font>
+         <Font size="21.0" />
+      </font></Button>
+    <stylesheets>
+        <URL value="@../CSS/CheatStyle.css" />
+    </stylesheets>
+
+</AnchorPane>

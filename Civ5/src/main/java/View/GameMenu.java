@@ -12,19 +12,22 @@ import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Controller.MapController;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
 
 public class GameMenu {
@@ -63,6 +66,21 @@ public class GameMenu {
             MapController mapController = fxmlLoader.getController();
             gameMapController = mapController;
             Scene scene = new Scene(root);
+            KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+            Runnable rn = ()-> {
+                try {
+                    FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
+                    Parent root1 = fxmlLoader1.load();
+                    Stage stage1 = new Stage();
+                    Scene scene1 = new Scene(root1);
+                    stage1.setTitle("Cheat Box");
+                    stage1.setScene(scene1);
+                    stage1.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            };
+            scene.getAccelerators().put(kc, rn);
             setMapNavigation(scene,mapController);
             setUnitMovement(mapController);
             Main.stage.setScene(scene);
@@ -705,6 +723,10 @@ public class GameMenu {
         System.out.println("unit type is invalid");
     }
 
+    public static void invalidBuildingName() {
+        System.out.println("building name is invalid");
+    }
+
     public static void cantFoundCityHere() {
         System.out.println("can't found city here");
         //TODO red border
@@ -744,6 +766,10 @@ public class GameMenu {
 
     public static void notEnoughResource() {
         System.out.println("you don't have enough resource");
+    }
+
+    public static void cantBuild() {
+        System.out.println("you can't build this building here");
     }
 
     public static void invalidTechName() {
@@ -787,8 +813,8 @@ public class GameMenu {
         System.out.println("city is already occupied by a " + type + " unit. move the unit and try again");
     }
 
-    public static void notEnoughGoldForUnit(UnitType unitType) {
-        System.out.println("cant not purchase " + unitType.toString() + "; not enough gold");
+    public static void notEnoughGoldForUnit(String string) {
+        System.out.println("cant purchase " + string + "; not enough gold");
     }
 
     public static void cantBuildRoadHere() {
@@ -854,5 +880,9 @@ public class GameMenu {
 
     public static void pillaged(String pillageTarget) {
         System.out.println(pillageTarget + " got pillaged successfully");
+    }
+
+    public static void unreachedBuilding(ArrayList<Building> prerequisiteBuildings) {
+        System.out.println("you haven't reached " + prerequisiteBuildings.toString() + " yet");
     }
 }

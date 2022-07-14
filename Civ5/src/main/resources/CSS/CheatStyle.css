@@ -1,0 +1,24 @@
+AnchorPane{
+    background-color: black;
+    -fx-background-size: 800px 450px;
+}
+
+#sendButton{
+    -fx-font-family: "Tw Cen MT";
+    -fx-background-color: #8f8f8f;
+    -fx-text-fill: Black;
+    -fx-background-radius: 20px;
+    -fx-font-size: 21;
+}
+
+.Pane{
+    -fx-background-color: #000000;
+}
+
+#textInput{
+    -fx-font-family: "Tw Cen MT";
+    -fx-background-color: #8f8f8f;
+    -fx-background-radius: 20px;
+    -fx-font-size: 20;
+}
+

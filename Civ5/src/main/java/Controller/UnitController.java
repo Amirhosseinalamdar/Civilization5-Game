@@ -697,6 +697,7 @@ public class UnitController {
         }
         new City(civilization, unit.getTile(), cityName);
         unit.kill();
+        GameMenu.getGameMapController().showMap();
     }
 
     private static boolean cityNameAlreadyExists(String cityName) {

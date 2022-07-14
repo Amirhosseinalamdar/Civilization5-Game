@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class UserController {
     public static ArrayList<User> getAllUsers() {
@@ -125,7 +127,6 @@ public class UserController {
         ArrayList<User> sorted = new ArrayList<>(allUsers);
         if (loggedInUser.getUsername().equals("guest")) sorted.add(loggedInUser);
         Comparator<User> comparator = Comparator.comparing(User::getScore).reversed().thenComparing(User::getTime);
-//        sorted = (ArrayList<User>) sorted.stream().sorted(comparator).collect(Collectors.toList());
         sorted.sort(comparator);
         return sorted;
     }
@@ -144,9 +145,11 @@ public class UserController {
     }
 
     public static void writeDataToJson() {
-        for (User allUser : allUsers) {
-            allUser.setCivilization(null);
-            allUser.setLoggedIn(false);
+        if (allUsers != null) {
+            for (User allUser : allUsers) {
+                allUser.setCivilization(null);
+                allUser.setLoggedIn(false);
+            }
         }
         try {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(allUsers);

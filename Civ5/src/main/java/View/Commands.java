@@ -72,7 +72,9 @@ public enum Commands {
     CHEAT8("^increase (--cities ranged combat strength|-crcs) (?<x>\\d+)$"),
     CHEAT9("^increase (--units MP|-uMP) (?<x>\\d+)$"),
     CHEAT10("^increase (--units combat strength|-ucs) (?<x>\\d+)$"),
-    CHEAT11("^increase (--units ranged combat strength|-urcs) (?<x>\\d+)$");
+    CHEAT11("^increase (--units ranged combat strength|-urcs) (?<x>\\d+)$"),
+    CREATE_BUILDING("^build (-b|--building) (?<buildingName>\\S+)$"),
+    PURCHASE_BUILDING("^purchase (-b|--building) (?<buildingName>\\S+)$");
 
     private final String regex;
 

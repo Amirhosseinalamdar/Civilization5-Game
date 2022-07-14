@@ -48,6 +48,6 @@
     </VBox>
 
     <stylesheets>
-        <URL value="@../css/GamePageStyle.css"/>
+        <URL value="@../CSS/GamePageStyle.css"/>
     </stylesheets>
 </Pane>
