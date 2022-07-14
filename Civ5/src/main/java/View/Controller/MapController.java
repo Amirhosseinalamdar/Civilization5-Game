@@ -666,7 +666,8 @@ public class MapController {
             setMouseClicksForIcon(prodImgView);
             prodImgView.setOnMouseClicked(event -> {
                 try {
-                    Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/ChooseProduction.fxml")));
+                    ChooseProductionPageController.setCity(c);
+                    Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/ChooseProductionPage.fxml")));
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);

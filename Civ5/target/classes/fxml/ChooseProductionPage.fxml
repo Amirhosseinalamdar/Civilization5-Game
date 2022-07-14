@@ -2,9 +2,13 @@
 
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.control.ScrollPane?>
 <Pane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="View.Controller.ChooseProductionPageController"
-            prefHeight="400.0" prefWidth="600.0">
-
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="View.Controller.ChooseProductionPageController"
+      prefHeight="600.0" prefWidth="400.0">
+    <ScrollPane>
+        <VBox fx:id="unitBox" prefWidth="400"/>
+        <VBox fx:id="buildingBox" prefWidth="400"/>
+    </ScrollPane>
 </Pane>

@@ -68,7 +68,7 @@ public class GameController {
             City chosenCity = getCityFromCommand(matcher);
             if (chosenCity == null) return;
             System.out.println("name: " + chosenCity.getName());
-            CityController.setCity(chosenCity);
+//            CityController.setCity(chosenCity);
             CityController.handleCityOptions();
         } else if (Commands.getMatcher(command, Commands.MANAGE_CIVILIZATION) != null) {
             CivilizationController.handleCivilizationOptions();
@@ -382,7 +382,7 @@ public class GameController {
                 City chosenCity = getCityFromCommand(matcher);
                 if (chosenCity != null) {
                     System.out.println("name: " + chosenCity.getName());
-                    CityController.setCity(chosenCity);
+//                    CityController.setCity(chosenCity);
                     CityController.handleCityOptions();
                 }
                 break;
@@ -408,7 +408,7 @@ public class GameController {
                 City chosenCity = getCityFromCommand(matcher);
                 if (chosenCity != null) {
                     System.out.println("name: " + chosenCity.getName());
-                    CityController.setCity(chosenCity);
+//                    CityController.setCity(chosenCity);
                     CityController.handleCityOptions();
                 }
                 break;
