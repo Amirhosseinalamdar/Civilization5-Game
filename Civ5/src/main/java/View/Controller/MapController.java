@@ -21,6 +21,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -33,6 +34,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class MapController {
@@ -42,8 +44,9 @@ public class MapController {
     private Label movesLabel;
     private Unit chosenUnit;
     private City chosenCity;
+    private Tile hoveredTile;
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
-    private final int cityPanelIconsSize = 140;
+    private final int cityPanelIconsSize = 100;
 
     public Pane getBackgroundPane() {
         return backgroundPane;
@@ -66,6 +69,10 @@ public class MapController {
         tileImageViews.clear();
         citizenImageViews.clear();
         this.chosenCity = chosenCity;
+    }
+
+    public void setHoveredTile (Tile tile) {
+        this.hoveredTile = tile;
     }
 
     public Unit getChosenUnit() {
@@ -152,8 +159,7 @@ public class MapController {
     }
 
     public void showMap() {
-        backgroundPane.getChildren().
-                removeAll(backgroundPane.getChildren());
+        backgroundPane.getChildren().clear();
         setVisionStatuses();
         boolean flag1 = true;
         boolean flag2 = true;
@@ -186,6 +192,25 @@ public class MapController {
         showChangeTurnSymbols();
         showTileInfoButton();
         showChosenCityPanel();
+        showHoveredTileInfo();
+    }
+
+    private void showHoveredTileInfo() {
+        if (hoveredTile == null) return;
+        ImageView imageView = new ImageView(hoveredTile.getImage());
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+        imageView.setX(1380);
+        imageView.setY(100);
+        Label type = new Label("Type: " + hoveredTile.getType().toString());
+        Label feature = new Label("Feature: " + hoveredTile.getFeature().toString());
+        type.getStylesheets().add("css/MapStyle.css");
+        feature.getStylesheets().add("css/MapStyle.css");
+        type.getStyleClass().add("hoveredTileInfo");
+        feature.getStyleClass().add("hoveredTileInfo");
+        type.setLayoutX(1417); type.setLayoutY(140); feature.setLayoutX(1417); feature.setLayoutY(180);
+        backgroundPane.getChildren().add(imageView);
+        backgroundPane.getChildren().addAll(type, feature);
     }
 
     private void showChosenCityPanel() {
@@ -304,11 +329,20 @@ public class MapController {
         if (chosenCity.getInProgressUnit() == null || chosenCity.getInProgressUnit() != unitType) {
             setMouseMovementForCityPanelIcons(imageView);
             imageView.setOnMouseClicked(mouseEvent -> {
-                chosenCity.setInProgressUnit(unitType);
-                if (!chosenCity.getLastCostsUntilNewProductions().containsKey(unitType))
-                    chosenCity.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
-                chosenCity = null;
-                showMap();
+                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    chosenCity.setInProgressUnit(unitType);
+                    if (!chosenCity.getLastCostsUntilNewProductions().containsKey(unitType))
+                        chosenCity.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
+                    setChosenCity(null);
+                    showMap();
+                }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    int sizeHolder = chosenCity.getLastCostsUntilNewProductions().size();
+                    CityController.setCity(chosenCity, "purchase -u " + unitType);
+                    CityController.handleCityOptions();
+                    if (sizeHolder != chosenCity.getLastCostsUntilNewProductions().size())
+                        setChosenCity(null);
+                }
             });
         }
         else {
@@ -327,9 +361,20 @@ public class MapController {
         if (chosenCity.getInProgressBuilding() == null || chosenCity.getInProgressBuilding() != building) {
             setMouseMovementForCityPanelIcons(imageView);
             imageView.setOnMouseClicked(mouseEvent -> {
-                chosenCity.setInProgressBuilding(building);
-                chosenCity = null;
-                showMap();
+                if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    chosenCity.setInProgressBuilding(building);
+                    if (!chosenCity.getBuildings().containsKey(building))
+                        chosenCity.getBuildings().put(building, building.getCost());
+                    setChosenCity(null);
+                    showMap();
+                }
+                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                    int sizeHolder = chosenCity.getBuildings().size();
+                    CityController.setCity(chosenCity, "purchase -b " + building);
+                    CityController.handleCityOptions();
+                    if (sizeHolder != chosenCity.getBuildings().size())
+                        setChosenCity(null);
+                }
             });
         }
         else {
@@ -342,6 +387,8 @@ public class MapController {
     }
 
     private void setMouseMovementForCityPanelIcons (ImageView imageView) {
+        Tooltip tooltip = new Tooltip("Left Click For Construction, Right Click For Purchase");
+        Tooltip.install(imageView, tooltip);
         imageView.setOnMouseEntered(mouseEvent -> {
             imageView.setX(imageView.getX() - 5);
             imageView.setY(imageView.getY() - 5);
@@ -363,7 +410,7 @@ public class MapController {
         close.setLayoutX(409);
         close.setLayoutY(853);
         close.setOnMouseClicked(mouseEvent -> {
-            chosenCity = null;
+            setChosenCity(null);
             tileImageViews.clear();
             hideCitizen();
             hideTilesFoodProductionGold();
@@ -512,6 +559,7 @@ public class MapController {
         setDiscoveredTileBrightness(tile,i,j,colorAdjust);
         backgroundPane.getChildren().add(tile);
     }
+
     private void setDiscoveredTileBrightness(Tile tile, int i, int j,ColorAdjust colorAdjust){
         if (GameController.getCivilization().getTileVisionStatuses()[i][j] == TileStatus.DISCOVERED) {
             colorAdjust.setBrightness(-0.4);

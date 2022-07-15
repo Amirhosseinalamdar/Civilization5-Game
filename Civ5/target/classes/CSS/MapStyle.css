@@ -51,3 +51,8 @@
     -fx-background-color: gold;
     -fx-text-fill: black;
 }
+.hoveredTileInfo{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-weight: bold;
+    -fx-font-size: 21;
+}
