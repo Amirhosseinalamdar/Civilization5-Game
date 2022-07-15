@@ -62,8 +62,7 @@ public class LoginMenuController {
             invalidLogin.setVisible(true);
             usernameLogin.setStyle("-fx-border-color: red");
             passwordLogin.setStyle("-fx-border-color: red");
-        } else{
-
+        } else {
             NavigationTransition.fadeTransition(login, "MainMenu");
         }
     }

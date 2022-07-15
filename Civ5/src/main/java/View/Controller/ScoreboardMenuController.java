@@ -19,7 +19,6 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 
 public class ScoreboardMenuController {
-    private static boolean entered = false;
     @FXML
     private ImageView icon1;
     @FXML
@@ -35,9 +34,7 @@ public class ScoreboardMenuController {
     @FXML
     private Label back;
 
-    public void showScoreboard(MouseEvent mouseEvent) {
-        if (entered) return;
-        entered = true;
+    public void initialize() {
         ArrayList<User> users = UserController.getBestUsers();
         int j = 1;
         for (int i = 0; i < users.size() && i < 8; i++) {
@@ -85,7 +82,6 @@ public class ScoreboardMenuController {
     }
 
     public void back(MouseEvent mouseEvent) {
-        entered = false;
         Main.clickSound();
         NavigationTransition.fadeTransition(back, "MainMenu");
     }
