@@ -39,3 +39,15 @@
     -fx-text-fill: white;
     -fx-cursor: hand;
 }
+.purchaseTileButton{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 20;
+    -fx-text-fill: gold;
+    -fx-background-color: black;
+    -fx-background-radius: 5;
+}
+.purchaseTileButton:hover{
+    -fx-cursor: hand;
+    -fx-background-color: gold;
+    -fx-text-fill: black;
+}

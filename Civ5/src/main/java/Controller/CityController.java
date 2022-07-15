@@ -207,7 +207,6 @@ public class CityController {
         Matcher matcher;
 
         while (true) {
-            String command = GameMenu.nextCommand();
             if ((matcher = Commands.getMatcher(command, Commands.CREATE_UNIT)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.PURCHASE_UNIT)) != null) {
                 if (unitIsValid(matcher.group("unitName")))
@@ -365,8 +364,7 @@ public class CityController {
     }
 
     private static void purchaseTile(Tile targetTile) {
-        int necessaryAmountOfGoldForPurchase = targetTile.getGoldPerTurn() * 3 + targetTile.getProductionPerTurn() +
-                targetTile.getFoodPerTurn() * 2;
+        int necessaryAmountOfGoldForPurchase = targetTile.getCost();
         if (civilization.getTotalGold() >= necessaryAmountOfGoldForPurchase) {
             civilization.setTotalGold(civilization.getTotalGold() - necessaryAmountOfGoldForPurchase);
             city.getTiles().add(targetTile);

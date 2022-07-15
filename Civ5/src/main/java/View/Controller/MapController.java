@@ -62,6 +62,12 @@ public class MapController {
         this.chosenUnit = chosenUnit;
     }
 
+    public void setChosenCity (City chosenCity) {
+        tileImageViews.clear();
+        citizenImageViews.clear();
+        this.chosenCity = chosenCity;
+    }
+
     public Unit getChosenUnit() {
         return chosenUnit;
     }
@@ -208,6 +214,7 @@ public class MapController {
         showTilesFoodProductionGold();
         showCitizens();
         initCloseButtonForCityPanel();
+        showPurchasableTiles();
 
         VBox vBox = new VBox();
         vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
@@ -260,8 +267,34 @@ public class MapController {
             hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
             vBox.getChildren().add(hBox);
         }
-
         backgroundPane.getChildren().add(vBox);
+    }
+
+    private void showPurchasableTiles() {
+        ArrayList <Tile> purchasableTiles = new ArrayList<>();
+        for (Tile cityTile : chosenCity.getTiles())
+            for (Tile neighbor : cityTile.getNeighbors())
+                if (!chosenCity.getTiles().contains(neighbor) && neighbor.isPurchasableFor(chosenCity)) purchasableTiles.add(neighbor);
+
+        for (Tile tile : purchasableTiles) {
+            int necessaryAmountOfGoldForPurchase = tile.getCost();
+            Button purchase = new Button(Integer.toString(necessaryAmountOfGoldForPurchase));
+            purchase.setLayoutX(tile.getX() + 35);
+            purchase.setLayoutY(tile.getY() - 5);
+            purchase.getStylesheets().add("css/MapStyle.css");
+            purchase.getStyleClass().add("purchaseTileButton");
+            Tooltip tooltip = new Tooltip("purchase for " + necessaryAmountOfGoldForPurchase + " golds");
+            Tooltip.install(purchase, tooltip);
+            purchase.setOnMouseClicked(mouseEvent -> {
+                int cityTiles = chosenCity.getTiles().size();
+                CityController.setCity(chosenCity, "purchase -t -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                CityController.handleCityOptions();
+                if (cityTiles != chosenCity.getTiles().size())
+                    chosenCity = null;
+                showMap();
+            });
+            backgroundPane.getChildren().add(purchase);
+        }
     }
 
     private void setUnitImageViewClickInCityPanel (UnitType unitType, HBox hBox) {
