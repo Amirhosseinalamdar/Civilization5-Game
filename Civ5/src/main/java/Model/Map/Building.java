@@ -113,10 +113,14 @@ public enum Building {
     }
 
     public Technology getPrerequisiteTech() {
+        if (prerequisiteTech == null)
+            return Technology.AGRICULTURE;
         return prerequisiteTech;
     }
 
     public ArrayList<Building> getPrerequisiteBuildings() {
+        if (prerequisiteBuildings == null)
+            return new ArrayList<>();
         return prerequisiteBuildings;
     }
 
