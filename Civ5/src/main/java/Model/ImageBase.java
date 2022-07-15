@@ -172,15 +172,23 @@ public enum ImageBase {
     DO_NOTHING_ICON(new Image("Pictures/unitIcons/Load.png")),
     LUMBER_MILL_ICON(new Image("Pictures/unitIcons/LUMBER_MILL.png")),
     MINE_ICON(new Image("Pictures/unitIcons/MINE.png")),
-    PASTURE_ICON(new Image("Pictures/unitIcons/MINE.png")),
-    PLANTATION_ICON(new Image("Pictures/unitIcons/PASTURE.png")),
+    PASTURE_ICON(new Image("Pictures/unitIcons/PASTURE.png")),
+    PLANTATION_ICON(new Image("Pictures/unitIcons/PLANTATION.png")),
     QUARRY_ICON(new Image("Pictures/unitIcons/QUARRY.png")),
     ACTIVE_ICON(new Image("Pictures/unitIcons/Quickstart.png")),
     RAIL_ROAD_ICON(new Image("Pictures/unitIcons/railRoad.png")),
     ROAD_ICON(new Image("Pictures/unitIcons/road.png")),
     SLEEP_ICON(new Image("Pictures/unitIcons/Sleep.png")),
-    STOP_ICON(new Image("Pictures/unitIcons/Stop.png"));
+    STOP_ICON(new Image("Pictures/unitIcons/Stop.png")),
+    TRADING_OUTPOST_ICON(new Image("Pictures/unitIcons/tradingOutpost.png")),
 
+    ALERT_ICON(new Image("Pictures/unitIcons/military/alert.png")),
+    ATTACK_ICON(new Image("Pictures/unitIcons/military/attack.png")),
+    FORTIFY_ICON(new Image("Pictures/unitIcons/military/fortify.png")),
+    GARRISON_ICON(new Image("Pictures/unitIcons/military/garrison.png")),
+    HEAL_ICON(new Image("Pictures/unitIcons/military/heal.png")),
+    PILLAGE_ICON(new Image("Pictures/unitIcons/military/Pillage.png")),
+    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png"));
 
 
 

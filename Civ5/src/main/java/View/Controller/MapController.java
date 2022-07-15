@@ -1,12 +1,11 @@
 package View.Controller;
 
+import Controller.CityController;
 import Controller.GameController;
 import Controller.UnitController;
-import Model.Civilization;
-import Model.Game;
-import Model.ImageBase;
+import Model.*;
 import Model.Map.*;
-import Model.TileStatus;
+import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
@@ -20,18 +19,23 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Locale;
 
 
 public class MapController {
@@ -40,6 +44,7 @@ public class MapController {
     private ImageView unitAvatarImageView;
     private Label movesLabel;
     private Unit chosenUnit;
+    private City chosenCity;
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
 
     public Pane getBackgroundPane() {
@@ -76,7 +81,9 @@ public class MapController {
     }
 
     public void initialize() {
-        backgroundPane.setOnMouseClicked(event -> System.out.println(event.getX() + " " + event.getY()));
+        backgroundPane.setOnMouseClicked(event -> {
+            System.out.println(event.getX() + " " + event.getY());
+        });
         showMap();
     }
 
@@ -124,14 +131,14 @@ public class MapController {
         if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
             ImageView imageView;
             if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 30)
-                imageView = new ImageView(new Image("Pictures/City/4.jpg"));
+                imageView = new ImageView(ImageBase.CITY_4.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 23)
-                imageView = new ImageView(new Image("Pictures/City/3.jpg"));
+                imageView = new ImageView(ImageBase.CITY_3.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 15)
-                imageView = new ImageView(new Image("Pictures/City/2.jpg"));
+                imageView = new ImageView(ImageBase.CITY_2.getImage());
             else if (tile.getCity() != null && tile.getCity().getBuildings().size() >= 7)
-                imageView = new ImageView(new Image("Pictures/City/1.jpg"));
-            else imageView = new ImageView(new Image("Pictures/City/0.jpg"));
+                imageView = new ImageView(ImageBase.CITY_1.getImage());
+            else imageView = new ImageView(ImageBase.CITY_0.getImage());
             imageView.setFitHeight(60);
             imageView.setFitWidth(60);
             imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 30);
@@ -172,9 +179,82 @@ public class MapController {
         showTileContentIfNeeded();
         showUnits();
         showStatusBar();
-        showUserPanelDownLeft();
         showChangeTurnSymbols();
         showTileInfoButton();
+        showChosenCityPanel();
+    }
+
+    private void showChosenCityPanel() {
+        if (chosenCity == null) return;
+        openCityPanel(chosenCity);
+    }
+
+    private void openCityPanel (City city) {
+        System.out.println("lol opened");
+        Color color = new Color(0,1,0.4,0.2);
+        for (Tile tile : city.getTiles()) {
+            double x = tile.getX(), y = tile.getY();
+            Polygon polygon = new Polygon();
+            polygon.setFill(color);
+            polygon.getPoints().addAll(
+                    x + 60, y,
+                    x, y + 33,
+                    x, y + 100,
+                    x + 60, y + 136,
+                    x + 120, y + 100,
+                    x + 120, y + 33);
+            backgroundPane.getChildren().add(polygon);
+        }
+        tileImageViews.clear();
+        tileImageViews.addAll(city.getTiles());
+        showTilesFoodProductionGold();
+        showCitizens();
+        initCloseButtonForCityPanel();
+
+        VBox vBox = new VBox();
+        vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
+        vBox.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 10;");
+
+        CityController.setCity(city, "");
+        ArrayList <UnitType> units = new ArrayList<>();
+        ArrayList <Building> buildings = new ArrayList<>();
+        for (UnitType unitType : UnitType.values()) if (CityController.canCreateUnit(unitType)) units.add(unitType);
+        for (Building building : Building.values()) if (CityController.canConstructBuilding(building)) buildings.add(building);
+
+        Label unitsLabel = new Label("Units:");
+        unitsLabel.setStyle("-fx-font-size: 20; -fx-font-family: 'Tw Cen MT';");
+        vBox.getChildren().add(unitsLabel);
+
+        for (int i = 0; i < units.size(); i++) {
+            UnitType unitType = units.get(i);
+            ImageView imgView1 = new ImageView(unitType.getImage());
+            HBox hBox = new HBox(7);
+            hBox.getChildren().add(imgView1);
+            if (i < units.size() - 1) {
+                i++;
+                unitType = units.get(i);
+                ImageView imgView2 = new ImageView(unitType.getImage());
+                hBox.getChildren().add(imgView2);
+            }
+            vBox.getChildren().add(hBox);
+        }
+
+        backgroundPane.getChildren().add(vBox);
+    }
+
+    private void initCloseButtonForCityPanel() {
+        Button exit = new Button("close");
+        exit.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 20; -fx-background-color: none; -fx-border-radius: 5;");
+        exit.setLayoutX(20);
+        exit.setLayoutY(500);
+        exit.setOnMouseClicked(mouseEvent -> {
+            chosenCity = null;
+            tileImageViews.clear();
+            hideCitizen();
+            hideTilesFoodProductionGold();
+            showMap();
+        });
+        backgroundPane.getChildren().add(exit);
     }
 
     private void showTileInfoButton() {
@@ -228,6 +308,10 @@ public class MapController {
             imageView1.setFitHeight(100);
             imageView1.setX(tile.getX() + 20);
             imageView1.setY(tile.getY() + 30);
+            tile.setOnMouseClicked(mouseEvent -> {
+                chosenCity = tile.getCity();
+                showMap();
+            });
             backgroundPane.getChildren().add(imageView1);
         }
     }
@@ -247,11 +331,11 @@ public class MapController {
         imageView.setX(0);
         imageView.setY(900 - imageView.getLayoutBounds().getHeight());
         backgroundPane.getChildren().add(imageView);
-        if (chosenUnit != null) {
-            showUnitAvatar();
-            if (chosenUnit.getType().isCivilian()) showCivilianOptions();
-            else showMilitaryOptions();
-        }
+//        if (chosenUnit != null) {
+//            showUnitAvatar();
+//            if (chosenUnit.getType().isCivilian()) showCivilianOptions();
+//            else showMilitaryOptions();
+//        }
         System.out.println(imageView.getLayoutBounds().getWidth());
     }
 
@@ -348,14 +432,15 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
-        if (tile.canUseItsResource()) {
+        if (tile.getImprovementInProgress() != null) {
             ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
             improvementImage.setFitWidth(60);
             improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
             improvementImage.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(improvementImage);
-        } else if (tile.getImprovementInProgress() != null) {
+        }
+        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0) {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
@@ -383,12 +468,22 @@ public class MapController {
                 if (GameController.getCivilization().getTileVisionStatuses()[i][j] != TileStatus.CLEAR) continue;
                 if (tile.getCivilian() != null) {
                     tile.getCivilian().setX(tile.getX() + 65);
-                    tile.getCivilian().setY(tile.getY() + 40);
+                    tile.getCivilian().setY(tile.getY() + 70);
+                    Circle circle = new Circle(tile.getCivilian().getX() + tile.getCivilian().getLayoutBounds().getWidth()/2,
+                            tile.getCivilian().getY() + tile.getCivilian().getLayoutBounds().getHeight()/2,
+                            (tile.getCivilian().getLayoutBounds().getHeight()+tile.getCivilian().getLayoutBounds().getWidth())/4,
+                            tile.getCivilian().getCivilization().getColor());
+                    backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getCivilian());
                 }
                 if (tile.getMilitary() != null) {
                     tile.getMilitary().setX(tile.getX() + 10);
-                    tile.getMilitary().setY(tile.getY() + 40);
+                    tile.getMilitary().setY(tile.getY() + 70);
+                    Circle circle = new Circle(tile.getMilitary().getX() + tile.getMilitary().getLayoutBounds().getWidth()/2,
+                            tile.getMilitary().getY() + tile.getMilitary().getLayoutBounds().getHeight()/2,
+                            (tile.getMilitary().getLayoutBounds().getHeight()+tile.getMilitary().getLayoutBounds().getWidth())/4
+                            ,tile.getMilitary().getCivilization().getColor());
+                    backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getMilitary());
                 }
             }
@@ -534,26 +629,125 @@ public class MapController {
         showMap();
     }
 
-    public void showCivilianOptions() {
-        unitOptionsNodes = new ArrayList<>();
-        showCivAndMilSameOptions();
-        HBox hBox = new HBox();
-        hBox.setLayoutY(900 - 70 - 70);
-        hBox.setLayoutX(456);
-        if (chosenUnit.getType() == UnitType.WORKER) workerExclusiveOptions(hBox);
-        else settlerExclusiveOptions(hBox);
-        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 10;");
-        unitOptionsNodes.add(hBox);
-        backgroundPane.getChildren().addAll(unitOptionsNodes);
+    private void workerExclusiveOptions(HBox hBox) {
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+        imageViews.add(new ImageView(ImageBase.AXE_ICON.getImage()));
+        clearLandButton(imageViews.get(0));
+        imageViews.add(new ImageView(ImageBase.HAMMER_ICON.getImage()));
+        repairButton(imageViews.get(1));
+        roadButton(imageViews);
+        railroadButton(imageViews);
+        improvementButton(imageViews,"FARM");
+        improvementButton(imageViews,"MINE");
+        improvementButton(imageViews,"CAMP");
+        improvementButton(imageViews,"PASTURE");
+        improvementButton(imageViews,"LUMBER_MILL");
+        improvementButton(imageViews,"PLANTATION");
+        improvementButton(imageViews,"QUARRY");
+        improvementButton(imageViews,"TRADING_POST");
+        for (ImageView imageView : imageViews) {
+            setImageViewOpacity(imageView);
+            imageView.setFitWidth(70);
+            imageView.setFitHeight(70);
+        }
+        hBox.getChildren().addAll(imageViews);
     }
 
-    private void workerExclusiveOptions(HBox hBox) {
-        ImageView imageView = new ImageView(ImageBase.MINE_ICON.getImage());
-        setImageViewOpacity(imageView);
-        imageView.setFitHeight(70);
-        imageView.setFitHeight(70);
-        hBox.getChildren().add(imageView);
+    private void repairButton(ImageView imageView) {
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(chosenUnit.getTile().getImprovementInProgress() != null) {
+                    UnitController.setUnit(chosenUnit, "repair -i " + chosenUnit.getTile().getImprovementInProgress().getKey());
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }else System.out.println("repair nakardam (giga chad)");
+            }
+        });
     }
+
+    private void clearLandButton(ImageView imageView) {
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(chosenUnit.getTile().getFeature() == TerrainFeature.FOREST) {
+                    UnitController.setUnit(chosenUnit, "clear forest");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }else if(chosenUnit.getTile().getFeature() == TerrainFeature.JUNGLE){
+                    UnitController.setUnit(chosenUnit, "clear jungle");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }else if(chosenUnit.getTile().getRouteInProgress() != null &&
+                chosenUnit.getTile().getRouteInProgress().getKey().equals("road")){
+                    UnitController.setUnit(chosenUnit, "clear road");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }else if(chosenUnit.getTile().getRouteInProgress() != null &&
+                        chosenUnit.getTile().getRouteInProgress().getKey().equals("railroad")){
+                    UnitController.setUnit(chosenUnit, "clear railroad");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }else System.out.println("clear nakardam (giga chad)");
+            }
+        });
+    }
+
+    private void improvementButton(ArrayList<ImageView> imageViews,String string){
+        if(UnitController.canBuildImprovementHere(Improvement.valueOf(string))){
+            ImageView imageView = new ImageView(ImageBase.valueOf(string+"_ICON").getImage());
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    UnitController.setUnit(chosenUnit,"build improvement -t "+string);//TODO SHOW THE ERR TO USER
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }
+            });
+            imageViews.add(imageView);
+        }
+    }
+    private void roadButton(ArrayList<ImageView> imageViews){
+        if(UnitController.canBuildRoadHere()){
+            ImageView imageView = new ImageView(ImageBase.ROAD_ICON.getImage());
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    UnitController.setUnit(chosenUnit,"build improvement -t ROAD");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }
+            });
+            imageViews.add(imageView);
+        }
+    }
+    private void railroadButton(ArrayList<ImageView> imageViews){
+        if(UnitController.getCivilization().hasReachedTech(Technology.RAILROAD)
+                && UnitController.canBuildRailroadHere()){
+            ImageView imageView = new ImageView(ImageBase.RAIL_ROAD_ICON.getImage());
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    UnitController.setUnit(chosenUnit,"build improvement -t RAILROAD");
+                    UnitController.handleUnitOptions();
+                    showMap();
+                }
+            });
+            imageViews.add(imageView);
+        }
+    }
+
+//    private boolean canShowWorkerDecision(Improvement improvement){
+//        if(improvement.getPrerequisiteTypes() == null && improvement.getPrerequisiteFeatures() == null)
+//            return false;
+//        else if(improvement.getPrerequisiteTypes() == null)
+//            return improvement.getPrerequisiteFeatures().contains(chosenUnit.getTile().getFeature());
+//        else if(improvement.getPrerequisiteFeatures() == null)
+//            return improvement.getPrerequisiteTypes().contains(chosenUnit.getTile().getType());
+//        else
+//            return improvement.getPrerequisiteTypes().contains(chosenUnit.getTile().getType()) ||
+//                improvement.getPrerequisiteFeatures().contains(chosenUnit.getTile().getFeature());
+//    }
 
     private void settlerExclusiveOptions(HBox hBox) {
         ImageView imageView = new ImageView(ImageBase.FOUND_CITY_ICON.getImage());
@@ -564,16 +758,9 @@ public class MapController {
             UnitController.handleUnitOptions();
             int after = UnitController.getCivilization().getCities().size();
             if (after == before + 1) {
-                ImageView imageView1 = new ImageView(ImageBase.CITY_0.getImage());
-                imageView1.setFitWidth(100);
-                imageView1.setFitHeight(100);
-                imageView1.setX(chosenUnit.getX() - 45);
-                imageView1.setY(chosenUnit.getY() - 10);
-                backgroundPane.getChildren().add(imageView1);
                 backgroundPane.getChildren().remove(chosenUnit);
-                hideUnitOptions();
-                hideUnitAvatar();
                 chosenUnit = null;
+                showMap();
             }
         });
         imageView.setFitWidth(70);
@@ -583,10 +770,59 @@ public class MapController {
 
     public void showMilitaryOptions() {
         unitOptionsNodes = new ArrayList<>();
+        HBox hBox = new HBox();
         showCivAndMilSameOptions();
+        ArrayList<ImageView> imageViews = new ArrayList<>();
+//        setMilitaryDecisionButtons(imageViews,"ATTACK");
+        setMilitaryDecisionButtons(imageViews,"ALERT");
+        setMilitaryDecisionButtons(imageViews,"FORTIFY");
+        if(UnitController.militaryIsInCityTiles(chosenUnit))
+            setMilitaryDecisionButtons(imageViews,"GARRISON");
+        if(chosenUnit.getHealth() < Unit.MAX_HEALTH)
+            setMilitaryDecisionButtons(imageViews,"HEAL");
+        if(chosenUnit.getTile().getImprovementInProgress() != null || chosenUnit.getTile().getRouteInProgress() != null)//TODO ERFAN DAGHIGH CHECK KON SHRTESHO
+            setMilitaryDecisionButtons(imageViews,"PILLAGE");
+        if(chosenUnit.getType().isSiege())
+            setMilitaryDecisionButtons(imageViews,"SETUP_RANDED");
+        hBox.setLayoutY(900 - 70 - 70);
+        hBox.setLayoutX(456);
+        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 0 0;");
+        hBox.getChildren().addAll(imageViews);
+        unitOptionsNodes.add(hBox);
         backgroundPane.getChildren().addAll(unitOptionsNodes);
     }
+    private void setMilitaryDecisionButtons(ArrayList<ImageView> imageViews,String string){
+        ImageView imageView = new ImageView(ImageBase.valueOf(string+"_ICON").getImage());
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                UnitController.setUnit(chosenUnit,Commands.valueOf(string).getRegex());//TODO SHOW ERR TO USER
+                UnitController.handleUnitOptions();
+                showMap();
+            }
+        });
+        imageView.setFitWidth(70);
+        imageView.setFitHeight(70);
+        setImageViewOpacity(imageView);
+        imageViews.add(imageView);
+    }
 
+
+    public void showCivilianOptions(){
+        unitOptionsNodes = new ArrayList<>();
+        showCivAndMilSameOptions();
+        HBox hBox = new HBox();
+        hBox.setLayoutY(900 - 70 - 70);
+        hBox.setLayoutX(456);
+        if (chosenUnit.getType() == UnitType.WORKER){
+            workerExclusiveOptions(hBox);
+            System.out.println("are chaghal");
+        }
+        else settlerExclusiveOptions(hBox);
+        hBox.setStyle("-fx-background-color: rgba(216,118,118,0.87); -fx-background-radius: 0 20 0 0;");
+        unitOptionsNodes.add(hBox);
+        backgroundPane.getChildren().addAll(unitOptionsNodes);
+    }
     private void showCivAndMilSameOptions() {
         HBox hBox = new HBox();
         hBox.setSpacing(20);
@@ -680,6 +916,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Research");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/research.png"));
                     stage.show();
                 }
                 catch (IOException e) {
@@ -705,6 +944,9 @@ public class MapController {
                     Stage stage = new Stage();
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setTitle("Production");
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.getIcons().add(new Image("/Pictures/cityIcons/production.png"));
                     stage.show();
                 }
                 catch (IOException e) {
@@ -743,5 +985,4 @@ public class MapController {
                 return city;
         return null;
     }
-
 }

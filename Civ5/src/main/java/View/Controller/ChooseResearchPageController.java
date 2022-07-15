@@ -62,7 +62,7 @@ public class ChooseResearchPageController {
         colorAdjust.setBrightness(-0.2);
         VBox box = new VBox();
         Tooltip tooltip = new Tooltip(tech.toString());
-        ImageView techImgView = new ImageView(new Image("/Pictures/TechIcons/" + tech.toString().toLowerCase() + ".png"));
+        ImageView techImgView = new ImageView(tech.getImage());
         techImgView.setFitWidth(130);
         techImgView.setFitHeight(130);
         techImgView.setEffect(colorAdjust);
@@ -76,6 +76,10 @@ public class ChooseResearchPageController {
         });
         techImgView.setOnMouseClicked(event -> {
             civilization.setInProgressTech(tech);
+            int remainingCost = tech.getCost();
+            if (civilization.getLastCostUntilNewTechnologies().containsKey(tech))
+                remainingCost = civilization.getLastCostUntilNewTechnologies().get(tech);
+            civilization.getLastCostUntilNewTechnologies().put(tech, remainingCost);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();

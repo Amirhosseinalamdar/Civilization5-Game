@@ -105,6 +105,27 @@ public class CityController {
         city.setInProgressBuilding(building);
     }
 
+    public static boolean canConstructBuilding (Building building) {
+        if (!hasReachedTechForBuilding(building)) {
+            return false;
+        }
+        if (hasNotBuiltBuildingForBuilding(building)) {
+            return false;
+        }
+        if (checkResource(building)) {
+            return false;
+        }
+        try {
+            int remainingCost = city.getBuildings().get(building);
+            if (remainingCost == 0) System.out.println("this building is already built");
+            else System.out.println("already in progress... remaining cost: " + remainingCost);
+            return false;
+        }
+        catch (Exception e) {
+            return true;
+        }
+    }
+
     private static boolean hasNotBuiltBuildingForBuilding(Building building) {
         for (Building prerequisiteBuilding : building.getPrerequisiteBuildings()) {
             try {
@@ -489,6 +510,7 @@ public class CityController {
 
     private static void updateProduction(City city) {
         if (city.getInProgressUnit() != null) {
+            System.out.println("debugging; " + city.getLastCostsUntilNewProductions().containsKey(city.getInProgressUnit()));
             int i = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit());
             i -= city.getProductionPerTurn();
             city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
@@ -637,11 +659,11 @@ public class CityController {
                 return false;
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
-            System.out.println("already in progress... remaining cost: " + remainingCost);
-            return false;
-        } catch (Exception ignored) {
+            return remainingCost > 0;
         }
-        return true;
+        catch (Exception e) {
+            return true;
+        }
     }
 
     private static boolean hasReachedTechForUnit(UnitType unitType) {

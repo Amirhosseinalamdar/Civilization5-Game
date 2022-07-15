@@ -20,8 +20,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -122,7 +120,7 @@ public class GameMenu {
                 tile.setOnMouseClicked(event -> {
                     System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
-                    if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)) {
+                    if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         UnitController.handleUnitOptions();
                         if (mapController.getChosenUnit().getType().isCivilian()) {
@@ -585,24 +583,24 @@ public class GameMenu {
     }
 
     private static void showCitiesOnMap(int i, int j, Civilization civilization) {
-        System.out.print(Game.getInstance().getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
-        if (Game.getInstance().getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY &&
-                Game.getInstance().getTiles()[i][j].getCity() == Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
-            if (Game.getInstance().getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getInstance().getTiles()[i][j])) {
-                String output = "*";
-                String output1 = output.concat(Game.getInstance().getTiles()[i][j].getCity().getName());
-                String output2 = output1.concat("        ");
-                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
-            } else
-                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
-        } else if (Game.getInstance().getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY) {
-            if (Game.getInstance().getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getInstance().getTiles()[i][j])) {
-                String output = Game.getInstance().getTiles()[i][j].getCity().getName().concat("       ");
-                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
-            } else
-                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
-        } else System.out.print("         ");
-        System.out.print(RESET);
+//        System.out.print(Game.getInstance().getTiles()[i][j].getTypeForCiv(civilization, i, j).getColor());
+//        if (Game.getInstance().getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY &&
+//                Game.getInstance().getTiles()[i][j].getCity() == Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCities().get(0)) {
+//            if (Game.getInstance().getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getInstance().getTiles()[i][j])) {
+//                String output = "*";
+//                String output1 = output.concat(Game.getInstance().getTiles()[i][j].getCity().getName());
+//                String output2 = output1.concat("        ");
+//                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + output2.substring(0, 9));
+//            } else
+//                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
+//        } else if (Game.getInstance().getTiles()[i][j].getCity() != null && civilization.getTileVisionStatuses()[i][j] != TileStatus.FOGGY) {
+//            if (Game.getInstance().getTiles()[i][j].getCity().getTiles().get(0).equals(Game.getInstance().getTiles()[i][j])) {
+//                String output = Game.getInstance().getTiles()[i][j].getCity().getName().concat("       ");
+//                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + output.substring(0, 9));
+//            } else
+//                System.out.print(Game.getInstance().getTiles()[i][j].getCity().getCivilization().getCivColor() + "    c    ");
+//        } else System.out.print("         ");
+//        System.out.print(RESET);
     }
 
     private static void showXAndY(int i, int j, boolean isEven, Civilization civilization) {
@@ -661,10 +659,10 @@ public class GameMenu {
     }
 
     private static void setColor(int i, int j) {
-        if (Game.getInstance().getTiles()[i][j].getCivilian() != null)
-            System.out.print(Game.getInstance().getTiles()[i][j].getCivilian().getCivilization().getCivColor());
-        else if (Game.getInstance().getTiles()[i][j].getMilitary() != null)
-            System.out.print(Game.getInstance().getTiles()[i][j].getMilitary().getCivilization().getCivColor());
+//        if (Game.getInstance().getTiles()[i][j].getCivilian() != null)
+//            System.out.print(Game.getInstance().getTiles()[i][j].getCivilian().getCivilization().getCivColor());
+//        else if (Game.getInstance().getTiles()[i][j].getMilitary() != null)
+//            System.out.print(Game.getInstance().getTiles()[i][j].getMilitary().getCivilization().getCivColor());
     }
 
     public static void notYourUnit() {

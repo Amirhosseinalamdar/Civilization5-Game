@@ -197,7 +197,7 @@ public class UnitController {
 
             if ((matcher = Commands.getMatcher(command, Commands.GARRISON)) != null) {
                 if (unit instanceof Military) {
-                    if (militaryIsInCityTiles())
+                    if (militaryIsInCityTiles(unit))
                         return matcher;
                     else
                         GameMenu.cantMakeGarrison();
@@ -255,7 +255,7 @@ public class UnitController {
         }
     }
 
-    private static boolean militaryIsInCityTiles() {
+    public static boolean militaryIsInCityTiles(Unit unit) {
         for (City city : civilization.getCities())
             for (Tile tile : city.getTiles())
                 if (tile.equals(unit.getTile()))
@@ -364,7 +364,7 @@ public class UnitController {
         return !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
-    private static boolean canBuildImprovementHere(Improvement improvement) {
+    public static boolean canBuildImprovementHere(Improvement improvement) {
         if (!civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
             GameMenu.unreachedTech(improvement.getPrerequisiteTech());
             return false;
@@ -376,11 +376,11 @@ public class UnitController {
         return true;
     }
 
-    private static boolean canBuildRoadHere() {
+    public static boolean canBuildRoadHere() {
         return civilization.hasReachedTech(Technology.WHEEL) && !unit.getTile().getFeature().equals(TerrainFeature.ICE);
     }
 
-    private static boolean canBuildRailroadHere() {
+    public static boolean canBuildRailroadHere() {
         return civilization.hasReachedTech(Technology.RAILROAD);
     }
 
@@ -590,6 +590,7 @@ public class UnitController {
                         }
                         break;
                     case 3:
+                        if (civilization.getCities().size() == 0) break;
                         ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
                         Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
                         allCities.sort(cmp);

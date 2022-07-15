@@ -57,6 +57,11 @@ public class Unit extends ImageView {
         });
         setOnMouseClicked(event -> {
             System.out.println("clicked duh");
+            try {
+                System.out.println("my type = " + type + ", chosen type = " + GameMenu.getGameMapController().getChosenUnit().getType());
+            } catch (Exception e) {
+                System.out.println("my type only = " + type);
+            }
             MapController mapController = GameMenu.getGameMapController();
             if (mapController.getChosenUnit() == null) {
                 mapController.setChosenUnit(this);
@@ -64,19 +69,27 @@ public class Unit extends ImageView {
                     mapController.setChosenUnit(null);
 
                 if (mapController.getChosenUnit() != null) {
+                    mapController.showUserPanelDownLeft();
                     mapController.showUnitAvatar();
-                    if (mapController.getChosenUnit().getType().isCivilian()) mapController.showCivilianOptions();
+                    if (type.isCivilian()) mapController.showCivilianOptions();
                     else mapController.showMilitaryOptions();
                 }
             }
             else {
                 if (mapController.getChosenUnit().equals(this)) {
                     mapController.setChosenUnit(null);
+                    mapController.hideUnitAvatar();
+                    mapController.hideUnitOptions();
                     mapController.showMap();
                 }
-                else if (civilization.equals(GameController.getCivilization()))
+                else if (civilization.equals(GameController.getCivilization())) {
                     mapController.setChosenUnit(this);
-                mapController.showMap();
+                    mapController.showMap();
+                    mapController.showUserPanelDownLeft();
+                    mapController.showUnitAvatar();
+                    if (type.isCivilian()) mapController.showCivilianOptions();
+                    else mapController.showMilitaryOptions();
+                }
             }
         });
     }

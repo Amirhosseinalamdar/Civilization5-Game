@@ -54,10 +54,7 @@ public class ChooseProductionPageController {
                 }
             }
 
-            System.out.println("size = " + availableUnits.size());
-
             hBox.setSpacing(2.8);
-            unitBox.setPrefHeight(unitBox.getWidth() + 130);
             unitBox.getChildren().add(hBox);
         }
     }
@@ -66,12 +63,13 @@ public class ChooseProductionPageController {
 
     }
 
-    private VBox getVboxForUnit (UnitType unitType) {
+    private ImageView getVboxForUnit (UnitType unitType) {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setSaturation(-1);
-        VBox box = new VBox();
         Tooltip tooltip = new Tooltip(unitType.toString());
         ImageView unitImgView = new ImageView(new Image("/Pictures/units/" + unitType + ".png"));
+        double width = unitImgView.getImage().getWidth(), height = unitImgView.getImage().getHeight();
+        System.out.println("w = " + width + ", h = " + height);
         unitImgView.setFitWidth(130);
         unitImgView.setFitHeight(130);
         unitImgView.setEffect(colorAdjust);
@@ -80,18 +78,21 @@ public class ChooseProductionPageController {
             unitImgView.setEffect(colorAdjust);
         });
         unitImgView.setOnMouseExited(event -> {
-            colorAdjust.setBrightness(-1);
+            colorAdjust.setSaturation(-1);
             unitImgView.setEffect(colorAdjust);
         });
         unitImgView.setOnMouseClicked(event -> {
             city.setInProgressUnit(unitType);
+            int remainingCost = unitType.getCost();
+            if (city.getLastCostsUntilNewProductions().containsKey(unitType))
+                remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
+            city.getLastCostsUntilNewProductions().put(unitType, remainingCost);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
             GameMenu.getGameMapController().showMap();
         });
-        box.getChildren().add(unitImgView);
         Tooltip.install(unitImgView, tooltip);
-        return box;
+        return unitImgView;
     }
 }
