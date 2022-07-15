@@ -5,7 +5,6 @@ import Controller.GameController;
 import Controller.UnitController;
 import Model.*;
 import Model.Map.*;
-import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
@@ -13,6 +12,7 @@ import View.Commands;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,7 +33,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 public class MapController {
@@ -44,6 +43,7 @@ public class MapController {
     private Unit chosenUnit;
     private City chosenCity;
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
+    private final int cityPanelIconsSize = 140;
 
     public Pane getBackgroundPane() {
         return backgroundPane;
@@ -219,40 +219,124 @@ public class MapController {
         for (UnitType unitType : UnitType.values()) if (CityController.canCreateUnit(unitType)) units.add(unitType);
         for (Building building : Building.values()) if (CityController.canConstructBuilding(building)) buildings.add(building);
 
-        Label unitsLabel = new Label("Units:");
-        unitsLabel.setStyle("-fx-font-size: 20; -fx-font-family: 'Tw Cen MT';");
+        Label unitsLabel = new Label("Units");
+        unitsLabel.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: white; -fx-alignment: center");
+        unitsLabel.setAlignment(Pos.CENTER);
         vBox.getChildren().add(unitsLabel);
 
         for (int i = 0; i < units.size(); i++) {
             UnitType unitType = units.get(i);
-            ImageView imgView1 = new ImageView(unitType.getImage());
-            HBox hBox = new HBox(7);
-            hBox.getChildren().add(imgView1);
+            HBox hBox = new HBox(15);
+            Rectangle rectangle = new Rectangle(5,160); rectangle.setFill(Color.TRANSPARENT);
+            hBox.getChildren().add(rectangle);
+            setUnitImageViewClickInCityPanel(unitType, hBox);
             if (i < units.size() - 1) {
                 i++;
                 unitType = units.get(i);
-                ImageView imgView2 = new ImageView(unitType.getImage());
-                hBox.getChildren().add(imgView2);
+                setUnitImageViewClickInCityPanel(unitType, hBox);
             }
+            hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
+            vBox.getChildren().add(hBox);
+        }
+
+        vBox.getChildren().add(new Rectangle(vBox.getWidth(), 10));
+
+        Label buildingsLabel = new Label("Buildings");
+        buildingsLabel.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: white; -fx-alignment: center");
+        buildingsLabel.setAlignment(Pos.CENTER);
+        vBox.getChildren().add(buildingsLabel);
+
+        for (int i = 0; i < buildings.size(); i++) {
+            Building building = buildings.get(i);
+            HBox hBox = new HBox(15);
+            Rectangle rectangle = new Rectangle(5,160); rectangle.setFill(Color.TRANSPARENT);
+            hBox.getChildren().add(rectangle);
+            setBuildingImageViewClickInCityPanel(building, hBox);
+            if (i < buildings.size() - 1) {
+                i++;
+                building = buildings.get(i);
+                setBuildingImageViewClickInCityPanel(building, hBox);
+            }
+            hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
             vBox.getChildren().add(hBox);
         }
 
         backgroundPane.getChildren().add(vBox);
     }
 
+    private void setUnitImageViewClickInCityPanel (UnitType unitType, HBox hBox) {
+        ImageView imageView = new ImageView(unitType.getImage());
+        imageView.setFitWidth(cityPanelIconsSize);
+        imageView.setFitHeight(cityPanelIconsSize);
+        if (chosenCity.getInProgressUnit() == null || chosenCity.getInProgressUnit() != unitType) {
+            setMouseMovementForCityPanelIcons(imageView);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                chosenCity.setInProgressUnit(unitType);
+                if (!chosenCity.getLastCostsUntilNewProductions().containsKey(unitType))
+                    chosenCity.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
+                chosenCity = null;
+                showMap();
+            });
+        }
+        else {
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setSaturation(-1);
+            colorAdjust.setBrightness(-0.2);
+            imageView.setEffect(colorAdjust);
+        }
+        hBox.getChildren().add(imageView);
+    }
+
+    private void setBuildingImageViewClickInCityPanel (Building building, HBox hBox) {
+        ImageView imageView = new ImageView(building.getImage());
+        imageView.setFitWidth(cityPanelIconsSize);
+        imageView.setFitHeight(cityPanelIconsSize);
+        if (chosenCity.getInProgressBuilding() == null || chosenCity.getInProgressBuilding() != building) {
+            setMouseMovementForCityPanelIcons(imageView);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                chosenCity.setInProgressBuilding(building);
+                chosenCity = null;
+                showMap();
+            });
+        }
+        else {
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setSaturation(-1);
+            colorAdjust.setBrightness(-0.2);
+            imageView.setEffect(colorAdjust);
+        }
+        hBox.getChildren().add(imageView);
+    }
+
+    private void setMouseMovementForCityPanelIcons (ImageView imageView) {
+        imageView.setOnMouseEntered(mouseEvent -> {
+            imageView.setX(imageView.getX() - 5);
+            imageView.setY(imageView.getY() - 5);
+            imageView.setFitWidth(imageView.getFitWidth() + 10);
+            imageView.setFitHeight(imageView.getFitHeight() + 10);
+        });
+        imageView.setOnMouseExited(mouseEvent -> {
+            imageView.setX(imageView.getX() + 5);
+            imageView.setY(imageView.getY() + 5);
+            imageView.setFitWidth(imageView.getFitWidth() - 10);
+            imageView.setFitHeight(imageView.getFitHeight() - 10);
+        });
+    }
+
     private void initCloseButtonForCityPanel() {
-        Button exit = new Button("close");
-        exit.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 20; -fx-background-color: none; -fx-border-radius: 5;");
-        exit.setLayoutX(20);
-        exit.setLayoutY(500);
-        exit.setOnMouseClicked(mouseEvent -> {
+        Button close = new Button("close");
+        close.getStylesheets().add("css/MapStyle.css");
+        close.getStyleClass().add("closeCityPanel");
+        close.setLayoutX(409);
+        close.setLayoutY(853);
+        close.setOnMouseClicked(mouseEvent -> {
             chosenCity = null;
             tileImageViews.clear();
             hideCitizen();
             hideTilesFoodProductionGold();
             showMap();
         });
-        backgroundPane.getChildren().add(exit);
+        backgroundPane.getChildren().add(close);
     }
 
     private void showTileInfoButton() {
@@ -304,11 +388,19 @@ public class MapController {
             imageView1.setFitHeight(100);
             imageView1.setX(tile.getX() + 20);
             imageView1.setY(tile.getY() + 30);
-            tile.setOnMouseClicked(mouseEvent -> {
-                chosenCity = tile.getCity();
-                showMap();
+            Button openCityPanelButton = new Button(tile.getCity().getName().toUpperCase());
+            openCityPanelButton.setLayoutX(tile.getX() + 18);
+            openCityPanelButton.setLayoutY(tile.getY() - 5);
+            openCityPanelButton.getStylesheets().add("css/MapStyle.css");
+            openCityPanelButton.getStyleClass().add("openCityPanelButton");
+            openCityPanelButton.setOnMouseClicked(mouseEvent -> {
+                if (tile.getCity().getCivilization().equals(GameController.getCivilization())) {
+                    chosenCity = tile.getCity();
+                    showMap();
+                }
             });
             backgroundPane.getChildren().add(imageView1);
+            backgroundPane.getChildren().add(openCityPanelButton);
         }
     }
 

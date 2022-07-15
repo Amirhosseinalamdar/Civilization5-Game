@@ -2,6 +2,10 @@ package Model;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 
 public enum ImageBase {
 
@@ -188,9 +192,43 @@ public enum ImageBase {
     GARRISON_ICON(new Image("Pictures/unitIcons/military/garrison.png")),
     HEAL_ICON(new Image("Pictures/unitIcons/military/heal.png")),
     PILLAGE_ICON(new Image("Pictures/unitIcons/military/Pillage.png")),
-    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png"));
+    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png")),
 
-
+    BARRACKS(new Image("Pictures/buildingIcons/ancient/barracks.png")),
+    GRANARY(new Image("Pictures/buildingIcons/ancient/granary.png")),
+    LIBRARY(new Image("Pictures/buildingIcons/ancient/library.png")),
+    MONUMENT(new Image("Pictures/buildingIcons/ancient/monument.png")),
+    WALLS(new Image("Pictures/buildingIcons/ancient/walls.png")),
+    WATER_MILL(new Image("Pictures/buildingIcons/ancient/water_mill.png")),
+    ARMORY(new Image("Pictures/buildingIcons/classical/armory.png")),
+    BURIAL_TOMB(new Image("Pictures/buildingIcons/classical/burial_tomb.png")),
+    CIRCUS(new Image("Pictures/buildingIcons/classical/circus.png")),
+    COLOSSEUM(new Image("Pictures/buildingIcons/classical/colosseum.png")),
+    COURTHOUSE(new Image("Pictures/buildingIcons/classical/courthouse.png")),
+    STABLE(new Image("Pictures/buildingIcons/classical/stable.png")),
+    TEMPLE(new Image("Pictures/buildingIcons/classical/temple.png")),
+    CASTLE(new Image("Pictures/buildingIcons/medieval/castle.png")),
+    FORGE(new Image("Pictures/buildingIcons/medieval/forge.png")),
+    GARDEN(new Image("Pictures/buildingIcons/medieval/garden.png")),
+    MARKET(new Image("Pictures/buildingIcons/medieval/market.png")),
+    MINT(new Image("Pictures/buildingIcons/medieval/mint.png")),
+    MONASTERY(new Image("Pictures/buildingIcons/medieval/monastery.png")),
+    UNIVERSITY(new Image("Pictures/buildingIcons/medieval/university.png")),
+    WORKSHOP(new Image("Pictures/buildingIcons/medieval/workshop.png")),
+    BANK(new Image("Pictures/buildingIcons/renaissance/bank.png")),
+    MILITARY_ACADEMY(new Image("Pictures/buildingIcons/renaissance/military_academy.png")),
+    OPERA_HOUSE(new Image("Pictures/buildingIcons/renaissance/opera_house.png")),
+    MUSEUM(new Image("Pictures/buildingIcons/renaissance/museum.png")),
+    PUBLIC_SCHOOL(new Image("Pictures/buildingIcons/renaissance/public_school.png")),
+    SATRAPS_COURT(new Image("Pictures/buildingIcons/renaissance/satraps_court.png")),
+    THEATER(new Image("Pictures/buildingIcons/renaissance/theater.png")),
+    WINDMILL(new Image("Pictures/buildingIcons/renaissance/windmill.png")),
+    ARSENAL(new Image("Pictures/buildingIcons/industrial/arsenal.png")),
+    BROADCAST_TOWER(new Image("Pictures/buildingIcons/industrial/broadcast_tower.png")),
+    FACTORY(new Image("Pictures/buildingIcons/industrial/factory.png")),
+    HOSPITAL(new Image("Pictures/buildingIcons/industrial/hospital.png")),
+    MILITARY_BASE(new Image("Pictures/buildingIcons/industrial/military_base.png")),
+    STOCK_EXCHANGE(new Image("Pictures/buildingIcons/industrial/stock_exchange.png"));
 
     private final Image image;
 

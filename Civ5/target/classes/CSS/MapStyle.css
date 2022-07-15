@@ -12,3 +12,30 @@
     -fx-background-color: gold;
     -fx-cursor: hand;
 }
+.closeCityPanel{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 23;
+    -fx-background-color: rgba(128, 128, 128, 0.22);
+    -fx-border-color: black;
+    -fx-border-width: 1.4;
+}
+.closeCityPanel:hover{
+    -fx-background-color: gray;
+    -fx-cursor: hand;
+}
+.openCityPanelButton{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 17;
+    -fx-text-fill: #00005b;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 91, 0.1);
+    -fx-background-radius: 5;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 5;
+    -fx-border-color: black;
+}
+.openCityPanelButton:hover{
+    -fx-background-color: #00005b;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
