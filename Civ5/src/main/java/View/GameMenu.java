@@ -90,14 +90,14 @@ public class GameMenu {
             public void handle(KeyEvent event) {
                 if (event.getCode().getName().equals("Right") &&
                         mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()) {
-                    mapController.setChosenUnit(null);
+//                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
                     mapController.setyStartingIndex(1+mapController.getyStartingIndex());
                     mapController.showMap();
                 }
                 else if (event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1) {
-                    mapController.setChosenUnit(null);
+//                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
                     mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
@@ -105,7 +105,7 @@ public class GameMenu {
                 }
                 else if (event.getCode().getName().equals("Down") &&
                         mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()) {
-                    mapController.setChosenUnit(null);
+//                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
                     mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
@@ -113,7 +113,7 @@ public class GameMenu {
                 }
                 else if (event.getCode().getName().equals("Up") &&
                         mapController.getxStartingIndex() > 1) {
-                    mapController.setChosenUnit(null);
+//                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
                     mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);

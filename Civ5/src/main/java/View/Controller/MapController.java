@@ -29,6 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -1143,7 +1144,7 @@ public class MapController {
                 }
                 flag2 = false;
                 Tile tile = Game.getInstance().getTiles()[i][j];
-                if (tile.getWorkingCitizen() != null) {
+                if (tile.getWorkingCitizen() != null && tile.getCity().equals(chosenCity)) {
                     ImageView imageView = new ImageView(ImageBase.POPULATION.getImage());
                     imageView.setFitWidth(30);
                     imageView.setFitHeight(30);
