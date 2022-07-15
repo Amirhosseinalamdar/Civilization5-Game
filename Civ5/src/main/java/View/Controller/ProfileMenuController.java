@@ -42,7 +42,7 @@ public class ProfileMenuController {
     @FXML
     private Label back;
 
-    public void initialize(MouseEvent mouseEvent) {
+    public void initialize() {
         icon0.setImage(new Image(UserController.getLoggedInUser().getIconAddress()));
     }
 

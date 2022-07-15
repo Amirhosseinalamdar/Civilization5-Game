@@ -161,7 +161,7 @@ public class CivilizationController {
         }
     }
 
-    private static boolean canAskForTech(Technology newTech) {
+    public static boolean canAskForTech(Technology newTech) {
         HashMap<Technology, Integer> civTechs = civilization.getLastCostUntilNewTechnologies();
 
         try {
