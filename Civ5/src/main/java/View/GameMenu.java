@@ -136,17 +136,21 @@ public class GameMenu {
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-                        UnitController.handleUnitOptions();
-                        if (mapController.getChosenUnit().getType().isCivilian()) {
-                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
-                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        String message = UnitController.handleUnitOptions();
+                        if (message.length() == 0) {
+                            if (mapController.getChosenUnit().getType().isCivilian()) {
+                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                            }
+                            else {
+                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                            }
+                            mapController.setChosenUnit(null);
+                            mapController.showMap();
                         }
-                        else {
-                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
-                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                        }
-                        mapController.setChosenUnit(null);
-                        mapController.showMap();
+                        else
+                            mapController.showPopup(event, message.toUpperCase() + "!");
                     }
                 });
             }

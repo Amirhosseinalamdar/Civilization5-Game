@@ -34,7 +34,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -586,7 +588,7 @@ public class MapController {
         initCloseButtonForCityPanel();
         showPurchasableTiles();
 
-        VBox vBox = new VBox();
+        VBox vBox = new VBox(-10);
         vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
         vBox.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 10;");
 
@@ -656,11 +658,12 @@ public class MapController {
             Tooltip tooltip = new Tooltip("purchase for " + necessaryAmountOfGoldForPurchase + " golds");
             Tooltip.install(purchase, tooltip);
             purchase.setOnMouseClicked(mouseEvent -> {
-                int cityTiles = chosenCity.getTiles().size();
                 CityController.setCity(chosenCity, "purchase -t -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-                CityController.handleCityOptions();
-                if (cityTiles != chosenCity.getTiles().size())
+                String message = CityController.handleCityOptions();
+                if (message.length() == 0)
                     chosenCity = null;
+                else
+                    showPopup(mouseEvent, message.toUpperCase() + "!");
                 showMap();
             });
             backgroundPane.getChildren().add(purchase);
@@ -682,11 +685,12 @@ public class MapController {
                     showMap();
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    int sizeHolder = chosenCity.getLastCostsUntilNewProductions().size();
                     CityController.setCity(chosenCity, "purchase -u " + unitType);
-                    CityController.handleCityOptions();
-                    if (sizeHolder != chosenCity.getLastCostsUntilNewProductions().size())
+                    String message = CityController.handleCityOptions();
+                    if (message.length() == 0)
                         setChosenCity(null);
+                    else
+                        showPopup(mouseEvent, message.toUpperCase() + "!");
                 }
             });
         }
@@ -714,11 +718,12 @@ public class MapController {
                     showMap();
                 }
                 if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    int sizeHolder = chosenCity.getBuildings().size();
                     CityController.setCity(chosenCity, "purchase -b " + building);
-                    CityController.handleCityOptions();
-                    if (sizeHolder != chosenCity.getBuildings().size())
+                    String message = CityController.handleCityOptions();
+                    if (message.length() == 0)
                         setChosenCity(null);
+                    else
+                        showPopup(mouseEvent, message.toUpperCase() + "!");
                 }
             });
         }
@@ -1201,9 +1206,15 @@ public class MapController {
             public void handle(MouseEvent event) {
                 if(chosenUnit.getTile().getImprovementInProgress() != null) {
                     UnitController.setUnit(chosenUnit, "repair -i " + chosenUnit.getTile().getImprovementInProgress().getKey());
-                    UnitController.handleUnitOptions();
-                    showMap();
-                }else System.out.println("repair nakardam (giga chad)");
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
+                }
+//                else System.out.println("repair nakardam (giga chad)");
             }
         });
     }
@@ -1214,36 +1225,61 @@ public class MapController {
             public void handle(MouseEvent event) {
                 if(chosenUnit.getTile().getFeature() == TerrainFeature.FOREST) {
                     UnitController.setUnit(chosenUnit, "clear forest");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }else if(chosenUnit.getTile().getFeature() == TerrainFeature.JUNGLE){
                     UnitController.setUnit(chosenUnit, "clear jungle");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }else if(chosenUnit.getTile().getRouteInProgress() != null &&
                 chosenUnit.getTile().getRouteInProgress().getKey().equals("road")){
                     UnitController.setUnit(chosenUnit, "clear road");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }else if(chosenUnit.getTile().getRouteInProgress() != null &&
                         chosenUnit.getTile().getRouteInProgress().getKey().equals("railroad")){
                     UnitController.setUnit(chosenUnit, "clear railroad");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }else System.out.println("clear nakardam (giga chad)");
             }
         });
     }
 
     private void improvementButton(ArrayList<ImageView> imageViews,String string){
-        if(UnitController.canBuildImprovementHere(Improvement.valueOf(string))){
+        if(UnitController.canBuildImprovementHere(Improvement.valueOf(string)).length() == 0){
             ImageView imageView = new ImageView(ImageBase.valueOf(string+"_ICON").getImage());
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     UnitController.setUnit(chosenUnit,"build improvement -t "+string);//TODO SHOW THE ERR TO USER
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }
             });
             imageViews.add(imageView);
@@ -1256,8 +1292,13 @@ public class MapController {
                 @Override
                 public void handle(MouseEvent event) {
                     UnitController.setUnit(chosenUnit,"build improvement -t ROAD");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }
             });
             imageViews.add(imageView);
@@ -1271,8 +1312,13 @@ public class MapController {
                 @Override
                 public void handle(MouseEvent event) {
                     UnitController.setUnit(chosenUnit,"build improvement -t RAILROAD");
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }
             });
             imageViews.add(imageView);
@@ -1295,15 +1341,14 @@ public class MapController {
         ImageView imageView = new ImageView(ImageBase.FOUND_CITY_ICON.getImage());
         setImageViewOpacity(imageView);
         imageView.setOnMouseClicked(event -> {
-            int before = UnitController.getCivilization().getCities().size();
             UnitController.setUnit(chosenUnit, Commands.FOUND_CITY.getRegex());
-            UnitController.handleUnitOptions();
-            int after = UnitController.getCivilization().getCities().size();
-            if (after == before + 1) {
-                backgroundPane.getChildren().remove(chosenUnit);
-                chosenUnit = null;
+            String message = UnitController.handleUnitOptions();
+            if (message.length() == 0) {
+                setChosenUnit(null);
                 showMap();
             }
+            else
+                showPopup(event, message.toUpperCase() + "!");
         });
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
@@ -1344,12 +1389,22 @@ public class MapController {
                         type = chosenUnit.getTile().getImprovementInProgress().getKey().toString();
                     else type = chosenUnit.getTile().getRouteInProgress().getKey();
                     UnitController.setUnit(chosenUnit,"pillage -i "+type);//TODO SHOW ERR TO USER
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }else {
                     UnitController.setUnit(chosenUnit, Commands.valueOf(string).getRegex());//TODO SHOW ERR TO USER
-                    UnitController.handleUnitOptions();
-                    showMap();
+                    String message = UnitController.handleUnitOptions();
+                    if (message.length() == 0) {
+                        setChosenUnit(null);
+                        showMap();
+                    }
+                    else
+                        showPopup(event, message.toUpperCase() + "!");
                 }
             }
         });
@@ -1536,5 +1591,21 @@ public class MapController {
             if (city.getInProgressUnit() == null)
                 return city;
         return null;
+    }
+
+    public void showPopup (MouseEvent mouseEvent, String message) {
+        Popup popup = new Popup();
+        Label label = new Label(message);
+        label.setTextFill(Color.rgb(180,0,0,1));
+        label.setMinHeight(100);
+        label.setMinWidth(400);
+        label.setTextAlignment(TextAlignment.CENTER);
+        label.setStyle("-fx-font-size: 30; -fx-font-family: 'Tw Cen MT'; -fx-font-weight: bold;" +
+                "-fx-background-color: white; -fx-background-radius: 5; -fx-alignment: center;" +
+                "-fx-border-color: black; -fx-border-width: 4.5; -fx-border-radius: 5;");
+        popup.getContent().add(label);
+        popup.setAutoHide(true);
+        //TODO... play error sound;
+        popup.show(((Node)(mouseEvent.getSource())).getScene().getWindow());
     }
 }
