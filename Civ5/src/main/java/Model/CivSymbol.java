@@ -1,19 +1,25 @@
 package Model;
 
-public enum CivSymbol {
-    WHITE("\033[1;97m"),
-    PURPLE("\033[1;95m"),
-    BLUE("\033[1;94m"),
-    RED("\033[1;91m"),
-    BLACK("\033[1;90m");
+import javafx.scene.paint.Color;
 
+public enum CivSymbol {
+    BLUE(null,Color.rgb(0,0,255)),
+    RED(null,Color.rgb(255,0,0)),
+    BLACK(null,Color.rgb(0,0,0)),
+    WHITE(null,Color.rgb(255,255,255)),
+    GREEN(null,Color.rgb(0,255,0));
+
+    public Color getColor() {
+        return color;
+    }
 
     private String symbol;
     private boolean isTaken;
-
-    CivSymbol(String symbol) {
+    private Color color;
+    CivSymbol(String symbol, Color color) {
         this.symbol = symbol;
         this.isTaken = false;
+        this.color = color;
     }
 
     public String getSymbol() {
