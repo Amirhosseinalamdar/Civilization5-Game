@@ -188,7 +188,15 @@ public enum ImageBase {
     GARRISON_ICON(new Image("Pictures/unitIcons/military/garrison.png")),
     HEAL_ICON(new Image("Pictures/unitIcons/military/heal.png")),
     PILLAGE_ICON(new Image("Pictures/unitIcons/military/Pillage.png")),
-    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png"));
+    SETUP_RANDED_ICON(new Image("Pictures/unitIcons/military/siegePrep.png")),
+
+    DEMOGRAPHIC_PANEL_ICON(new Image("Pictures/Icons/demog.png")),
+    NOTIFICATION_HISTORY_ICON(new Image("Pictures/Icons/notif.png")),
+    UNITS_PANEL_ICON(new Image("Pictures/Icons/units.png")),
+    ECONOMIC_PANEL_ICON(new Image("Pictures/Icons/eco.png")),
+    MILITARY_OVERVIEW_PANEL_ICON(new Image("Pictures/Icons/military.jpg")),
+    CITIES_PANEL_ICON(new Image("Pictures/Icons/Cities.png")),
+    HEXAGON_ICON(new Image("Pictures/Icons/Hexagon.png"));
 
 
 
