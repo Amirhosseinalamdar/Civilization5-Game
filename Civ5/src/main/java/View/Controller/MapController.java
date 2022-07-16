@@ -9,6 +9,7 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -220,6 +221,8 @@ public class MapController {
         }
         showHoveredTileInfo();
     }
+
+
     private void showPanelsButtons(){
         VBox vBox = new VBox();
         vBox.setLayoutX(10);
@@ -263,7 +266,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/MilitaryOverView.fxml"));
             Parent root = fxmlLoader.load();
             MilitaryOverViewController militaryOverViewController = fxmlLoader.getController();
-            stageShower(root);
+            stageShower(root,"Military Overview",ImageBase.MILITARY_OVERVIEW_PANEL_ICON.getImage());
             VBox vBox = militaryOverViewController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(10);
@@ -302,7 +305,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/DemographicPanel.fxml"));
             Parent root = fxmlLoader.load();
             DemographicPanelController demographicPanelController = fxmlLoader.getController();
-            stageShower(root);
+            stageShower(root,"Demographics",ImageBase.DEMOGRAPHIC_PANEL_ICON.getImage());
             VBox vBox = demographicPanelController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(0);
@@ -348,7 +351,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/NotificationPanel.fxml"));
             Parent root = fxmlLoader.load();
             NotificationController notificationController = fxmlLoader.getController();
-            stageShower(root);
+            stageShower(root,"Notifications",ImageBase.NOTIFICATION_HISTORY_ICON.getImage());
             VBox vBox = notificationController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(10);
@@ -358,11 +361,13 @@ public class MapController {
             e.printStackTrace();
         }
     }
-    private Stage stageShower(Parent root){
+    private Stage stageShower(Parent root,String title,Image image){
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle(title);
+        stage.getIcons().add(image);
         stage.show();
         return stage;
     }
@@ -371,7 +376,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/UnitsPanel.fxml"));
             Parent root = fxmlLoader.load();
             UnitsPanelController unitsPanelController = fxmlLoader.getController();
-            Stage stage = stageShower(root);
+            Stage stage = stageShower(root,"Units Panel",ImageBase.UNITS_PANEL_ICON.getImage());
             VBox vBox = unitsPanelController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(10);
@@ -386,7 +391,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/CitiesPanel.fxml"));
             Parent root = fxmlLoader.load();
             CitiesPanelController citiesPanelController = fxmlLoader.getController();
-            Stage stage = stageShower(root);
+            Stage stage = stageShower(root,"Cities Panel",ImageBase.CITIES_PANEL_ICON.getImage());
             VBox vBox = citiesPanelController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(10);
@@ -507,7 +512,7 @@ public class MapController {
             FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/EconomicPanel.fxml"));
             Parent root = fxmlLoader.load();
             EconomicPanelController economicPanelController = fxmlLoader.getController();
-            Stage stage = stageShower(root);
+            Stage stage = stageShower(root,"Economic Overview",ImageBase.ECONOMIC_PANEL_ICON.getImage());
             VBox vBox = economicPanelController.getMainVBox();
             vBox.setStyle("-fx-spacing: 15;");
             vBox.setTranslateX(10);
@@ -1022,6 +1027,7 @@ public class MapController {
                             tile.getCivilian().getCivilization().getColor());
                     backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getCivilian());
+                    showUnitStatus(tile.getCivilian());
                 }
                 if (tile.getMilitary() != null) {
                     tile.getMilitary().setX(tile.getX() + 10);
@@ -1032,8 +1038,20 @@ public class MapController {
                             ,tile.getMilitary().getCivilization().getColor());
                     backgroundPane.getChildren().add(circle);
                     backgroundPane.getChildren().add(tile.getMilitary());
+                    showUnitStatus(tile.getMilitary());
                 }
             }
+        }
+    }
+
+    private void showUnitStatus(Unit unit) {
+        if(unit.getStatus().getImage() != null){
+            ImageView imageView = new ImageView(unit.getStatus().getImage());
+            imageView.setFitWidth(unit.getFitWidth()/1.5);
+            imageView.setFitHeight(unit.getFitHeight()/1.5);
+            imageView.setX(unit.getX());
+            imageView.setY(unit.getY()+20);
+            backgroundPane.getChildren().add(imageView);
         }
     }
 
@@ -1397,14 +1415,7 @@ public class MapController {
                     else
                         showPopup(event, message.toUpperCase() + "!");
                 }else {
-                    UnitController.setUnit(chosenUnit, Commands.valueOf(string).getRegex());//TODO SHOW ERR TO USER
-                    String message = UnitController.handleUnitOptions();
-                    if (message.length() == 0) {
-                        setChosenUnit(null);
-                        showMap();
-                    }
-                    else
-                        showPopup(event, message.toUpperCase() + "!");
+                    doUnitOptions(string,event);
                 }
             }
         });
@@ -1443,51 +1454,11 @@ public class MapController {
             imageViews[1] = new ImageView(ImageBase.ACTIVE_ICON.getImage());
         imageViews[2] = new ImageView(ImageBase.STOP_ICON.getImage());
         imageViews[3] = new ImageView(ImageBase.KILL_ICON.getImage());
-        imageViews[0].setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                UnitController.setUnit(chosenUnit, Commands.DO_NOTHING.getRegex());
-                UnitController.handleUnitOptions();
-                chosenUnit = null;
-                showMap();
-            }
-        });
-        imageViews[1].setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (chosenUnit.getStatus() == UnitStatus.SLEEP) {
-                    UnitController.setUnit(chosenUnit, Commands.WAKE_UNIT.getRegex());
-                    UnitController.handleUnitOptions();
-                    chosenUnit = null;
-                    showMap();
-                }else{
-                    UnitController.setUnit(chosenUnit,Commands.SLEEP_UNIT.getRegex());
-                    UnitController.handleUnitOptions();
-                    chosenUnit = null;
-                    showMap();
-                }
-            }
-        });
-        imageViews[2].setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                UnitController.setUnit(chosenUnit, Commands.CANCEL_MISSION.getRegex());
-                UnitController.handleUnitOptions();
-                chosenUnit = null;
-                showMap();
-            }
-        });
-        imageViews[3].setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                UnitController.setUnit(chosenUnit, Commands.DELETE.getRegex());
-                UnitController.handleUnitOptions();
-                hideUnitOptions();
-                hideUnitAvatar();
-                chosenUnit = null;
-                showMap();
-            }
-        });
+        setSameOptionsFunctions(imageViews[0],"DO_NOTHING");
+        setSameOptionsFunctions(imageViews[1],"CHANGE_STATE");
+        setSameOptionsFunctions(imageViews[2],"CANCEL_MISSION");
+        setSameOptionsFunctions(imageViews[3],"DELETE");
+
         for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(70);
             imageViews[i].setFitWidth(70);
@@ -1497,7 +1468,30 @@ public class MapController {
 
         unitOptionsNodes.add(hBox);
     }
+    private void setSameOptionsFunctions(ImageView imageView,String string){
+        imageView.setOnMouseClicked(event -> {
+            if(string.equals("CHANGE_STATE")){
+                if (chosenUnit.getStatus() == UnitStatus.SLEEP) {
+                    doUnitOptions("WAKE_UNIT",event);
+                }else{
+                    doUnitOptions("SLEEP_UNIT",event);
+                }
+            }else {
+                doUnitOptions(string,event);
+            }
+        });
+    }
 
+    private void doUnitOptions(String string, Event event){
+        UnitController.setUnit(chosenUnit, Commands.valueOf(string).getRegex());//TODO SHOW ERR TO USER
+        String message = UnitController.handleUnitOptions();
+        if (message.length() == 0) {
+            setChosenUnit(null);
+            showMap();
+        }
+        else
+            showPopup((MouseEvent) event, message.toUpperCase() + "!");
+    }
     public void hideUnitOptions() {
         backgroundPane.getChildren().removeAll(unitOptionsNodes);
     }
