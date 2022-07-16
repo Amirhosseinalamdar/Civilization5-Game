@@ -185,6 +185,18 @@ public class Tile extends ImageView {
         this.improvementInProgress = improvementInProgress;
     }
 
+    public void setFoodPerTurn(int foodPerTurn) {
+        this.foodPerTurn = foodPerTurn;
+    }
+
+    public void setGoldPerTurn(int goldPerTurn) {
+        this.goldPerTurn = goldPerTurn;
+    }
+
+    public void setProductionPerTurn(int productionPerTurn) {
+        this.productionPerTurn = productionPerTurn;
+    }
+
     public void setRouteInProgress(Pair<String, Integer> routeInProgress) {
         this.routeInProgress = routeInProgress;
     }

@@ -105,7 +105,7 @@ public class CityController {
         city.setInProgressBuilding(building);
     }
 
-    public static boolean canConstructBuilding (Building building) {
+    public static boolean canConstructBuilding(Building building) {
         if (!hasReachedTechForBuilding(building)) {
             return false;
         }
@@ -408,10 +408,10 @@ public class CityController {
     private static void updateCityBuildingsEffects(City city) {
         for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
             if (set.getValue() <= 0) {
-                city.setFoodPerTurn(city.getFoodPerTurn() + set.getKey().getFoodAdder() + (int)(set.getKey().getFoodMultiplier() * city.getFoodPerTurn()));
-                city.setSciencePerTurn(city.getSciencePerTurn() + set.getKey().getScienceAdder() + (int)(set.getKey().getScienceMultiplier() * city.getSciencePerTurn()));
-                city.setGoldPerTurn(city.getGoldPerTurn() + (int)(set.getKey().getGoldMultiplier() * city.getGoldPerTurn()));
-                city.setProductionPerTurn(city.getProductionPerTurn() + (int)(set.getKey().getProductionMultiplier() * city.getProductionPerTurn()));
+                city.setFoodPerTurn(city.getFoodPerTurn() + set.getKey().getFoodAdder() + (int) (set.getKey().getFoodMultiplier() * city.getFoodPerTurn()));
+                city.setSciencePerTurn(city.getSciencePerTurn() + set.getKey().getScienceAdder() + (int) (set.getKey().getScienceMultiplier() * city.getSciencePerTurn()));
+                city.setGoldPerTurn(city.getGoldPerTurn() + (int) (set.getKey().getGoldMultiplier() * city.getGoldPerTurn()));
+                city.setProductionPerTurn(city.getProductionPerTurn() + (int) (set.getKey().getProductionMultiplier() * city.getProductionPerTurn()));
             }
         }
     }
@@ -497,6 +497,11 @@ public class CityController {
                             count++;
                             civilization.getLuxuryResources().replace(tile.getResource(), count);
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
+                    }
+                    if (tile.getImprovementInProgress().getKey().equals(Improvement.MINE)) tile.setProductionPerTurn(tile.getProductionPerTurn() + 1);
+                    else if (tile.getImprovementInProgress().getKey().equals(Improvement.FARM)) {
+                        tile.setFoodPerTurn(tile.getFoodPerTurn() + 1);
+                        tile.setGoldPerTurn(tile.getGoldPerTurn() + 1);
                     }
                     civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
                             + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getInstance().getTime());
@@ -617,7 +622,7 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit (UnitType unitType) {
+    private static void tryCreateUnit(UnitType unitType) {
         if (!hasReachedTechForUnit(unitType)) {
             GameMenu.unreachedTech(unitType.getPrerequisiteTech());
             return;
@@ -646,7 +651,7 @@ public class CityController {
         city.setInProgressUnit(unitType);
     }
 
-    public static boolean canCreateUnit (UnitType unitType) {
+    public static boolean canCreateUnit(UnitType unitType) {
         if (!hasReachedTechForUnit(unitType))
             return false;
         if (!hasEnoughResources(unitType))
@@ -654,14 +659,12 @@ public class CityController {
         if (unitType.isCivilian())
             if (city.getTiles().get(0).getCivilian() != null)
                 return false;
-        else
-            if (city.getTiles().get(0).getMilitary() != null)
+            else if (city.getTiles().get(0).getMilitary() != null)
                 return false;
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             return remainingCost > 0;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return true;
         }
     }
