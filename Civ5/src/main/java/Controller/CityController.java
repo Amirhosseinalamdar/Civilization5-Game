@@ -13,6 +13,7 @@ import View.GameMenu;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -31,81 +32,80 @@ public class CityController {
         CityController.command = command;
     }
 
-    public static void handleCityOptions() {
+    public static String handleCityOptions() {
         Matcher matcher = getCityDecision();
 
         if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex()) ||
                 matcher.pattern().toString().equals(Commands.PURCHASE_UNIT.getRegex())) {
             UnitType unitType = getUnitTypeFromString(matcher.group("unitName"));
-            if (unitType == null) {
-                GameMenu.invalidUnitType();
-                return;
-            }
-            if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) tryCreateUnit(unitType);
-            else tryPurchaseUnit(unitType);
-        } else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
+            if (unitType == null)
+                return "unit type is invalid";
+
+            if (matcher.pattern().toString().equals(Commands.CREATE_UNIT.getRegex())) return tryCreateUnit(unitType);
+            else return tryPurchaseUnit(unitType);
+        }
+        else if (matcher.pattern().toString().equals(Commands.PURCHASE_TILE.getRegex())) {
             Tile targetTile = Game.getInstance().getTiles()[Integer.parseInt(matcher.group("x"))][Integer.parseInt(matcher.group("y"))];
-            if (tileIsPurchasable(targetTile))
-                purchaseTile(targetTile);
-        } else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
+            return purchaseTile(targetTile);
+        }
+        else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
                     lockCitizenOnTile(citizen, Game.getInstance().getTiles()[x][y]);
-                    return;
+                    return "";
                 }
-            GameMenu.noUnemployedCitizenAvailable();
-            if (city.getCitizens().size() == 0) return;
+            if (city.getCitizens().size() == 0) return "city has no citizens at all!";
             Citizen workingCitizen = getWorkingCitizen();
-            if (workingCitizen == null) {
-                GameMenu.citizenLockError();
-                return;
-            }
+            if (workingCitizen == null)
+                return "couldn't lock any citizen";
             lockCitizenOnTile(workingCitizen, Game.getInstance().getTiles()[x][y]);
-        } else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
+            return "";
+        }
+        else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-            if (canCityAttackTo(Game.getInstance().getTiles()[x][y])) {
-                rangeAttackToUnit(Game.getInstance().getTiles()[x][y].getMilitary());
-            }
-        } else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
+            //TODO... handle options (canCityAttackTo()) from graphic side
+            return rangeAttackToUnit(Game.getInstance().getTiles()[x][y].getMilitary());
+        }
+        else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
             updateCityInfos(city);
             GameMenu.showCityOutput(city);
-        } else if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex()) ||
+        }
+        else if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex()) ||
                 matcher.pattern().toString().equals(Commands.PURCHASE_BUILDING.getRegex())) {
             Building building = getBuildingFromString(matcher.group("buildingName"));
-            if (building == null) {
-                GameMenu.invalidBuildingName();
-                return;
-            }
-            if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex())) tryCreateBuilding(building);
-            else tryPurchaseBuilding(building);
-        } else System.out.println("city controller, invalid command");
+            if (building == null)
+                return "building is invalid";
+
+            if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex())) return tryCreateBuilding(building);
+            else return tryPurchaseBuilding(building);
+        }
+        return "city controller, invalid command";
     }
 
-    private static void tryCreateBuilding(Building building) {
+    private static String tryCreateBuilding(Building building) {
         if (!hasReachedTechForBuilding(building)) {
-            GameMenu.unreachedTech(building.getPrerequisiteTech());
-            return;
+            return "you haven't reached " + building.getPrerequisiteTech() + " yet";
         }
         if (hasNotBuiltBuildingForBuilding(building)) {
-            GameMenu.unreachedBuilding(building.getPrerequisiteBuildings());
-            return;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Building b : building.getPrerequisiteBuildings())
+                if (!city.getBuildings().containsKey(b) || city.getBuildings().get(b) > 0)
+                    stringBuilder.append(b.toString()).append(", ");
+            stringBuilder.setCharAt(stringBuilder.length() - 1, ' ');
+            return "you haven't reached " + stringBuilder + " yet";
         }
-        if (checkResource(building)) {
-            GameMenu.cantBuild();
-            return;
-        }
-        try {
-            int remainingCost = city.getBuildings().get(building);
-            if (remainingCost == 0) System.out.println("this building is already built");
-            else System.out.println("already in progress... remaining cost: " + remainingCost);
-        } catch (Exception e) {
+        if (checkResource(building))
+            return "you can't build this building here";
+
+        if (!city.getBuildings().containsKey(building))
             city.getBuildings().put(building, building.getCost());
-        }
+
         city.setInProgressBuilding(building);
+        return "";
     }
 
-    public static boolean canConstructBuilding(Building building) {
+    public static boolean canConstructBuilding (Building building) {
         if (!hasReachedTechForBuilding(building)) {
             return false;
         }
@@ -166,24 +166,11 @@ public class CityController {
         return false;
     }
 
-    private static void tryPurchaseBuilding(Building building) {
+    private static String tryPurchaseBuilding(Building building) {
         int buildingGoldCost = 2 * building.getCost();
-        if (!civilization.hasReachedTech(building.getPrerequisiteTech())) {
-            GameMenu.unreachedTech(building.getPrerequisiteTech());
-            return;
-        }
-        if (checkResource(building)) {
-            GameMenu.cantBuild();
-            return;
-        }
-        if (hasNotBuiltBuildingForBuilding(building)) {
-            GameMenu.unreachedBuilding(building.getPrerequisiteBuildings());
-            return;
-        }
-        if (buildingGoldCost > civilization.getTotalGold()) {
-            GameMenu.notEnoughGoldForUnit(building.toString());
-            return;
-        }
+        if (buildingGoldCost > civilization.getTotalGold())
+            return "cant purchase " + building + "; not enough gold";
+
         if (city.getBuildings().get(building) != null) {
             int remainingCost = city.getBuildings().get(building);
             if (remainingCost <= 0) System.out.println("this building is already built");
@@ -200,6 +187,7 @@ public class CityController {
             civilization.getNotifications().add(city.getInProgressBuilding() + " is built in city: "
                     + city.getName() + ".    time: " + Game.getInstance().getTime());
         }
+        return "";
     }
 
 
@@ -207,7 +195,6 @@ public class CityController {
         Matcher matcher;
 
         while (true) {
-            String command = GameMenu.nextCommand();
             if ((matcher = Commands.getMatcher(command, Commands.CREATE_UNIT)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.PURCHASE_UNIT)) != null) {
                 if (unitIsValid(matcher.group("unitName")))
@@ -268,21 +255,18 @@ public class CityController {
                 !targetTile.getMilitary().getCivilization().equals(civilization);
     }
 
-    private static void tryPurchaseUnit(UnitType unitType) {
+    private static String tryPurchaseUnit(UnitType unitType) {
         int unitGoldCost = 100;
-        if (!civilization.hasReachedTech(unitType.getPrerequisiteTech())) {
-            GameMenu.unreachedTech(unitType.getPrerequisiteTech());
-            return;
-        }
-        if (unitGoldCost > civilization.getTotalGold()) {
-            GameMenu.notEnoughGoldForUnit(unitType.toString());
-            return;
-        }
+        if (!civilization.hasReachedTech(unitType.getPrerequisiteTech()))
+            return "you haven't reached " + unitType.getPrerequisiteTech() + " yet";
+
+        if (unitGoldCost > civilization.getTotalGold())
+            return "not enough gold";
+
         if ((unitType.isCivilian() && city.getTiles().get(0).getCivilian() != null) ||
-                (city.getTiles().get(0).getMilitary() != null && !unitType.isCivilian())) {
-            GameMenu.cityIsOccupied(unitType.toString());
-            return;
-        }
+                (city.getTiles().get(0).getMilitary() != null && !unitType.isCivilian()))
+            return "city is already occupied by another unit. move the unit and try again";
+
         civilization.setTotalGold(civilization.getTotalGold() - unitGoldCost);
         if (unitType.isCivilian()) {
             Unit civilian = new Unit(unitType);
@@ -290,13 +274,15 @@ public class CityController {
             city.getTiles().get(0).setCivilian(civilian);
             civilian.setTile(city.getTiles().get(0));
             civilian.setCivilization(civilization);
-        } else {
+        }
+        else {
             Military military = new Military(unitType);
             civilization.addUnit(military);
             city.getTiles().get(0).setMilitary(military);
             military.setTile(city.getTiles().get(0));
             military.setCivilization(civilization);
         }
+        return "";
     }
 
     private static boolean unitIsValid(String unitName) {
@@ -348,33 +334,18 @@ public class CityController {
         }
     }
 
-    private static boolean tileIsPurchasable(Tile targetTile) {
-        boolean isNeighbor = false;
-        for (Tile tile : city.getTiles()) {
-            if (tile.equals(targetTile)) {
-                GameMenu.cityAlreadyHasTile();
-                return false;
-            }
-            if (!UnitController.areNeighbors(tile, targetTile)) {
-                isNeighbor = true;
-                break;
-            }
-        }
-        if (!isNeighbor) GameMenu.unreachableTileForCity();
-        return isNeighbor;
-    }
-
-    private static void purchaseTile(Tile targetTile) {
-        int necessaryAmountOfGoldForPurchase = targetTile.getGoldPerTurn() * 3 + targetTile.getProductionPerTurn() +
-                targetTile.getFoodPerTurn() * 2;
+    private static String purchaseTile(Tile targetTile) {
+        int necessaryAmountOfGoldForPurchase = targetTile.getCost();
         if (civilization.getTotalGold() >= necessaryAmountOfGoldForPurchase) {
             civilization.setTotalGold(civilization.getTotalGold() - necessaryAmountOfGoldForPurchase);
             city.getTiles().add(targetTile);
             targetTile.setCity(city);
             civilization.getNotifications().add("new tile is purchased. tile x: "
                     + targetTile.getIndexInMapI() + " y: " + targetTile.getIndexInMapJ() + "    time: " + Game.getInstance().getTime());
-        } else
-            GameMenu.notEnoughGoldForTilePurchase();
+            return "";
+        }
+        else
+            return "can't purchase tile : not enough gold";
     }
 
     public static void updateCityInfos(City city) {
@@ -622,33 +593,28 @@ public class CityController {
 
     }
 
-    private static void tryCreateUnit(UnitType unitType) {
-        if (!hasReachedTechForUnit(unitType)) {
-            GameMenu.unreachedTech(unitType.getPrerequisiteTech());
-            return;
-        }
-        if (!hasEnoughResources(unitType)) {
-            GameMenu.notEnoughResource();
-            return;
-        }
-        if (unitType.isCivilian()) {
-            if (city.getTiles().get(0).getCivilian() != null) {
-                GameMenu.cityIsOccupied(city.getTiles().get(0).getCivilian().getType().toString());
-                return;
-            }
-        } else {
-            if (city.getTiles().get(0).getMilitary() != null) {
-                GameMenu.cityIsOccupied(city.getTiles().get(0).getMilitary().getType().toString());
-                return;
-            }
-        }
-        try {
-            int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
-            System.out.println("already in progress... remaining cost: " + remainingCost);
-        } catch (Exception e) {
+    private static String tryCreateUnit (UnitType unitType) {
+        if (!hasReachedTechForUnit(unitType))
+            return "haven't reached the necessary tech yet";
+
+        if (!hasEnoughResources(unitType))
+            return "you don't have enough resource";
+
+        if (unitType.isCivilian())
+            if (city.getTiles().get(0).getCivilian() != null)
+                return "city is already occupied by a " +
+                        city.getTiles().get(0).getCivilian().getType() +
+                        " unit. move the unit and try again";
+        else
+            if (city.getTiles().get(0).getMilitary() != null)
+                return "city is already occupied by a " +
+                        city.getTiles().get(0).getMilitary().getType() +
+                        " unit. move the unit and try again";
+
+        if (!city.getLastCostsUntilNewProductions().containsKey(unitType))
             city.getLastCostsUntilNewProductions().put(unitType, unitType.getCost());
-        }
         city.setInProgressUnit(unitType);
+        return "";
     }
 
     public static boolean canCreateUnit(UnitType unitType) {
@@ -693,8 +659,9 @@ public class CityController {
         return false;
     }
 
-    private static void rangeAttackToUnit(Military targetUnit) {
+    private static String rangeAttackToUnit(Military targetUnit) {
         targetUnit.setHealth(targetUnit.getHealth() - (city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
         if (targetUnit.getHealth() <= 0) targetUnit.kill();
+        return "";
     }
 }

@@ -16,10 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -91,22 +88,34 @@ public class GameMenu {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode().getName().equals("Right") &&
-                        mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()){
+                if (event.getCode().getName().equals("Right") &&
+                        mapController.getyStartingIndex() + 14 < Game.getInstance().getMapSize()) {
+//                    mapController.setChosenUnit(null);
+                    mapController.setChosenCity(null);
+                    mapController.setHoveredTile(null);
                     mapController.setyStartingIndex(1+mapController.getyStartingIndex());
-
                     mapController.showMap();
-                }else if(event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1){
+                }
+                else if (event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1) {
+//                    mapController.setChosenUnit(null);
+                    mapController.setChosenCity(null);
+                    mapController.setHoveredTile(null);
                     mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
-
                     mapController.showMap();
-                }else if(event.getCode().getName().equals("Down") &&
-                        mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()){
+                }
+                else if (event.getCode().getName().equals("Down") &&
+                        mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()) {
+//                    mapController.setChosenUnit(null);
+                    mapController.setChosenCity(null);
+                    mapController.setHoveredTile(null);
                     mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
-
                     mapController.showMap();
-                }else if(event.getCode().getName().equals("Up") &&
-                        mapController.getxStartingIndex() > 1){
+                }
+                else if (event.getCode().getName().equals("Up") &&
+                        mapController.getxStartingIndex() > 1) {
+//                    mapController.setChosenUnit(null);
+                    mapController.setChosenCity(null);
+                    mapController.setHoveredTile(null);
                     mapController.setxStartingIndex(mapController.getxStartingIndex() - 1);
                     mapController.showMap();
                 }
@@ -118,21 +127,30 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
+                    if (event.getButton() == MouseButton.SECONDARY) {
+                        mapController.setHoveredTile(tile);
+                        showMap();
+                        return;
+                    }
                     System.out.println(event.getX() + " " + event.getY());
                     System.out.println("clicked");
                     if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
                         UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-                        UnitController.handleUnitOptions();
-                        if (mapController.getChosenUnit().getType().isCivilian()) {
-                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
-                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                        String message = UnitController.handleUnitOptions();
+                        if (message.length() == 0) {
+                            if (mapController.getChosenUnit().getType().isCivilian()) {
+                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                            }
+                            else {
+                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                            }
+                            mapController.setChosenUnit(null);
+                            mapController.showMap();
                         }
-                        else {
-                            mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
-                            mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                        }
-                        mapController.setChosenUnit(null);
-                        mapController.showMap();
+                        else
+                            mapController.showPopup(event, message.toUpperCase() + "!");
                     }
                 });
             }

@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -36,6 +37,7 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader1.load(), 1600, 900);
         Main.scene = scene;
         stage.setTitle("Civilization V");
+        stage.getIcons().add(new Image("/Pictures/steamworkshop_guide_1393684511_guide_branding.jpg"));
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
