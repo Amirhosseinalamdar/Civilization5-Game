@@ -53,6 +53,20 @@ public class MapController {
     private Unit chosenUnit;
     private City chosenCity;
     private Tile hoveredTile;
+    private Tile chosenTarget;
+
+    public void setChosenTarget(Tile chosenTarget) {
+        this.chosenTarget = chosenTarget;
+    }
+
+    public Tile getChosenTarget() {
+        return chosenTarget;
+    }
+
+    public City getChosenCity() {
+        return chosenCity;
+    }
+
     private ArrayList<Node> unitOptionsNodes = new ArrayList<>();
     private final int cityPanelIconsSize = 100;
 
@@ -1452,7 +1466,7 @@ public class MapController {
         HBox hBox = new HBox();
         showCivAndMilSameOptions();
         ArrayList<ImageView> imageViews = new ArrayList<>();
-//        setMilitaryDecisionButtons(imageViews,"ATTACK");
+        setMilitaryDecisionButtons(imageViews,"ATTACK");
         setMilitaryDecisionButtons(imageViews,"ALERT");
         setMilitaryDecisionButtons(imageViews,"FORTIFY");
         if(UnitController.militaryIsInCityTiles(chosenUnit))
@@ -1488,6 +1502,8 @@ public class MapController {
                     }
                     else
                         showPopup(event, message.toUpperCase() + "!");
+                }else if(string.equals("ATTACK")){
+                    chosenUnit.realSetStatus(UnitStatus.ATTACK);
                 }else {
                     doUnitOptions(string,event);
                 }

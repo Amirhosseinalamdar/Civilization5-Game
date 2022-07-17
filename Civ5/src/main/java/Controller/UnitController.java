@@ -55,12 +55,12 @@ public class UnitController {
             else return "unit doesn't have enough moves";
         }
         else if (unit.getStatus().equals(UnitStatus.ATTACK)) { //TODO... holy shit
-            return "";
-//            int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-//            if (unit.hasRemainingMoves()) {
-//                if (canAttackTo(Game.getInstance().getTiles()[x][y])) attack(Game.getInstance().getTiles()[x][y]);
-//                else GameMenu.invalidTileForAttack();
-//            } else GameMenu.notEnoughMoves();
+            int x = Integer.parseInt(matcher.group("x"));
+            int y = Integer.parseInt(matcher.group("y"));
+            if (unit.hasRemainingMoves()) {
+                if (canAttackTo(Game.getInstance().getTiles()[x][y])) return attack(Game.getInstance().getTiles()[x][y]);
+                else return GameMenu.invalidTileForAttack();
+            } else return GameMenu.notEnoughMoves();
         }
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
@@ -72,7 +72,7 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
-//                if (canBuildImprovementHere(improvement)) { //TODO samte graphic check mishe dige @amirholmd?
+//                if (canBuildImprovementHere(improvement)) { //TODO samte graphic check mishe dige @amirholmd? are
                     if (unit.hasRemainingMoves()) return buildImprovement(improvement);
                     else return "unit doesn't have enough moves";
 //                }
@@ -757,35 +757,36 @@ public class UnitController {
                 !tile.getMilitary().getCivilization().equals(civilization);
     }
 
-    private static void attack(Tile targetTile) {
+    private static String attack(Tile targetTile) {
         if (targetTile.isCenterOfCity(targetTile.getCity())) {
             if (unit.getType().isRangeCombat())
-                rangedAttackToCity(targetTile.getCity());
+                return rangedAttackToCity(targetTile.getCity());
             if (unit.getType().isMeleeCombat())
-                meleeAttackToCity(targetTile.getCity());
+                return meleeAttackToCity(targetTile.getCity());
         } else {
             if (unit.getType().isRangeCombat())
-                rangedAttackToUnit(targetTile);
+                return rangedAttackToUnit(targetTile);
             if (unit.getType().isMeleeCombat())
-                meleeAttackToUnit(targetTile);
+                return meleeAttackToUnit(targetTile);
         }
+        return "couldn't handle command";
     }
 
-    private static void rangedAttackToUnit(Tile targetTile) {
+    private static String rangedAttackToUnit(Tile targetTile) {
         if (targetTile.getMilitary() == null) {
             targetTile.getCivilian().kill();
-            return;
+            return "done";
         }
         Military me = (Military)unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
         if (targetTile.getMilitary().getHealth() <= 0)
             targetTile.getMilitary().kill();
+        return "done";
     }
 
-    private static void rangedAttackToCity(City city) {
+    private static String rangedAttackToCity(City city) {
         if (cityIsOutOfRange(city)) {
-            GameMenu.cityOutOfUnitRange();
-            return;
+            return GameMenu.cityOutOfUnitRange();
         }
         Military military = (Military) unit;
         System.out.println(unit.getStatus());
@@ -795,6 +796,7 @@ public class UnitController {
         GameMenu.rangedAttackToCitySuccessfully(city);
         unit.setMovesInTurn(unit.getMP());
         unit.setStatus("active");
+        return "done";
     }
 
     private static boolean cityIsOutOfRange(City city) {
@@ -815,23 +817,24 @@ public class UnitController {
         return true;
     }
 
-    private static void meleeAttackToCity(City city) {
+    private static String meleeAttackToCity(City city) {
         unit.setHealth(unit.getHealth() - city.getCombatStrength() / 4);
         city.setHP(city.getHP() - ((Military) unit).getCombatStrength());
         unit.setMovesInTurn(unit.getMP());
         unit.setStatus("active");
         if (unit.getHealth() <= 0) unit.kill();
         if (city.getHP() <= 0) {
-            GameMenu.cityHPIsZero(city);
             CivilizationController.enterCityAsConqueror(city);
+            return GameMenu.cityHPIsZero(city);
         }
+        return "done";
     }
 
-    private static void meleeAttackToUnit (Tile targetTile) {
+    private static String meleeAttackToUnit (Tile targetTile) {
         if (targetTile.getMilitary() == null) {
             targetTile.getCivilian().setCivilization(unit.getCivilization());
             unit.getCivilization().addUnit(targetTile.getCivilian());
-            return;
+            return "done";
         }
         Military enemy = targetTile.getMilitary();
         Military me = (Military)unit;
@@ -848,5 +851,6 @@ public class UnitController {
 
         if (me.getHealth() <= 0)
             me.kill();
+        return "done";
     }
 }

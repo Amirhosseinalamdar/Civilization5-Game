@@ -127,30 +127,44 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
-                    if (event.getButton() == MouseButton.SECONDARY) {
-                        mapController.setHoveredTile(tile);
-                        showMap();
-                        return;
-                    }
-                    System.out.println(event.getX() + " " + event.getY());
-                    System.out.println("clicked");
-                    if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
-                        UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                    if (mapController.getChosenUnit()!=null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK){
+                        mapController.setChosenTarget(tile);
+                        UnitController.setUnit(mapController.getChosenUnit(),"attack to -c "+
+                                tile.getIndexInMapI()+" "+tile.getIndexInMapJ());
                         String message = UnitController.handleUnitOptions();
                         if (message.length() == 0) {
-                            if (mapController.getChosenUnit().getType().isCivilian()) {
-                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
-                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                            }
-                            else {
-                                mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
-                                mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
-                            }
                             mapController.setChosenUnit(null);
-                            mapController.showMap();
+                            showMap();
                         }
                         else
                             mapController.showPopup(event, message.toUpperCase() + "!");
+                        mapController.getChosenUnit().realSetStatus(UnitStatus.ACTIVE);
+                        mapController.setChosenUnit(null);
+                        mapController.showMap();
+                    }else {
+                        if (event.getButton() == MouseButton.SECONDARY) {
+                            mapController.setHoveredTile(tile);
+                            showMap();
+                            return;
+                        }
+                        System.out.println(event.getX() + " " + event.getY());
+                        System.out.println("clicked");
+                        if (mapController.getChosenUnit() != null) { //TODO... mapController.getChosenUnit().getStatus().equals(UnitStatus.ACTIVE)
+                            UnitController.setUnit(mapController.getChosenUnit(), "move to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                            String message = UnitController.handleUnitOptions();
+                            if (message.length() == 0) {
+                                if (mapController.getChosenUnit().getType().isCivilian()) {
+                                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 65);
+                                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                                } else {
+                                    mapController.getChosenUnit().setX(mapController.getChosenUnit().getTile().getX() + 10);
+                                    mapController.getChosenUnit().setY(mapController.getChosenUnit().getTile().getY() + 40);
+                                }
+                                mapController.setChosenUnit(null);
+                                mapController.showMap();
+                            } else
+                                mapController.showPopup(event, message.toUpperCase() + "!");
+                        }
                     }
                 });
             }
@@ -172,8 +186,8 @@ public class GameMenu {
         System.out.println("one option for now... please enter \"move\"");
     }
 
-    public static void notEnoughMoves() {
-        System.out.println("unit doesn't have enough moves");
+    public static String  notEnoughMoves() {
+        return "unit doesn't have enough moves";
     }
 
     public static void showBanner(City city) {
@@ -865,16 +879,16 @@ public class GameMenu {
         System.out.println("can not walk on that tile");
     }
 
-    public static void cityOutOfUnitRange() {
-        System.out.println("can not range attack, city out of range");
+    public static String cityOutOfUnitRange() {
+        return "can not range attack, city out of range";
     }
 
     public static void rangedAttackToCitySuccessfully(City city) {
         System.out.println("ranged attack to " + city.getName() + " was a success");
     }
 
-    public static void cityHPIsZero(City city) {
-        System.out.println(city.getName() + " is zero");
+    public static String cityHPIsZero(City city) {
+        return city.getName() + " is zero";
     }
 
     public static void invalidDecisionForConqueredCity() {
@@ -885,8 +899,8 @@ public class GameMenu {
         System.out.println(city.getName() + " attached successfully");
     }
 
-    public static void invalidTileForAttack() {
-        System.out.println("can not attack to chosen tile, there are no enemy units/city");
+    public static String invalidTileForAttack() {
+        return "can not attack to chosen tile, there are no enemy units/city";
     }
 
 
