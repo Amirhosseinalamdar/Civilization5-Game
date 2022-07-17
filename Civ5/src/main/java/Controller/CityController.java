@@ -469,6 +469,13 @@ public class CityController {
                             civilization.getLuxuryResources().replace(tile.getResource(), count);
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
                     }
+                    else if (tile.getResource() != null && tile.getResource().getType().equals("strategic")) {
+                        if (civilization.getStrategicResources().containsKey(tile.getResource())) {
+                            int count = civilization.getStrategicResources().get(tile.getResource());
+                            count++;
+                            civilization.getStrategicResources().replace(tile.getResource(), count);
+                        } else civilization.getStrategicResources().put(tile.getResource(), 1);
+                    }
                     if (tile.getImprovementInProgress().getKey().equals(Improvement.MINE)) tile.setProductionPerTurn(tile.getProductionPerTurn() + 1);
                     else if (tile.getImprovementInProgress().getKey().equals(Improvement.FARM)) {
                         tile.setFoodPerTurn(tile.getFoodPerTurn() + 1);

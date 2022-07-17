@@ -31,7 +31,6 @@ public class DemandPanelController {
     private Label error;
     @FXML
     private Label choose;
-    private Request request = new Request();
 
     public void initialize() {
         HashMap<Resource, Integer> resources = new HashMap<>(DiplomacyPanelController.getPlayer().getCivilization().getStrategicResources());
@@ -117,7 +116,7 @@ public class DemandPanelController {
     private void changeProductPresence(Label label) {
         choose.setTextFill(Paint.valueOf("ffffff"));
         error.setVisible(false);
-        if (request.getParams().containsKey(label.getText())) {
+        if (label.getStyle().contains("f2f2ef")) {
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +
                     "-fx-text-fill: #dbdbb1;" +
                     "-fx-font-size: 30;" +
@@ -125,7 +124,6 @@ public class DemandPanelController {
                     "-fx-background-radius: 10;" +
                     "-fx-arc-height: 5;" +
                     "-fx-arc-width: 5;");
-            request.getParams().remove(label.getText());
         } else {
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +
                     "-fx-text-fill: #508e96;" +
@@ -134,29 +132,29 @@ public class DemandPanelController {
                     "-fx-background-radius: 10;" +
                     "-fx-arc-height: 5;" +
                     "-fx-arc-width: 5;");
-            request.getParams().put(label.getText(), 1);
         }
     }
 
     public void demand(MouseEvent mouseEvent) {
-        if (request.getParams().isEmpty()) {
-            choose.setTextFill(Paint.valueOf("ff0000"));
-            return;
-        }
+        boolean isGive = false;
         try {
+            Request request = new Request();
             request.setAction("Demand");
             for (int i = 0; i < list1.getChildren().size(); i++) {
-                if (request.getParams().containsKey(((Label)list1.getChildren().get(i)).getText())) {
-                    if (Integer.parseInt(((TextField)list2.getChildren().get(i)).getText()) <= 0) throw new Exception();
-                    request.getParams().replace(((Label)list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField)list2.getChildren().get(i)).getText()));
+                if (list1.getChildren().get(i).getStyle().contains("508e96")) {
+                    if (Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()) <= 0) throw new Exception();
+                    else {
+                        request.getParams().put(((Label) list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()));
+                        isGive = true;
+                    }
                 }
             }
-            DiplomacyPanelController.getPlayer().getCivilization().getRequests().add(request);
-            error.setText("Demand sent successfully");
-            error.setTextFill(Paint.valueOf("ffffff"));
-            error.setVisible(true);
-            System.out.println(request.getAction());
-            System.out.println(request.getParams());
+            if (isGive) {
+                DiplomacyPanelController.getPlayer().getCivilization().getRequests().add(request);
+                error.setText("Demand sent successfully");
+                error.setTextFill(Paint.valueOf("ffffff"));
+                error.setVisible(true);
+            } else choose.setTextFill(Paint.valueOf("ff0000"));
         } catch (Exception e) {
             error.setText("Enter valid numbers");
             error.setTextFill(Paint.valueOf("ff0000"));
