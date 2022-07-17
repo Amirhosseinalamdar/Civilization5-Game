@@ -50,6 +50,7 @@ public class CityController {
         }
         else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
+            System.out.println("city has " + city.getCitizens().size() + " citizens");
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
                     lockCitizenOnTile(citizen, Game.getInstance().getTiles()[x][y]);
@@ -295,25 +296,28 @@ public class CityController {
     }
 
     private static Citizen getWorkingCitizen() {
-        String[] args = GameMenu.nextCommand().split(" ");
-        try {
-            int x = Integer.parseInt(args[0]), y = Integer.parseInt(args[1]);
-            if (GameController.invalidPos(x, y)) {
-                GameMenu.indexOutOfArray();
-                return null;
-            }
-            Citizen citizen = Game.getInstance().getTiles()[x][y].getWorkingCitizen();
-            if (citizen == null) return null;
-            if (citizen.getCity().equals(city)) return citizen;
-            GameMenu.citizenNotYours();
-            return null;
-        } catch (Exception e) {
-            GameMenu.invalidPosForCitizen();
-            return null;
-        }
+        if (city.getCitizens().size() > 1) return city.getCitizens().get(city.getCitizens().size() - 1);
+        return null;
+//        String[] args = GameMenu.nextCommand().split(" ");
+//        try {
+//            int x = Integer.parseInt(args[0]), y = Integer.parseInt(args[1]);
+//            if (GameController.invalidPos(x, y)) {
+//                GameMenu.indexOutOfArray();
+//                return null;
+//            }
+//            Citizen citizen = Game.getInstance().getTiles()[x][y].getWorkingCitizen();
+//            if (citizen == null) return null;
+//            if (citizen.getCity().equals(city)) return citizen;
+//            GameMenu.citizenNotYours();
+//            return null;
+//        } catch (Exception e) {
+//            GameMenu.invalidPosForCitizen();
+//            return null;
+//        }
     }
 
     public static void lockCitizenOnTile(Citizen citizen, Tile tile) {
+        if (citizen.getTile() != null) citizen.getTile().setWorkingCitizen(null);
         citizen.changeWorkingTile(tile);
         tile.setWorkingCitizen(citizen);
     }
@@ -617,12 +621,15 @@ public class CityController {
             return false;
         if (!hasEnoughResources(unitType))
             return false;
-        if (unitType.isCivilian())
+
+        if (unitType.isCivilian()) {
             if (city.getTiles().get(0).getCivilian() != null)
                 return false;
-        else
+        }
+        else {
             if (city.getTiles().get(0).getMilitary() != null)
                 return false;
+        }
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             return remainingCost > 0;
