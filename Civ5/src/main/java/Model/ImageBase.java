@@ -232,7 +232,11 @@ public enum ImageBase {
     FACTORY(new Image("Pictures/buildingIcons/industrial/factory.png")),
     HOSPITAL(new Image("Pictures/buildingIcons/industrial/hospital.png")),
     MILITARY_BASE(new Image("Pictures/buildingIcons/industrial/military_base.png")),
-    STOCK_EXCHANGE(new Image("Pictures/buildingIcons/industrial/stock_exchange.png"));
+    STOCK_EXCHANGE(new Image("Pictures/buildingIcons/industrial/stock_exchange.png")),
+
+    OPEN_TECH_TREE(new Image("Pictures/openTechTreeButton.png")),
+    EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.jpg")),
+    UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.jpg"));
 
     private final Image image;
 

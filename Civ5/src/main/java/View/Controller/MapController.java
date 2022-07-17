@@ -1,5 +1,6 @@
 package View.Controller;
 
+import App.Main;
 import Controller.CityController;
 import Controller.GameController;
 import Controller.UnitController;
@@ -220,8 +221,42 @@ public class MapController {
             else showMilitaryOptions();
         }
         showHoveredTileInfo();
+        showTechTreeButton();
     }
 
+    private void showTechTreeButton() {
+        ImageView openTechTree = new ImageView(ImageBase.OPEN_TECH_TREE.getImage());
+        openTechTree.setFitWidth(80); openTechTree.setFitHeight(80);
+        openTechTree.setX(1480); openTechTree.setY(70);
+        openTechTree.setStyle("-fx-cursor:hand;");
+        openTechTree.setOnMouseEntered(mouseEvent -> {
+            openTechTree.setX(openTechTree.getX() - 4);
+            openTechTree.setY(openTechTree.getY() - 4);
+            openTechTree.setFitWidth(openTechTree.getFitWidth() + 10);
+            openTechTree.setFitHeight(openTechTree.getFitHeight() + 10);
+        });
+        openTechTree.setOnMouseExited(mouseEvent -> {
+            openTechTree.setX(openTechTree.getX() + 4);
+            openTechTree.setY(openTechTree.getY() + 4);
+            openTechTree.setFitWidth(openTechTree.getFitWidth() - 10);
+            openTechTree.setFitHeight(openTechTree.getFitHeight() - 10);
+        });
+        openTechTree.setOnMouseClicked(mouseEvent -> {
+            FXMLLoader fxmlLoader1 = new FXMLLoader(Main.class.getResource("/fxml/TechTree.fxml"));
+            Scene scene = null;
+            try {
+                Stage stage = new Stage();
+                scene = new Scene(fxmlLoader1.load(), 1600, 900);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        backgroundPane.getChildren().add(openTechTree);
+    }
 
     private void showPanelsButtons(){
         VBox vBox = new VBox();
@@ -571,8 +606,9 @@ public class MapController {
     }
 
     private void openCityPanel (City city) {
-        System.out.println("lol opened");
-        Color color = new Color(0,1,0.4,0.2);
+        Color color = new Color(GameController.getCivilization().getColor().getRed(),
+                                GameController.getCivilization().getColor().getGreen(),
+                                GameController.getCivilization().getColor().getBlue(), 0.3);
         for (Tile tile : city.getTiles()) {
             double x = tile.getX(), y = tile.getY();
             Polygon polygon = new Polygon();
@@ -589,7 +625,8 @@ public class MapController {
         tileImageViews.clear();
         tileImageViews.addAll(city.getTiles());
         showTilesFoodProductionGold();
-        showCitizens();
+//        showCitizens();
+        showExclusiveCitizens();
         initCloseButtonForCityPanel();
         showPurchasableTiles();
 
@@ -739,6 +776,43 @@ public class MapController {
             imageView.setEffect(colorAdjust);
         }
         hBox.getChildren().add(imageView);
+    }
+
+    private void showExclusiveCitizens() {
+        for (Tile tile : chosenCity.getTiles()) {
+            ImageView imageView = new ImageView();
+            if (tile.getWorkingCitizen() == null) {
+                imageView.setStyle("-fx-cursor: hand;");
+                imageView.setImage(ImageBase.UNEMPLOYED_CITIZEN.getImage());
+                imageView.setOnMouseClicked(mouseEvent -> {
+                    CityController.setCity(chosenCity, "lock citizen on tile -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                    String message = CityController.handleCityOptions();
+                    if (message.length() != 0)
+                        showPopup(mouseEvent, message.toUpperCase() + "!");
+                    else {
+                        for (int i = 0; i < backgroundPane.getChildren().size(); i++) {
+                            Node child = backgroundPane.getChildren().get(i);
+                            if (!(child instanceof ImageView)) continue;
+                            ImageView childImg = (ImageView) child;
+                            if (childImg.getImage().equals(ImageBase.EMPLOYED_CITIZEN.getImage()) ||
+                                    childImg.getImage().equals(ImageBase.UNEMPLOYED_CITIZEN.getImage())) {
+                                backgroundPane.getChildren().remove(childImg);
+                                i--;
+                            }
+                        }
+                        showExclusiveCitizens();
+                    }
+                });
+            }
+            else {
+                imageView.setImage(ImageBase.EMPLOYED_CITIZEN.getImage());
+            }
+            imageView.setFitWidth(30); imageView.setFitHeight(30);
+            int i = tile.getIndexInMapI(), j = tile.getIndexInMapJ();
+            imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 50);
+            imageView.setY(105 * (i - xStartingIndex) + 50);
+            backgroundPane.getChildren().add(imageView);
+        }
     }
 
     private void setMouseMovementForCityPanelIcons (ImageView imageView) {
