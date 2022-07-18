@@ -132,12 +132,11 @@ public class GameMenu {
                         UnitController.setUnit(mapController.getChosenUnit(),"attack to -c "+
                                 tile.getIndexInMapI()+" "+tile.getIndexInMapJ());
                         String message = UnitController.handleUnitOptions();
-                        if (message.length() == 0) {
-                            mapController.setChosenUnit(null);
-                            showMap();
+                        if(message.equals("done")){
+                            //age ghablan ba in jang nabude declare war inja soorat migire
+                            //TODO Ehsanino taghirate diplomacy chosenUnit ba unit ya shahre chosenTarget
                         }
-                        else
-                            mapController.showPopup(event, message.toUpperCase() + "!");
+                        mapController.showPopup(event, message.toUpperCase() + "!");
                         mapController.getChosenUnit().realSetStatus(UnitStatus.ACTIVE);
                         mapController.setChosenUnit(null);
                         mapController.showMap();
