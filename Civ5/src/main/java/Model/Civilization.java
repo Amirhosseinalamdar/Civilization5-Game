@@ -42,6 +42,18 @@ public class Civilization {
     private ArrayList<String> notifications;
     @Expose(serialize = true, deserialize = true)
     private HashMap<Resource, Integer> luxuryResources;
+    @Expose(serialize = true, deserialize = true)
+    private HashMap<Resource, Integer> strategicResources;
+    @Expose(serialize = true, deserialize = true)
+    private ArrayList<Request> requests;
+
+    public HashMap<Resource, Integer> getStrategicResources() {
+        return strategicResources;
+    }
+
+    public ArrayList<Request> getRequests() {
+        return requests;
+    }
 
     public Civilization() {
         cities = new ArrayList<>();
@@ -49,6 +61,8 @@ public class Civilization {
         notifications = new ArrayList<>();
         lastCostUntilNewTechnologies = new HashMap<>();
         luxuryResources = new HashMap<>();
+        strategicResources = new HashMap<>();
+        requests = new ArrayList<>();
         for (int i = 0; i < Game.getInstance().getMapSize(); i++)
             for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;

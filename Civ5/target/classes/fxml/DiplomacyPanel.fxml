@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="450.0" prefWidth="800.0" stylesheets="@../CSS/DiplomacyPanel.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.DiplomacyPanelController">
+   <children>
+      <Button fx:id="declareWar" disable="true" layoutX="601.0" layoutY="240.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="165.0" text="Declare War" textFill="WHITE" visible="false">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="demand" layoutX="601.0" layoutY="300.0" mnemonicParsing="false" onMouseClicked="#startDemand" prefHeight="50.0" prefWidth="165.0" text="Demand" textFill="WHITE">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="trade" layoutX="601.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#startTrading" prefHeight="50.0" prefWidth="165.0" text="Trade" textFill="WHITE">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="peace" disable="true" layoutX="601.0" layoutY="240.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="165.0" text="Peace" textFill="WHITE" visible="false">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="exit" layoutX="14.0" layoutY="385.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="94.0" text="Exit" textFill="WHITE">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="discuss" layoutX="601.0" layoutY="180.0" mnemonicParsing="false" onMouseClicked="#discussing" prefHeight="50.0" prefWidth="165.0" text="Discuss" textFill="WHITE">
+         <font>
+            <Font size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <VBox fx:id="list" alignment="TOP_CENTER" layoutX="388.0" layoutY="201.0" prefHeight="212.0" prefWidth="195.0">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor></VBox>
+      <Label fx:id="choose" alignment="CENTER" layoutX="378.0" layoutY="161.0" prefHeight="32.0" prefWidth="215.0" text="Choose a player" textFill="WHITE">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
