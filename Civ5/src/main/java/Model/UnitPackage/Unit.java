@@ -28,6 +28,11 @@ public class Unit extends ImageView {
     protected int cost;
     @Expose(serialize = true, deserialize = true)
     public static double MAX_HEALTH = 10;
+
+    public static double getMaxHealth() {
+        return MAX_HEALTH;
+    }
+
     @Expose(serialize = true, deserialize = true)
     protected Path path;
     @Expose(serialize = true, deserialize = true)

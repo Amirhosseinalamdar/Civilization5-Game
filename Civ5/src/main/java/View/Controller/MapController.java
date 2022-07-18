@@ -20,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -1109,27 +1110,32 @@ public class MapController {
                 if (tile.getCivilian() != null) {
                     tile.getCivilian().setX(tile.getX() + 65);
                     tile.getCivilian().setY(tile.getY() + 70);
-                    Circle circle = new Circle(tile.getCivilian().getX() + tile.getCivilian().getLayoutBounds().getWidth()/2,
-                            tile.getCivilian().getY() + tile.getCivilian().getLayoutBounds().getHeight()/2,
-                            (tile.getCivilian().getLayoutBounds().getHeight()+tile.getCivilian().getLayoutBounds().getWidth())/4,
-                            tile.getCivilian().getCivilization().getColor());
-                    backgroundPane.getChildren().add(circle);
+                    addProgressUnitBar(tile.getX() + 75,tile.getY() + 60,tile.getCivilian());
+
                     backgroundPane.getChildren().add(tile.getCivilian());
                     showUnitStatus(tile.getCivilian());
                 }
                 if (tile.getMilitary() != null) {
                     tile.getMilitary().setX(tile.getX() + 10);
                     tile.getMilitary().setY(tile.getY() + 70);
-                    Circle circle = new Circle(tile.getMilitary().getX() + tile.getMilitary().getLayoutBounds().getWidth()/2,
-                            tile.getMilitary().getY() + tile.getMilitary().getLayoutBounds().getHeight()/2,
-                            (tile.getMilitary().getLayoutBounds().getHeight()+tile.getMilitary().getLayoutBounds().getWidth())/4
-                            ,tile.getMilitary().getCivilization().getColor());
-                    backgroundPane.getChildren().add(circle);
+                    addProgressUnitBar(tile.getX() + 20,tile.getY() + 60,tile.getMilitary());
+
                     backgroundPane.getChildren().add(tile.getMilitary());
                     showUnitStatus(tile.getMilitary());
                 }
             }
         }
+    }
+
+    private void addProgressUnitBar(double v, double v1, Unit unit) {
+        Rectangle rectangle = new Rectangle(v,v1,3 * Unit.getMaxHealth(),7);
+        rectangle.setFill(Color.BLACK);
+        rectangle.setOpacity(0.7);
+        backgroundPane.getChildren().add(rectangle);
+        rectangle = new Rectangle(v,v1,3 * unit.getHealth(),7);
+        rectangle.setFill(unit.getCivilization().getColor());
+        rectangle.setOpacity(0.8);
+        backgroundPane.getChildren().add(rectangle);
     }
 
     private void showUnitStatus(Unit unit) {
