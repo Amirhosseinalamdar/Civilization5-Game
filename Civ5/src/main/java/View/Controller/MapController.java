@@ -11,6 +11,7 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
+import View.GameMenu;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -41,6 +42,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class MapController {
@@ -52,7 +55,7 @@ public class MapController {
     private City chosenCity;
     private Tile hoveredTile;
     private Tile chosenTarget;
-
+    private boolean isEnded;
     public void setChosenTarget(Tile chosenTarget) {
         this.chosenTarget = chosenTarget;
     }
@@ -207,6 +210,7 @@ public class MapController {
         else return ImageBase.CITY_0.getImage();
     }
     public void showMap() {
+        if(isEnded) return;
         backgroundPane.getChildren().clear();
         setVisionStatuses();
         boolean flag1 = true;
@@ -1787,5 +1791,49 @@ public class MapController {
         button.setOnMouseExited(event -> {
             button.setOpacity(1);
         });
+    }
+
+    public void setEnded(boolean ended) {
+        isEnded = ended;
+    }
+
+    public boolean isEnded() {
+        return isEnded;
+    }
+
+    public void showScores() {
+        Rectangle rectangle = new Rectangle(0,0,1600,900);
+        rectangle.setFill(Color.BLACK);
+        rectangle.setOpacity(0.7);
+        backgroundPane.getChildren().add(rectangle);
+        VBox vBox = new VBox();
+        Comparator<User> cmp = Comparator.comparing(User::getScore);
+        Game.getInstance().getPlayers().sort(cmp);
+        Label label = new Label(Game.getInstance().getPlayers().get(0).getUsername()+" won!");
+        label.setStyle("-fx-text-fill: purple; -fx-font-size: 70;");
+        vBox.getChildren().add(label);
+        for (User player : Game.getInstance().getPlayers()) {
+            label = new Label(player.getUsername()+":   "+player.getScore());
+            label.setStyle("-fx-font-size: 40; -fx-text-fill: white;");
+            vBox.getChildren().add(label);
+        }
+        vBox.setTranslateX(600);
+        vBox.setTranslateY(100);
+        Button button = new Button("Main menu");
+        //download button stylee ehsan
+        button.setOnMouseEntered(event -> {
+            button.setOpacity(0.3);
+        });
+        button.setOnMouseExited(event -> {
+            button.setOpacity(1);
+        });
+        button.setOnMouseClicked(event -> {
+            //TODO EHSAN MARO BEBAR MAIN MENU
+            //aha inke faghat emtiaz namayesh dadam kafie dige?
+            //kare digeyi ke nemikhas?
+        });
+        button.setLayoutX(600);
+        vBox.getChildren().add(button);
+        backgroundPane.getChildren().add(vBox);
     }
 }

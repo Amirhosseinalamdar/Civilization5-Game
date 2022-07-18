@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.Map.Building;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.*;
@@ -9,11 +8,6 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
