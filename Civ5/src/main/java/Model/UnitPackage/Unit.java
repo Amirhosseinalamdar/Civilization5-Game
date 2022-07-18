@@ -40,8 +40,8 @@ public class Unit extends ImageView {
     @Expose(serialize = true, deserialize = true)
     protected int maintenance;
 
-    private static final int healRate = 3;
-    public static int getHealRate() {
+    private static final double healRate = 1.5;
+    public static double getHealRate() {
         return healRate;
     }
 

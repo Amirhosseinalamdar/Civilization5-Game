@@ -252,6 +252,7 @@ public class MapController {
     }
 
     private void showTechTreeButton() {
+        if (GameController.getCivilization().getCities().size() == 0) return;
         ImageView openTechTree = new ImageView(ImageBase.OPEN_TECH_TREE.getImage());
         openTechTree.setFitWidth(80); openTechTree.setFitHeight(80);
         openTechTree.setX(1480); openTechTree.setY(70);
@@ -277,6 +278,7 @@ public class MapController {
                 stage.setScene(scene);
                 stage.setResizable(false);
                 stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setOnCloseRequest(windowEvent -> showMap());
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -750,8 +752,7 @@ public class MapController {
                 if (!chosenCity.getTiles().contains(neighbor) && !borderTiles.contains(neighbor)) borderTiles.add(neighbor);
 
         for (Tile tile : borderTiles) {
-            if ((tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(chosenCity.getCivilization())) ||
-                    (tile.getCivilian() != null && !tile.getCivilian().getCivilization().equals(chosenCity.getCivilization()))) {
+            if (tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(chosenCity.getCivilization())) {
                 ImageView target = new ImageView(ImageBase.CITY_ATTACK_TARGET.getImage());
                 target.setFitHeight(30); target.setFitWidth(30);
                 target.setX(tile.getX() + tile.getImage().getWidth() / 2 - target.getFitWidth() / 2);
@@ -1133,7 +1134,7 @@ public class MapController {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
-            improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 20);
+            improvementImage.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
             improvementImage.setY(105 * (i - xStartingIndex) + 25);
             backgroundPane.getChildren().add(improvementImage);
         }
@@ -1747,7 +1748,6 @@ public class MapController {
                 "-fx-border-color: black; -fx-border-width: 3; -fx-border-radius: 5;");
         popup.getContent().add(label);
         popup.setWidth(label.getWidth() + 30);
-        popup.setHeight(10000);
         popup.setAutoHide(true);
         //TODO... play error sound;
         popup.show(((Node)(mouseEvent.getSource())).getScene().getWindow());
@@ -1757,7 +1757,7 @@ public class MapController {
         Button[] buttons = new Button[4];
 
         buttons[0] = new Button("do nothing");
-        buttons[1] = new Button("do nothing");
+        buttons[1] = new Button("attach");
         buttons[2] = new Button("puppet");
         buttons[3] = new Button("raze");
         for (Button button : buttons) {

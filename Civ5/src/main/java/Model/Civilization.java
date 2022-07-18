@@ -220,6 +220,7 @@ public class Civilization {
     }
 
     public boolean hasPrerequisitesOf (Technology tech) {
+        if (tech.getParents() == null) return true;
         for (Technology parent : tech.getParents())
             if (!this.hasReachedTech(parent)) return false;
         return true;

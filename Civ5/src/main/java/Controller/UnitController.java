@@ -160,8 +160,8 @@ public class UnitController {
         }
         else if (unit.getStatus().equals(UnitStatus.HEAL)) {
             unit.setHealth(unit.getHealth() + Unit.getHealRate());
-            if (unit.getHealth() >= 20) {
-                unit.setHealth(20);
+            if (unit.getHealth() >= Unit.MAX_HEALTH) {
+                unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
             }
         }
@@ -611,7 +611,7 @@ public class UnitController {
         label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 35; -fx-font-weight: bold; -fx-alignment: center;" +
                 "-fx-text-alignment: center; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-color: white;" +
                 "-fx-background-radius: 5");
-        switch (rand) { //TODO... popups
+        switch (rand) {
             case 0:
                 civilization.setTotalGold(unit.getCivilization().getTotalGold() + 20);
                 label.setTextFill(Color.rgb(194,142,1,1));
@@ -699,8 +699,11 @@ public class UnitController {
 
     public static boolean tileIsImpassable(Tile tile, Unit unit) {
         if (unit != null) {
-            if (!unit.getType().isCivilian() && tile.getMilitary() != null) return true;
-            if (unit.getType().isCivilian() && tile.getCivilian() != null) return true;
+            if ((tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(unit.getCivilization())) ||
+                    (tile.getCivilian() != null && !tile.getCivilian().getCivilization().equals(unit.getCivilization())))
+                return true;
+            if (tile.getMilitary() != null && !unit.getType().isCivilian()) return true;
+            if (tile.getCivilian() != null && unit.getType().isCivilian()) return true;
         }
         return tile.getType().equals(TerrainType.OCEAN) ||
                 tile.getType().equals(TerrainType.MOUNTAIN);
@@ -743,8 +746,8 @@ public class UnitController {
         }
         if (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) {
             unit.setHealth(unit.getHealth() + Unit.getHealRate());
-            if (unit.getHealth() >= 20) {
-                unit.setHealth(20);
+            if (unit.getHealth() >= Unit.MAX_HEALTH) {
+                unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
             }
             return;
@@ -817,7 +820,8 @@ public class UnitController {
                 return rangedAttackToCity(targetTile.getCity());
             if (unit.getType().isMeleeCombat())
                 return meleeAttackToCity(targetTile.getCity());
-        } else {
+        }
+        else {
             if (unit.getType().isRangeCombat())
                 return rangedAttackToUnit(targetTile);
             if (unit.getType().isMeleeCombat())
@@ -835,6 +839,8 @@ public class UnitController {
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
         if (targetTile.getMilitary().getHealth() <= 0)
             targetTile.getMilitary().kill();
+        unit.setMovesInTurn(unit.getMP());
+        unit.setStatus("active");
         return "done";
     }
 
@@ -878,7 +884,7 @@ public class UnitController {
         unit.setStatus("active");
         if (unit.getHealth() <= 0) unit.kill();
         if (city.getHP() <= 0) {
-            CivilizationController.enterCityAsConqueror(city);
+//            CivilizationController.enterCityAsConqueror(city);
             return GameMenu.cityHPIsZero(city);
         }
         return "done";
@@ -892,17 +898,17 @@ public class UnitController {
         }
         Military enemy = targetTile.getMilitary();
         Military me = (Military)unit;
-
         me.setHealth(me.getHealth() - enemy.getCombatStrength() / 4);
         enemy.setHealth(enemy.getHealth() - me.getCombatStrength() / 4);
-
+        unit.setMovesInTurn(unit.getMP());
+        unit.setStatus("active");
         if (enemy.getHealth() <= 0) {
             int i = enemy.getTile().getIndexInMapI(), j = enemy.getTile().getIndexInMapJ();
             enemy.kill();
-            me.setMovesInTurn(me.getMP() - 1);
+            me.setMovesInTurn(0);
             moveUnit(i, j);
+            me.setMovesInTurn(me.getMP());
         }
-
         if (me.getHealth() <= 0)
             me.kill();
         return "done";
