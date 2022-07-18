@@ -640,10 +640,11 @@ public class MapController {
         tileImageViews.clear();
         tileImageViews.addAll(city.getTiles());
         showTilesFoodProductionGold();
-//        showCitizens();
         showExclusiveCitizens();
         initCloseButtonForCityPanel();
+
         showPurchasableTiles();
+        showAttackOptionsForCity();
 
         VBox vBox = new VBox(-10);
         vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
@@ -697,14 +698,16 @@ public class MapController {
             vBox.getChildren().add(hBox);
         }
         backgroundPane.getChildren().add(vBox);
+
+
     }
 
     private void showPurchasableTiles() {
         ArrayList <Tile> purchasableTiles = new ArrayList<>();
         for (Tile cityTile : chosenCity.getTiles())
             for (Tile neighbor : cityTile.getNeighbors())
-                if (!chosenCity.getTiles().contains(neighbor) && neighbor.isPurchasableFor(chosenCity)) purchasableTiles.add(neighbor);
-
+                if (!chosenCity.getTiles().contains(neighbor) && neighbor.isPurchasableFor(chosenCity) &&
+                        !purchasableTiles.contains(neighbor)) purchasableTiles.add(neighbor);
         for (Tile tile : purchasableTiles) {
             int necessaryAmountOfGoldForPurchase = tile.getCost();
             Button purchase = new Button(Integer.toString(necessaryAmountOfGoldForPurchase));
@@ -724,6 +727,42 @@ public class MapController {
                 showMap();
             });
             backgroundPane.getChildren().add(purchase);
+        }
+    }
+
+    private void showAttackOptionsForCity() {
+        ArrayList <Tile> borderTiles = new ArrayList<>();
+
+        for (Tile cityTile : chosenCity.getTiles())
+            for (Tile neighbor : cityTile.getNeighbors())
+                if (!chosenCity.getTiles().contains(neighbor) && !borderTiles.contains(neighbor)) borderTiles.add(neighbor);
+
+        for (Tile tile : borderTiles) {
+            System.out.println(tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+            System.out.println("milit = " + (tile.getMilitary() == null));
+            System.out.println("civil = " + (tile.getCivilian() == null));
+            if ((tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(chosenCity.getCivilization())) ||
+                    (tile.getCivilian() != null && !tile.getCivilian().getCivilization().equals(chosenCity.getCivilization()))) {
+                ImageView target = new ImageView(ImageBase.CITY_ATTACK_TARGET.getImage());
+                target.setFitHeight(30); target.setFitWidth(30);
+                target.setX(tile.getX() + tile.getImage().getWidth() / 2 - target.getFitWidth() / 2);
+                target.setY(tile.getY() + 10);
+                target.setStyle("-fx-cursor: hand;");
+
+                target.setOnMouseEntered(mouseEvent -> target.setImage(ImageBase.CITY_ATTACK_LOCK.getImage()));
+                target.setOnMouseExited(mouseEvent -> target.setImage(ImageBase.CITY_ATTACK_TARGET.getImage()));
+                
+                target.setOnMouseClicked(mouseEvent -> {
+                    CityController.setCity(chosenCity, "attack to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
+                    String message = CityController.handleCityOptions();
+                    if (message.length() > 0)
+                        showPopup(mouseEvent, message.toUpperCase() + "!");
+                    else
+                        setChosenCity(null);
+                    showMap();
+                });
+                backgroundPane.getChildren().add(target);
+            }
         }
     }
 

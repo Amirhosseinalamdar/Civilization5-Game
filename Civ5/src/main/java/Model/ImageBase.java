@@ -236,7 +236,9 @@ public enum ImageBase {
 
     OPEN_TECH_TREE(new Image("Pictures/openTechTreeButton.png")),
     EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.jpg")),
-    UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.jpg"));
+    UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.jpg")),
+    CITY_ATTACK_TARGET(new Image("Pictures/cityIcons/target.png")),
+    CITY_ATTACK_LOCK(new Image("Pictures/cityIcons/lock.png"));
 
     private final Image image;
 
