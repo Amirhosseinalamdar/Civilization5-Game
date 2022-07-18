@@ -139,13 +139,18 @@ public class GameController {
 
     private static String cheatTurn(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x"));
-        for (int i = 0; i < x - 1; i++) {
+        for (int i = 0; i < x; i++) {
             Game.getInstance().nextTurn();
             checkMyCivilization();
             checkControllersCivilization();
             CivilizationController.updateCivilization();
         }
-        updateGame();
+        System.out.println("turn: " + Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
+        for (Unit unit : Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getCivilization().getUnits()) {
+            unit.setMovesInTurn(0);
+            UnitController.setUnit(unit, "");
+            UnitController.doRemainingMissions();
+        }
         return "turn increased " + x + "times";
     }
 

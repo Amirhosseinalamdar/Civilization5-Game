@@ -1,8 +1,10 @@
 package View.Controller;
 
 import App.Main;
+import Controller.GameController;
 import Controller.UserController;
 import Model.Game;
+import Model.Request;
 import Model.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +24,15 @@ import java.util.ArrayList;
 
 public class DiplomacyPanelController {
     @FXML
+    private Label message;
+    @FXML
     private VBox list;
     @FXML
     private Button exit;
+    @FXML
+    private Button peaceButton;
+    @FXML
+    private Button warButton;
     @FXML
     private Label choose;
     private static User player;
@@ -68,7 +76,8 @@ public class DiplomacyPanelController {
                         "-fx-background-radius: 10;" +
                         "-fx-arc-height: 5;" +
                         "-fx-arc-width: 5;");
-            }else {node.setStyle("-fx-font-family: 'Tw Cen MT';" +
+            } else {
+                node.setStyle("-fx-font-family: 'Tw Cen MT';" +
                         "-fx-text-fill: #dbdbb1;" +
                         "-fx-font-size: 30;" +
                         "-fx-background-color: transparent;" +
@@ -80,8 +89,15 @@ public class DiplomacyPanelController {
     }
 
     private void changeWarState() {
-        //TODO handle the visibility of war or peace button
+        if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+            peaceButton.setVisible(true);
+            peaceButton.setDisable(false);
+        } else {
+            warButton.setVisible(true);
+            warButton.setDisable(false);
+        }
     }
+
 
     public static User getPlayer() {
         return player;
@@ -89,7 +105,11 @@ public class DiplomacyPanelController {
 
     public void startDemand(MouseEvent mouseEvent) throws IOException {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else {
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+            message.setTextFill(Paint.valueOf("ff0000"));
+            message.setText("You are in war with this civilization");
+            message.setVisible(true);
+        } else {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/fxml/DemandPanel.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 450);
@@ -103,7 +123,11 @@ public class DiplomacyPanelController {
 
     public void startTrading(MouseEvent mouseEvent) throws IOException {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else {
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+            message.setTextFill(Paint.valueOf("ff0000"));
+            message.setText("You are in war with this civilization");
+            message.setVisible(true);
+        } else {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/fxml/TradePanel.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 450);
@@ -127,6 +151,37 @@ public class DiplomacyPanelController {
 //            stage.setScene(scene);
 //            stage.setResizable(false);
 //            stage.show();
+        }
+    }
+
+    public void declareWar(MouseEvent mouseEvent) {
+        if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+            message.setTextFill(Paint.valueOf("ff0000"));
+            message.setText("You are already in war with this civilization");
+            message.setVisible(true);
+        }
+        else {
+            GameController.getCivilization().getInWarCivilizations().add(player.getCivilization());
+            player.getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+            Request request = new Request();
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+            request.setAction("War");
+            message.setTextFill(Paint.valueOf("ffffff"));
+            message.setText("War message sent successfully");
+            message.setVisible(true);
+        }
+    }
+
+    public void declarePeace(MouseEvent mouseEvent) {
+        if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
+        else {
+            Request request = new Request();
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+            request.setAction("Peace");
+            message.setText("Peace message sent successfully");
+            message.setTextFill(Paint.valueOf("ffffff"));
+            message.setVisible(true);
         }
     }
 }

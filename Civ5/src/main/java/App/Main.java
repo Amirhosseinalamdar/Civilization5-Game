@@ -2,6 +2,7 @@ package App;
 
 import Controller.UserController;
 import Model.Game;
+import Model.Map.Resource;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

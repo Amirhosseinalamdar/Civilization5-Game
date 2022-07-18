@@ -40,7 +40,7 @@ public class TradePanelController {
 
     public void initialize() {
         HashMap<Resource, Integer> resources1 = new HashMap<>(GameController.getCivilization().getStrategicResources());
-        resources1.putAll(GameController.getCivilization().getStrategicResources());
+        resources1.putAll(GameController.getCivilization().getLuxuryResources());
         HashMap<Resource, Integer> resources2 = new HashMap<>(DiplomacyPanelController.getPlayer().getCivilization().getStrategicResources());
         resources2.putAll(DiplomacyPanelController.getPlayer().getCivilization().getLuxuryResources());
         Label label = new Label();
@@ -219,6 +219,7 @@ public class TradePanelController {
         boolean isGive = false;
         try {
             Request request = new Request();
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
             request.setAction("Trade");
             for (int i = 0; i < list1.getChildren().size(); i++) {
                 if (list1.getChildren().get(i).getStyle().contains("508e96")) {
