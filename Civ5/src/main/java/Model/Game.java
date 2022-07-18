@@ -9,6 +9,7 @@ import Model.Map.Tile;
 import Model.Map.*;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
+import View.GameMenu;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -62,6 +63,10 @@ public class Game {
         turn++;
         turn %= players.size();
         if (getTurn() == 0) time++;
+        if(time >= 205 && !GameMenu.getGameMapController().isEnded()){
+            GameMenu.getGameMapController().setEnded(true);
+            GameMenu.getGameMapController().showScores();
+        }
     }
 
     public User getLoggedInUser() {

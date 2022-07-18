@@ -235,8 +235,8 @@ public enum ImageBase {
     STOCK_EXCHANGE(new Image("Pictures/buildingIcons/industrial/stock_exchange.png")),
 
     OPEN_TECH_TREE(new Image("Pictures/openTechTreeButton.png")),
-    EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.jpg")),
-    UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.jpg"));
+    EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.png")),
+    UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.png"));
 
     private final Image image;
 
