@@ -35,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -258,7 +259,41 @@ public class MapController {
         }
         showHoveredTileInfo();
         showTechTreeButton();
+        showDiplomacyPanelButton();
         showRequests();
+    }
+
+    private void showDiplomacyPanelButton() {
+        if (GameController.getCivilization().getCities().size() == 0) return;
+        ImageView openDiplomacyPanel = new ImageView(ImageBase.OPEN_DIPLOMACY_PANEL.getImage());
+        openDiplomacyPanel.setFitWidth(80);
+        openDiplomacyPanel.setFitHeight(80);
+        openDiplomacyPanel.setX(1480);
+        openDiplomacyPanel.setY(170);
+        Tooltip.install(openDiplomacyPanel, new Tooltip("Diplomacy Panel"));
+
+        Rectangle clip = new Rectangle(1480, 160, 80,80);
+        clip.setArcWidth(10); clip.setArcHeight(10);
+        openDiplomacyPanel.setClip(clip);
+
+        setUpperRightButton(openDiplomacyPanel, clip);
+        openDiplomacyPanel.setOnMouseClicked(mouseEvent -> {
+            FXMLLoader fxmlLoader1 = new FXMLLoader(Main.class.getResource("/fxml/DiplomacyPanel.fxml"));
+            Scene scene;
+            try {
+                Stage stage = new Stage();
+                scene = new Scene(fxmlLoader1.load(), 800, 450);
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setOnCloseRequest(windowEvent -> showMap());
+                stage.show();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        backgroundPane.getChildren().add(openDiplomacyPanel);
     }
 
     private void showTechTreeButton() {
@@ -268,22 +303,11 @@ public class MapController {
         openTechTree.setFitHeight(80);
         openTechTree.setX(1480);
         openTechTree.setY(70);
-        openTechTree.setStyle("-fx-cursor:hand;");
-        openTechTree.setOnMouseEntered(mouseEvent -> {
-            openTechTree.setX(openTechTree.getX() - 4);
-            openTechTree.setY(openTechTree.getY() - 4);
-            openTechTree.setFitWidth(openTechTree.getFitWidth() + 10);
-            openTechTree.setFitHeight(openTechTree.getFitHeight() + 10);
-        });
-        openTechTree.setOnMouseExited(mouseEvent -> {
-            openTechTree.setX(openTechTree.getX() + 4);
-            openTechTree.setY(openTechTree.getY() + 4);
-            openTechTree.setFitWidth(openTechTree.getFitWidth() - 10);
-            openTechTree.setFitHeight(openTechTree.getFitHeight() - 10);
-        });
+        Tooltip.install(openTechTree, new Tooltip("Tech Tree"));
+        setUpperRightButton(openTechTree, null);
         openTechTree.setOnMouseClicked(mouseEvent -> {
             FXMLLoader fxmlLoader1 = new FXMLLoader(Main.class.getResource("/fxml/TechTree.fxml"));
-            Scene scene = null;
+            Scene scene;
             try {
                 Stage stage = new Stage();
                 scene = new Scene(fxmlLoader1.load(), 1600, 900);
@@ -292,11 +316,40 @@ public class MapController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setOnCloseRequest(windowEvent -> showMap());
                 stage.show();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         });
         backgroundPane.getChildren().add(openTechTree);
+    }
+
+    private void setUpperRightButton (ImageView imageView, Rectangle clip) {
+        imageView.setStyle("-fx-cursor:hand; -fx-font-family: 'Tw Cen MT'; -fx-font-size: 17;");
+        imageView.setOnMouseEntered(mouseEvent -> {
+            imageView.setX(imageView.getX() - 4);
+            imageView.setY(imageView.getY() - 4);
+            imageView.setFitWidth(imageView.getFitWidth() + 10);
+            imageView.setFitHeight(imageView.getFitHeight() + 10);
+            if (clip != null) {
+                clip.setX(clip.getX() - 4);
+                clip.setY(clip.getY() - 4);
+                clip.setWidth(clip.getWidth() + 10);
+                clip.setHeight(clip.getHeight() + 10);
+            }
+        });
+        imageView.setOnMouseExited(mouseEvent -> {
+            imageView.setX(imageView.getX() + 4);
+            imageView.setY(imageView.getY() + 4);
+            imageView.setFitWidth(imageView.getFitWidth() - 10);
+            imageView.setFitHeight(imageView.getFitHeight() - 10);
+            if (clip != null) {
+                clip.setX(clip.getX() + 4);
+                clip.setY(clip.getY() + 4);
+                clip.setWidth(clip.getWidth() - 10);
+                clip.setHeight(clip.getHeight() - 10);
+            }
+        });
     }
 
     private void showPanelsButtons() {
@@ -1489,7 +1542,7 @@ public class MapController {
                 anchorPane.getChildren().add(button1);
             }
             popup.getContent().add(anchorPane);
-            popup.show(Main.stage);
+            popup.show(backgroundPane.getScene().getWindow());
         }
     }
 
