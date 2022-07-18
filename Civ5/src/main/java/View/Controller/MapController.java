@@ -1777,7 +1777,6 @@ public class MapController {
         }
         vBox.setTranslateX(600);
         vBox.setTranslateY(100);
-        backgroundPane.getChildren().add(vBox);
         Button button = new Button("Main menu");
         //download button stylee ehsan
         button.setOnMouseEntered(event -> {
@@ -1791,5 +1790,8 @@ public class MapController {
             //aha inke faghat emtiaz namayesh dadam kafie dige?
             //kare digeyi ke nemikhas?
         });
+        button.setLayoutX(600);
+        vBox.getChildren().add(button);
+        backgroundPane.getChildren().add(vBox);
     }
 }
