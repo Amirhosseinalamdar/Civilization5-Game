@@ -1274,8 +1274,10 @@ public class MapController {
         citizenImageViews.removeAll(citizenImageViews);
     }
 
-    public void nextTurn() {
-        GameController.updateGame();
+    public void nextTurn (MouseEvent event) {
+        String message = GameController.updateGame();
+        if (message.length() > 0)
+            showPopup(event, message.toUpperCase() + "!");
         hideUnitAvatar();
         hideUnitOptions();
         chosenUnit = null;
@@ -1592,7 +1594,7 @@ public class MapController {
         nextTurn.setLayoutY(820);
         nextTurn.getStylesheets().add("css/MapStyle.css");
         nextTurn.getStyleClass().add("nextTurn");
-        nextTurn.setOnMouseClicked(event -> nextTurn());
+        nextTurn.setOnMouseClicked(this::nextTurn);
         backgroundPane.getChildren().add(nextTurn);
 
         if (techIconMustBeShown()) {
@@ -1678,16 +1680,20 @@ public class MapController {
     }
 
     public void showPopup (MouseEvent mouseEvent, String message) {
+        message = message + " ";
+        message = " " + message;
         Popup popup = new Popup();
         Label label = new Label(message);
-        label.setTextFill(Color.rgb(180,0,0,1));
+        label.setTextFill(Color.rgb(200,0,0,1));
         label.setMinHeight(100);
         label.setMinWidth(400);
         label.setTextAlignment(TextAlignment.CENTER);
         label.setStyle("-fx-font-size: 30; -fx-font-family: 'Tw Cen MT'; -fx-font-weight: bold;" +
                 "-fx-background-color: white; -fx-background-radius: 5; -fx-alignment: center;" +
-                "-fx-border-color: black; -fx-border-width: 4.5; -fx-border-radius: 5;");
+                "-fx-border-color: black; -fx-border-width: 3; -fx-border-radius: 5;");
         popup.getContent().add(label);
+        popup.setWidth(label.getWidth() + 30);
+        popup.setHeight(10000);
         popup.setAutoHide(true);
         //TODO... play error sound;
         popup.show(((Node)(mouseEvent.getSource())).getScene().getWindow());

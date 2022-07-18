@@ -8,9 +8,16 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Commands;
+import View.Controller.MapController;
 import View.GameMenu;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -43,8 +50,6 @@ public class UnitController {
 
     public static String handleUnitOptions() {
         Matcher matcher = getUnitDecision();
-
-//        if (matcher.pattern().toString().equals("back")) return "";
 
         unit.setStatus(matcher.pattern().toString());
 
@@ -151,6 +156,13 @@ public class UnitController {
             else {
                 unit.setStatus("active");
                 return "tile doesn't have this feature to be cleared";
+            }
+        }
+        else if (unit.getStatus().equals(UnitStatus.HEAL)) {
+            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            if (unit.getHealth() >= 20) {
+                unit.setHealth(20);
+                unit.setStatus("active");
             }
         }
 
@@ -576,63 +588,99 @@ public class UnitController {
             unit.setTile(chosenPath.tiles.get(0));
             if (unit.equals(UnitController.unit)) changeTileVisionStatus(unit.getTile(), TileStatus.CLEAR);
             chosenPath.tiles.remove(0);
+            if (unit.getTile().isRuined())
+                handleRuinTile();
         }
         if (chosenPath.tiles.size() > 0) {
             unit.setStatus("has path");
             unit.setPath(chosenPath);
-        } else {
+        }
+        else {
+            if (unit.getTile().isRuined())
+                handleRuinTile();
             unit.setStatus("active");
-            if (unit.getTile().isRuined()) {
-                unit.getTile().setRuined(false);
-                int rand = new Random().nextInt(5);
-                switch (rand) { //TODO... popups
-                    case 0:
-                        civilization.setTotalGold(unit.getCivilization().getTotalGold() + 20);
+        }
+    }
+
+    private static void handleRuinTile() {
+        unit.getTile().setRuined(false);
+        int rand = new Random().nextInt(5);
+        if ((civilization.getCities().size() == 0 && (rand == 1 || rand == 3)) || (unit.getType().isCivilian() && rand == 4))
+            rand = 0;
+        Label label = new Label();
+        label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 35; -fx-font-weight: bold; -fx-alignment: center;" +
+                "-fx-text-alignment: center; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-color: white;" +
+                "-fx-background-radius: 5");
+        switch (rand) { //TODO... popups
+            case 0:
+                civilization.setTotalGold(unit.getCivilization().getTotalGold() + 20);
+                label.setTextFill(Color.rgb(194,142,1,1));
+                label.setText("You Found 20 Golds in the Ruins!");
+                break;
+            case 1:
+                Technology discover = Technology.AGRICULTURE;
+                for (Technology tech : Technology.values())
+                    if (!civilization.hasReachedTech(tech) && civilization.hasPrerequisitesOf(tech)) {
+                        discover = tech;
+                        civilization.getLastCostUntilNewTechnologies().put(tech, 0);
                         break;
-                    case 1:
-                        for (Technology tech : Technology.values())
-                            if (!civilization.hasReachedTech(tech) && civilization.hasPrerequisitesOf(tech)) {
-                                civilization.getLastCostUntilNewTechnologies().put(tech, 0);
-                                break;
-                            }
-                        break;
-                    case 2:
-                        int counter = 10;
-                        for (int i = 0; i < Game.getInstance().getMapSize(); i++) {
-                            for (int j = 0; j < Game.getInstance().getMapSize(); j++)
-                                if (civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY)) {
-                                    civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
-                                    counter--;
-                                    if (counter == 0) break;
-                                }
+                    }
+                if (discover.equals(Technology.AGRICULTURE))
+                    return;
+                label.setTextFill(Color.rgb(5,5,150,1));
+                label.setText("You Discovered " + discover + " Technology in the Ruins!");
+                break;
+            case 2:
+                int counter = 10;
+                for (int i = 0; i < Game.getInstance().getMapSize(); i++) {
+                    for (int j = 0; j < Game.getInstance().getMapSize(); j++)
+                        if (civilization.getTileVisionStatuses()[i][j].equals(TileStatus.FOGGY)) {
+                            civilization.getTileVisionStatuses()[i][j] = TileStatus.DISCOVERED;
+                            counter--;
                             if (counter == 0) break;
                         }
-                        break;
-                    case 3:
-                        if (civilization.getCities().size() == 0) break;
-                        ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
-                        Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
-                        allCities.sort(cmp);
-                        City city = allCities.get(0);
-                        for (int i = 0; i < 2; i++) {
-                            Citizen citizen = new Citizen(city, null);
-                            city.getCitizens().add(citizen);
-                        }
-                        city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 2.25));
-                        city.setGainCitizenLastFood(city.getCitizenNecessityFood());
-                        civilization.getNotifications().add("The " + city.getName() + "'s population is increased (from ruins)     time: " + Game.getInstance().getTime());
-                        break;
-                    case 4:
-                        if (unit.getType().isCivilian()) break;
-                        Unit settler = new Unit(UnitType.SETTLER);
-                        settler.setCivilization(civilization);
-                        civilization.getUnits().add(settler);
-                        settler.setTile(unit.getTile());
-                        unit.getTile().setCivilian(settler);
-                        break;
+                    if (counter == 0) break;
                 }
-            }
+                label.setTextFill(Color.rgb(0,0,0,1));
+                label.setText("You Unlocked New Tiles' Visibility in the Ruins!");
+                break;
+            case 3:
+                ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
+                Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
+                allCities.sort(cmp);
+                City city = allCities.get(0);
+                for (int i = 0; i < 2; i++) {
+                    Citizen citizen = new Citizen(city, null);
+                    city.getCitizens().add(citizen);
+                }
+                city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 2.25));
+                city.setGainCitizenLastFood(city.getCitizenNecessityFood());
+                civilization.getNotifications().add("The " + city.getName() + "'s population is increased (from ruins)     time: " + Game.getInstance().getTime());
+                label.setTextFill(Color.rgb(0,100,0,1));
+                label.setText("You Found Survivors in the Ruins!");
+                break;
+            case 4:
+                if (unit.getType().isCivilian()) break;
+                Unit settler = new Unit(UnitType.SETTLER);
+                settler.setCivilization(civilization);
+                civilization.getUnits().add(settler);
+                settler.setTile(unit.getTile());
+                unit.getTile().setCivilian(settler);
+                label.setTextFill(civilization.getColor());
+                label.setText("You Found a Settler Unit in the Ruins!");
+                break;
         }
+        Button okButton = new Button("OK");
+        okButton.getStylesheets().add("css/MapStyle.css");
+        okButton.getStyleClass().add("ruinsPopupButton");
+        okButton.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox();
+        vBox.getChildren().add(label);
+        vBox.getChildren().add(okButton);
+        Popup popup = new Popup();
+        popup.getContent().add(vBox);
+        okButton.setOnMouseClicked(mouseEvent -> popup.hide());
+        popup.show(GameMenu.getGameMapController().getBackgroundPane().getScene().getWindow());
     }
 
     private static void changeTileVisionStatus(Tile tile, TileStatus newStatus) {
@@ -690,12 +738,18 @@ public class UnitController {
 
     public static void doRemainingMissions() {
         if (unit.getStatus().equals(UnitStatus.HAS_PATH)) {
-            System.out.println("brotha had path to complete!");
             continuePath();
             return;
         }
+        if (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) {
+            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            if (unit.getHealth() >= 20) {
+                unit.setHealth(20);
+                unit.setStatus("active");
+            }
+            return;
+        }
         if (unit.getStatus().equals(UnitStatus.SLEEP) || unit.getStatus().equals(UnitStatus.FORTIFY) ||
-                (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) ||
                 unit.getStatus().equals(UnitStatus.GARRISON) || unit.getStatus().equals(UnitStatus.SIEGEPREP))
             return;
         if (unit.getStatus().equals(UnitStatus.ALERT) && noEnemyNearby())

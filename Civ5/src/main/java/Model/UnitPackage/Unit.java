@@ -35,6 +35,11 @@ public class Unit extends ImageView {
     @Expose(serialize = true, deserialize = true)
     protected int maintenance;
 
+    private static final int healRate = 3;
+    public static int getHealRate() {
+        return healRate;
+    }
+
     public Unit(UnitType unitType) {
         this.type = unitType;
         this.status = UnitStatus.ACTIVE;

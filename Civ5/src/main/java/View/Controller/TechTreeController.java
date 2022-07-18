@@ -243,6 +243,7 @@ public class TechTreeController {
     }
 
     private void paintCurrentlyResearching() {
+        if (GameController.getCivilization().getInProgressTech() == null) return;
         if (GameController.getCivilization().getInProgressTech().equals(Technology.AGRICULTURE))
             agriculture.setFill(Paint.valueOf("005eab"));
         else if (GameController.getCivilization().getInProgressTech().equals(Technology.POTTERY))

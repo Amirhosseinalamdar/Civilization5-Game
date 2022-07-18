@@ -132,7 +132,7 @@ public class GameMenu {
                         UnitController.setUnit(mapController.getChosenUnit(),"attack to -c "+
                                 tile.getIndexInMapI()+" "+tile.getIndexInMapJ());
                         String message = UnitController.handleUnitOptions();
-                        if(message.equals("done")){
+                        if (message.equals("done")) {
                             //age ghablan ba in jang nabude declare war inja soorat migire
                             //TODO Ehsanino taghirate diplomacy chosenUnit ba unit ya shahre chosenTarget
                         }
