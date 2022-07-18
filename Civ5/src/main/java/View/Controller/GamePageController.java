@@ -2,10 +2,10 @@ package View.Controller;
 
 import View.GameMenu;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.Scanner;
@@ -34,6 +34,7 @@ public class GamePageController {
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         }
         catch (Exception e){

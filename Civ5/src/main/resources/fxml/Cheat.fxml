@@ -24,7 +24,7 @@
          <Font size="21.0" />
       </font></Button>
     <stylesheets>
-        <URL value="@../CSS/CheatStyle.css" />
+        <URL value="@../css/CheatStyle.css" />
     </stylesheets>
 
 </AnchorPane>

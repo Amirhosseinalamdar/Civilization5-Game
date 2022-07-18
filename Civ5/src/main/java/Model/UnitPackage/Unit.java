@@ -1,22 +1,15 @@
 package Model.UnitPackage;
 
 import Controller.GameController;
-import Controller.UnitController;
 import Model.Civilization;
-import Model.Game;
 import Model.Map.Path;
 import Model.Map.Tile;
 import View.Controller.MapController;
 import View.GameMenu;
 import com.google.gson.annotations.Expose;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
 
 public class Unit extends ImageView {
     @Expose(serialize = true, deserialize = true)
@@ -46,6 +39,11 @@ public class Unit extends ImageView {
     protected UnitStatus status;
     @Expose(serialize = true, deserialize = true)
     protected int maintenance;
+
+    private static final double healRate = 1.5;
+    public static double getHealRate() {
+        return healRate;
+    }
 
     public Unit(UnitType unitType) {
         this.type = unitType;
@@ -87,14 +85,16 @@ public class Unit extends ImageView {
                         mapController.hideUnitOptions();
                         mapController.showMap();
                     }
-//                    else if (civilization.equals(GameController.getCivilization())) {
-//                        mapController.setChosenUnit(this);
-//                        mapController.showMap();
-//                        mapController.showUserPanelDownLeft();
-//                        mapController.showUnitAvatar();
-//                        if (type.isCivilian()) mapController.showCivilianOptions();
-//                        else mapController.showMilitaryOptions();
-//                    }
+                    else if (civilization.equals(GameController.getCivilization())) {
+                        mapController.setChosenUnit(this);
+                        mapController.hideUnitAvatar();
+                        mapController.hideUnitOptions();
+                        mapController.showMap();
+                        mapController.showUserPanelDownLeft();
+                        mapController.showUnitAvatar();
+                        if (type.isCivilian()) mapController.showCivilianOptions();
+                        else mapController.showMilitaryOptions();
+                    }
                 }
             }
         });

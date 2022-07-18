@@ -38,9 +38,9 @@ public class DiplomacyPanelController {
     private static User player;
 
     public void initialize() {
-//        ArrayList<User> allPlayers = Game.getInstance().getPlayers();
-        ArrayList<User> allPlayers = UserController.getAllUsers();
-//        allPlayers.remove(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+        ArrayList<User> allPlayers = Game.getInstance().getPlayers();
+//        ArrayList<User> allPlayers = UserController.getAllUsers();
+        allPlayers.remove(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
         for (User user : allPlayers) {
             Label label = new Label();
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +

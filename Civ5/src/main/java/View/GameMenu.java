@@ -38,12 +38,13 @@ public class GameMenu {
         GameMenu.scanner = scanner;
     }
 
-    private static void loadGame(int saveCode) {
+    private static void loadGame (int saveCode) {
         try {
             String json = new String(Files.readAllBytes(Paths.get("Game" + saveCode + ".json")));
             Game.loadInstance(new Gson().fromJson(json, Game.class));
             Game.getInstance().createRelations();
-        } catch (Exception ignored) {
+        }
+        catch (Exception ignored){
             System.out.println("ignored");
         }
     }
@@ -120,10 +121,9 @@ public class GameMenu {
             }
         });
     }
-
-    public static void setUnitMovement(MapController mapController) {
-        for (int i = 0; i < Game.getInstance().getMapSize(); i++) {
-            for (int j = 0; j < Game.getInstance().getMapSize(); j++) {
+    public static void setUnitMovement(MapController mapController){
+        for(int i=0;i<Game.getInstance().getMapSize();i++){
+            for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
                     if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK) {
@@ -152,11 +152,13 @@ public class GameMenu {
                                 mapController.getChosenTarget().getCity().getCivilization().getRequests().add(request);
                             }
                         }
+                        if (message.endsWith("is zero"))
+                            mapController.getConquerorDecision(tile.getCity());
                         mapController.showPopup(event, message.toUpperCase() + "!");
                         mapController.getChosenUnit().realSetStatus(UnitStatus.ACTIVE);
                         mapController.setChosenUnit(null);
                         mapController.showMap();
-                    } else {
+                    }else {
                         if (event.getButton() == MouseButton.SECONDARY) {
                             mapController.setHoveredTile(tile);
                             showMap();

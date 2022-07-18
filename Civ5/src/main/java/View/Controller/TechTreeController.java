@@ -2,18 +2,27 @@ package View.Controller;
 
 import Controller.CivilizationController;
 import Controller.GameController;
+import Model.Civilization;
 import Model.Technology;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 public class TechTreeController {
     @FXML
     private ScrollPane scrollPane;
+    @FXML
+    private AnchorPane anchorPane;
     @FXML
     private Label invalidTech;
     @FXML
@@ -115,6 +124,48 @@ public class TechTreeController {
         paintAvailable();
         paintCurrentlyResearching();
         paintResearched();
+        chooseResearch();
+    }
+
+    private void chooseResearch() {
+        for (Node child : anchorPane.getChildren()) {
+            if (!(child instanceof ImageView)) continue;
+            ImageView imageView = (ImageView)child;
+            if (imageView.getFitWidth() != 80 || imageView.getFitHeight() != 80) continue;
+            imageView.setStyle("-fx-cursor: hand");
+            Technology technology = getTechFromImageView(imageView);
+            if (technology == null) continue;
+            imageView.setOnMouseClicked(mouseEvent -> {
+                Civilization civilization = GameController.getCivilization();
+                if (civilization.hasPrerequisitesOf(technology) && !civilization.hasReachedTech(technology)) {
+                    if (!civilization.getLastCostUntilNewTechnologies().containsKey(technology))
+                        civilization.getLastCostUntilNewTechnologies().put(technology, technology.getCost());
+                    civilization.setInProgressTech(technology);
+                    paintAvailable();
+                    paintCurrentlyResearching();
+                    paintResearched();
+                }
+            });
+        }
+    }
+
+    private Technology getTechFromImageView (ImageView imageView) {
+        for (Technology tech : Technology.values())
+            if (imagesAreSame(imageView.getImage(), tech.getImage()))
+                return tech;
+        return null;
+    }
+
+    private boolean imagesAreSame (Image i1, Image i2) {
+        for (int i = 0; i < i1.getWidth(); i++)
+            for (int j = 0; j < i1.getHeight(); j++)
+                if (!colorsAreTheSame(i1.getPixelReader().getColor(i, j), i2.getPixelReader().getColor(i, j)))
+                    return false;
+        return true;
+    }
+
+    private boolean colorsAreTheSame (Color c1, Color c2) {
+        return c1.getRed() == c2.getRed() && c1.getGreen() == c2.getGreen() && c1.getBlue() == c2.getBlue();
     }
 
     public void searchTech(MouseEvent mouseEvent) {
@@ -243,6 +294,7 @@ public class TechTreeController {
     }
 
     private void paintCurrentlyResearching() {
+        if (GameController.getCivilization().getInProgressTech() == null) return;
         if (GameController.getCivilization().getInProgressTech().equals(Technology.AGRICULTURE))
             agriculture.setFill(Paint.valueOf("005eab"));
         else if (GameController.getCivilization().getInProgressTech().equals(Technology.POTTERY))

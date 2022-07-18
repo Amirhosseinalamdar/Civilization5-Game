@@ -497,7 +497,6 @@ public class CityController {
 
     private static void updateProduction(City city) {
         if (city.getInProgressUnit() != null) {
-            System.out.println("debugging; " + city.getLastCostsUntilNewProductions().containsKey(city.getInProgressUnit()));
             int i = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit());
             i -= city.getProductionPerTurn();
             city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
