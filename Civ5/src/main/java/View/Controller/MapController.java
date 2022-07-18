@@ -738,9 +738,6 @@ public class MapController {
                 if (!chosenCity.getTiles().contains(neighbor) && !borderTiles.contains(neighbor)) borderTiles.add(neighbor);
 
         for (Tile tile : borderTiles) {
-            System.out.println(tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
-            System.out.println("milit = " + (tile.getMilitary() == null));
-            System.out.println("civil = " + (tile.getCivilian() == null));
             if ((tile.getMilitary() != null && !tile.getMilitary().getCivilization().equals(chosenCity.getCivilization())) ||
                     (tile.getCivilian() != null && !tile.getCivilian().getCivilization().equals(chosenCity.getCivilization()))) {
                 ImageView target = new ImageView(ImageBase.CITY_ATTACK_TARGET.getImage());
@@ -751,7 +748,7 @@ public class MapController {
 
                 target.setOnMouseEntered(mouseEvent -> target.setImage(ImageBase.CITY_ATTACK_LOCK.getImage()));
                 target.setOnMouseExited(mouseEvent -> target.setImage(ImageBase.CITY_ATTACK_TARGET.getImage()));
-                
+
                 target.setOnMouseClicked(mouseEvent -> {
                     CityController.setCity(chosenCity, "attack to -c " + tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                     String message = CityController.handleCityOptions();

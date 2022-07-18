@@ -127,8 +127,6 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
-                    System.out.print("Pos: ");
-                    System.out.println(tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                     if (mapController.getChosenUnit()!=null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK){
                         mapController.setChosenTarget(tile);
                         UnitController.setUnit(mapController.getChosenUnit(),"attack to -c "+
