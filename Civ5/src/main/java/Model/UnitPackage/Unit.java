@@ -57,38 +57,39 @@ public class Unit extends ImageView {
         });
         setOnMouseClicked(event -> {
             System.out.println("clicked duh");
-            try {
-                System.out.println("my type = " + type + ", chosen type = " + GameMenu.getGameMapController().getChosenUnit().getType());
-            } catch (Exception e) {
-                System.out.println("my type only = " + type);
-            }
             MapController mapController = GameMenu.getGameMapController();
-            if (mapController.getChosenUnit() == null) {
-                mapController.setChosenUnit(this);
-                if (!civilization.equals(GameController.getCivilization()))
-                    mapController.setChosenUnit(null);
-
-                if (mapController.getChosenUnit() != null) {
-                    mapController.showUserPanelDownLeft();
-                    mapController.showUnitAvatar();
-                    if (type.isCivilian()) mapController.showCivilianOptions();
-                    else mapController.showMilitaryOptions();
+            if(!(mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK)) {
+                try {
+                    System.out.println("my type = " + type + ", chosen type = " + GameMenu.getGameMapController().getChosenUnit().getType());
+                } catch (Exception e) {
+                    System.out.println("my type only = " + type);
                 }
-            }
-            else {
-                if (mapController.getChosenUnit().equals(this)) {
-                    mapController.setChosenUnit(null);
-                    mapController.hideUnitAvatar();
-                    mapController.hideUnitOptions();
-                    mapController.showMap();
-                }
-                else if (civilization.equals(GameController.getCivilization())) {
+                if (mapController.getChosenUnit() == null) {
                     mapController.setChosenUnit(this);
-                    mapController.showMap();
-                    mapController.showUserPanelDownLeft();
-                    mapController.showUnitAvatar();
-                    if (type.isCivilian()) mapController.showCivilianOptions();
-                    else mapController.showMilitaryOptions();
+                    if (!civilization.equals(GameController.getCivilization()))
+                        mapController.setChosenUnit(null);
+
+                    if (mapController.getChosenUnit() != null) {
+                        mapController.showUserPanelDownLeft();
+                        mapController.showUnitAvatar();
+                        if (type.isCivilian()) mapController.showCivilianOptions();
+                        else mapController.showMilitaryOptions();
+                    }
+                } else {
+                    if (mapController.getChosenUnit().equals(this)) {
+                        mapController.setChosenUnit(null);
+                        mapController.hideUnitAvatar();
+                        mapController.hideUnitOptions();
+                        mapController.showMap();
+                    }
+//                    else if (civilization.equals(GameController.getCivilization())) {
+//                        mapController.setChosenUnit(this);
+//                        mapController.showMap();
+//                        mapController.showUserPanelDownLeft();
+//                        mapController.showUnitAvatar();
+//                        if (type.isCivilian()) mapController.showCivilianOptions();
+//                        else mapController.showMilitaryOptions();
+//                    }
                 }
             }
         });
@@ -166,7 +167,9 @@ public class Unit extends ImageView {
         civilization.getUnits().remove(this);
         path = null;
     }
-
+    public void realSetStatus(UnitStatus unitStatus){
+        this.status = unitStatus;
+    }
     public void setStatus(String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
