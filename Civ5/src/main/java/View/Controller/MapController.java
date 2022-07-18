@@ -2,6 +2,7 @@ package View.Controller;
 
 import App.Main;
 import Controller.CityController;
+import Controller.CivilizationController;
 import Controller.GameController;
 import Controller.UnitController;
 import Model.*;
@@ -20,7 +21,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -36,14 +36,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
-import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class MapController {
@@ -181,8 +178,23 @@ public class MapController {
             });
             backgroundPane.getChildren().add(imageView);
             backgroundPane.getChildren().add(openCityPanelButton);
+            addCityHealthBar(tile.getCity(),imageView,tile);
         }
     }
+
+    private void addCityHealthBar(City city, ImageView imageView,Tile tile) {
+        Rectangle rectangle = new Rectangle(tile.getX() + 18,tile.getY() - 5 + 40
+                ,imageView.getFitWidth(),10);
+        rectangle.setFill(Color.BLACK);
+        rectangle.setOpacity(0.7);
+        backgroundPane.getChildren().add(rectangle);
+        rectangle = new Rectangle(tile.getX() + 18,tile.getY() - 5+40
+                ,imageView.getFitWidth()* city.getHP()/ 20,10);
+        rectangle.setFill(city.getCivilization().getColor());
+        rectangle.setOpacity(0.8);
+        backgroundPane.getChildren().add(rectangle);
+    }
+
     private Image getCityImage(City city){
         if(city.getBuildings().size() >= 30)
             return ImageBase.CITY_4.getImage();
@@ -1697,5 +1709,41 @@ public class MapController {
         popup.setAutoHide(true);
         //TODO... play error sound;
         popup.show(((Node)(mouseEvent.getSource())).getScene().getWindow());
+    }
+    public void getConquerorDecision(City city){
+        HBox hBox = new HBox();
+        Button[] buttons = new Button[4];
+
+        buttons[0] = new Button("do nothing");
+        buttons[1] = new Button("do nothing");
+        buttons[2] = new Button("puppet");
+        buttons[3] = new Button("raze");
+        for (Button button : buttons) {
+            //TODO downloade style va andaze button haye ehsanino82
+            button.setPrefWidth(40);
+            button.setPrefWidth(70);
+        }
+        setButtonFunction(buttons[0],"do nothing",city);
+        setButtonFunction(buttons[1],"attach",city);
+        setButtonFunction(buttons[2],"puppet",city);
+        setButtonFunction(buttons[3],"raze",city);
+        hBox.getChildren().addAll(buttons);
+        hBox.setTranslateX(800 - hBox.getWidth()/2);
+        hBox.setTranslateY(700);
+        backgroundPane.getChildren().add(hBox);
+    }
+    private void setButtonFunction(Button button, String string, City city) {
+        button.setOnMouseClicked(event -> {
+            if(string.equals("attach")) CivilizationController.attachCity(city);
+            else if(string.equals("puppet")) CivilizationController.puppetCity(city);
+            else if(string.equals("raze")) CivilizationController.razeCity(city);
+            showMap();
+        });
+        button.setOnMouseEntered(event -> {
+            button.setOpacity(0.3);
+        });
+        button.setOnMouseExited(event -> {
+            button.setOpacity(1);
+        });
     }
 }
