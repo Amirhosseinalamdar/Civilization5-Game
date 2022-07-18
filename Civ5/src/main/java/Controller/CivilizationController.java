@@ -9,7 +9,11 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
+import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -204,39 +208,23 @@ public class CivilizationController {
     }
 
     public static void enterCityAsConqueror(City city) {
-        while (true) {
-            String decision = GameMenu.nextCommand();
-            if (decision.equals("do nothing")) return;
-            else if (decision.equals("attach")) {
-                attachCity(city);
-                return;
-            }
-            else if (decision.equals("puppet")) {
-                puppetCity(city);
-                return;
-            }
-            else if (decision.equals("raze")) {
-                razeCity(city);
-                return;
-            }
-            else {
-                GameMenu.invalidDecisionForConqueredCity();
-            }
-        }
+        GameMenu.getGameMapController().getConquerorDecision(city);
     }
 
-    private static void puppetCity(City city) {
+
+
+    public static void puppetCity(City city) {
         city.setCityStatus(CityStatus.PUPPET);
         civilization.addCity(city);
     }
 
-    private static void attachCity(City city) {
+    public static void attachCity(City city) {
         city.setCivilization(civilization);
         civilization.getCities().add(city);
         GameMenu.attachCitySuccessful(city);
     }
 
-    private static void razeCity(City city) {
+    public static void razeCity(City city) {
         civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
         int firstPopulation = city.getCitizens().size();
         if (firstPopulation / 2 > 0)
