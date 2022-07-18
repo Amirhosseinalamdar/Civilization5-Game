@@ -1765,24 +1765,26 @@ public class MapController {
         buttons[2] = new Button("puppet");
         buttons[3] = new Button("raze");
         for (Button button : buttons) {
-            //TODO downloade style va andaze button haye ehsanino82
-            button.setPrefWidth(40);
-            button.setPrefWidth(70);
+            button.getStylesheets().add("css/MapStyle.css");
+            button.getStyleClass().add("conquerorButton");
         }
-        setButtonFunction(buttons[0],"do nothing",city);
-        setButtonFunction(buttons[1],"attach",city);
-        setButtonFunction(buttons[2],"puppet",city);
-        setButtonFunction(buttons[3],"raze",city);
+        Popup popup = new Popup();
+        setButtonFunction(popup, buttons[0],"do nothing",city);
+        setButtonFunction(popup, buttons[1],"attach",city);
+        setButtonFunction(popup, buttons[2],"puppet",city);
+        setButtonFunction(popup, buttons[3],"raze",city);
         hBox.getChildren().addAll(buttons);
         hBox.setTranslateX(800 - hBox.getWidth()/2);
         hBox.setTranslateY(700);
-        backgroundPane.getChildren().add(hBox);
+        popup.getContent().add(hBox);
+        popup.show(backgroundPane.getScene().getWindow());
     }
-    private void setButtonFunction(Button button, String string, City city) {
+    private void setButtonFunction(Popup popup, Button button, String string, City city) {
         button.setOnMouseClicked(event -> {
             if(string.equals("attach")) CivilizationController.attachCity(city);
             else if(string.equals("puppet")) CivilizationController.puppetCity(city);
             else if(string.equals("raze")) CivilizationController.razeCity(city);
+            popup.hide();
             showMap();
         });
         button.setOnMouseEntered(event -> {

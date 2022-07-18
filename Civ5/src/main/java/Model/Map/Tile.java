@@ -315,7 +315,8 @@ public class Tile extends ImageView {
     }
 
     public boolean isPurchasableFor (City buyer) {
-        return type != TerrainType.OCEAN && type != TerrainType.MOUNTAIN && city == null && (civilian == null ||
+        return type != TerrainType.OCEAN && type != TerrainType.MOUNTAIN && feature != TerrainFeature.ICE &&
+                city == null && (civilian == null ||
                 civilian.getCivilization().equals(buyer.getCivilization())) && (military == null ||
                 military.getCivilization().equals(buyer.getCivilization()));
     }

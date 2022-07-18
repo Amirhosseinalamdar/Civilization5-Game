@@ -504,7 +504,7 @@ public class UnitController {
     private static String moveUnit(int destIndexI, int destIndexJ) {
 
         if (tileIsImpassable(Game.getInstance().getTiles()[destIndexI][destIndexJ], unit))
-            return "can not walk on that tile";
+            return "can't walk on that tile";
 
         Path chosenPath = findBestPath(destIndexI, destIndexJ);
 
@@ -670,16 +670,11 @@ public class UnitController {
                 label.setText("You Found a Settler Unit in the Ruins!");
                 break;
         }
-        Button okButton = new Button("OK");
-        okButton.getStylesheets().add("css/MapStyle.css");
-        okButton.getStyleClass().add("ruinsPopupButton");
-        okButton.setAlignment(Pos.CENTER);
         VBox vBox = new VBox();
         vBox.getChildren().add(label);
-        vBox.getChildren().add(okButton);
         Popup popup = new Popup();
         popup.getContent().add(vBox);
-        okButton.setOnMouseClicked(mouseEvent -> popup.hide());
+        popup.setAutoHide(true);
         popup.show(GameMenu.getGameMapController().getBackgroundPane().getScene().getWindow());
     }
 
@@ -706,7 +701,8 @@ public class UnitController {
             if (tile.getCivilian() != null && unit.getType().isCivilian()) return true;
         }
         return tile.getType().equals(TerrainType.OCEAN) ||
-                tile.getType().equals(TerrainType.MOUNTAIN);
+                tile.getType().equals(TerrainType.MOUNTAIN) ||
+                tile.getFeature().equals(TerrainFeature.ICE);
     }
 
     private static void generateFirstPaths(ArrayList<Path> paths, Tile startingTile) {

@@ -72,3 +72,11 @@
     -fx-text-fill: white;
     -fx-border-color: white;
 }
+.conquerorButton{
+    -fx-font-family: "Tw Cen MT";
+    -fx-font-size: 25;
+
+}
+.conquerorButton:hover{
+    -fx-cursor: hand;
+}
