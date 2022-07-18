@@ -84,6 +84,8 @@ public class Unit extends ImageView {
                 }
                 else if (civilization.equals(GameController.getCivilization())) {
                     mapController.setChosenUnit(this);
+                    mapController.hideUnitAvatar();
+                    mapController.hideUnitOptions();
                     mapController.showMap();
                     mapController.showUserPanelDownLeft();
                     mapController.showUnitAvatar();
