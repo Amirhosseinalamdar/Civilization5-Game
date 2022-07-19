@@ -1,20 +1,26 @@
 package View.Controller;
 
 import App.Main;
+import Model.User;
 import View.GameMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GamePageController {
     public VBox background;
     public Label autoSaveDuration;
     public Label newGame;
+    public Label mapSizeLabel;
+
+    private int mapSize = 20;
 
     private int autoSave;
     private final String[] labels = {"Each Turn", "Each 5 Turns", "Each 10 Turns"};
@@ -22,8 +28,23 @@ public class GamePageController {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
         newGame.setOnMouseClicked(event -> {
-            GameMenu.startGame(PlayerListPageController.getPlayers(), new Scanner(System.in), -1);
+            ArrayList <User> players = PlayerListPageController.getPlayers();
+            if (players == null) {
+                Popup popup = new Popup();
+                Label label = new Label("Choose at least One Opponent to Start the Game!");
+                label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 27; -fx-font-weight: bold;" +
+                        "-fx-text-fill: red; -fx-background-color: black; -fx-background-radius: 2");
+                popup.getContent().add(label);
+                popup.setAutoHide(true);
+                popup.show(background.getScene().getWindow());
+            }
+            else {
+                GameMenu.setMapSize(mapSize);
+                GameMenu.startGame(players, new Scanner(System.in), -1);
+            }
         });
+        mapSizeLabel.setText(Integer.toString(mapSize));
+        mapSizeLabel.setOnMouseClicked(mouseEvent -> changeMapSize());
     }
     public void next() {
         autoSave++;
@@ -72,5 +93,10 @@ public class GamePageController {
             System.out.println("failed to load inv page");
             e.printStackTrace();
         }
+    }
+    public void changeMapSize() {
+        mapSize++;
+        if (mapSize > 25) mapSize = 20;
+        mapSizeLabel.setText(Integer.toString(mapSize));
     }
 }

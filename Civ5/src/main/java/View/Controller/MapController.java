@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -34,6 +35,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -44,11 +46,7 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -747,10 +745,28 @@ public class MapController {
         showTilesFoodProductionGold();
         showExclusiveCitizens();
         initButtonsForCityPanel();
-
         showPurchasableTiles();
         showAttackOptionsForCity();
         backgroundPane.getChildren().add(cityPanel);
+    }
+
+    private HBox createOutputHBox (Label label) {
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(33); imageView.setFitHeight(33);
+        HBox hBox = new HBox(4);
+        if (label.getText().startsWith("Food"))
+            imageView.setImage(ImageBase.FOOD_ICON.getImage());
+        if (label.getText().startsWith("Production"))
+            imageView.setImage(ImageBase.PRODUCTION_ICON.getImage());
+        if (label.getText().startsWith("Gold"))
+            imageView.setImage(ImageBase.GOLD_ICON.getImage());
+        if (label.getText().startsWith("Science"))
+            imageView.setImage(ImageBase.SCIENCE_ICON.getImage());
+        if (label.getText().startsWith("Unemployed"))
+            imageView.setImage(ImageBase.UNEMPLOYED_CITIZEN.getImage());
+        hBox.getChildren().add(label);
+        hBox.getChildren().add(imageView);
+        return hBox;
     }
 
     private void showPurchasableTiles() {
@@ -961,14 +977,53 @@ public class MapController {
     }
 
     private void showProductionMenuForCity() {
-        VBox vBox = new VBox(-10);
-        vBox.setLayoutY(280); vBox.setPrefWidth(410); vBox.setPrefHeight(900);
-        vBox.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-background-radius: 10;");
+        ScrollPane scrollPane = new ScrollPane();
+        VBox vBox = new VBox(5);
+        vBox.setPrefWidth(410); vBox.setPrefHeight(900); vBox.setLayoutY(60);
+        vBox.setStyle("-fx-background-color: rgba(0,0,0,0.6);" +
+                "-fx-fill: transparent; -fx-background-radius: 15");
+        vBox.getChildren().add(new Line());
 
-        ArrayList <UnitType> units = new ArrayList<>();
+        Label[] labels = new Label[8];
+        labels[0] = new Label("Food: " + (chosenCity.getFoodPerTurn() >= 0 ? "+" : "-") + chosenCity.getFoodPerTurn());
+        labels[1] = new Label("Production: " + (chosenCity.getProductionPerTurn() >= 0 ? "+" : "-") + chosenCity.getProductionPerTurn());
+        labels[2] = new Label("Gold: " + (chosenCity.getGoldPerTurn() >= 0 ? "+" : "-") + chosenCity.getGoldPerTurn());
+        labels[3] = new Label("Science: " + (chosenCity.getSciencePerTurn() >= 0 ? "+" : "-") + chosenCity.getSciencePerTurn());
+
+        if (chosenCity.getStoredFood() > 0)
+            labels[4] = new Label("Turns until growth citizen: " + chosenCity.getTurnsUntilBirthCitizen());
+        else if (chosenCity.getStoredFood() < 0)
+            labels[4] = new Label("Turns until lose citizen: " + chosenCity.getTurnsUntilDeathCitizen());
+        else
+            labels[4] = new Label("Turns until growth citizen: N/A");
+
+        if (chosenCity.getTurnsUntilGrowthBorder() == 0)
+            labels[5] = new Label("Turns until growth border: N/A");
+        else
+            labels[5] = new Label("Turns until growth border: " + chosenCity.getTurnsUntilGrowthBorder());
+
+        labels[6] = new Label("Total Number of Citizens: " + chosenCity.getCitizens().size());
+
+        int numOfUnemployed = 0;
+        for (Citizen citizen : chosenCity.getCitizens())
+            if (citizen.getTile() == null)
+                numOfUnemployed++;
+
+        labels[7] = new Label("Unemployed Citizens: " + numOfUnemployed);
+
+        for (Label label : labels) {
+            label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 29; -fx-text-fill: white;");
+            vBox.getChildren().add(createOutputHBox(label));
+        }
+
+        Rectangle space = new Rectangle(); space.setFill(Color.TRANSPARENT); space.setWidth(410); space.setHeight(35);
+        vBox.getChildren().add(space);
+
+        ArrayList<UnitType> units = new ArrayList<>();
         ArrayList <Building> buildings = new ArrayList<>();
         for (UnitType unitType : UnitType.values()) if (CityController.canCreateUnit(unitType)) units.add(unitType);
         for (Building building : Building.values()) if (CityController.canConstructBuilding(building)) buildings.add(building);
+
 
         Label unitsLabel = new Label("Units");
         unitsLabel.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: white; -fx-alignment: center");
@@ -985,6 +1040,11 @@ public class MapController {
                 i++;
                 unitType = units.get(i);
                 setUnitImageViewClickInCityPanel(unitType, hBox);
+                if (i < units.size() - 1) {
+                    i++;
+                    unitType = units.get(i);
+                    setUnitImageViewClickInCityPanel(unitType, hBox);
+                }
             }
             hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
             vBox.getChildren().add(hBox);
@@ -1007,11 +1067,19 @@ public class MapController {
                 i++;
                 building = buildings.get(i);
                 setBuildingImageViewClickInCityPanel(building, hBox);
+                if (i < buildings.size() - 1) {
+                    i++;
+                    building = buildings.get(i);
+                    setBuildingImageViewClickInCityPanel(building, hBox);
+                }
             }
             hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
             vBox.getChildren().add(hBox);
         }
-        backgroundPane.getChildren().add(vBox);
+        scrollPane.setLayoutX(-2); scrollPane.setLayoutY(60);
+        scrollPane.setContent(vBox);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+        backgroundPane.getChildren().add(scrollPane);
 
         Button close = new Button("close");
         close.getStylesheets().add("css/MapStyle.css");
@@ -1800,18 +1868,6 @@ public class MapController {
         }
     }
 
-//    private boolean canShowWorkerDecision(Improvement improvement){
-//        if(improvement.getPrerequisiteTypes() == null && improvement.getPrerequisiteFeatures() == null)
-//            return false;
-//        else if(improvement.getPrerequisiteTypes() == null)
-//            return improvement.getPrerequisiteFeatures().contains(chosenUnit.getTile().getFeature());
-//        else if(improvement.getPrerequisiteFeatures() == null)
-//            return improvement.getPrerequisiteTypes().contains(chosenUnit.getTile().getType());
-//        else
-//            return improvement.getPrerequisiteTypes().contains(chosenUnit.getTile().getType()) ||
-//                improvement.getPrerequisiteFeatures().contains(chosenUnit.getTile().getFeature());
-//    }
-
     private void settlerExclusiveOptions(HBox hBox) {
         ImageView imageView = new ImageView(ImageBase.FOUND_CITY_ICON.getImage());
         setImageViewOpacity(imageView);
@@ -1884,7 +1940,6 @@ public class MapController {
         setImageViewOpacity(imageView);
         imageViews.add(imageView);
     }
-
 
     public void showCivilianOptions(){
         unitOptionsNodes = new ArrayList<>();
@@ -2091,6 +2146,7 @@ public class MapController {
         popup.getContent().add(hBox);
         popup.show(backgroundPane.getScene().getWindow());
     }
+
     private void setButtonFunction(Popup popup, Button button, String string, City city) {
         button.setOnMouseClicked(event -> {
             if(string.equals("attach")) CivilizationController.attachCity(city);

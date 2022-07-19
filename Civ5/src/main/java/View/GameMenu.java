@@ -29,6 +29,11 @@ import java.util.Scanner;
 public class GameMenu {
     private static Scanner scanner;
     private static MapController gameMapController;
+    private static int mapSize;
+
+    public static void setMapSize (int mapSize) {
+        GameMenu.mapSize = mapSize;
+    }
 
     public static MapController getGameMapController() {
         return gameMapController;
@@ -51,7 +56,7 @@ public class GameMenu {
 
     public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode) {
         if (saveCode < 0)
-            Game.getInstance().generateGame(players);
+            Game.getInstance().generateGame(players, mapSize);
         else
             loadGame(saveCode);
         GameMenu.scanner = scanner;

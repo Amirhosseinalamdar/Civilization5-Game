@@ -27,7 +27,7 @@ public class Game {
     @Expose(serialize = true, deserialize = true)
     private int time;
     @Expose(serialize = true, deserialize = true)
-    private Tile[][] tiles = new Tile[mapSize][mapSize];
+    private Tile[][] tiles;
 
 
 
@@ -76,8 +76,9 @@ public class Game {
         return UserController.getLoggedInUser();
     }
 
-    public void generateGame(ArrayList<User> users) {
-
+    public void generateGame(ArrayList<User> users, int mapSize) {
+        this.mapSize = mapSize;
+        tiles = new Tile[mapSize][mapSize];
         players = users;
         turn = 0;
         time = 1;
@@ -89,7 +90,8 @@ public class Game {
             do {
                 randomX = random.nextInt(this.mapSize);
                 randomY = random.nextInt(this.mapSize);
-            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null));
+            } while (UnitController.tileIsImpassable(tiles[randomX][randomY], null) || tiles[randomX][randomY].isRuined() ||
+                    tiles[randomX][randomY].getCivilian() != null);
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
             System.out.println("i am " + player.getUsername() + ", my first unit is on " +

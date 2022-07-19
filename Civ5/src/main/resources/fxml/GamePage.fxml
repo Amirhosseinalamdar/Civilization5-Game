@@ -19,19 +19,25 @@
         <Image url="@../Pictures/GamePage/frame.png"/>
     </ImageView>
 
-    <VBox layoutX="667" layoutY="210" spacing="70" styleClass="vboxBlur" prefHeight="487" maxWidth="268" fx:id="background">
+    <VBox layoutX="667" layoutY="210" spacing="25" styleClass="vboxBlur" prefHeight="487" maxWidth="268" fx:id="background">
         <VBox spacing="10">
-            <Rectangle width="268" height="30" styleClass="vboxBlur"/>
+            <Rectangle width="268" height="10" styleClass="vboxBlur"/>
             <Label fx:id="newGame" prefWidth="268" text="Start New Game" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Start your civilization from scratch!"/></tooltip>
             </Label>
             <Label prefWidth="268" text="Send Invitation" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#sendInvitation">
-                <tooltip><Tooltip text="Request a match with the player you want!"/></tooltip>
+                <tooltip><Tooltip text="Request a match with players you want!"/></tooltip>
             </Label>
             <Label prefWidth="268" text="Choose Players" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#choosePlayers">
                 <tooltip><Tooltip text="Choose your opponents manually!"/></tooltip>
             </Label>
         </VBox>
+
+        <HBox spacing="20" prefWidth="268">
+            <Line/>
+            <Label text="Map Size: " styleClass="startGameText"/>
+            <Label fx:id="mapSizeLabel" styleClass="startGameButton"/>
+        </HBox>
 
         <VBox spacing="5">
             <Label prefWidth="268" text="Load Game" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#loadGame">
