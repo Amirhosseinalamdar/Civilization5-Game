@@ -200,7 +200,7 @@ public class MapController {
         rectangle.setOpacity(0.7);
         backgroundPane.getChildren().add(rectangle);
         rectangle = new Rectangle(tile.getX() + 18,tile.getY() - 5+40
-                ,imageView.getFitWidth()* city.getHP()/ 20,10);
+                ,imageView.getFitWidth()* city.getHP()/ 45,10);
         rectangle.setFill(city.getCivilization().getColor());
         rectangle.setOpacity(0.8);
         backgroundPane.getChildren().add(rectangle);
@@ -1310,6 +1310,16 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
+        if(tile.getRouteInProgress() != null){
+            ImageView imageView;
+            if(tile.getRouteInProgress().equals("road")) imageView = new ImageView(ImageBase.ROAD_ICON.getImage());
+            else imageView = new ImageView(ImageBase.RAIL_ROAD_ICON.getImage());
+            imageView.setFitHeight(60);
+            imageView.setFitWidth(60);
+            imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
+            imageView.setY(105 * (i - xStartingIndex) + 10);
+            backgroundPane.getChildren().add(imageView);
+        }
         if (tile.getImprovementInProgress() != null) {
             ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
@@ -1318,7 +1328,8 @@ public class MapController {
             improvementImage.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(improvementImage);
         }
-        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0) {
+        if ((tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0)
+                ||(tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() != 0)) {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);

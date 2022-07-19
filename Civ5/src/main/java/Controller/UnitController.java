@@ -787,6 +787,7 @@ public class UnitController {
                     popup.hide();
                     new City(civilization, unit.getTile(), nameField.getText());
                     unit.kill();
+                    civilization.getNotifications().add(nameField.getText()+" was founded!");
                     GameMenu.getGameMapController().setChosenUnit(null);
                     GameMenu.getGameMapController().showMap();
                 }
