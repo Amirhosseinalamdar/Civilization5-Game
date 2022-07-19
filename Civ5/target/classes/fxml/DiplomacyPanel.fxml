@@ -66,7 +66,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Label fx:id="message" alignment="CENTER" layoutX="271.0" layoutY="410.0" prefHeight="32.0" prefWidth="346.0" text="You are already in war with this civilization" textFill="WHITE" visible="false">
+      <Label fx:id="message" alignment="CENTER" layoutX="230.0" layoutY="410.0" prefHeight="32.0" prefWidth="434.0" text="You are already sent peace message to this civilization" textFill="WHITE" visible="false">
          <font>
             <Font size="18.0" />
          </font>

@@ -245,10 +245,6 @@ public class GameMenu {
         else System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
     }
 
-    public static void cityShopMenu(City city) {
-
-    }
-
     public static UnitType cityProductionMenu(City city) {
         return null;
     }

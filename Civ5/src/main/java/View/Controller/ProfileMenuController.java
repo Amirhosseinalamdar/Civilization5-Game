@@ -73,6 +73,7 @@ public class ProfileMenuController {
         if (UserController.changeNickname(newNickname.getText()).startsWith("user")) {
             invalidNickname.setText("user with nickname " + newNickname.getText() + " already exists");
             invalidNickname.setVisible(true);
+            invalidNickname.setStyle("-fx-border-color: red");
             newNickname.setStyle("-fx-border-color: red");
         } else {
             invalidNickname.setText("nickname changed successfully!");

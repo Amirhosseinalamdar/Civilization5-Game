@@ -146,7 +146,7 @@ public class DemandPanelController {
                 if (list1.getChildren().get(i).getStyle().contains("508e96")) {
                     if (Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()) <= 0) throw new Exception();
                     else {
-                        request.getParams().put(((Label) list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()));
+                        request.getParams().put("Get: " + ((Label) list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()));
                         isGive = true;
                     }
                 }
