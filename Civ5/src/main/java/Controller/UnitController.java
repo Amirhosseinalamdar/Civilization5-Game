@@ -772,6 +772,12 @@ public class UnitController {
         nameField.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 30;" +
                 "-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 10;" +
                 "-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10;");
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 5) {
+                String copy = nameField.getText().substring(0, 5);
+                nameField.setText(copy);
+            }
+        });
         nameField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 //TODO
@@ -828,13 +834,18 @@ public class UnitController {
 
     private static String rangedAttackToUnit(Tile targetTile) {
         if (targetTile.getMilitary() == null) {
+            Civilization civilization = targetTile.getCivilian().getCivilization();
             targetTile.getCivilian().kill();
+            checkIfDefeated(civilization);
             return "done";
         }
+        Civilization civilization = targetTile.getMilitary().getCivilization();
         Military me = (Military)unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
-        if (targetTile.getMilitary().getHealth() <= 0)
+        if (targetTile.getMilitary().getHealth() <= 0){
             targetTile.getMilitary().kill();
+            checkIfDefeated(civilization);
+        }
         unit.setMovesInTurn(unit.getMP());
         unit.setStatus("active");
         return "done";
@@ -888,12 +899,16 @@ public class UnitController {
 
     private static String meleeAttackToUnit (Tile targetTile) {
         if (targetTile.getMilitary() == null) {
+        Civilization civilization = targetTile.getCivilian().getCivilization();
             targetTile.getCivilian().setCivilization(unit.getCivilization());
             unit.getCivilization().addUnit(targetTile.getCivilian());
+            checkIfDefeated(civilization);
             return "done";
         }
+        Civilization civilization = targetTile.getMilitary().getCivilization();
         Military enemy = targetTile.getMilitary();
         Military me = (Military)unit;
+
         me.setHealth(me.getHealth() - enemy.getCombatStrength() / 4);
         enemy.setHealth(enemy.getHealth() - me.getCombatStrength() / 4);
         unit.setMovesInTurn(unit.getMP());
@@ -904,9 +919,24 @@ public class UnitController {
             me.setMovesInTurn(0);
             moveUnit(i, j);
             me.setMovesInTurn(me.getMP());
+            checkIfDefeated(civilization);
         }
+
         if (me.getHealth() <= 0)
             me.kill();
         return "done";
+    }
+
+    private static void checkIfDefeated(Civilization civilization) {
+        if(civilization.getCities().size() ==0 && civilization.getUnits().size() == 0){
+            Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
+        }
+        for (User player : Game.getInstance().getPlayers()) {
+            //TODO az ehsan pull konam civ hazf shode ro az list enemy civ ha pak konam
+        }
+        if(Game.getInstance().getPlayers().size() == 1){
+            GameMenu.getGameMapController().setEnded(true);
+            GameMenu.getGameMapController().showScores();
+        }
     }
 }

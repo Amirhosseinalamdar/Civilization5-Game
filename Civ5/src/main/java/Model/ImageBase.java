@@ -235,11 +235,12 @@ public enum ImageBase {
     STOCK_EXCHANGE(new Image("Pictures/buildingIcons/industrial/stock_exchange.png")),
 
     OPEN_TECH_TREE(new Image("Pictures/openTechTreeButton.png")),
-    OPEN_DIPLOMACY_PANEL(new Image("Pictures/openDiplomacyPanelButton.jpg")),
+    OPEN_DIPLOMACY_PANEL(new Image("Pictures/DiplomacyButton.png")),
     EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.png")),
     UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.png")),
     CITY_ATTACK_TARGET(new Image("Pictures/cityIcons/target.png")),
-    CITY_ATTACK_LOCK(new Image("Pictures/cityIcons/lock.png"));
+    CITY_ATTACK_LOCK(new Image("Pictures/cityIcons/lock.png")),
+    CITY_PRODUCTION_MENU(new Image("Pictures/cityIcons/productionMenu.png"));
 
     private final Image image;
 

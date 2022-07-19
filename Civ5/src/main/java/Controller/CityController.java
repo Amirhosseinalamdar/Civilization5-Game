@@ -50,7 +50,6 @@ public class CityController {
         }
         else if (matcher.pattern().toString().equals(Commands.LOCK_CITIZEN.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-            System.out.println("city has " + city.getCitizens().size() + " citizens");
             for (Citizen citizen : city.getCitizens())
                 if (citizen.getTile() == null) {
                     lockCitizenOnTile(citizen, Game.getInstance().getTiles()[x][y]);
