@@ -402,13 +402,30 @@ public class UnitController {
     }
 
     public static String canBuildImprovementHere(Improvement improvement) {
-        if (!civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
-            return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
+        if (unit.getTile().getCity() == null || !unit.getTile().getCity().getCivilization().equals(unit.getCivilization()))
+            if (!civilization.hasReachedTech(improvement.getPrerequisiteTech()))
+                return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
+
+        if (improvement == Improvement.FARM) {
+            if (unit.getTile().getFeature() != TerrainFeature.ICE ||
+                    unit.getTile().getFeature() != TerrainFeature.FOREST ||
+                    unit.getTile().getFeature() != TerrainFeature.JUNGLE ||
+                    unit.getTile().getFeature() != TerrainFeature.MARSH)
+                return "";
+            return "can't build chosen improvement here";
         }
-        if (!tileIsValidForImprovement(unit.getTile(), improvement)) {
-            return "can't build chosen improvement on this tile";
+
+        if (improvement == Improvement.MINE)
+            if (unit.getTile().getType() == TerrainType.HILL)
+                return "";
+
+        if (unit.getTile().getResource() != null && unit.getTile().getResource().getPrerequisiteImprovement() == improvement) {
+            if (!tileIsValidForImprovement(unit.getTile(), improvement))
+                return "can't build chosen improvement on this tile";
+            return "";
         }
-        return "";
+
+        else return "can't build chosen improvement on this tile";
     }
 
     public static boolean canBuildRoadHere() {

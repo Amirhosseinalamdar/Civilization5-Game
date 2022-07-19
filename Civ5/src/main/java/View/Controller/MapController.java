@@ -190,7 +190,7 @@ public class MapController {
                 backgroundPane.getChildren().add(openCityPanelButton);
             }
             backgroundPane.getChildren().add(imageView);
-            addCityHealthBar(tile.getCity(),imageView,tile);
+            addCityHealthBar(tile.getCity(), imageView, tile);
         }
     }
 
@@ -201,7 +201,7 @@ public class MapController {
         rectangle.setOpacity(0.7);
         backgroundPane.getChildren().add(rectangle);
         rectangle = new Rectangle(tile.getX() + 18, tile.getY() - 5 + 40
-                , imageView.getFitWidth() * city.getHP() / 20, 10);
+                , imageView.getFitWidth() * city.getHP() / getCityMaxHealth(city), 10);
         rectangle.setFill(city.getCivilization().getColor());
         rectangle.setOpacity(0.8);
         backgroundPane.getChildren().add(rectangle);
@@ -276,8 +276,9 @@ public class MapController {
         openDiplomacyPanel.setY(170);
         Tooltip.install(openDiplomacyPanel, new Tooltip("Diplomacy Panel"));
 
-        Rectangle clip = new Rectangle(1480, 170, 80,80);
-        clip.setArcWidth(25); clip.setArcHeight(25);
+        Rectangle clip = new Rectangle(1480, 170, 80, 80);
+        clip.setArcWidth(25);
+        clip.setArcHeight(25);
         openDiplomacyPanel.setClip(clip);
 
         setUpperRightButton(openDiplomacyPanel, clip);
@@ -388,7 +389,7 @@ public class MapController {
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
         setImageViewOpacity(imageView);
-        Tooltip.install(imageView,new Tooltip(string.substring(0,string.length()-5)));
+        Tooltip.install(imageView, new Tooltip(string.substring(0, string.length() - 5)));
         vBox.getChildren().add(imageView);
     }
 
@@ -716,14 +717,14 @@ public class MapController {
 
     private void openCityPanel(City city) {
         Color color = new Color(GameController.getCivilization().getColor().getRed(),
-                                GameController.getCivilization().getColor().getGreen(),
-                                GameController.getCivilization().getColor().getBlue(), 0.3);
+                GameController.getCivilization().getColor().getGreen(),
+                GameController.getCivilization().getColor().getBlue(), 0.3);
         Button cityPanel = null;
         for (Node child : backgroundPane.getChildren()) {
             if (!(child instanceof Button)) continue;
-            Button button = (Button)child;
+            Button button = (Button) child;
             if (button.getLayoutX() == city.getTiles().get(0).getX() + 18 &&
-                button.getLayoutY() == city.getTiles().get(0).getY() - 5) {
+                    button.getLayoutY() == city.getTiles().get(0).getY() - 5) {
                 cityPanel = button;
                 break;
             }
@@ -753,9 +754,10 @@ public class MapController {
         backgroundPane.getChildren().add(cityPanel);
     }
 
-    private HBox createOutputHBox (Label label) {
+    private HBox createOutputHBox(Label label) {
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(33); imageView.setFitHeight(33);
+        imageView.setFitWidth(33);
+        imageView.setFitHeight(33);
         HBox hBox = new HBox(4);
         if (label.getText().startsWith("Food"))
             imageView.setImage(ImageBase.FOOD_ICON.getImage());
@@ -916,8 +918,7 @@ public class MapController {
                     else
                         renderCitizenIcons();
                 });
-            }
-            else {
+            } else {
                 imageView.setImage(ImageBase.EMPLOYED_CITIZEN.getImage());
                 if (!tile.isCenterOfCity(tile.getCity())) {
                     imageView.setCursor(Cursor.HAND);
@@ -929,7 +930,8 @@ public class MapController {
                     });
                 }
             }
-            imageView.setFitWidth(30); imageView.setFitHeight(30);
+            imageView.setFitWidth(30);
+            imageView.setFitHeight(30);
             int i = tile.getIndexInMapI(), j = tile.getIndexInMapJ();
             imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 50);
             imageView.setY(105 * (i - xStartingIndex) + 50);
@@ -951,7 +953,7 @@ public class MapController {
         showExclusiveCitizens();
     }
 
-    private void setMouseMovementForCityPanelIcons (ImageView imageView, int d) {
+    private void setMouseMovementForCityPanelIcons(ImageView imageView, int d) {
         imageView.setOnMouseEntered(mouseEvent -> {
             imageView.setX(imageView.getX() - d);
             imageView.setY(imageView.getY() - d);
@@ -982,7 +984,9 @@ public class MapController {
     private void showProductionMenuForCity() {
         ScrollPane scrollPane = new ScrollPane();
         VBox vBox = new VBox(5);
-        vBox.setPrefWidth(410); vBox.setPrefHeight(900); vBox.setLayoutY(60);
+        vBox.setPrefWidth(410);
+        vBox.setPrefHeight(900);
+        vBox.setLayoutY(60);
         vBox.setStyle("-fx-background-color: rgba(0,0,0,0.6);" +
                 "-fx-fill: transparent; -fx-background-radius: 15");
         vBox.getChildren().add(new Line());
@@ -1019,13 +1023,17 @@ public class MapController {
             vBox.getChildren().add(createOutputHBox(label));
         }
 
-        Rectangle space = new Rectangle(); space.setFill(Color.TRANSPARENT); space.setWidth(410); space.setHeight(35);
+        Rectangle space = new Rectangle();
+        space.setFill(Color.TRANSPARENT);
+        space.setWidth(410);
+        space.setHeight(35);
         vBox.getChildren().add(space);
 
         ArrayList<UnitType> units = new ArrayList<>();
-        ArrayList <Building> buildings = new ArrayList<>();
+        ArrayList<Building> buildings = new ArrayList<>();
         for (UnitType unitType : UnitType.values()) if (CityController.canCreateUnit(unitType)) units.add(unitType);
-        for (Building building : Building.values()) if (CityController.canConstructBuilding(building)) buildings.add(building);
+        for (Building building : Building.values())
+            if (CityController.canConstructBuilding(building)) buildings.add(building);
 
 
         Label unitsLabel = new Label("Units");
@@ -1036,7 +1044,8 @@ public class MapController {
         for (int i = 0; i < units.size(); i++) {
             UnitType unitType = units.get(i);
             HBox hBox = new HBox(15);
-            Rectangle rectangle = new Rectangle(5,160); rectangle.setFill(Color.TRANSPARENT);
+            Rectangle rectangle = new Rectangle(5, 160);
+            rectangle.setFill(Color.TRANSPARENT);
             hBox.getChildren().add(rectangle);
             setUnitImageViewClickInCityPanel(unitType, hBox);
             if (i < units.size() - 1) {
@@ -1063,7 +1072,8 @@ public class MapController {
         for (int i = 0; i < buildings.size(); i++) {
             Building building = buildings.get(i);
             HBox hBox = new HBox(15);
-            Rectangle rectangle = new Rectangle(5,160); rectangle.setFill(Color.TRANSPARENT);
+            Rectangle rectangle = new Rectangle(5, 160);
+            rectangle.setFill(Color.TRANSPARENT);
             hBox.getChildren().add(rectangle);
             setBuildingImageViewClickInCityPanel(building, hBox);
             if (i < buildings.size() - 1) {
@@ -1079,7 +1089,8 @@ public class MapController {
             hBox.setStyle("-fx-background-color: transparent; -fx-fill: transparent;");
             vBox.getChildren().add(hBox);
         }
-        scrollPane.setLayoutX(-2); scrollPane.setLayoutY(60);
+        scrollPane.setLayoutX(-2);
+        scrollPane.setLayoutY(60);
         scrollPane.setContent(vBox);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         backgroundPane.getChildren().add(scrollPane);
@@ -1103,7 +1114,7 @@ public class MapController {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(-0.85);
         ImageView imageView = new ImageView(ImageBase.HEXAGON_ICON.getImage());
-        Tooltip.install(imageView,new Tooltip("tiles content"));
+        Tooltip.install(imageView, new Tooltip("tiles content"));
         imageView.setEffect(colorAdjust);
         imageView.setX(1390);
         imageView.setY(825);
@@ -1366,8 +1377,18 @@ public class MapController {
         }
     }
 
+    private int getCityMaxHealth(City city) {
+        if (city.getBuildings().containsKey(Building.MILITARY_BASE) && city.getBuildings().get(Building.MILITARY_BASE) <= 0) return 45;
+        else if (city.getBuildings().containsKey(Building.CASTLE) && city.getBuildings().get(Building.CASTLE) <= 0) return 33;
+        else if (city.getBuildings().containsKey(Building.WALLS) && city.getBuildings().get(Building.WALLS) <= 0) return 25;
+        return 20;
+    }
+
     private void addProgressUnitBar(double v, double v1, Unit unit) {
         Rectangle rectangle = new Rectangle(v, v1, 3 * Unit.getMaxHealth(), 7);
+        if (unit.getHealth() > Unit.MAX_HEALTH) {
+            rectangle = new Rectangle(v, v1, 3 * unit.getHealth(), 7);
+        }
         rectangle.setFill(Color.BLACK);
         rectangle.setOpacity(0.7);
         backgroundPane.getChildren().add(rectangle);
@@ -1680,27 +1701,30 @@ public class MapController {
                     GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                     if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
                         request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
-                    else request.getSender().getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    else
+                        request.getSender().getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 } else if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
                     GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                     if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
                         request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
-                    else request.getSender().getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    else
+                        request.getSender().getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 }
             } else {
                 if (args[1].equals("Gold")) {
                     GameController.getCivilization().setTotalGold(GameController.getCivilization().getTotalGold() + (Integer) set.getValue());
                     request.getSender().getCivilization().setTotalGold(request.getSender().getCivilization().getTotalGold() - (Integer) set.getValue());
-                }
-                else if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
+                } else if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
                     if (GameController.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
                         GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
-                    else GameController.getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    else
+                        GameController.getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                     request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                 } else if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
                     if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
                         GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
-                    else GameController.getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    else
+                        GameController.getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                     request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                 }
             }
@@ -1848,7 +1872,7 @@ public class MapController {
                         showPopup(event, message.toUpperCase() + "!");
                 }
             });
-            Tooltip.install(imageView,new Tooltip(string));
+            Tooltip.install(imageView, new Tooltip(string));
             imageViews.add(imageView);
         }
     }
@@ -1904,7 +1928,7 @@ public class MapController {
             } else
                 showPopup(event, message.toUpperCase() + "!");
         });
-        Tooltip.install(imageView ,new Tooltip("found city"));
+        Tooltip.install(imageView, new Tooltip("found city"));
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
         hBox.getChildren().add(imageView);
@@ -1958,7 +1982,7 @@ public class MapController {
                 }
             }
         });
-        Tooltip.install(imageView,new Tooltip(string));
+        Tooltip.install(imageView, new Tooltip(string));
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
         setImageViewOpacity(imageView);
