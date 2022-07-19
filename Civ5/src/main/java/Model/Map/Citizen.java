@@ -1,11 +1,7 @@
 package Model.Map;
 
-import com.google.gson.annotations.Expose;
-
 public class Citizen {
-    @Expose(serialize = false, deserialize = false)
     private Tile tile;
-    @Expose(serialize = false, deserialize = false)
     private final City city;
 
     public Citizen (City city, Tile tile) {

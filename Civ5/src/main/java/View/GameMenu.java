@@ -11,8 +11,10 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import View.Controller.DiplomacyPanelController;
+import View.Controller.GamePageController;
 import View.Controller.MapController;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,9 +32,16 @@ public class GameMenu {
     private static Scanner scanner;
     private static MapController gameMapController;
     private static int mapSize;
+    private static int autoSaveDuration;
 
     public static void setMapSize (int mapSize) {
         GameMenu.mapSize = mapSize;
+    }
+
+    public static void setAutoSaveDuration (int number) {
+        if (number == 0) GameMenu.autoSaveDuration = 0;
+        else if (number == 1) GameMenu.autoSaveDuration = 1;
+        else GameMenu.autoSaveDuration = (number - 1) * 5;
     }
 
     public static MapController getGameMapController() {
@@ -46,7 +55,9 @@ public class GameMenu {
     private static void loadGame (int saveCode) {
         try {
             String json = new String(Files.readAllBytes(Paths.get("Game" + saveCode + ".json")));
-            Game.loadInstance(new Gson().fromJson(json, Game.class));
+            System.out.println("reading " + saveCode);
+            Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
+            System.out.println("loaded");
             Game.getInstance().createRelations();
         }
         catch (Exception ignored){
@@ -56,9 +67,18 @@ public class GameMenu {
 
     public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode) {
         if (saveCode < 0)
-            Game.getInstance().generateGame(players, mapSize);
-        else
+            Game.getInstance().generateGame(players, mapSize, autoSaveDuration);
+        else {
             loadGame(saveCode);
+            players = Game.getInstance().getPlayers();
+            System.out.println("---------");
+            System.out.println(players == null);
+            System.out.println(players.get(0) == null);
+            System.out.println(players.get(0).getCivilization() == null);
+            System.out.println(players.get(0).getCivilization().getColor() == null);
+            System.out.println(players.get(0).getCivilization().getColor().getRed());
+            System.out.println("---------");
+        }
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         try {

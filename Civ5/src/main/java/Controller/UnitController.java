@@ -159,7 +159,7 @@ public class UnitController {
             }
         }
         else if (unit.getStatus().equals(UnitStatus.HEAL)) {
-            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            unit.setHealth(unit.getHealth() + Unit.healRate);
             if (unit.getHealth() >= Unit.MAX_HEALTH) {
                 unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
@@ -741,7 +741,7 @@ public class UnitController {
             return;
         }
         if (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) {
-            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            unit.setHealth(unit.getHealth() + Unit.healRate);
             if (unit.getHealth() >= Unit.MAX_HEALTH) {
                 unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
