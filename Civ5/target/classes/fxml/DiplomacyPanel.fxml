@@ -49,14 +49,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="discuss" layoutX="601.0" layoutY="180.0" mnemonicParsing="false" onMouseClicked="#discussing" prefHeight="50.0" prefWidth="165.0" text="Discuss" textFill="WHITE">
-         <font>
-            <Font size="22.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
       <VBox fx:id="list" alignment="TOP_CENTER" layoutX="347.0" layoutY="201.0" prefHeight="202.0" prefWidth="195.0">
          <cursor>
             <Cursor fx:constant="DEFAULT" />

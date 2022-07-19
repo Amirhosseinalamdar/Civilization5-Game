@@ -1568,11 +1568,15 @@ public class MapController {
                     GameController.getCivilization().setTotalGold(GameController.getCivilization().getTotalGold() - (Integer) set.getValue());
                     request.getSender().getCivilization().setTotalGold(request.getSender().getCivilization().getTotalGold() + (Integer) set.getValue());
                 } else if (GameController.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
-                    GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(set.getKey()), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(set.getKey())) - (Integer) set.getValue());
-                    request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(set.getKey()), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(set.getKey())) + (Integer) set.getValue());
+                    GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
+                    if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
+                        request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    else request.getSender().getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 } else if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
-                    GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(set.getKey()), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(set.getKey())) - (Integer) set.getValue());
-                    request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(set.getKey()), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(set.getKey())) + (Integer) set.getValue());
+                    GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
+                    if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
+                        request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    else request.getSender().getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 }
             } else {
                 if (args[1].equals("Gold")) {
@@ -1580,11 +1584,15 @@ public class MapController {
                     request.getSender().getCivilization().setTotalGold(request.getSender().getCivilization().getTotalGold() - (Integer) set.getValue());
                 }
                 else if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
-                    GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(set.getKey()), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(set.getKey())) + (Integer) set.getValue());
-                    request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(set.getKey()), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(set.getKey())) - (Integer) set.getValue());
+                    if (GameController.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
+                        GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    else GameController.getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                 } else if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
-                    GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(set.getKey()), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(set.getKey())) + (Integer) set.getValue());
-                    request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(set.getKey()), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(set.getKey())) - (Integer) set.getValue());
+                    if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
+                        GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    else GameController.getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                    request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                 }
             }
         }
@@ -1595,22 +1603,32 @@ public class MapController {
         HashMap<Resource, Integer> hashmap = new HashMap<>(GameController.getCivilization().getStrategicResources());
         hashmap.putAll(GameController.getCivilization().getLuxuryResources());
         HashMap<Resource, Integer> hashmap1 = new HashMap<>(request.getSender().getCivilization().getStrategicResources());
-        hashmap.putAll(request.getSender().getCivilization().getLuxuryResources());
+        hashmap1.putAll(request.getSender().getCivilization().getLuxuryResources());
         for (Map.Entry<String, Object> set :
                 request.getParams().entrySet()) {
             String[] args = set.getKey().split(" ");
             if (set.getKey().startsWith("Get")) {
+                System.out.println(args[1]);
                 if (args[1].equals("Gold")) {
+                    System.out.println("total gold = " + GameController.getCivilization().getTotalGold());
+                    System.out.println("need gold = " + set.getValue());
                     if (GameController.getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
                 } else if (hashmap.containsKey(Resource.valueOf(args[1]))) {
+                    System.out.println("total resource = " + hashmap.get(Resource.valueOf(args[1])));
+                    System.out.println("need resource = " + set.getValue());
                     if (hashmap.get(Resource.valueOf(args[1])) < (Integer) set.getValue()) {
                         return false;
                     }
                 } else return false;
             } else {
+                System.out.println(args[1]);
                 if (args[1].equals("Gold")) {
+                    System.out.println("total gold = " + request.getSender().getCivilization().getTotalGold());
+                    System.out.println("need gold = " + set.getValue());
                     if (request.getSender().getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
                 } else if (hashmap1.containsKey(Resource.valueOf(args[1]))) {
+                    System.out.println("total resource = " + hashmap1.get(Resource.valueOf(args[1])));
+                    System.out.println("need resource = " + set.getValue());
                     if (hashmap1.get(Resource.valueOf(args[1])) < (Integer) set.getValue()) {
                         return false;
                     }
