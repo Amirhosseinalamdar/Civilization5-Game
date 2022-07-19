@@ -71,6 +71,7 @@ public enum ImageBase {
     SCIENCE_ICON(new Image("Pictures/Panels/Science.png")),
     HAPPINESS_ICON(new Image("Pictures/Panels/Happiness.png")),
     TURN_ICON(new Image("Pictures/Panels/Turn.png")),
+    SAVE_ICON(new Image("Pictures/Icons/save.png")),
     LEFT_DOWN_PANEL_BOX(new Image("Pictures/Panels/myCiv.png")),
     STATUSBAR_BOX(new Image("Pictures/Panels/statusBar.png")),
 

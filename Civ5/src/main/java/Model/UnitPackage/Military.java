@@ -3,17 +3,14 @@ package Model.UnitPackage;
 import Model.Map.TerrainType;
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-
 public class Military extends Unit {
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private double combatStrength;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private double rangedCombatStrength;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int range;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private boolean isReady;
 
     public Military(UnitType militaryType) {

@@ -970,6 +970,7 @@ public class MapController {
         production.setY(chosenCity.getTiles().get(0).getY() - 5);
         production.setFitWidth(40);
         production.setFitHeight(40);
+        production.setCursor(Cursor.HAND);
         setMouseMovementForCityPanelIcons(production, 2);
         production.setOnMouseClicked(mouseEvent -> {
             showProductionMenuForCity();
@@ -1376,7 +1377,7 @@ public class MapController {
     }
 
     private void addProgressUnitBar(double v, double v1, Unit unit) {
-        Rectangle rectangle = new Rectangle(v,v1,3 * Unit.getMaxHealth(),7);
+        Rectangle rectangle = new Rectangle(v,v1,3 * Unit.MAX_HEALTH,7);
         rectangle.setFill(Color.BLACK);
         rectangle.setOpacity(0.7);
         backgroundPane.getChildren().add(rectangle);
@@ -1400,30 +1401,34 @@ public class MapController {
     public void showStatusBar() {//TODO ADD TEXT BOXES
         ImageView imageView = new ImageView(ImageBase.STATUSBAR_BOX.getImage());
         backgroundPane.getChildren().add(imageView);
-        ImageView[] imageViews = new ImageView[4];
+        ImageView[] imageViews = new ImageView[5];
         imageViews[0] = new ImageView(ImageBase.SCIENCE_ICON.getImage());
         imageViews[1] = new ImageView(ImageBase.GOLD_ICON.getImage());
         imageViews[2] = new ImageView(ImageBase.HAPPINESS_ICON.getImage());
         imageViews[3] = new ImageView(ImageBase.TURN_ICON.getImage());
+        imageViews[4] = new ImageView(ImageBase.SAVE_ICON.getImage());
+        imageViews[4].setCursor(Cursor.HAND);
+        imageViews[4].setOnMouseClicked(mouseEvent -> GameController.saveGameToJson());
         for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
             imageViews[i].setY(10);
             imageViews[i].setX(40 + 140 * i);
-            if (i == 3) imageViews[i].setX(imageViews[i].getX() + 700);
+            if (i >= 3) imageViews[i].setX(imageViews[i].getX() + 700);
             backgroundPane.getChildren().add(imageViews[i]);
         }
 
-        Label[] labels = new Label[4];
+        Label[] labels = new Label[5];
         labels[0] = new Label(String.valueOf(GameController.getCivilization().getScience()));
         labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
         labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
         labels[3] = new Label(String.valueOf(Game.getInstance().getTurn()));
+        labels[4] = new Label("Save");
         for (int i = 0; i < labels.length; i++) {
             labels[i].setLayoutY(5);
             labels[i].setLayoutX(40 + 140 * i + 50);
-            labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30;");
-            if (i == 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
+            labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30; -fx-font-family: 'Tw Cen MT'");
+            if (i >= 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
             backgroundPane.getChildren().add(labels[i]);
         }
 

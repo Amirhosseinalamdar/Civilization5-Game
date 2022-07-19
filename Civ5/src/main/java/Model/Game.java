@@ -12,27 +12,30 @@ import Model.UnitPackage.Unit;
 import View.GameMenu;
 import com.google.gson.annotations.Expose;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
-    @Expose(deserialize = true, serialize = true)
+    @Expose
     private int mapSize = 20;
-    @Expose(deserialize = false, serialize = false)
+    @Expose
+    private int autoSaveDuration;
+    @Expose
+    private int saveFileNum = 0;
+
     private static Game instance;
-    @Expose(serialize = true, deserialize = true)
+
+    @Expose
     private ArrayList<User> players = new ArrayList<>();
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int turn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int time;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Tile[][] tiles;
-
-
-
+    @Expose
     private ArrayList<Tile> map = new ArrayList<>();
-
 
     public static Game getInstance() {
         if (instance == null) instance = new Game();
@@ -47,8 +50,12 @@ public class Game {
         return mapSize;
     }
 
-    public void setMapSize(int mapSize) {
-        this.mapSize = mapSize;
+    public int getAutoSaveDuration() {
+        return autoSaveDuration;
+    }
+
+    public int getSaveFileNum() {
+        return saveFileNum;
     }
 
     public int getTurn() {
@@ -76,8 +83,14 @@ public class Game {
         return UserController.getLoggedInUser();
     }
 
-    public void generateGame(ArrayList<User> users, int mapSize) {
+    public void generateGame(ArrayList<User> users, int mapSize, int autoSaveDuration) {
+        for (int i = 0; i < 5; i++)
+            if (!new File("Game" + i + ".json").exists()) {
+                saveFileNum = i;
+                break;
+            }
         this.mapSize = mapSize;
+        this.autoSaveDuration = autoSaveDuration;
         tiles = new Tile[mapSize][mapSize];
         players = users;
         turn = 0;
@@ -104,6 +117,7 @@ public class Game {
     }
 
     public static void loadInstance(Game game) {
+        System.out.println("instance loaded");
         instance = game;
     }
 
@@ -134,7 +148,8 @@ public class Game {
                     military.setStatus("active");
                     units.remove(unit);
                     units.add(military);
-                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = military.getTile();
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setMilitary(military);
                 }
             }
             for (City city : player.getCivilization().getCities()) {
@@ -160,14 +175,11 @@ public class Game {
     public void generateMap() {
         map = new ArrayList<>();
         Random random = new Random();
-        int centersParameter = 1;
         for (int i = 0; i < this.mapSize; i++) {
             for (int j = 0; j < this.mapSize; j++) {
                 tiles[i][j] = new Tile();
                 tiles[i][j].setIndexInMapI(i);
                 tiles[i][j].setIndexInMapJ(j);
-                tiles[i][j].setCenterY(j * centersParameter);
-                tiles[i][j].setCenterX(i * centersParameter * 2 + centersParameter * (j % 2));
                 if (i < 1 || j < 1 || i > 18 || j > 18) {
                     tiles[i][j].setType(TerrainType.OCEAN);
                 } else if ((i < 2 || j < 2 || i > 17 || j > 17) && random.nextInt(2) == 0) {

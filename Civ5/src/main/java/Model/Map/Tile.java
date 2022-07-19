@@ -1,14 +1,11 @@
 package Model.Map;
 
 import Controller.GameController;
-import Controller.UnitController;
 import Model.Civilization;
 import Model.Game;
 import Model.TileStatus;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
-import View.Controller.MapController;
-import View.GameMenu;
 import com.google.gson.annotations.Expose;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
@@ -16,49 +13,46 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 
 public class Tile extends ImageView {
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private TerrainType type;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private TerrainFeature feature;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Resource resource;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int foodPerTurn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int goldPerTurn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int productionPerTurn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int movementCost;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private double combatEffect;
-    @Expose(serialize = false, deserialize = false)
+
     private Military military;
-    @Expose(serialize = false, deserialize = false)
+
     private Unit civilian;
-    @Expose(serialize = true, deserialize = true)
+
+    @Expose
     private Pair<Improvement, Integer> improvementInProgress;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Pair<String, Integer> routeInProgress;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Pair<String, Integer> removeInProgress;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private boolean isRaided;
     @Expose(deserialize = false, serialize = false)
     private City city;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private boolean isRiverAtLeft;
-    @Expose(serialize = true, deserialize = true)
-    private int centerX;
-    @Expose(serialize = true, deserialize = true)
-    private int centerY;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int indexInMapI;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int indexInMapJ;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Citizen workingCitizen;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private boolean isRuined;
 
 
@@ -159,14 +153,6 @@ public class Tile extends ImageView {
 
     public void setIndexInMapJ(int indexInMapJ) {
         this.indexInMapJ = indexInMapJ;
-    }
-
-    public void setCenterX(int centerX) {
-        this.centerX = centerX;
-    }
-
-    public void setCenterY(int centerY) {
-        this.centerY = centerY;
     }
 
     public void setMilitary (Military military) {
