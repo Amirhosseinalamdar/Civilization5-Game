@@ -64,6 +64,7 @@ public class PlayerListPageController {
     }
 
     public static ArrayList<User> getPlayers() {
+        if (players == null || players.size() == 0) return null;
         players.add(0, UserController.getLoggedInUser());
         return players;
     }

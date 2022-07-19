@@ -772,6 +772,12 @@ public class UnitController {
         nameField.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 30;" +
                 "-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 10;" +
                 "-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10;");
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 5) {
+                String copy = nameField.getText().substring(0, 5);
+                nameField.setText(copy);
+            }
+        });
         nameField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                 //TODO

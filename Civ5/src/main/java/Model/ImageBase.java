@@ -239,7 +239,8 @@ public enum ImageBase {
     EMPLOYED_CITIZEN(new Image("Pictures/cityIcons/employed.png")),
     UNEMPLOYED_CITIZEN(new Image("Pictures/cityIcons/unemployed.png")),
     CITY_ATTACK_TARGET(new Image("Pictures/cityIcons/target.png")),
-    CITY_ATTACK_LOCK(new Image("Pictures/cityIcons/lock.png"));
+    CITY_ATTACK_LOCK(new Image("Pictures/cityIcons/lock.png")),
+    CITY_PRODUCTION_MENU(new Image("Pictures/cityIcons/productionMenu.png"));
 
     private final Image image;
 
