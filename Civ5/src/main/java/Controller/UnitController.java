@@ -77,10 +77,10 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
-//                if (canBuildImprovementHere(improvement)) { //TODO samte graphic check mishe dige @amirholmd? are
+                if (canBuildImprovementHere(improvement).length() == 0) {
                     if (unit.hasRemainingMoves()) return buildImprovement(improvement);
                     else return "unit doesn't have enough moves";
-//                }
+                }
             }
             catch (Exception e) {
                 if (matcher.group("improvement").equals("ROAD")) {

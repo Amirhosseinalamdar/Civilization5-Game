@@ -1724,6 +1724,7 @@ public class MapController {
     }
 
     private void improvementButton(ArrayList<ImageView> imageViews, String string) {
+        UnitController.setUnit(chosenUnit, "");
         if (UnitController.canBuildImprovementHere(Improvement.valueOf(string)).length() == 0) {
             ImageView imageView = new ImageView(ImageBase.valueOf(string + "_ICON").getImage());
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
