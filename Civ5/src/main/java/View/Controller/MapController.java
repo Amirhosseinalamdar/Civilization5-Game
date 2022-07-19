@@ -272,8 +272,8 @@ public class MapController {
         openDiplomacyPanel.setY(170);
         Tooltip.install(openDiplomacyPanel, new Tooltip("Diplomacy Panel"));
 
-        Rectangle clip = new Rectangle(1480, 160, 80,80);
-        clip.setArcWidth(10); clip.setArcHeight(10);
+        Rectangle clip = new Rectangle(1480, 170, 80,80);
+        clip.setArcWidth(20); clip.setArcHeight(20);
         openDiplomacyPanel.setClip(clip);
 
         setUpperRightButton(openDiplomacyPanel, clip);
@@ -385,6 +385,7 @@ public class MapController {
         imageView.setFitHeight(50);
         imageView.setFitWidth(50);
         setImageViewOpacity(imageView);
+        Tooltip.install(imageView,new Tooltip(string.substring(0,string.length()-5)));
         vBox.getChildren().add(imageView);
     }
 
@@ -989,6 +990,7 @@ public class MapController {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(-0.85);
         ImageView imageView = new ImageView(ImageBase.HEXAGON_ICON.getImage());
+        Tooltip.install(imageView,new Tooltip("tiles content"));
         imageView.setEffect(colorAdjust);
         imageView.setX(1390);
         imageView.setY(825);
@@ -1710,6 +1712,7 @@ public class MapController {
                         showPopup(event, message.toUpperCase() + "!");
                 }
             });
+            Tooltip.install(imageView,new Tooltip(string));
             imageViews.add(imageView);
         }
     }
@@ -1780,6 +1783,7 @@ public class MapController {
             else
                 showPopup(event, message.toUpperCase() + "!");
         });
+        Tooltip.install(imageView ,new Tooltip("found city"));
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
         hBox.getChildren().add(imageView);
@@ -1834,6 +1838,7 @@ public class MapController {
                 }
             }
         });
+        Tooltip.install(imageView,new Tooltip(string));
         imageView.setFitWidth(70);
         imageView.setFitHeight(70);
         setImageViewOpacity(imageView);
@@ -1897,6 +1902,7 @@ public class MapController {
                 doUnitOptions(string,event);
             }
         });
+        Tooltip.install(imageView, new Tooltip(string));
     }
 
     private void doUnitOptions(String string, Event event){
