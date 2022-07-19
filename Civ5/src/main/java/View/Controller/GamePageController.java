@@ -1,5 +1,6 @@
 package View.Controller;
 
+import App.Main;
 import View.GameMenu;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -47,8 +48,29 @@ public class GamePageController {
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         }
-        catch (Exception ignored){}
+        catch (Exception e) {
+            System.out.println("failed to load LoadPage");
+            e.printStackTrace();
+        }
+    }
+    public void back() {
+        Main.changeScene("MainMenu");
+    }
+    public void sendInvitation() {
+        try {
+            Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/SendInvitaionPage.fxml")));
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        }
+        catch (Exception e) {
+            System.out.println("failed to load inv page");
+            e.printStackTrace();
+        }
     }
 }

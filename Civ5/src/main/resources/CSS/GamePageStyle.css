@@ -16,6 +16,20 @@
     -fx-text-fill: #508e96;
     -fx-cursor: hand;
 }
+.backButton {
+    -fx-font-family: 'Tw Cen MT';
+    -fx-text-fill: #dbdbb1;
+    -fx-font-size: 30;
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+    -fx-arc-height: 2;
+    -fx-arc-width: 2;
+}
+.backButton:hover{
+    -fx-background-color: #f2f2ef;
+    -fx-text-fill: #508e96;
+    -fx-cursor: hand;
+}
 .tooltip{
     -fx-font-family: 'Tw Cen MT';
     -fx-font-size: 18;

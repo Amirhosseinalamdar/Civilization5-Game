@@ -25,7 +25,7 @@
             <Label fx:id="newGame" prefWidth="268" text="Start New Game" styleClass="startGameButton" alignment="CENTER">
                 <tooltip><Tooltip text="Start your civilization from scratch!"/></tooltip>
             </Label>
-            <Label prefWidth="268" text="Send Invitation" styleClass="startGameButton" alignment="CENTER">
+            <Label prefWidth="268" text="Send Invitation" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#sendInvitation">
                 <tooltip><Tooltip text="Request a match with the player you want!"/></tooltip>
             </Label>
             <Label prefWidth="268" text="Choose Players" styleClass="startGameButton" alignment="CENTER" onMouseClicked="#choosePlayers">
@@ -44,7 +44,10 @@
             <HBox spacing="15">
                 <Label prefWidth="268" alignment="CENTER" fx:id="autoSaveDuration" styleClass="startGameButton" onMouseClicked="#next"/>
             </HBox>
+            <Line/><Line/>
+            <Label prefWidth="268" text="Back" styleClass="backButton" alignment="CENTER" onMouseClicked="#back"/>
         </VBox>
+
     </VBox>
 
     <stylesheets>
