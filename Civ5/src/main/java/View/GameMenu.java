@@ -10,6 +10,7 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import View.Controller.DiplomacyPanelController;
 import View.Controller.MapController;
 import com.google.gson.Gson;
 import javafx.event.EventHandler;
@@ -62,7 +63,7 @@ public class GameMenu {
             gameMapController = mapController;
             Scene scene = new Scene(root);
             KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-            Runnable rn = ()-> {
+            Runnable rn = () -> {
                 try {
                     FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
                     Parent root1 = fxmlLoader1.load();
@@ -76,7 +77,7 @@ public class GameMenu {
                 }
             };
             scene.getAccelerators().put(kc, rn);
-            setMapNavigation(scene,mapController);
+            setMapNavigation(scene, mapController);
             setUnitMovement(mapController);
             Main.stage.setScene(scene);
             Main.stage.show();
@@ -84,7 +85,8 @@ public class GameMenu {
             e.printStackTrace();
         }
     }
-    public static void setMapNavigation(Scene scene,MapController mapController){
+
+    public static void setMapNavigation(Scene scene, MapController mapController) {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -93,25 +95,22 @@ public class GameMenu {
 //                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
-                    mapController.setyStartingIndex(1+mapController.getyStartingIndex());
+                    mapController.setyStartingIndex(1 + mapController.getyStartingIndex());
                     mapController.showMap();
-                }
-                else if (event.getCode().getName().equals("Left") && mapController.getyStartingIndex()>1) {
+                } else if (event.getCode().getName().equals("Left") && mapController.getyStartingIndex() > 1) {
 //                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
                     mapController.setyStartingIndex(mapController.getyStartingIndex() - 1);
                     mapController.showMap();
-                }
-                else if (event.getCode().getName().equals("Down") &&
+                } else if (event.getCode().getName().equals("Down") &&
                         mapController.getxStartingIndex() + 9 < Game.getInstance().getMapSize()) {
 //                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
                     mapController.setHoveredTile(null);
-                    mapController.setxStartingIndex(mapController.getxStartingIndex()  + 1);
+                    mapController.setxStartingIndex(mapController.getxStartingIndex() + 1);
                     mapController.showMap();
-                }
-                else if (event.getCode().getName().equals("Up") &&
+                } else if (event.getCode().getName().equals("Up") &&
                         mapController.getxStartingIndex() > 1) {
 //                    mapController.setChosenUnit(null);
                     mapController.setChosenCity(null);
@@ -127,15 +126,34 @@ public class GameMenu {
             for(int j=0;j<Game.getInstance().getMapSize();j++){
                 Tile tile = Game.getInstance().getTiles()[i][j];
                 tile.setOnMouseClicked(event -> {
-                    if (mapController.getChosenUnit()!=null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK){
+                    if (mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK) {
                         mapController.setChosenTarget(tile);
-                        UnitController.setUnit(mapController.getChosenUnit(),"attack to -c "+
-                                tile.getIndexInMapI()+" "+tile.getIndexInMapJ());
+                        UnitController.setUnit(mapController.getChosenUnit(), "attack to -c " +
+                                tile.getIndexInMapI() + " " + tile.getIndexInMapJ());
                         String message = UnitController.handleUnitOptions();
-                        if(message.equals("done")){
-                            //age ghablan ba in jang nabude declare war inja soorat migire
-                            //TODO Ehsanino taghirate diplomacy chosenUnit ba unit ya shahre chosenTarget
+                        if (message.equals("done")) {
+                            Request request = new Request();
+                            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+                            request.setAction("War");
+                            if (mapController.getChosenTarget().getCivilian() != null) {
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCivilian().getCivilization()))
+                                GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCivilian().getCivilization());
+                                mapController.getChosenTarget().getCivilian().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                mapController.getChosenTarget().getCivilian().getCivilization().getRequests().add(request);
+                            } else if (mapController.getChosenTarget().getMilitary() != null) {
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getMilitary().getCivilization()))
+                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getMilitary().getCivilization());
+                                mapController.getChosenTarget().getMilitary().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                mapController.getChosenTarget().getMilitary().getCivilization().getRequests().add(request);
+                            } else if (mapController.getChosenTarget().getCity() != null && mapController.getChosenTarget().getCity().getTiles().get(0).equals(mapController.getChosenTarget())) {
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCity().getCivilization()))
+                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCity().getCivilization());
+                                mapController.getChosenTarget().getCity().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                mapController.getChosenTarget().getCity().getCivilization().getRequests().add(request);
+                            }
                         }
+                        if (message.endsWith("is zero"))
+                            mapController.getConquerorDecision(tile.getCity());
                         mapController.showPopup(event, message.toUpperCase() + "!");
                         mapController.getChosenUnit().realSetStatus(UnitStatus.ACTIVE);
                         mapController.setChosenUnit(null);
@@ -169,7 +187,8 @@ public class GameMenu {
             }
         }
     }
-    public static void showMap(){
+
+    public static void showMap() {
         gameMapController.showMap();
     }
 
@@ -185,7 +204,7 @@ public class GameMenu {
         System.out.println("one option for now... please enter \"move\"");
     }
 
-    public static String  notEnoughMoves() {
+    public static String notEnoughMoves() {
         return "unit doesn't have enough moves";
     }
 
@@ -414,7 +433,8 @@ public class GameMenu {
         if (isAtLeft) {
             System.out.print("f" + Game.getInstance().getTiles()[i][j].getFoodPerTurn());
             if (Game.getInstance().getTiles()[i][j].getRouteInProgress() != null) {
-                if (Game.getInstance().getTiles()[i][j].getRouteInProgress().getKey().equals("road")) System.out.print("r");
+                if (Game.getInstance().getTiles()[i][j].getRouteInProgress().getKey().equals("road"))
+                    System.out.print("r");
                 else System.out.print("R");
             } else System.out.print(" ");
         } else {

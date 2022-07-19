@@ -30,25 +30,25 @@ public class GameController {
         GameController.civilization = civilization;
     }
 
-    public static boolean noTaskRemaining() {
+    public static String noTaskRemaining() {
         for (Unit unit : civilization.getUnits())
             if (!unit.getStatus().equals(UnitStatus.DO_NOTHING) && !unit.getStatus().equals(UnitStatus.HEAL)
                     && !unit.getStatus().equals(UnitStatus.FORTIFY) && !unit.getStatus().equals(UnitStatus.SLEEP) &&
                     !unit.getStatus().equals(UnitStatus.ALERT) && !unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT) &&
                     !unit.getStatus().equals(UnitStatus.REPAIR) && !unit.getStatus().equals(UnitStatus.CLEAR_LAND) && unit.getMovesInTurn() < unit.getMP()) {
-                GameMenu.unitHasRemainingMove(unit);
-                return false;
+                return "a " + unit.getType().toString() + " unit on " + unit.getTile().getIndexInMapI() + ", " +
+                        unit.getTile().getIndexInMapJ() + " has remaining moves";
             }
+
         for (City city : civilization.getCities())
             if (city.getInProgressUnit() == null && canCityHaveProduction(city)) {
-                GameMenu.chooseProductionForCity(city.getName());
-                return false;
+                return city.getName() + " has no production currently; choose production for it";
             }
-        if (civilization.getInProgressTech() == null && civilization.getCities().size() > 0) {
-            GameMenu.chooseTechForCivilization();
-            return false;
-        }
-        return true;
+
+        if (civilization.getInProgressTech() == null && civilization.getCities().size() > 0)
+            return "civilization has no tech in progress; choose a research";
+
+        return "";
     }
 
     public static boolean canCityHaveProduction (City city) {
@@ -139,13 +139,18 @@ public class GameController {
 
     private static String cheatTurn(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x"));
-        for (int i = 0; i < x - 1; i++) {
+        for (int i = 0; i < x; i++) {
             Game.getInstance().nextTurn();
             checkMyCivilization();
             checkControllersCivilization();
             CivilizationController.updateCivilization();
         }
-        updateGame();
+        System.out.println("turn: " + Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
+        for (Unit unit : Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getCivilization().getUnits()) {
+            unit.setMovesInTurn(0);
+            UnitController.setUnit(unit, "");
+            UnitController.doRemainingMissions();
+        }
         return "turn increased " + x + "times";
     }
 
@@ -297,8 +302,9 @@ public class GameController {
         CityController.changeCivilization(civilization);
     }
 
-    public static void updateGame() {
-        if (!noTaskRemaining()) return;
+    public static String updateGame() {
+        String message = noTaskRemaining();
+        if (message.length() > 0) return message;
         Game.getInstance().nextTurn();
         checkMyCivilization();
         checkControllersCivilization();
@@ -310,6 +316,7 @@ public class GameController {
             UnitController.doRemainingMissions();
         }
         CivilizationController.updateCivilization();
+        return "";
 //        if (Game.getInstance().getTurn() == 0) saveGameToJson(); //TODO... duration must come from GamePage
     }
 

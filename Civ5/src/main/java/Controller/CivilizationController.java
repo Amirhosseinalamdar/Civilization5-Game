@@ -162,30 +162,14 @@ public class CivilizationController {
     public static boolean canAskForTech(Technology newTech) {
         HashMap<Technology, Integer> civTechs = civilization.getLastCostUntilNewTechnologies();
 
-        try {
-            if (civTechs.get(newTech) <= 0) System.out.println("you already have this tech :)");
-            else {
-                civilization.setInProgressTech(newTech);
-                System.out.println("tech is in progress;" + turnsForNewTech());
-            }
-            return false;
-        } catch (Exception e1) {
-            ArrayList<Technology> parents = newTech.getParents();
+        if (civTechs.containsKey(newTech) && civTechs.get(newTech) <= 0) return false;
 
-            for (Technology parent : parents) {
-                try {
-                    if (civTechs.get(parent) > 0) {
-                        GameMenu.unreachedTech(parent);
-                        return false;
-                    }
-                } catch (Exception e2) {
-                    GameMenu.unreachedTech(parent);
-                    return false;
-                }
-            }
-            return true;
-        }
+        if (newTech.getParents() == null || newTech.getParents().size() == 0) return true;
 
+        for (Technology parent : newTech.getParents())
+            if (!civTechs.containsKey(parent) || civTechs.get(parent) > 0) return false;
+
+        return true;
     }
 
     public static String turnsForNewTech() {

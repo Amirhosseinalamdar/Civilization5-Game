@@ -383,10 +383,10 @@ public class CityController {
     private static void updateCityBuildingsEffects(City city) {
         for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
             if (set.getValue() <= 0) {
-                city.setFoodPerTurn(city.getFoodPerTurn() + set.getKey().getFoodAdder() + (int)(set.getKey().getFoodMultiplier() * city.getFoodPerTurn()));
-                city.setSciencePerTurn(city.getSciencePerTurn() + set.getKey().getScienceAdder() + (int)(set.getKey().getScienceMultiplier() * city.getSciencePerTurn()));
-                city.setGoldPerTurn(city.getGoldPerTurn() + (int)(set.getKey().getGoldMultiplier() * city.getGoldPerTurn()));
-                city.setProductionPerTurn(city.getProductionPerTurn() + (int)(set.getKey().getProductionMultiplier() * city.getProductionPerTurn()));
+                city.setFoodPerTurn(city.getFoodPerTurn() + set.getKey().getFoodAdder() + (int) (set.getKey().getFoodMultiplier() * city.getFoodPerTurn()));
+                city.setSciencePerTurn(city.getSciencePerTurn() + set.getKey().getScienceAdder() + (int) (set.getKey().getScienceMultiplier() * city.getSciencePerTurn()));
+                city.setGoldPerTurn(city.getGoldPerTurn() + (int) (set.getKey().getGoldMultiplier() * city.getGoldPerTurn()));
+                city.setProductionPerTurn(city.getProductionPerTurn() + (int) (set.getKey().getProductionMultiplier() * city.getProductionPerTurn()));
             }
         }
     }
@@ -473,6 +473,18 @@ public class CityController {
                             civilization.getLuxuryResources().replace(tile.getResource(), count);
                         } else civilization.getLuxuryResources().put(tile.getResource(), 1);
                     }
+                    else if (tile.getResource() != null && tile.getResource().getType().equals("strategic")) {
+                        if (civilization.getStrategicResources().containsKey(tile.getResource())) {
+                            int count = civilization.getStrategicResources().get(tile.getResource());
+                            count++;
+                            civilization.getStrategicResources().replace(tile.getResource(), count);
+                        } else civilization.getStrategicResources().put(tile.getResource(), 1);
+                    }
+                    if (tile.getImprovementInProgress().getKey().equals(Improvement.MINE)) tile.setProductionPerTurn(tile.getProductionPerTurn() + 1);
+                    else if (tile.getImprovementInProgress().getKey().equals(Improvement.FARM)) {
+                        tile.setFoodPerTurn(tile.getFoodPerTurn() + 1);
+                        tile.setGoldPerTurn(tile.getGoldPerTurn() + 1);
+                    }
                     civilization.getNotifications().add(tile.getImprovementInProgress().getKey().name() + " is built in tile x: "
                             + tile.getIndexInMapI() + " y: " + tile.getIndexInMapJ() + ".    time: " + Game.getInstance().getTime());
                     if (tile.getResource() != null) {
@@ -485,7 +497,6 @@ public class CityController {
 
     private static void updateProduction(City city) {
         if (city.getInProgressUnit() != null) {
-            System.out.println("debugging; " + city.getLastCostsUntilNewProductions().containsKey(city.getInProgressUnit()));
             int i = city.getLastCostsUntilNewProductions().get(city.getInProgressUnit());
             i -= city.getProductionPerTurn();
             city.getLastCostsUntilNewProductions().replace(city.getInProgressUnit(), i);
@@ -621,7 +632,6 @@ public class CityController {
             return false;
         if (!hasEnoughResources(unitType))
             return false;
-
         if (unitType.isCivilian()) {
             if (city.getTiles().get(0).getCivilian() != null)
                 return false;
@@ -633,8 +643,7 @@ public class CityController {
         try {
             int remainingCost = city.getLastCostsUntilNewProductions().get(unitType);
             return remainingCost > 0;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return true;
         }
     }

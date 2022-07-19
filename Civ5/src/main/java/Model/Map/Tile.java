@@ -185,6 +185,18 @@ public class Tile extends ImageView {
         this.improvementInProgress = improvementInProgress;
     }
 
+    public void setFoodPerTurn(int foodPerTurn) {
+        this.foodPerTurn = foodPerTurn;
+    }
+
+    public void setGoldPerTurn(int goldPerTurn) {
+        this.goldPerTurn = goldPerTurn;
+    }
+
+    public void setProductionPerTurn(int productionPerTurn) {
+        this.productionPerTurn = productionPerTurn;
+    }
+
     public void setRouteInProgress(Pair<String, Integer> routeInProgress) {
         this.routeInProgress = routeInProgress;
     }
@@ -303,7 +315,8 @@ public class Tile extends ImageView {
     }
 
     public boolean isPurchasableFor (City buyer) {
-        return type != TerrainType.OCEAN && type != TerrainType.MOUNTAIN && city == null && (civilian == null ||
+        return type != TerrainType.OCEAN && type != TerrainType.MOUNTAIN && feature != TerrainFeature.ICE &&
+                city == null && (civilian == null ||
                 civilian.getCivilization().equals(buyer.getCivilization())) && (military == null ||
                 military.getCivilization().equals(buyer.getCivilization()));
     }
