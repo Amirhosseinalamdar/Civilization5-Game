@@ -39,6 +39,7 @@ public class GamePageController {
                 popup.show(background.getScene().getWindow());
             }
             else {
+                if (Main.music.isPlaying()) Main.playSound("Game.mp3");
                 GameMenu.setMapSize(mapSize);
                 GameMenu.setAutoSaveDuration(autoSave);
                 GameMenu.startGame(players, new Scanner(System.in), -1);
@@ -48,11 +49,13 @@ public class GamePageController {
         mapSizeLabel.setOnMouseClicked(mouseEvent -> changeMapSize());
     }
     public void next() {
+        Main.clickSound();
         autoSave++;
         autoSave %= 4;
         autoSaveDuration.setText(labels[autoSave]);
     }
     public void choosePlayers() {
+        Main.clickSound();
         try {
             Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/PlayerListPage.fxml")));
             Stage stage = new Stage();
@@ -66,6 +69,7 @@ public class GamePageController {
         }
     }
     public void loadGame() {
+        Main.clickSound();
         try {
             Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/LoadPage.fxml")));
             Stage stage = new Stage();
@@ -80,9 +84,11 @@ public class GamePageController {
         }
     }
     public void back() {
+        Main.clickSound();
         Main.changeScene("MainMenu");
     }
     public void sendInvitation() {
+        Main.clickSound();
         try {
             Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/SendInvitaionPage.fxml")));
             Stage stage = new Stage();
@@ -97,6 +103,7 @@ public class GamePageController {
         }
     }
     public void changeMapSize() {
+        Main.clickSound();
         mapSize++;
         if (mapSize > 25) mapSize = 20;
         mapSizeLabel.setText(Integer.toString(mapSize));

@@ -2251,9 +2251,7 @@ public class MapController {
         });
         button.setOnMouseClicked(event -> {
             NavigationTransition.fadeTransition(button, "MainMenu");
-            //TODO EHSAN MARO BEBAR MAIN MENU
-            //aha inke faghat emtiaz namayesh dadam kafie dige?
-            //kare digeyi ke nemikhas?
+            Main.playSound("Menu.mp3");
         });
         button.setLayoutX(600);
         vBox.getChildren().add(button);

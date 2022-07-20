@@ -1,5 +1,6 @@
 package View.Controller;
 
+import App.Main;
 import Controller.UserController;
 import Model.Game;
 import Model.User;
@@ -65,6 +66,7 @@ public class LoadPageController {
                         Node source = (Node) event.getSource();
                         Stage stage = (Stage) source.getScene().getWindow();
                         stage.close();
+                        if (Main.music.isPlaying()) Main.playSound("Game.mp3");
                         GameMenu.startGame(null, new Scanner(System.in), finalI);
                     });
                     box.getChildren().add(label);

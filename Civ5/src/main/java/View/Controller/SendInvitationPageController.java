@@ -1,5 +1,6 @@
 package View.Controller;
 
+import App.Main;
 import Controller.UserController;
 import Model.User;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ public class SendInvitationPageController {
             label.setPrefWidth(370);
             label.setText(user.getUsername());
             label.setOnMouseClicked(event -> {
+                Main.clickSound();
                 chosenUser = user;
                 changeUserLabel(label);
                 pane.getChildren().add(send);
