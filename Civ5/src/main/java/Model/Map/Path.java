@@ -1,8 +1,11 @@
 package Model.Map;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 
 public class Path {
+    @Expose
     public ArrayList<Tile> tiles;
 
     public Path(Path parent) {

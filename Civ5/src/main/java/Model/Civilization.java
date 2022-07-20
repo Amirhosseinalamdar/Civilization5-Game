@@ -12,43 +12,48 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Civilization {
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int score;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int totalGold;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private ArrayList<City> cities;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private ArrayList<Unit> units;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private TileStatus[][] tileVisionStatuses = new TileStatus[Game.getInstance().getMapSize()][Game.getInstance().getMapSize()];
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private HashMap<Technology, Integer> lastCostUntilNewTechnologies;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Technology inProgressTech;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int science;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int happiness;
-    @Expose(serialize = true, deserialize = true)
-    private final Color color;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
+    private double R;
+    @Expose
+    private double G;
+    @Expose
+    private double B;
+    @Expose
     private int showingCenterI;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int showingCenterJ;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private ArrayList<String> notifications;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private HashMap<Resource, Integer> luxuryResources;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private HashMap<Resource, Integer> strategicResources;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private ArrayList<Request> requests;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private ArrayList<String> inWarCivilizations;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String username;
 
     public String getUsername() {
@@ -75,7 +80,14 @@ public class Civilization {
         for (int i = 0; i < Game.getInstance().getMapSize(); i++)
             for (int j = 0; j < Game.getInstance().getMapSize(); j++)
                 this.tileVisionStatuses[i][j] = TileStatus.FOGGY;
-        this.color = initCivSymbol();
+        Color color = initCivSymbol();
+        if (color == null) {
+            Random random = new Random();
+            color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 1);
+        }
+        R = color.getRed();
+        G = color.getGreen();
+        B = color.getBlue();
         this.showingCenterI = 1;
         this.showingCenterJ = 2;
         lastCostUntilNewTechnologies.put(Technology.AGRICULTURE, -1);
@@ -160,7 +172,7 @@ public class Civilization {
     }
 
     public Color getColor() {
-        return color;
+        return new Color(R, G, B, 1);
     }
 
     public void createSettlerAndWarriorOnTile(Tile tile) {

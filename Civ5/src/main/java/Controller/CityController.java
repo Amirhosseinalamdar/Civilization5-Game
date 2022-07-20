@@ -392,7 +392,7 @@ public class CityController {
     }
 
     public static void updateCity(City city) {
-        if (city.getHP() < 20) city.setHP(city.getHP() + 1);
+        if (city.getHP() < 20) city.setHP(city.getHP() + 5);
         updateCityInfos(city);
         handlePopulation(city);
         updateBorder(city);
@@ -412,9 +412,9 @@ public class CityController {
                 city.getBuildings().replace(city.getInProgressBuilding(), 0);
                 civilization.getNotifications().add(city.getInProgressBuilding() + " is built in city: "
                         + city.getName() + ".    time: " + Game.getInstance().getTime());
-                if (city.getInProgressBuilding().equals(Building.WALLS)) city.setHP(city.getHP() + 5);
-                else if (city.getInProgressBuilding().equals(Building.CASTLE)) city.setHP(city.getHP() + 8);
-                else if (city.getInProgressBuilding().equals(Building.MILITARY_BASE)) city.setHP(city.getHP() + 12);
+                if (city.getInProgressBuilding().equals(Building.WALLS)) city.setHP(city.getHP() + 7);
+                else if (city.getInProgressBuilding().equals(Building.CASTLE)) city.setHP(city.getHP() + 9);
+                else if (city.getInProgressBuilding().equals(Building.MILITARY_BASE)) city.setHP(city.getHP() + 13);
                 city.setInProgressBuilding(null);
             }
         }

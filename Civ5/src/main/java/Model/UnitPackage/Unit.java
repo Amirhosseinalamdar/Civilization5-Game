@@ -2,6 +2,7 @@ package Model.UnitPackage;
 
 import Controller.GameController;
 import Model.Civilization;
+import Model.ImageBase;
 import Model.Map.Path;
 import Model.Map.Tile;
 import View.Controller.MapController;
@@ -12,38 +13,30 @@ import javafx.scene.image.ImageView;
 
 
 public class Unit extends ImageView {
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected UnitType type;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected Tile tile;
     @Expose(deserialize = false, serialize = false)
     protected Civilization civilization;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected int MP;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected int movesInTurn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected double health;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected int cost;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     public static double MAX_HEALTH = 10;
-
-    public static double getMaxHealth() {
-        return MAX_HEALTH;
-    }
-
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected Path path;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected UnitStatus status;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     protected int maintenance;
-
-    private static final double healRate = 1.5;
-    public static double getHealRate() {
-        return healRate;
-    }
+    @Expose
+    public static final double healRate = 1.5;
 
     public Unit(UnitType unitType) {
         this.type = unitType;
@@ -51,8 +44,7 @@ public class Unit extends ImageView {
         this.path = new Path(null);
         this.MP = unitType.getMP();
         this.health = MAX_HEALTH;
-        System.out.println("/Pictures/" + unitType);
-        this.setImage(new Image(this.getClass().getResource("/Pictures/units/" + unitType + ".png").toExternalForm()));
+        this.setImage(ImageBase.valueOf(unitType.toString()).getImage());
         this.setFitWidth(50);
         this.setFitHeight(50);
         setOnMouseEntered(event -> {
@@ -63,7 +55,7 @@ public class Unit extends ImageView {
             MapController mapController = GameMenu.getGameMapController();
             if(!(mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK)) {
                 try {
-                    System.out.println("my type = " + type + ", chosen type = " + GameMenu.getGameMapController().getChosenUnit().getType());
+                    System.out.println("my type = " + type + ", chosen type = " + mapController.getChosenUnit().getType());
                 } catch (Exception e) {
                     System.out.println("my type only = " + type);
                 }
@@ -108,9 +100,9 @@ public class Unit extends ImageView {
         return this.path;
     }
 
-    public void setTile(Tile tile) {
-        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
+    public void setTile (Tile tile) {
         this.tile = tile;
+        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
         if (type.isCivilian()) {
             this.setX(tile.getX() + 65);
             this.setY(tile.getY() + 40);
@@ -119,6 +111,11 @@ public class Unit extends ImageView {
             this.setX(tile.getX() + 10);
             this.setY(tile.getY() + 40);
         }
+    }
+
+    public void initTile (Tile tile) {
+        this.tile = tile;
+        System.out.println("tile initialized");
     }
 
     public void setCivilization(Civilization civilization) {
@@ -172,9 +169,11 @@ public class Unit extends ImageView {
         civilization.getUnits().remove(this);
         path = null;
     }
+
     public void realSetStatus(UnitStatus unitStatus){
         this.status = unitStatus;
     }
+
     public void setStatus(String string) {
         if (string.equals("has path")) this.status = UnitStatus.HAS_PATH;
         else if (string.equals("sleep")) this.status = UnitStatus.SLEEP;
@@ -215,5 +214,9 @@ public class Unit extends ImageView {
     public boolean hasRemainingMoves() {
         if (movesInTurn >= MP) this.setStatus("active");
         return movesInTurn < MP;
+    }
+
+    public static double getMaxHealth() {
+        return MAX_HEALTH;
     }
 }

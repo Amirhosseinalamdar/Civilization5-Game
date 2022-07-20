@@ -3,7 +3,9 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.Building;
+import Model.Map.Citizen;
 import Model.Map.City;
+import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
@@ -11,10 +13,8 @@ import Model.UnitPackage.UnitType;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -316,8 +316,15 @@ public class GameController {
             UnitController.doRemainingMissions();
         }
         CivilizationController.updateCivilization();
+
+        System.out.println("time = " + Game.getInstance().getTime() + ", dur = " + Game.getInstance().getAutoSaveDuration() +
+                ", file = " + Game.getInstance().getSaveFileNum());
+
+        if (Game.getInstance().getAutoSaveDuration() != 0)
+            if (Game.getInstance().getTime() % Game.getInstance().getAutoSaveDuration() == 0)
+                saveGameToJson();
+
         return "";
-//        if (Game.getInstance().getTurn() == 0) saveGameToJson(); //TODO... duration must come from GamePage
     }
 
     public static boolean gameIsOver() {
@@ -606,26 +613,17 @@ public class GameController {
     }
 
     public static void saveGameToJson() {
-        System.out.println("bruh im here");
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        String json = gson.toJson(Game.getInstance());
-        for (int i = 0; i < 5; i++) {
-            try {
-                File file = new File("Game" + i + ".json");
-                if (file.exists() && i != 4) continue;
-                try {
-                    FileWriter fileWriter = new FileWriter("Game" + i + ".json");
-                    fileWriter.write(json);
-                    fileWriter.close();
-                }
-                catch (IOException io) {
-                    io.printStackTrace();
-                }
-                break;
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1) return;
+        System.out.println("bruh saving");
+        String json = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+        try {
+            FileWriter fileWriter = new FileWriter("Game" + Game.getInstance().getSaveFileNum() + ".json");
+            fileWriter.write(json);
+            fileWriter.close();
+            System.out.println("file written");
+        }
+        catch (IOException io) {
+            io.printStackTrace();
         }
     }
 }

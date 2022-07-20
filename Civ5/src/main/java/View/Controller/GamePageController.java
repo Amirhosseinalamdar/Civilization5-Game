@@ -23,7 +23,7 @@ public class GamePageController {
     private int mapSize = 20;
 
     private int autoSave;
-    private final String[] labels = {"Each Turn", "Each 5 Turns", "Each 10 Turns"};
+    private final String[] labels = {"Off", "Each Turn", "Each 5 Turns", "Each 10 Turns"};
     public void initialize() {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
@@ -40,6 +40,7 @@ public class GamePageController {
             }
             else {
                 GameMenu.setMapSize(mapSize);
+                GameMenu.setAutoSaveDuration(autoSave);
                 GameMenu.startGame(players, new Scanner(System.in), -1);
             }
         });
@@ -48,7 +49,8 @@ public class GamePageController {
     }
     public void next() {
         autoSave++;
-        autoSaveDuration.setText(labels[autoSave % 3]);
+        autoSave %= 4;
+        autoSaveDuration.setText(labels[autoSave]);
     }
     public void choosePlayers() {
         try {

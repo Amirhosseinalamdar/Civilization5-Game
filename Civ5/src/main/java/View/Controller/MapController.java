@@ -94,13 +94,13 @@ public class MapController {
         this.chosenUnit = chosenUnit;
     }
 
-    public void setChosenCity(City chosenCity) {
+    public void setChosenCity (City chosenCity) {
         tileImageViews.clear();
         citizenImageViews.clear();
         this.chosenCity = chosenCity;
     }
 
-    public void setHoveredTile(Tile tile) {
+    public void setHoveredTile (Tile tile) {
         this.hoveredTile = tile;
     }
 
@@ -168,7 +168,7 @@ public class MapController {
     }
 
     public void showCity(Tile tile, int i, int j) {
-        if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity())) {
             ImageView imageView = new ImageView(getCityImage(tile.getCity()));
             imageView.setFitHeight(100);
             imageView.setFitWidth(100);
@@ -327,7 +327,7 @@ public class MapController {
         backgroundPane.getChildren().add(openTechTree);
     }
 
-    private void setUpperRightButton(ImageView imageView, Rectangle clip) {
+    private void setUpperRightButton (ImageView imageView, Rectangle clip) {
         imageView.setStyle("-fx-cursor:hand; -fx-font-family: 'Tw Cen MT'; -fx-font-size: 17;");
         imageView.setOnMouseEntered(mouseEvent -> {
             imageView.setX(imageView.getX() - 4);
@@ -974,6 +974,7 @@ public class MapController {
         production.setY(chosenCity.getTiles().get(0).getY() - 5);
         production.setFitWidth(40);
         production.setFitHeight(40);
+        production.setCursor(Cursor.HAND);
         setMouseMovementForCityPanelIcons(production, 2);
         production.setOnMouseClicked(mouseEvent -> {
             showProductionMenuForCity();
@@ -1412,30 +1413,34 @@ public class MapController {
     public void showStatusBar() {//TODO ADD TEXT BOXES
         ImageView imageView = new ImageView(ImageBase.STATUSBAR_BOX.getImage());
         backgroundPane.getChildren().add(imageView);
-        ImageView[] imageViews = new ImageView[4];
+        ImageView[] imageViews = new ImageView[5];
         imageViews[0] = new ImageView(ImageBase.SCIENCE_ICON.getImage());
         imageViews[1] = new ImageView(ImageBase.GOLD_ICON.getImage());
         imageViews[2] = new ImageView(ImageBase.HAPPINESS_ICON.getImage());
         imageViews[3] = new ImageView(ImageBase.TURN_ICON.getImage());
+        imageViews[4] = new ImageView(ImageBase.SAVE_ICON.getImage());
+        imageViews[4].setCursor(Cursor.HAND);
+        imageViews[4].setOnMouseClicked(mouseEvent -> GameController.saveGameToJson());
         for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
             imageViews[i].setY(10);
             imageViews[i].setX(40 + 140 * i);
-            if (i == 3) imageViews[i].setX(imageViews[i].getX() + 700);
+            if (i >= 3) imageViews[i].setX(imageViews[i].getX() + 700);
             backgroundPane.getChildren().add(imageViews[i]);
         }
 
-        Label[] labels = new Label[4];
+        Label[] labels = new Label[5];
         labels[0] = new Label(String.valueOf(GameController.getCivilization().getScience()));
         labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
         labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
-        labels[3] = new Label(String.valueOf(Game.getInstance().getTurn()));
+        labels[3] = new Label(String.valueOf(Game.getInstance().getTime()));
+        labels[4] = new Label("Save");
         for (int i = 0; i < labels.length; i++) {
             labels[i].setLayoutY(5);
             labels[i].setLayoutX(40 + 140 * i + 50);
-            labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30;");
-            if (i == 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
+            labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30; -fx-font-family: 'Tw Cen MT'");
+            if (i >= 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
             backgroundPane.getChildren().add(labels[i]);
         }
 

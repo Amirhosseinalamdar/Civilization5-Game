@@ -159,7 +159,7 @@ public class UnitController {
             }
         }
         else if (unit.getStatus().equals(UnitStatus.HEAL)) {
-            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            unit.setHealth(unit.getHealth() + Unit.healRate);
             if (unit.getHealth() >= Unit.MAX_HEALTH) {
                 unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
@@ -566,7 +566,7 @@ public class UnitController {
         for (Path path : paths)
             if (path.tiles.get(0).equals(Game.getInstance().getTiles()[destIndexI][destIndexJ]))
                 return path;
-        while (paths.size() > 0) {
+        while (paths.size() > 0 && paths.size() < 100000) {
             Path path = paths.get(0);
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
             for (Tile neighborTile : lastTile.getNeighbors()) {
@@ -758,7 +758,7 @@ public class UnitController {
             return;
         }
         if (unit.getStatus().equals(UnitStatus.HEAL) && unit.getHealth() < 20) {
-            unit.setHealth(unit.getHealth() + Unit.getHealRate());
+            unit.setHealth(unit.getHealth() + Unit.healRate);
             if (unit.getHealth() >= Unit.MAX_HEALTH) {
                 unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
@@ -791,7 +791,7 @@ public class UnitController {
                 "-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10;");
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 5) {
-                String copy = nameField.getText().substring(0, 5);
+                String copy = nameField.getText().substring(0, 6);
                 nameField.setText(copy);
             }
         });

@@ -12,27 +12,31 @@ import Model.UnitPackage.Unit;
 import View.GameMenu;
 import com.google.gson.annotations.Expose;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
-    @Expose(deserialize = true, serialize = true)
+    @Expose
     private int mapSize = 20;
-    @Expose(deserialize = false, serialize = false)
+    @Expose
+    private int autoSaveDuration;
+    @Expose
+    private int saveFileNum = 0;
+
     private static Game instance;
-    @Expose(serialize = true, deserialize = true)
+
+    @Expose
     private ArrayList<User> players = new ArrayList<>();
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int turn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int time;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Tile[][] tiles;
-
-
-
+    @Expose
     private ArrayList<Tile> map = new ArrayList<>();
-
 
     public static Game getInstance() {
         if (instance == null) instance = new Game();
@@ -47,8 +51,12 @@ public class Game {
         return mapSize;
     }
 
-    public void setMapSize(int mapSize) {
-        this.mapSize = mapSize;
+    public int getAutoSaveDuration() {
+        return autoSaveDuration;
+    }
+
+    public int getSaveFileNum() {
+        return saveFileNum;
     }
 
     public int getTurn() {
@@ -63,7 +71,7 @@ public class Game {
         turn++;
         turn %= players.size();
         if (getTurn() == 0) time++;
-        if(time >= 205 && !GameMenu.getGameMapController().isEnded()){
+        if(time >= 2050 && !GameMenu.getGameMapController().isEnded()){
             GameMenu.getGameMapController().setEnded(true);
             GameMenu.getGameMapController().showScores();
         }
@@ -76,8 +84,14 @@ public class Game {
         return UserController.getLoggedInUser();
     }
 
-    public void generateGame(ArrayList<User> users, int mapSize) {
+    public void generateGame(ArrayList<User> users, int mapSize, int autoSaveDuration) {
+        for (int i = 0; i < 5; i++)
+            if (!new File("Game" + i + ".json").exists()) {
+                saveFileNum = i;
+                break;
+            }
         this.mapSize = mapSize;
+        this.autoSaveDuration = autoSaveDuration;
         tiles = new Tile[mapSize][mapSize];
         players = users;
         turn = 0;
@@ -108,43 +122,49 @@ public class Game {
     }
 
     public void createRelations() {
+        System.out.println("creating relations:");
         for (User player : players) {
-            ArrayList <Unit> units = player.getCivilization().getUnits();
-            for (int i = 0; i < units.size(); i++)
-                for (int j = i + 1; j < units.size(); j++)
-                    if ((units.get(i).getTile().getIndexInMapI() ==
-                        units.get(j).getTile().getIndexInMapI()) &&
-                            (units.get(i).getTile().getIndexInMapJ() ==
-                             units.get(j).getTile().getIndexInMapJ()))
-                        units.get(j).setTile(units.get(i).getTile());
-            for (int i = 0; i < units.size(); i++) {
-                Unit unit = units.get(i);
+            ArrayList <Unit> unitsHolder = new ArrayList<>(player.getCivilization().getUnits());
+            player.getCivilization().getUnits().clear();
+            for (Unit unit : unitsHolder) {
                 unit.setCivilization(player.getCivilization());
+                unit.initTile(tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()]);
                 if (unit.getType().isCivilian()) {
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
+                    Unit civilian = new Unit(unit.getType());
+                    civilian.initTile(unit.getTile());
+                    civilian.setMovesInTurn(unit.getMovesInTurn());
+                    civilian.setCivilization(unit.getCivilization());
+                    civilian.setStatus("active");
+                    civilian.setHealth(unit.getHealth());
+                    player.getCivilization().getUnits().add(civilian);
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(civilian);
                 }
                 else {
                     Military military = new Military(unit.getType());
-                    military.setMP(unit.getMP());
                     military.setHealth(unit.getHealth());
-                    military.setTile(unit.getTile());
+                    military.initTile(unit.getTile());
                     military.setMovesInTurn(unit.getMovesInTurn());
                     military.setCivilization(unit.getCivilization());
                     military.setStatus("active");
-                    units.remove(unit);
-                    units.add(military);
-                    tiles[military.getTile().getIndexInMapI()][military.getTile().getIndexInMapJ()].setMilitary(military);
+                    player.getCivilization().getUnits().add(military);
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setMilitary(military);
                 }
             }
             for (City city : player.getCivilization().getCities()) {
-                for (Tile tile : city.getTiles()) {
-                    city.setCivilization(player.getCivilization());
-                    tile.setCity(city);
-                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
+                city.setCivilization(player.getCivilization());
+                for (int i = 0; i < city.getTiles().size(); i++) {
+                    Tile tile = city.getTiles().get(i);
+                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()].setCity(city);
+                    int index = city.getTiles().indexOf(tile);
+                    city.getTiles().remove(tile);
+                    city.getTiles().add(index, tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()]);
+                }
+                for (Citizen citizen : city.getCitizens()) {
+                    citizen.setCity(city);
+                    tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
+                    citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
                 }
             }
-            System.out.println(player.getUsername());
         }
     }
 
@@ -160,14 +180,11 @@ public class Game {
     public void generateMap() {
         map = new ArrayList<>();
         Random random = new Random();
-        int centersParameter = 1;
         for (int i = 0; i < this.mapSize; i++) {
             for (int j = 0; j < this.mapSize; j++) {
                 tiles[i][j] = new Tile();
                 tiles[i][j].setIndexInMapI(i);
                 tiles[i][j].setIndexInMapJ(j);
-                tiles[i][j].setCenterY(j * centersParameter);
-                tiles[i][j].setCenterX(i * centersParameter * 2 + centersParameter * (j % 2));
                 if (i < 1 || j < 1 || i > 18 || j > 18) {
                     tiles[i][j].setType(TerrainType.OCEAN);
                 } else if ((i < 2 || j < 2 || i > 17 || j > 17) && random.nextInt(2) == 0) {

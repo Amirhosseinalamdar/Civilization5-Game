@@ -5,21 +5,21 @@ import com.google.gson.annotations.Expose;
 import java.util.Random;
 
 public class User {
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String username;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String password;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String nickname;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String iconAddress;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private Civilization civilization;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private boolean isLoggedIn;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private int score;
-    @Expose(serialize = true, deserialize = true)
+    @Expose
     private String time;
 
     public User(String username, String password, String nickname, boolean isLoggedIn, int score) {

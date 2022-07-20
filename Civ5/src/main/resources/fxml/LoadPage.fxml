@@ -12,5 +12,5 @@
         <Image url="@../Pictures/GamePage/playerlist.jpg"/>
     </ImageView>
 
-    <VBox fx:id="box" spacing="10" layoutX="15" layoutY="75"/>
+    <VBox fx:id="box" spacing="24" layoutX="15" layoutY="75"/>
 </Pane>
