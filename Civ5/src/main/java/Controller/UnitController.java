@@ -948,6 +948,7 @@ public class UnitController {
 
     public static void checkIfDefeated(Civilization civilization) {
         if(civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
+            Game.getInstance().getPlayerScores().put(civilization.getUsername(), civilization.getScore());
             Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
             for (User player : Game.getInstance().getPlayers()) {
                 player.getCivilization().getInWarCivilizations().removeIf(username -> username.equals(civilization.getUsername()));

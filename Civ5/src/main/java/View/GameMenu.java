@@ -86,7 +86,7 @@ public class GameMenu {
             Parent root = fxmlLoader.load();
             MapController mapController = fxmlLoader.getController();
             gameMapController = mapController;
-            Scene scene = new Scene(root);
+            Main.scene.setRoot(root);
             KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
             Runnable rn = () -> {
                 try {
@@ -101,10 +101,10 @@ public class GameMenu {
                     e.printStackTrace();
                 }
             };
-            scene.getAccelerators().put(kc, rn);
-            setMapNavigation(scene, mapController);
+            Main.scene.getAccelerators().put(kc, rn);
+            setMapNavigation(Main.scene, mapController);
             setUnitMovement(mapController);
-            Main.stage.setScene(scene);
+            Main.stage.setScene(Main.scene);
             Main.stage.show();
         } catch (IOException e) {
             e.printStackTrace();
