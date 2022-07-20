@@ -167,7 +167,10 @@ public class MapController {
     }
 
     public void showCity(Tile tile, int i, int j) {
-        if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
+        System.out.println("city = " + (tile.getCity() == null));
+        System.out.println("isCenter = " + tile.isCenterOfCity(tile.getCity()));
+        if (tile.getCity() != null)
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity())) {
             ImageView imageView = new ImageView(getCityImage(tile.getCity()));
             imageView.setFitHeight(100);
             imageView.setFitWidth(100);
@@ -1347,7 +1350,6 @@ public class MapController {
                     tile.getCivilian().setX(tile.getX() + 65);
                     tile.getCivilian().setY(tile.getY() + 70);
                     addProgressUnitBar(tile.getX() + 75,tile.getY() + 60,tile.getCivilian());
-
                     backgroundPane.getChildren().add(tile.getCivilian());
                     showUnitStatus(tile.getCivilian());
                 }
@@ -1355,7 +1357,6 @@ public class MapController {
                     tile.getMilitary().setX(tile.getX() + 10);
                     tile.getMilitary().setY(tile.getY() + 70);
                     addProgressUnitBar(tile.getX() + 20,tile.getY() + 60,tile.getMilitary());
-
                     backgroundPane.getChildren().add(tile.getMilitary());
                     showUnitStatus(tile.getMilitary());
                 }
@@ -1813,6 +1814,7 @@ public class MapController {
     }
 
     private void improvementButton(ArrayList<ImageView> imageViews,String string){
+        UnitController.setUnit(chosenUnit, "");
         if(UnitController.canBuildImprovementHere(Improvement.valueOf(string)).length() == 0){
             ImageView imageView = new ImageView(ImageBase.valueOf(string+"_ICON").getImage());
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {

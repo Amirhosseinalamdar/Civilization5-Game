@@ -10,10 +10,7 @@ import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
-import View.Controller.DiplomacyPanelController;
-import View.Controller.GamePageController;
 import View.Controller.MapController;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -58,10 +55,12 @@ public class GameMenu {
             System.out.println("reading " + saveCode);
             Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
             System.out.println("loaded");
+            System.out.println("fuuuuuuuuuuuuuuuuuuuuuuck");
             Game.getInstance().createRelations();
         }
-        catch (Exception ignored){
+        catch (Exception e){
             System.out.println("ignored");
+            e.printStackTrace();
         }
     }
 
@@ -76,7 +75,9 @@ public class GameMenu {
             System.out.println(players.get(0) == null);
             System.out.println(players.get(0).getCivilization() == null);
             System.out.println(players.get(0).getCivilization().getColor() == null);
-            System.out.println(players.get(0).getCivilization().getColor().getRed());
+            System.out.print(players.get(0).getCivilization().getColor().getRed() + " ");
+            System.out.print(players.get(0).getCivilization().getColor().getGreen() + " ");
+            System.out.println(players.get(0).getCivilization().getColor().getBlue());
             System.out.println("---------");
         }
         GameMenu.scanner = scanner;

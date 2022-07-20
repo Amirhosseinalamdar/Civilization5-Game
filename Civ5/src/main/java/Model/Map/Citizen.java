@@ -1,8 +1,11 @@
 package Model.Map;
 
+import com.google.gson.annotations.Expose;
+
 public class Citizen {
+    @Expose
     private Tile tile;
-    private final City city;
+    private City city;
 
     public Citizen (City city, Tile tile) {
         this.city = city;
@@ -19,5 +22,9 @@ public class Citizen {
 
     public Tile getTile() {
         return tile;
+    }
+
+    public void setCity (City city) {
+        this.city = city;
     }
 }

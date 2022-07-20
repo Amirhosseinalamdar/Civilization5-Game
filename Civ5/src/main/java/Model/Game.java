@@ -14,6 +14,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Game {
@@ -117,49 +118,53 @@ public class Game {
     }
 
     public static void loadInstance(Game game) {
-        System.out.println("instance loaded");
         instance = game;
     }
 
     public void createRelations() {
+        System.out.println("creating relations:");
         for (User player : players) {
-            ArrayList <Unit> units = player.getCivilization().getUnits();
-            for (int i = 0; i < units.size(); i++)
-                for (int j = i + 1; j < units.size(); j++)
-                    if ((units.get(i).getTile().getIndexInMapI() ==
-                        units.get(j).getTile().getIndexInMapI()) &&
-                            (units.get(i).getTile().getIndexInMapJ() ==
-                             units.get(j).getTile().getIndexInMapJ()))
-                        units.get(j).setTile(units.get(i).getTile());
-            for (int i = 0; i < units.size(); i++) {
-                Unit unit = units.get(i);
+            ArrayList <Unit> unitsHolder = new ArrayList<>(player.getCivilization().getUnits());
+            player.getCivilization().getUnits().clear();
+            for (Unit unit : unitsHolder) {
                 unit.setCivilization(player.getCivilization());
+                unit.initTile(tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()]);
                 if (unit.getType().isCivilian()) {
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = unit.getTile();
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(unit);
+                    Unit civilian = new Unit(unit.getType());
+                    civilian.initTile(unit.getTile());
+                    civilian.setMovesInTurn(unit.getMovesInTurn());
+                    civilian.setCivilization(unit.getCivilization());
+                    civilian.setStatus("active");
+                    civilian.setHealth(unit.getHealth());
+                    player.getCivilization().getUnits().add(civilian);
+                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(civilian);
                 }
                 else {
                     Military military = new Military(unit.getType());
-                    military.setMP(unit.getMP());
                     military.setHealth(unit.getHealth());
-                    military.setTile(unit.getTile());
+                    military.initTile(unit.getTile());
                     military.setMovesInTurn(unit.getMovesInTurn());
                     military.setCivilization(unit.getCivilization());
                     military.setStatus("active");
-                    units.remove(unit);
-                    units.add(military);
-                    tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()] = military.getTile();
+                    player.getCivilization().getUnits().add(military);
                     tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setMilitary(military);
                 }
             }
             for (City city : player.getCivilization().getCities()) {
-                for (Tile tile : city.getTiles()) {
-                    city.setCivilization(player.getCivilization());
-                    tile.setCity(city);
-                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()] = tile;
+                city.setCivilization(player.getCivilization());
+                for (int i = 0; i < city.getTiles().size(); i++) {
+                    Tile tile = city.getTiles().get(i);
+                    tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()].setCity(city);
+                    int index = city.getTiles().indexOf(tile);
+                    city.getTiles().remove(tile);
+                    city.getTiles().add(index, tiles[tile.getIndexInMapI()][tile.getIndexInMapJ()]);
+                }
+                for (Citizen citizen : city.getCitizens()) {
+                    citizen.setCity(city);
+                    tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
+                    citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
                 }
             }
-            System.out.println(player.getUsername());
         }
     }
 
