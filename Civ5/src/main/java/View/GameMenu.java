@@ -158,22 +158,22 @@ public class GameMenu {
                         String message = UnitController.handleUnitOptions();
                         if (message.equals("done")) {
                             Request request = new Request();
-                            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+                            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
                             request.setAction("War");
                             if (mapController.getChosenTarget().getCivilian() != null) {
-                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCivilian().getCivilization()))
-                                GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCivilian().getCivilization());
-                                mapController.getChosenTarget().getCivilian().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCivilian().getCivilization().getUsername()))
+                                GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCivilian().getCivilization().getUsername());
+                                mapController.getChosenTarget().getCivilian().getCivilization().getInWarCivilizations().add(GameController.getCivilization().getUsername());
                                 mapController.getChosenTarget().getCivilian().getCivilization().getRequests().add(request);
                             } else if (mapController.getChosenTarget().getMilitary() != null) {
-                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getMilitary().getCivilization()))
-                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getMilitary().getCivilization());
-                                mapController.getChosenTarget().getMilitary().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getMilitary().getCivilization().getUsername()))
+                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getMilitary().getCivilization().getUsername());
+                                mapController.getChosenTarget().getMilitary().getCivilization().getInWarCivilizations().add(GameController.getCivilization().getUsername());
                                 mapController.getChosenTarget().getMilitary().getCivilization().getRequests().add(request);
                             } else if (mapController.getChosenTarget().getCity() != null && mapController.getChosenTarget().getCity().getTiles().get(0).equals(mapController.getChosenTarget())) {
-                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCity().getCivilization()))
-                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCity().getCivilization());
-                                mapController.getChosenTarget().getCity().getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+                                if (!GameController.getCivilization().getInWarCivilizations().contains(mapController.getChosenTarget().getCity().getCivilization().getUsername()))
+                                    GameController.getCivilization().getInWarCivilizations().add(mapController.getChosenTarget().getCity().getCivilization().getUsername());
+                                mapController.getChosenTarget().getCity().getCivilization().getInWarCivilizations().add(GameController.getCivilization().getUsername());
                                 mapController.getChosenTarget().getCity().getCivilization().getRequests().add(request);
                             }
                         }
@@ -268,10 +268,6 @@ public class GameMenu {
         else System.out.println("turns until growth citizen: N/A");
         if (city.getTurnsUntilGrowthBorder() == 0) System.out.println("turns until growth border: N/A");
         else System.out.println("turns until growth border: " + city.getTurnsUntilGrowthBorder());
-    }
-
-    public static void cityShopMenu(City city) {
-
     }
 
     public static UnitType cityProductionMenu(City city) {

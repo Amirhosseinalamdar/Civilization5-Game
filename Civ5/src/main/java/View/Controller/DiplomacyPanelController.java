@@ -38,9 +38,11 @@ public class DiplomacyPanelController {
     private static User player;
 
     public void initialize() {
-        ArrayList<User> allPlayers = Game.getInstance().getPlayers();
-//        ArrayList<User> allPlayers = UserController.getAllUsers();
+        System.out.println(Game.getInstance().getPlayers());
+        ArrayList<User> allPlayers = new ArrayList<>(Game.getInstance().getPlayers());
+        System.out.println(allPlayers);
         allPlayers.remove(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+        System.out.println(allPlayers);
         for (User user : allPlayers) {
             Label label = new Label();
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +
@@ -89,7 +91,7 @@ public class DiplomacyPanelController {
     }
 
     private void changeWarState() {
-        if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+        if (GameController.getCivilization().getInWarCivilizations().contains(player.getUsername())) {
             peaceButton.setVisible(true);
             peaceButton.setDisable(false);
         } else {
@@ -105,7 +107,7 @@ public class DiplomacyPanelController {
 
     public void startDemand(MouseEvent mouseEvent) throws IOException {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getUsername())) {
             message.setTextFill(Paint.valueOf("ff0000"));
             message.setText("You are in war with this civilization");
             message.setVisible(true);
@@ -123,7 +125,7 @@ public class DiplomacyPanelController {
 
     public void startTrading(MouseEvent mouseEvent) throws IOException {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getUsername())) {
             message.setTextFill(Paint.valueOf("ff0000"));
             message.setText("You are in war with this civilization");
             message.setVisible(true);
@@ -139,34 +141,19 @@ public class DiplomacyPanelController {
         }
     }
 
-    public void discussing(MouseEvent mouseEvent) throws IOException {
-        if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else {
-            //TODO Next Phase
-//            Stage stage = new Stage();
-//            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/fxml/DiplomacyPanel.fxml"));
-//            Scene scene = new Scene(fxmlLoader.load(), 800, 450);
-//            stage.setTitle("Civilization V");
-//            stage.getIcons().add(new Image("/Pictures/steamworkshop_guide_1393684511_guide_branding.jpg"));
-//            stage.setScene(scene);
-//            stage.setResizable(false);
-//            stage.show();
-        }
-    }
-
     public void declareWar(MouseEvent mouseEvent) {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getCivilization())) {
+        else if (GameController.getCivilization().getInWarCivilizations().contains(player.getUsername())) {
             message.setTextFill(Paint.valueOf("ff0000"));
             message.setText("You are already in war with this civilization");
             message.setVisible(true);
-        }
-        else {
-            GameController.getCivilization().getInWarCivilizations().add(player.getCivilization());
-            player.getCivilization().getInWarCivilizations().add(GameController.getCivilization());
+        } else {
+            GameController.getCivilization().getInWarCivilizations().add(player.getUsername());
+            player.getCivilization().getInWarCivilizations().add(GameController.getCivilization().getUsername());
             Request request = new Request();
-            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
             request.setAction("War");
+            player.getCivilization().getRequests().add(request);
             message.setTextFill(Paint.valueOf("ffffff"));
             message.setText("War message sent successfully");
             message.setVisible(true);
@@ -175,13 +162,26 @@ public class DiplomacyPanelController {
 
     public void declarePeace(MouseEvent mouseEvent) {
         if (player == null) choose.setTextFill(Paint.valueOf("ff0000"));
-        else {
+        else if (isPeaceSent()) {
+            message.setTextFill(Paint.valueOf("ff0000"));
+            message.setText("You are already sent peace message to this civilization");
+            message.setVisible(true);
+        } else {
             Request request = new Request();
-            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
             request.setAction("Peace");
+            player.getCivilization().getRequests().add(request);
             message.setText("Peace message sent successfully");
             message.setTextFill(Paint.valueOf("ffffff"));
             message.setVisible(true);
         }
+    }
+
+    private boolean isPeaceSent() {
+        for (Request request : player.getCivilization().getRequests()) {
+            if (request.getAction().equals("Peace") && request.getSender().equals(Game.getInstance().getPlayers().get(Game.getInstance().getTurn())))
+                return true;
+        }
+        return false;
     }
 }

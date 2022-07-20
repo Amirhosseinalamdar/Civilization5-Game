@@ -76,7 +76,6 @@ public class CityController {
             Building building = getBuildingFromString(matcher.group("buildingName"));
             if (building == null)
                 return "building is invalid";
-
             if (matcher.pattern().toString().equals(Commands.CREATE_BUILDING.getRegex())) return tryCreateBuilding(building);
             else return tryPurchaseBuilding(building);
         }
@@ -116,10 +115,9 @@ public class CityController {
             return false;
         }
         try {
+            System.out.println(city.getBuildings());
             int remainingCost = city.getBuildings().get(building);
-            if (remainingCost == 0) System.out.println("this building is already built");
-            else System.out.println("already in progress... remaining cost: " + remainingCost);
-            return false;
+            return remainingCost != 0;
         }
         catch (Exception e) {
             return true;
@@ -129,11 +127,12 @@ public class CityController {
     private static boolean hasNotBuiltBuildingForBuilding(Building building) {
         for (Building prerequisiteBuilding : building.getPrerequisiteBuildings()) {
             try {
-                if (city.getBuildings().get(prerequisiteBuilding) <= 0) return false;
+                if (city.getBuildings().get(prerequisiteBuilding) > 0) return true;
             } catch (Exception ignored) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private static boolean checkResource(Building building) {
@@ -224,6 +223,8 @@ public class CityController {
             if ((matcher = Commands.getMatcher(command, Commands.SHOW_CITY_OUTPUT)) != null)
                 return matcher;
 
+            if ((matcher = Commands.getMatcher(command, Commands.CREATE_BUILDING)) != null || (matcher = Commands.getMatcher(command, Commands.PURCHASE_BUILDING)) != null)
+                return matcher;
             System.out.println("city decision wasn't valid");
         }
     }

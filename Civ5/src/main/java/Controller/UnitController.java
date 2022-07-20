@@ -77,10 +77,10 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
-//                if (canBuildImprovementHere(improvement)) { //TODO samte graphic check mishe dige @amirholmd? are
+                if (canBuildImprovementHere(improvement).length() == 0) {
                     if (unit.hasRemainingMoves()) return buildImprovement(improvement);
                     else return "unit doesn't have enough moves";
-//                }
+                }
             }
             catch (Exception e) {
                 if (matcher.group("improvement").equals("ROAD")) {
@@ -402,23 +402,21 @@ public class UnitController {
     }
 
     public static String canBuildImprovementHere(Improvement improvement) {
-
         if (unit.getTile().getCity() == null || !unit.getTile().getCity().getCivilization().equals(unit.getCivilization()))
-
-        if (!civilization.hasReachedTech(improvement.getPrerequisiteTech()))
-            return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
+            if (!civilization.hasReachedTech(improvement.getPrerequisiteTech()))
+                return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
 
         if (improvement == Improvement.FARM) {
             if (unit.getTile().getFeature() != TerrainFeature.ICE ||
-                unit.getTile().getFeature() != TerrainFeature.FOREST ||
-                unit.getTile().getFeature() != TerrainFeature.JUNGLE ||
-                unit.getTile().getFeature() != TerrainFeature.MARSH)
+                    unit.getTile().getFeature() != TerrainFeature.FOREST ||
+                    unit.getTile().getFeature() != TerrainFeature.JUNGLE ||
+                    unit.getTile().getFeature() != TerrainFeature.MARSH)
                 return "";
             return "can't build chosen improvement here";
         }
 
         if (improvement == Improvement.MINE)
-            if (unit.getTile().getType() != TerrainType.HILL)
+            if (unit.getTile().getType() == TerrainType.HILL)
                 return "";
 
         if (unit.getTile().getResource() != null && unit.getTile().getResource().getPrerequisiteImprovement() == improvement) {
@@ -853,13 +851,18 @@ public class UnitController {
 
     private static String rangedAttackToUnit(Tile targetTile) {
         if (targetTile.getMilitary() == null) {
+            Civilization civilization = targetTile.getCivilian().getCivilization();
             targetTile.getCivilian().kill();
+            checkIfDefeated(civilization);
             return "done";
         }
+        Civilization civilization = targetTile.getMilitary().getCivilization();
         Military me = (Military)unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
-        if (targetTile.getMilitary().getHealth() <= 0)
+        if (targetTile.getMilitary().getHealth() <= 0){
             targetTile.getMilitary().kill();
+            checkIfDefeated(civilization);
+        }
         unit.setMovesInTurn(unit.getMP());
         unit.setStatus("active");
         return "done";
@@ -905,7 +908,6 @@ public class UnitController {
         unit.setStatus("active");
         if (unit.getHealth() <= 0) unit.kill();
         if (city.getHP() <= 0) {
-//            CivilizationController.enterCityAsConqueror(city);
             return GameMenu.cityHPIsZero(city);
         }
         return "done";
@@ -913,12 +915,16 @@ public class UnitController {
 
     private static String meleeAttackToUnit (Tile targetTile) {
         if (targetTile.getMilitary() == null) {
+        Civilization civilization = targetTile.getCivilian().getCivilization();
             targetTile.getCivilian().setCivilization(unit.getCivilization());
             unit.getCivilization().addUnit(targetTile.getCivilian());
+            checkIfDefeated(civilization);
             return "done";
         }
+        Civilization civilization = targetTile.getMilitary().getCivilization();
         Military enemy = targetTile.getMilitary();
         Military me = (Military)unit;
+
         me.setHealth(me.getHealth() - enemy.getCombatStrength() / 4);
         enemy.setHealth(enemy.getHealth() - me.getCombatStrength() / 4);
         unit.setMovesInTurn(unit.getMP());
@@ -929,9 +935,25 @@ public class UnitController {
             me.setMovesInTurn(0);
             moveUnit(i, j);
             me.setMovesInTurn(me.getMP());
+            checkIfDefeated(civilization);
         }
+
         if (me.getHealth() <= 0)
             me.kill();
         return "done";
+    }
+
+    public static void checkIfDefeated(Civilization civilization) {
+        if(civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
+            Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
+            for (User player : Game.getInstance().getPlayers()) {
+                player.getCivilization().getInWarCivilizations().removeIf(username -> username.equals(civilization.getUsername()));
+                player.getCivilization().getRequests().removeIf(request -> request.getSender().equals(civilization.getUsername()));
+            }
+            if (Game.getInstance().getPlayers().size() == 1) {
+                GameMenu.getGameMapController().setEnded(true);
+                GameMenu.getGameMapController().showScores();
+            }
+        }
     }
 }
