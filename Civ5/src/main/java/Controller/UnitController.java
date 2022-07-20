@@ -65,7 +65,8 @@ public class UnitController {
             if (unit.hasRemainingMoves()) {
                 if (canAttackTo(Game.getInstance().getTiles()[x][y])) return attack(Game.getInstance().getTiles()[x][y]);
                 else return GameMenu.invalidTileForAttack();
-            } else return GameMenu.notEnoughMoves();
+            }
+            else return GameMenu.notEnoughMoves();
         }
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
@@ -77,10 +78,10 @@ public class UnitController {
         else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
-//                if (canBuildImprovementHere(improvement)) { //TODO samte graphic check mishe dige @amirholmd? are
+                if (canBuildImprovementHere(improvement).length() == 0) {
                     if (unit.hasRemainingMoves()) return buildImprovement(improvement);
                     else return "unit doesn't have enough moves";
-//                }
+                }
             }
             catch (Exception e) {
                 if (matcher.group("improvement").equals("ROAD")) {
@@ -402,13 +403,30 @@ public class UnitController {
     }
 
     public static String canBuildImprovementHere(Improvement improvement) {
-        if (!civilization.hasReachedTech(improvement.getPrerequisiteTech())) {
-            return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
+        if (unit.getTile().getCity() == null || !unit.getTile().getCity().getCivilization().equals(unit.getCivilization()))
+            if (!civilization.hasReachedTech(improvement.getPrerequisiteTech()))
+                return "you haven't reached " + improvement.getPrerequisiteTech() + " yet";
+
+        if (improvement == Improvement.FARM) {
+            if (unit.getTile().getFeature() != TerrainFeature.ICE ||
+                    unit.getTile().getFeature() != TerrainFeature.FOREST ||
+                    unit.getTile().getFeature() != TerrainFeature.JUNGLE ||
+                    unit.getTile().getFeature() != TerrainFeature.MARSH)
+                return "";
+            return "can't build chosen improvement here";
         }
-        if (!tileIsValidForImprovement(unit.getTile(), improvement)) {
-            return "can't build chosen improvement on this tile";
+
+        if (improvement == Improvement.MINE)
+            if (unit.getTile().getType() == TerrainType.HILL)
+                return "";
+
+        if (unit.getTile().getResource() != null && unit.getTile().getResource().getPrerequisiteImprovement() == improvement) {
+            if (!tileIsValidForImprovement(unit.getTile(), improvement))
+                return "can't build chosen improvement on this tile";
+            return "";
         }
-        return "";
+
+        else return "can't build chosen improvement on this tile";
     }
 
     public static boolean canBuildRoadHere() {
@@ -549,7 +567,7 @@ public class UnitController {
         for (Path path : paths)
             if (path.tiles.get(0).equals(Game.getInstance().getTiles()[destIndexI][destIndexJ]))
                 return path;
-        while (paths.size() > 0) {
+        while (paths.size() > 0 && paths.size() < 100000) {
             Path path = paths.get(0);
             Tile lastTile = path.tiles.get(path.tiles.size() - 1);
             for (Tile neighborTile : lastTile.getNeighbors()) {
@@ -700,6 +718,8 @@ public class UnitController {
             if (tile.getMilitary() != null && !unit.getType().isCivilian()) return true;
             if (tile.getCivilian() != null && unit.getType().isCivilian()) return true;
         }
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity()))
+            return true;
         return tile.getType().equals(TerrainType.OCEAN) ||
                 tile.getType().equals(TerrainType.MOUNTAIN) ||
                 tile.getFeature().equals(TerrainFeature.ICE);
@@ -774,7 +794,7 @@ public class UnitController {
                 "-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 10;");
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 5) {
-                String copy = nameField.getText().substring(0, 5);
+                String copy = nameField.getText().substring(0, 6);
                 nameField.setText(copy);
             }
         });
@@ -892,7 +912,6 @@ public class UnitController {
         unit.setStatus("active");
         if (unit.getHealth() <= 0) unit.kill();
         if (city.getHP() <= 0) {
-//            CivilizationController.enterCityAsConqueror(city);
             return GameMenu.cityHPIsZero(city);
         }
         return "done";
@@ -928,16 +947,18 @@ public class UnitController {
         return "done";
     }
 
-    private static void checkIfDefeated(Civilization civilization) {
-        if(civilization.getCities().size() ==0 && civilization.getUnits().size() == 0){
+    public static void checkIfDefeated(Civilization civilization) {
+        if(civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
+            Game.getInstance().getPlayerScores().put(civilization.getUsername(), civilization.getScore());
             Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
-        }
-        for (User player : Game.getInstance().getPlayers()) {
-            //TODO az ehsan pull konam civ hazf shode ro az list enemy civ ha pak konam
-        }
-        if(Game.getInstance().getPlayers().size() == 1){
-            GameMenu.getGameMapController().setEnded(true);
-            GameMenu.getGameMapController().showScores();
+            for (User player : Game.getInstance().getPlayers()) {
+                player.getCivilization().getInWarCivilizations().removeIf(username -> username.equals(civilization.getUsername()));
+                player.getCivilization().getRequests().removeIf(request -> request.getSender().equals(civilization.getUsername()));
+            }
+            if (Game.getInstance().getPlayers().size() == 1) {
+                GameMenu.getGameMapController().setEnded(true);
+                GameMenu.getGameMapController().showScores();
+            }
         }
     }
 }

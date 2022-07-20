@@ -17,8 +17,9 @@ public class Unit extends ImageView {
     protected UnitType type;
     @Expose
     protected Tile tile;
-    @Expose(deserialize = false, serialize = false)
+
     protected Civilization civilization;
+
     @Expose
     protected int MP;
     @Expose
@@ -37,10 +38,6 @@ public class Unit extends ImageView {
     protected int maintenance;
     @Expose
     public static final double healRate = 1.5;
-    @Expose
-    protected double posX = 0;
-    @Expose
-    protected double posY = 0;
 
     public Unit(UnitType unitType) {
         this.type = unitType;
@@ -51,8 +48,6 @@ public class Unit extends ImageView {
         this.setImage(ImageBase.valueOf(unitType.toString()).getImage());
         this.setFitWidth(50);
         this.setFitHeight(50);
-        this.setX(posX);
-        this.setY(posY);
         setOnMouseEntered(event -> {
             setStyle("-fx-cursor: hand;");
         });
@@ -61,7 +56,7 @@ public class Unit extends ImageView {
             MapController mapController = GameMenu.getGameMapController();
             if(!(mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK)) {
                 try {
-                    System.out.println("my type = " + type + ", chosen type = " + GameMenu.getGameMapController().getChosenUnit().getType());
+                    System.out.println("my type = " + type + ", chosen type = " + mapController.getChosenUnit().getType());
                 } catch (Exception e) {
                     System.out.println("my type only = " + type);
                 }
@@ -106,9 +101,9 @@ public class Unit extends ImageView {
         return this.path;
     }
 
-    public void setTile(Tile tile) {
-        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
+    public void setTile (Tile tile) {
         this.tile = tile;
+        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
         if (type.isCivilian()) {
             this.setX(tile.getX() + 65);
             this.setY(tile.getY() + 40);
@@ -117,8 +112,11 @@ public class Unit extends ImageView {
             this.setX(tile.getX() + 10);
             this.setY(tile.getY() + 40);
         }
-        posX = this.getX();
-        posY = this.getY();
+    }
+
+    public void initTile (Tile tile) {
+        this.tile = tile;
+        System.out.println("tile initialized");
     }
 
     public void setCivilization(Civilization civilization) {
@@ -217,5 +215,9 @@ public class Unit extends ImageView {
     public boolean hasRemainingMoves() {
         if (movesInTurn >= MP) this.setStatus("active");
         return movesInTurn < MP;
+    }
+
+    public static double getMaxHealth() {
+        return MAX_HEALTH;
     }
 }

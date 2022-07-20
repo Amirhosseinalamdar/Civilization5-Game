@@ -49,14 +49,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="discuss" layoutX="601.0" layoutY="180.0" mnemonicParsing="false" onMouseClicked="#discussing" prefHeight="50.0" prefWidth="165.0" text="Discuss" textFill="WHITE">
-         <font>
-            <Font size="22.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
       <VBox fx:id="list" alignment="TOP_CENTER" layoutX="347.0" layoutY="201.0" prefHeight="202.0" prefWidth="195.0">
          <cursor>
             <Cursor fx:constant="DEFAULT" />
@@ -66,7 +58,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Label fx:id="message" alignment="CENTER" layoutX="271.0" layoutY="410.0" prefHeight="32.0" prefWidth="346.0" text="You are already in war with this civilization" textFill="WHITE" visible="false">
+      <Label fx:id="message" alignment="CENTER" layoutX="230.0" layoutY="410.0" prefHeight="32.0" prefWidth="434.0" text="You are already sent peace message to this civilization" textFill="WHITE" visible="false">
          <font>
             <Font size="18.0" />
          </font>

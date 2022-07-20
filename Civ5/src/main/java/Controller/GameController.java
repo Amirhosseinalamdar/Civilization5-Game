@@ -13,11 +13,9 @@ import Model.UnitPackage.UnitType;
 import Model.User;
 import View.Commands;
 import View.GameMenu;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -616,13 +614,14 @@ public class GameController {
     }
 
     public static void saveGameToJson() {
+        if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1) return;
         System.out.println("bruh saving");
-        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
-        String json = gson.toJson(Game.getInstance());
+        String json = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
         try {
             FileWriter fileWriter = new FileWriter("Game" + Game.getInstance().getSaveFileNum() + ".json");
             fileWriter.write(json);
             fileWriter.close();
+            System.out.println("file written");
         }
         catch (IOException io) {
             io.printStackTrace();

@@ -60,6 +60,8 @@ public class City {
     private CityStatus cityStatus;
     @Expose
     private final String name;
+    @Expose
+    private boolean canAttack;
 
     public City(Civilization civilization, Tile centerTile, String name) {
         lastCostsUntilNewProductions = new HashMap<>();
@@ -92,6 +94,7 @@ public class City {
         this.name = name;
         this.foodPerTurn = 1;
         this.productionPerTurn = 1;
+        canAttack = true;
     }
 
     public HashMap<Building, Integer> getBuildings() {
@@ -291,5 +294,13 @@ public class City {
 
     public int getCitizensNumber() {
         return citizens.size();
+    }
+
+    public void setCanAttack (boolean b) {
+        this.canAttack = b;
+    }
+
+    public boolean canAttack() {
+        return canAttack;
     }
 }

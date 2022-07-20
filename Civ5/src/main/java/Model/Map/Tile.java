@@ -42,16 +42,18 @@ public class Tile extends ImageView {
     private Pair<String, Integer> removeInProgress;
     @Expose
     private boolean isRaided;
-    @Expose(deserialize = false, serialize = false)
+
     private City city;
+
     @Expose
     private boolean isRiverAtLeft;
     @Expose
     private int indexInMapI;
     @Expose
     private int indexInMapJ;
-    @Expose
+
     private Citizen workingCitizen;
+
     @Expose
     private boolean isRuined;
 

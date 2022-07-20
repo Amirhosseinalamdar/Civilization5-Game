@@ -3,7 +3,7 @@ package Model;
 import java.util.HashMap;
 
 public class Request {
-    private User sender;
+    private String sender;
     private String action;
     private HashMap<String, Object> params = new HashMap<>();
 
@@ -19,11 +19,11 @@ public class Request {
         return params;
     }
 
-    public User getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 }

@@ -98,7 +98,7 @@ public class CivilizationController {
     private static void updateHappiness() {
         int unhappiness = 2 * civilization.getCities().size();
         for (City city : civilization.getCities()) {
-            if (city.getCityStatus().equals(CityStatus.PUPPET)) unhappiness++;
+//            if (city.getCityStatus().equals(CityStatus.PUPPET)) unhappiness++;
             unhappiness += city.getCitizens().size();
             for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
                 if (set.getValue() <= 0) {
@@ -189,23 +189,24 @@ public class CivilizationController {
         GameMenu.getGameMapController().getConquerorDecision(city);
     }
 
-
-
-    public static void puppetCity(City city) {
-        city.setCityStatus(CityStatus.PUPPET);
-        civilization.addCity(city);
+    public static void destroyCity(City city) {
+//        city.setCityStatus(CityStatus.PUPPET);
+//        civilization.addCity(city);
+        city.getCivilization().getCities().remove(city);
     }
 
     public static void attachCity(City city) {
+        city.getCivilization().getCities().remove(city);
         city.setCivilization(civilization);
         civilization.getCities().add(city);
         GameMenu.attachCitySuccessful(city);
     }
 
     public static void razeCity(City city) {
+        city.getCivilization().setTotalGold(city.getCivilization().getTotalGold() - city.getGoldPerTurn());
         civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
         int firstPopulation = city.getCitizens().size();
         if (firstPopulation / 2 > 0)
-            city.getCitizens().subList(0, firstPopulation / 2).clear();
+            city.getCitizens().subList(firstPopulation / 2, firstPopulation - 1).clear();
     }
 }
