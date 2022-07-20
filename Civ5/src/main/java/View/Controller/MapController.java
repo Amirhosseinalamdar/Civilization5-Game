@@ -1427,10 +1427,14 @@ public class MapController {
         imageViews[3] = new ImageView(ImageBase.TURN_ICON.getImage());
         imageViews[4] = new ImageView(ImageBase.SAVE_ICON.getImage());
         imageViews[4].setCursor(Cursor.HAND);
-        imageViews[4].setOnMouseClicked(mouseEvent -> GameController.saveGameToJson(true));
+        imageViews[4].setOnMouseClicked(mouseEvent -> {
+            Main.clickSound();
+            GameController.saveGameToJson(true);
+        });
         imageViews[5] = new ImageView(ImageBase.HOME_ICON.getImage());
         imageViews[5].setCursor(Cursor.HAND);
         imageViews[5].setOnMouseClicked(mouseEvent -> {
+            Main.playSound("Menu.mp3");
             GameController.saveGameToJson(true);
             Main.changeScene("GamePage");
         });

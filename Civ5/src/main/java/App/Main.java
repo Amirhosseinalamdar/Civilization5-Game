@@ -59,6 +59,7 @@ public class Main extends Application {
         if (music != null) music.stop();
         URL url = Main.class.getResource("/sounds/" + name);
         music = new AudioClip(url.toExternalForm());
+        music.setVolume(0.3f);
         music.play();
     }
 
