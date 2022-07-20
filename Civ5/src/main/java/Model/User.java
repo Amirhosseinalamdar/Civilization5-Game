@@ -41,7 +41,7 @@ public class User {
     }
 
     public void newCivilization() {
-        this.civilization = new Civilization();
+        this.civilization = new Civilization(username);
     }
 
     public void setPassword(String password) {

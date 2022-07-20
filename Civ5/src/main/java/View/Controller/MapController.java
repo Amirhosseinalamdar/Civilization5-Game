@@ -1572,7 +1572,7 @@ public class MapController {
                     message = message.concat(set.getKey() + ": " + set.getValue() + " - ");
                 }
                 message = message.substring(0, message.length() - 2);
-                label.setText("Sender: " + request.getSender().getUsername() + "\nType: " + request.getAction() + "\n" + message);
+                label.setText("Sender: " + request.getSender() + "\nType: " + request.getAction() + "\n" + message);
             } else if (request.getAction().equals("Trade")) {
                 String messageGive = "Give: ";
                 String messageGet = "Get: ";
@@ -1585,11 +1585,11 @@ public class MapController {
                 }
                 messageGive = messageGive.substring(0, messageGive.length() - 2);
                 messageGet = messageGet.substring(0, messageGet.length() - 2);
-                label.setText("Sender: " + request.getSender().getUsername() + "\nType: " + request.getAction() + "\n" + messageGive + "\n" + messageGet);
+                label.setText("Sender: " + request.getSender() + "\nType: " + request.getAction() + "\n" + messageGive + "\n" + messageGet);
             } else if (request.getAction().equals("Peace")) {
-                label.setText("Sender: " + request.getSender().getUsername() + "\nType: " + request.getAction() + "\nMake Peace");
+                label.setText("Sender: " + request.getSender() + "\nType: " + request.getAction() + "\nMake Peace");
             } else if (request.getAction().equals("War")) {
-                label.setText("Sender: " + request.getSender().getUsername() + "\nType: " + request.getAction() + "\nDeclare War");
+                label.setText("Sender: " + request.getSender() + "\nType: " + request.getAction() + "\nDeclare War");
             }
             label.setTextFill(Color.rgb(180, 0, 0, 1));
             label.setMinHeight(100);
@@ -1685,9 +1685,16 @@ public class MapController {
     }
 
     private void acceptRequest(Request request) {
+        User user = null;
+        for (User player : Game.getInstance().getPlayers()) {
+            if (player.getUsername().equals(request.getSender())) {
+                user = player;
+                break;
+            }
+        }
         if (request.getAction().equals("Peace")) {
-            GameController.getCivilization().getInWarCivilizations().remove(request.getSender().getCivilization());
-            request.getSender().getCivilization().getInWarCivilizations().remove(GameController.getCivilization());
+            GameController.getCivilization().getInWarCivilizations().remove(request.getSender());
+            user.getCivilization().getInWarCivilizations().remove(GameController.getCivilization().getUsername());
             return;
         }
         for (Map.Entry<String, Object> set :
@@ -1696,36 +1703,36 @@ public class MapController {
             if (set.getKey().startsWith("Get")) {
                 if (args[1].equals("Gold")) {
                     GameController.getCivilization().setTotalGold(GameController.getCivilization().getTotalGold() - (Integer) set.getValue());
-                    request.getSender().getCivilization().setTotalGold(request.getSender().getCivilization().getTotalGold() + (Integer) set.getValue());
+                    user.getCivilization().setTotalGold(user.getCivilization().getTotalGold() + (Integer) set.getValue());
                 } else if (GameController.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
                     GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
-                    if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
-                        request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    if (user.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
+                        user.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), user.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
                     else
-                        request.getSender().getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                        user.getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 } else if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
                     GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
-                    if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
-                        request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
+                    if (user.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
+                        user.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), user.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
                     else
-                        request.getSender().getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
+                        user.getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
                 }
             } else {
                 if (args[1].equals("Gold")) {
                     GameController.getCivilization().setTotalGold(GameController.getCivilization().getTotalGold() + (Integer) set.getValue());
-                    request.getSender().getCivilization().setTotalGold(request.getSender().getCivilization().getTotalGold() - (Integer) set.getValue());
-                } else if (request.getSender().getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
+                    user.getCivilization().setTotalGold(user.getCivilization().getTotalGold() - (Integer) set.getValue());
+                } else if (user.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1]))) {
                     if (GameController.getCivilization().getLuxuryResources().containsKey(Resource.valueOf(args[1])))
                         GameController.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
                     else
                         GameController.getCivilization().getLuxuryResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
-                    request.getSender().getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
-                } else if (request.getSender().getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
+                    user.getCivilization().getLuxuryResources().replace(Resource.valueOf(args[1]), user.getCivilization().getLuxuryResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
+                } else if (user.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1]))) {
                     if (GameController.getCivilization().getStrategicResources().containsKey(Resource.valueOf(args[1])))
                         GameController.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), GameController.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) + (Integer) set.getValue());
                     else
                         GameController.getCivilization().getStrategicResources().put(Resource.valueOf(args[1]), (Integer) set.getValue());
-                    request.getSender().getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), request.getSender().getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
+                    user.getCivilization().getStrategicResources().replace(Resource.valueOf(args[1]), user.getCivilization().getStrategicResources().get(Resource.valueOf(args[1])) - (Integer) set.getValue());
                 }
             }
         }
@@ -1733,10 +1740,17 @@ public class MapController {
 
     private boolean canAcceptRequest(Request request) {
         if (request.getAction().equals("Peace")) return true;
+        User user = null;
+        for (User player : Game.getInstance().getPlayers()) {
+            if (player.getUsername().equals(request.getSender())) {
+                user = player;
+                break;
+            }
+        }
         HashMap<Resource, Integer> hashmap = new HashMap<>(GameController.getCivilization().getStrategicResources());
         hashmap.putAll(GameController.getCivilization().getLuxuryResources());
-        HashMap<Resource, Integer> hashmap1 = new HashMap<>(request.getSender().getCivilization().getStrategicResources());
-        hashmap1.putAll(request.getSender().getCivilization().getLuxuryResources());
+        HashMap<Resource, Integer> hashmap1 = new HashMap<>(user.getCivilization().getStrategicResources());
+        hashmap1.putAll(user.getCivilization().getLuxuryResources());
         for (Map.Entry<String, Object> set :
                 request.getParams().entrySet()) {
             String[] args = set.getKey().split(" ");
@@ -1756,12 +1770,8 @@ public class MapController {
             } else {
                 System.out.println(args[1]);
                 if (args[1].equals("Gold")) {
-                    System.out.println("total gold = " + request.getSender().getCivilization().getTotalGold());
-                    System.out.println("need gold = " + set.getValue());
-                    if (request.getSender().getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
+                    if (user.getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
                 } else if (hashmap1.containsKey(Resource.valueOf(args[1]))) {
-                    System.out.println("total resource = " + hashmap1.get(Resource.valueOf(args[1])));
-                    System.out.println("need resource = " + set.getValue());
                     if (hashmap1.get(Resource.valueOf(args[1])) < (Integer) set.getValue()) {
                         return false;
                     }
@@ -1808,7 +1818,6 @@ public class MapController {
                     } else
                         showPopup(event, message.toUpperCase() + "!");
                 }
-//                else System.out.println("repair nakardam (giga chad)");
             }
         });
     }
@@ -2198,6 +2207,7 @@ public class MapController {
             if (string.equals("attach")) CivilizationController.attachCity(city);
             else if (string.equals("puppet")) CivilizationController.puppetCity(city);
             else if (string.equals("raze")) CivilizationController.razeCity(city);
+            UnitController.checkIfDefeated(city.getCivilization());
             popup.hide();
             showMap();
         });

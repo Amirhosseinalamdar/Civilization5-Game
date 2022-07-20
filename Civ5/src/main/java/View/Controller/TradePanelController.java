@@ -219,7 +219,7 @@ public class TradePanelController {
         boolean isGive = false;
         try {
             Request request = new Request();
-            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
+            request.setSender(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
             request.setAction("Trade");
             for (int i = 0; i < list1.getChildren().size(); i++) {
                 if (list1.getChildren().get(i).getStyle().contains("508e96")) {

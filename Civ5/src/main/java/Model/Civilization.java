@@ -47,7 +47,13 @@ public class Civilization {
     @Expose(serialize = true, deserialize = true)
     private ArrayList<Request> requests;
     @Expose(serialize = true, deserialize = true)
-    private ArrayList<Civilization> inWarCivilizations;
+    private ArrayList<String> inWarCivilizations;
+    @Expose(serialize = true, deserialize = true)
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
 
     public HashMap<Resource, Integer> getStrategicResources() {
         return strategicResources;
@@ -57,7 +63,7 @@ public class Civilization {
         return requests;
     }
 
-    public Civilization() {
+    public Civilization(String username) {
         cities = new ArrayList<>();
         units = new ArrayList<>();
         notifications = new ArrayList<>();
@@ -76,6 +82,7 @@ public class Civilization {
         inProgressTech = null;
         happiness = 50;
         score = 0;
+        this.username = username;
     }
 
     public void setHappiness(int happiness) {
@@ -126,7 +133,7 @@ public class Civilization {
         this.showingCenterJ = showingCenterJ;
     }
 
-    public ArrayList<Civilization> getInWarCivilizations() {
+    public ArrayList<String> getInWarCivilizations() {
         return inWarCivilizations;
     }
 

@@ -908,7 +908,6 @@ public class UnitController {
         unit.setStatus("active");
         if (unit.getHealth() <= 0) unit.kill();
         if (city.getHP() <= 0) {
-//            CivilizationController.enterCityAsConqueror(city);
             return GameMenu.cityHPIsZero(city);
         }
         return "done";
@@ -944,16 +943,17 @@ public class UnitController {
         return "done";
     }
 
-    private static void checkIfDefeated(Civilization civilization) {
-        if(civilization.getCities().size() ==0 && civilization.getUnits().size() == 0){
+    public static void checkIfDefeated(Civilization civilization) {
+        if(civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
             Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
-        }
-        for (User player : Game.getInstance().getPlayers()) {
-            //TODO az ehsan pull konam civ hazf shode ro az list enemy civ ha pak konam
-        }
-        if(Game.getInstance().getPlayers().size() == 1){
-            GameMenu.getGameMapController().setEnded(true);
-            GameMenu.getGameMapController().showScores();
+            for (User player : Game.getInstance().getPlayers()) {
+                player.getCivilization().getInWarCivilizations().removeIf(username -> username.equals(civilization.getUsername()));
+                player.getCivilization().getRequests().removeIf(request -> request.getSender().equals(civilization.getUsername()));
+            }
+            if (Game.getInstance().getPlayers().size() == 1) {
+                GameMenu.getGameMapController().setEnded(true);
+                GameMenu.getGameMapController().showScores();
+            }
         }
     }
 }
