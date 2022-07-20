@@ -65,7 +65,8 @@ public class UnitController {
             if (unit.hasRemainingMoves()) {
                 if (canAttackTo(Game.getInstance().getTiles()[x][y])) return attack(Game.getInstance().getTiles()[x][y]);
                 else return GameMenu.invalidTileForAttack();
-            } else return GameMenu.notEnoughMoves();
+            }
+            else return GameMenu.notEnoughMoves();
         }
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
@@ -717,6 +718,8 @@ public class UnitController {
             if (tile.getMilitary() != null && !unit.getType().isCivilian()) return true;
             if (tile.getCivilian() != null && unit.getType().isCivilian()) return true;
         }
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity()))
+            return true;
         return tile.getType().equals(TerrainType.OCEAN) ||
                 tile.getType().equals(TerrainType.MOUNTAIN) ||
                 tile.getFeature().equals(TerrainFeature.ICE);
@@ -804,6 +807,7 @@ public class UnitController {
                     popup.hide();
                     new City(civilization, unit.getTile(), nameField.getText());
                     unit.kill();
+                    civilization.getNotifications().add(nameField.getText()+" was founded!");
                     GameMenu.getGameMapController().setChosenUnit(null);
                     GameMenu.getGameMapController().showMap();
                 }
@@ -860,6 +864,7 @@ public class UnitController {
         Military me = (Military)unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
         if (targetTile.getMilitary().getHealth() <= 0){
+            Main.unitActionsSound("unitDeath");
             targetTile.getMilitary().kill();
             checkIfDefeated(civilization);
         }
@@ -931,6 +936,7 @@ public class UnitController {
         unit.setStatus("active");
         if (enemy.getHealth() <= 0) {
             int i = enemy.getTile().getIndexInMapI(), j = enemy.getTile().getIndexInMapJ();
+            Main.unitActionsSound("unitDeath");
             enemy.kill();
             me.setMovesInTurn(0);
             moveUnit(i, j);

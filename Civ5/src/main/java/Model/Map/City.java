@@ -60,44 +60,8 @@ public class City {
     private CityStatus cityStatus;
     @Expose
     private final String name;
-
-    @Override
-    public City clone() {
-        City clone = new City(name);
-        clone.setAll(this);
-        return clone;
-    }
-
-    private void setAll (City city) {
-        tiles = new ArrayList<>(city.getTiles());
-        civilization = city.getCivilization();
-        storedFood = city.getStoredFood();
-        goldPerTurn = city.getGoldPerTurn();
-        foodPerTurn = city.getFoodPerTurn();
-        productionPerTurn = city.getProductionPerTurn();
-        sciencePerTurn = city.getSciencePerTurn();
-        lastCostsUntilNewProductions = new HashMap<>(city.getLastCostsUntilNewProductions());
-        buildings = new HashMap<>(city.getBuildings());
-        inProgressBuilding = city.getInProgressBuilding();
-        inProgressUnit = city.getInProgressUnit();
-        citizens = new ArrayList<>(city.getCitizens());
-        turnsUntilBirthCitizen = city.getTurnsUntilBirthCitizen();
-        turnsUntilDeathCitizen = city.getTurnsUntilDeathCitizen();
-        citizenNecessityFood = city.getCitizenNecessityFood();
-        gainCitizenLastFood = city.getGainCitizenLastFood();
-        lostCitizenLastFood = city.getLostCitizenLastFood();
-        turnsUntilGrowthBorder = city.getTurnsUntilGrowthBorder();
-        borderExpansionCost = city.getBorderExpansionCost();
-        borderLastCost = city.getBorderLastCost();
-        HP = city.getHP();
-        combatStrength = city.getCombatStrength();
-        rangedCombatStrength = city.getRangedCombatStrength();
-        cityStatus = city.getCityStatus();
-    }
-
-    public City (String name) {
-        this.name = name;
-    }
+    @Expose
+    private boolean canAttack;
 
     public City(Civilization civilization, Tile centerTile, String name) {
         lastCostsUntilNewProductions = new HashMap<>();
@@ -130,6 +94,7 @@ public class City {
         this.name = name;
         this.foodPerTurn = 1;
         this.productionPerTurn = 1;
+        canAttack = true;
     }
 
     public HashMap<Building, Integer> getBuildings() {
@@ -329,5 +294,13 @@ public class City {
 
     public int getCitizensNumber() {
         return citizens.size();
+    }
+
+    public void setCanAttack (boolean b) {
+        this.canAttack = b;
+    }
+
+    public boolean canAttack() {
+        return canAttack;
     }
 }

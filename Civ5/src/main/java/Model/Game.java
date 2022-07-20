@@ -97,6 +97,11 @@ public class Game {
                 saveFileNum = i;
                 break;
             }
+        CivSymbol.WHITE.setTaken(false);
+        CivSymbol.BLUE.setTaken(false);
+        CivSymbol.BLACK.setTaken(false);
+        CivSymbol.RED.setTaken(false);
+        CivSymbol.GREEN.setTaken(false);
         this.mapSize = mapSize;
         this.autoSaveDuration = autoSaveDuration;
         tiles = new Tile[mapSize][mapSize];
@@ -168,8 +173,10 @@ public class Game {
                 }
                 for (Citizen citizen : city.getCitizens()) {
                     citizen.setCity(city);
-                    tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
-                    citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
+                    if (citizen.getTile() != null) {
+                        tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
+                        citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
+                    }
                 }
             }
         }

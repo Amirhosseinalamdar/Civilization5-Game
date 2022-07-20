@@ -204,8 +204,10 @@ public class GameMenu {
                                 }
                                 mapController.setChosenUnit(null);
                                 mapController.showMap();
-                            } else
+                            } else{
+                                Main.unitActionsSound("moveSound");
                                 mapController.showPopup(event, message.toUpperCase() + "!");
+                            }
                         }
                     }
                 });

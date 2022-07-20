@@ -1,5 +1,6 @@
 package Model.UnitPackage;
 
+import App.Main;
 import Controller.GameController;
 import Model.Civilization;
 import Model.ImageBase;
@@ -11,14 +12,17 @@ import com.google.gson.annotations.Expose;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Random;
+
 
 public class Unit extends ImageView {
     @Expose
     protected UnitType type;
     @Expose
     protected Tile tile;
-    @Expose(deserialize = false, serialize = false)
+
     protected Civilization civilization;
+
     @Expose
     protected int MP;
     @Expose
@@ -65,6 +69,7 @@ public class Unit extends ImageView {
                         mapController.setChosenUnit(null);
 
                     if (mapController.getChosenUnit() != null) {
+                        Main.unitActionsSound("select"+new Random().nextInt(5));
                         mapController.showUserPanelDownLeft();
                         mapController.showUnitAvatar();
                         if (type.isCivilian()) mapController.showCivilianOptions();

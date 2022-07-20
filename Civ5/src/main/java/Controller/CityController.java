@@ -401,6 +401,7 @@ public class CityController {
         updateBuildingImprovement(city);
         updateRemovingProgress();
         updateRoads();
+        city.setCanAttack(true);
     }
 
     private static void updateBuildBuildings(City city) {
@@ -675,6 +676,7 @@ public class CityController {
     private static String rangeAttackToUnit(Military targetUnit) {
         targetUnit.setHealth(targetUnit.getHealth() - (city.getCombatStrength() - targetUnit.getCombatStrength()) / 3);
         if (targetUnit.getHealth() <= 0) targetUnit.kill();
+        city.setCanAttack(false);
         return "";
     }
 }

@@ -801,11 +801,12 @@ public class MapController {
     }
 
     private void showAttackOptionsForCity() {
+        if (!chosenCity.canAttack()) return;
         ArrayList<Tile> borderTiles = new ArrayList<>();
 
         for (Tile cityTile : chosenCity.getTiles())
             for (Tile neighbor : cityTile.getNeighbors())
-                if (!chosenCity.getTiles().contains(neighbor) && !borderTiles.contains(neighbor))
+                if (!neighbor.equals(chosenCity.getTiles().get(0)) && !borderTiles.contains(neighbor))
                     borderTiles.add(neighbor);
 
         for (Tile tile : borderTiles) {
@@ -1307,7 +1308,7 @@ public class MapController {
             ImageView imageView2 = new ImageView(image);
             imageView2.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView2.setY(105 * (i - xStartingIndex));
-            setDiscoveredTileBrightness(tile, i, j, colorAdjust);
+            setDiscoveredTileBrightness(tile,i,j,colorAdjust);
             backgroundPane.getChildren().add(imageView2);
         }
     }
@@ -1322,6 +1323,16 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
+        if(tile.getRouteInProgress() != null){
+            ImageView imageView;
+            if(tile.getRouteInProgress().equals("road")) imageView = new ImageView(ImageBase.ROAD_ICON.getImage());
+            else imageView = new ImageView(ImageBase.RAIL_ROAD_ICON.getImage());
+            imageView.setFitHeight(60);
+            imageView.setFitWidth(60);
+            imageView.setX(120 * (j - yStartingIndex) + (i % 2) * 60 + 60);
+            imageView.setY(105 * (i - xStartingIndex) + 10);
+            backgroundPane.getChildren().add(imageView);
+        }
         if (tile.getImprovementInProgress() != null) {
             ImageView improvementImage = new ImageView(tile.getImprovementInProgress().getKey().getImage());
             improvementImage.setFitHeight(60);
@@ -1330,7 +1341,8 @@ public class MapController {
             improvementImage.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(improvementImage);
         }
-        if (tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0) {
+        if ((tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0)
+                ||(tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() != 0)) {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
@@ -1988,6 +2000,7 @@ public class MapController {
                     } else
                         showPopup(event, message.toUpperCase() + "!");
                 } else if (string.equals("ATTACK")) {
+                    Main.unitActionsSound("attack");
                     chosenUnit.realSetStatus(UnitStatus.ATTACK);
                 } else {
                     doUnitOptions(string, event);
@@ -2054,6 +2067,7 @@ public class MapController {
                     doUnitOptions("SLEEP_UNIT", event);
                 }
             } else {
+                if(string.equals("DELETE")) Main.unitActionsSound("unitKill");
                 doUnitOptions(string, event);
             }
         });
@@ -2187,7 +2201,7 @@ public class MapController {
 
         buttons[0] = new Button("do nothing");
         buttons[1] = new Button("attach");
-        buttons[2] = new Button("puppet");
+        buttons[2] = new Button("destroy");
         buttons[3] = new Button("raze");
         for (Button button : buttons) {
             button.getStylesheets().add("css/MapStyle.css");
@@ -2196,7 +2210,7 @@ public class MapController {
         Popup popup = new Popup();
         setButtonFunction(popup, buttons[0], "do nothing", city);
         setButtonFunction(popup, buttons[1], "attach", city);
-        setButtonFunction(popup, buttons[2], "puppet", city);
+        setButtonFunction(popup, buttons[2], "destroy", city);
         setButtonFunction(popup, buttons[3], "raze", city);
         hBox.getChildren().addAll(buttons);
         hBox.setTranslateX(800 - hBox.getWidth() / 2);
@@ -2209,7 +2223,7 @@ public class MapController {
         button.setOnMouseClicked(event -> {
             Civilization civilization = city.getCivilization();
             if (string.equals("attach")) CivilizationController.attachCity(city);
-            else if (string.equals("puppet")) CivilizationController.puppetCity(city);
+            else if (string.equals("destroy")) CivilizationController.destroyCity(city);
             else if (string.equals("raze")) CivilizationController.razeCity(city);
             UnitController.checkIfDefeated(civilization);
             popup.hide();
