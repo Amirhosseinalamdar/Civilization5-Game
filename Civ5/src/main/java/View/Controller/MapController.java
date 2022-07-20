@@ -1,15 +1,13 @@
 package View.Controller;
 
 import App.Main;
-import Controller.CityController;
-import Controller.CivilizationController;
-import Controller.GameController;
-import Controller.UnitController;
+import Controller.*;
 import Model.*;
 import Model.Map.*;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
+import Transiton.NavigationTransition;
 import View.Commands;
 import View.GameMenu;
 import javafx.event.Event;
@@ -2209,10 +2207,11 @@ public class MapController {
 
     private void setButtonFunction(Popup popup, Button button, String string, City city) {
         button.setOnMouseClicked(event -> {
+            Civilization civilization = city.getCivilization();
             if (string.equals("attach")) CivilizationController.attachCity(city);
             else if (string.equals("puppet")) CivilizationController.puppetCity(city);
             else if (string.equals("raze")) CivilizationController.razeCity(city);
-            UnitController.checkIfDefeated(city.getCivilization());
+            UnitController.checkIfDefeated(civilization);
             popup.hide();
             showMap();
         });
@@ -2240,18 +2239,10 @@ public class MapController {
         VBox vBox = new VBox();
         Comparator<User> cmp = Comparator.comparing(User::getScore);
         Game.getInstance().getPlayers().sort(cmp);
-        Label label = new Label(Game.getInstance().getPlayers().get(0).getUsername() + " won!");
-        label.setStyle("-fx-text-fill: purple; -fx-font-size: 70;");
-        vBox.getChildren().add(label);
-        for (User player : Game.getInstance().getPlayers()) {
-            label = new Label(player.getUsername() + ":   " + player.getScore());
-            label.setStyle("-fx-font-size: 40; -fx-text-fill: white;");
-            vBox.getChildren().add(label);
-        }
+        showSortedPlayers(vBox);
         vBox.setTranslateX(600);
         vBox.setTranslateY(100);
         Button button = new Button("Main menu");
-        //download button stylee ehsan
         button.setOnMouseEntered(event -> {
             button.setOpacity(0.3);
         });
@@ -2259,6 +2250,7 @@ public class MapController {
             button.setOpacity(1);
         });
         button.setOnMouseClicked(event -> {
+            NavigationTransition.fadeTransition(button, "MainMenu");
             //TODO EHSAN MARO BEBAR MAIN MENU
             //aha inke faghat emtiaz namayesh dadam kafie dige?
             //kare digeyi ke nemikhas?
@@ -2266,5 +2258,36 @@ public class MapController {
         button.setLayoutX(600);
         vBox.getChildren().add(button);
         backgroundPane.getChildren().add(vBox);
+    }
+
+    private void showSortedPlayers(VBox vBox) {
+        Label label;
+        boolean isEntered = true;
+        for (User player : Game.getInstance().getPlayers()) {
+            Game.getInstance().getPlayerScores().put(player.getUsername(), player.getScore());
+        }
+        ArrayList<Integer> scores = new ArrayList(Game.getInstance().getPlayerScores().values());
+        scores.sort(Collections.reverseOrder());
+        for (Integer score : scores) {
+            for (Map.Entry<String, Integer> set :
+                    Game.getInstance().getPlayerScores().entrySet()) {
+                if (set.getValue().equals(score)) {
+                    if (isEntered) {
+                        label = new Label(set.getKey() + " won!");
+                        label.setStyle("-fx-text-fill: purple; -fx-font-size: 70;");
+                        vBox.getChildren().add(label);
+                        isEntered = false;
+                    }
+                    label = new Label(set.getKey() + ":   " + set.getValue());
+                    label.setStyle("-fx-font-size: 40; -fx-text-fill: white;");
+                    vBox.getChildren().add(label);
+                    break;
+                }
+            }
+        }
+        for (User allUser : UserController.getAllUsers()) {
+            if (Game.getInstance().getPlayerScores().containsKey(allUser.getUsername()))
+                allUser.setScore(allUser.getScore() + Game.getInstance().getPlayerScores().get(allUser.getUsername()));
+        }
     }
 }

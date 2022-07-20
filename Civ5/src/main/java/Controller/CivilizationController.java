@@ -197,12 +197,14 @@ public class CivilizationController {
     }
 
     public static void attachCity(City city) {
+        city.getCivilization().getCities().remove(city);
         city.setCivilization(civilization);
         civilization.getCities().add(city);
         GameMenu.attachCitySuccessful(city);
     }
 
     public static void razeCity(City city) {
+        city.getCivilization().setTotalGold(city.getCivilization().getTotalGold() - city.getGoldPerTurn());
         civilization.setTotalGold(civilization.getTotalGold() + city.getGoldPerTurn());
         int firstPopulation = city.getCitizens().size();
         if (firstPopulation / 2 > 0)

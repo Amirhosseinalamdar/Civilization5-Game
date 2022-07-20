@@ -155,7 +155,6 @@ public class UserController {
     }
 
     public static void writeDataToJson() {
-        System.out.println(allUsers);
         if (allUsers != null) {
             for (User allUser : allUsers) {
                 allUser.setCivilization(null);
@@ -164,7 +163,6 @@ public class UserController {
         }
         try {
             String json = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(allUsers);
-            System.out.println(json);
             FileWriter fileWriter = new FileWriter("json.json");
             fileWriter.write(json);
             fileWriter.close();

@@ -15,6 +15,7 @@ import com.google.gson.annotations.Expose;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Game {
@@ -30,6 +31,8 @@ public class Game {
     @Expose
     private ArrayList<User> players = new ArrayList<>();
     @Expose
+    private HashMap<String, Integer> playerScores = new HashMap<>();
+    @Expose
     private int turn;
     @Expose
     private int time;
@@ -41,6 +44,10 @@ public class Game {
     public static Game getInstance() {
         if (instance == null) instance = new Game();
         return instance;
+    }
+
+    public HashMap<String, Integer> getPlayerScores() {
+        return playerScores;
     }
 
     public ArrayList<User> getPlayers() {
