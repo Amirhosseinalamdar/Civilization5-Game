@@ -215,4 +215,8 @@ public class Unit extends ImageView {
         if (movesInTurn >= MP) this.setStatus("active");
         return movesInTurn < MP;
     }
+
+    public static double getMaxHealth() {
+        return MAX_HEALTH;
+    }
 }

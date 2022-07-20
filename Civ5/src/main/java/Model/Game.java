@@ -71,7 +71,7 @@ public class Game {
         turn++;
         turn %= players.size();
         if (getTurn() == 0) time++;
-        if(time >= 205 && !GameMenu.getGameMapController().isEnded()){
+        if(time >= 2050 && !GameMenu.getGameMapController().isEnded()){
             GameMenu.getGameMapController().setEnded(true);
             GameMenu.getGameMapController().showScores();
         }

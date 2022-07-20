@@ -1434,7 +1434,7 @@ public class MapController {
         labels[0] = new Label(String.valueOf(GameController.getCivilization().getScience()));
         labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
         labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
-        labels[3] = new Label(String.valueOf(Game.getInstance().getTurn()));
+        labels[3] = new Label(String.valueOf(Game.getInstance().getTime()));
         labels[4] = new Label("Save");
         for (int i = 0; i < labels.length; i++) {
             labels[i].setLayoutY(5);
