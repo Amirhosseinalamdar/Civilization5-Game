@@ -2000,6 +2000,7 @@ public class MapController {
                     } else
                         showPopup(event, message.toUpperCase() + "!");
                 } else if (string.equals("ATTACK")) {
+                    Main.unitActionsSound("attack");
                     chosenUnit.realSetStatus(UnitStatus.ATTACK);
                 } else {
                     doUnitOptions(string, event);
@@ -2066,6 +2067,7 @@ public class MapController {
                     doUnitOptions("SLEEP_UNIT", event);
                 }
             } else {
+                if(string.equals("DELETE")) Main.unitActionsSound("unitKill");
                 doUnitOptions(string, event);
             }
         });

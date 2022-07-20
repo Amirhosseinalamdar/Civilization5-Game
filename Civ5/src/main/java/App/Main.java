@@ -18,6 +18,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Main extends Application {
     public static Stage stage;
@@ -47,9 +48,9 @@ public class Main extends Application {
 
 
     public static void clickSound() {
-//        Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
-//        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//        mediaPlayer.play();
+        Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
     }
 
     public static void changeScene(String name) {
@@ -59,5 +60,10 @@ public class Main extends Application {
         } catch (Exception exception) {
             System.out.println("wrong fxml");
         }
+    }
+    public static void unitActionsSound(String string){
+        Media media = new Media(Main.class.getResource("/sounds/"+string+".wav").toExternalForm());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
     }
 }

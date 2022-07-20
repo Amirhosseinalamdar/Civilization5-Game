@@ -97,6 +97,11 @@ public class Game {
                 saveFileNum = i;
                 break;
             }
+        CivSymbol.WHITE.setTaken(false);
+        CivSymbol.BLUE.setTaken(false);
+        CivSymbol.BLACK.setTaken(false);
+        CivSymbol.RED.setTaken(false);
+        CivSymbol.GREEN.setTaken(false);
         this.mapSize = mapSize;
         this.autoSaveDuration = autoSaveDuration;
         tiles = new Tile[mapSize][mapSize];

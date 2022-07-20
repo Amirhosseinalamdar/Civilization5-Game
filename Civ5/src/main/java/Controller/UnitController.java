@@ -864,6 +864,7 @@ public class UnitController {
         Military me = (Military)unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
         if (targetTile.getMilitary().getHealth() <= 0){
+            Main.unitActionsSound("unitDeath");
             targetTile.getMilitary().kill();
             checkIfDefeated(civilization);
         }
@@ -935,6 +936,7 @@ public class UnitController {
         unit.setStatus("active");
         if (enemy.getHealth() <= 0) {
             int i = enemy.getTile().getIndexInMapI(), j = enemy.getTile().getIndexInMapJ();
+            Main.unitActionsSound("unitDeath");
             enemy.kill();
             me.setMovesInTurn(0);
             moveUnit(i, j);
