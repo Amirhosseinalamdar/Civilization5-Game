@@ -803,11 +803,12 @@ public class MapController {
     }
 
     private void showAttackOptionsForCity() {
+        if (!chosenCity.canAttack()) return;
         ArrayList<Tile> borderTiles = new ArrayList<>();
 
         for (Tile cityTile : chosenCity.getTiles())
             for (Tile neighbor : cityTile.getNeighbors())
-                if (!chosenCity.getTiles().contains(neighbor) && !borderTiles.contains(neighbor))
+                if (!neighbor.equals(chosenCity.getTiles().get(0)) && !borderTiles.contains(neighbor))
                     borderTiles.add(neighbor);
 
         for (Tile tile : borderTiles) {
@@ -2189,7 +2190,7 @@ public class MapController {
 
         buttons[0] = new Button("do nothing");
         buttons[1] = new Button("attach");
-        buttons[2] = new Button("puppet");
+        buttons[2] = new Button("destroy");
         buttons[3] = new Button("raze");
         for (Button button : buttons) {
             button.getStylesheets().add("css/MapStyle.css");
@@ -2198,7 +2199,7 @@ public class MapController {
         Popup popup = new Popup();
         setButtonFunction(popup, buttons[0], "do nothing", city);
         setButtonFunction(popup, buttons[1], "attach", city);
-        setButtonFunction(popup, buttons[2], "puppet", city);
+        setButtonFunction(popup, buttons[2], "destroy", city);
         setButtonFunction(popup, buttons[3], "raze", city);
         hBox.getChildren().addAll(buttons);
         hBox.setTranslateX(800 - hBox.getWidth() / 2);
@@ -2210,7 +2211,7 @@ public class MapController {
     private void setButtonFunction(Popup popup, Button button, String string, City city) {
         button.setOnMouseClicked(event -> {
             if (string.equals("attach")) CivilizationController.attachCity(city);
-            else if (string.equals("puppet")) CivilizationController.puppetCity(city);
+            else if (string.equals("destroy")) CivilizationController.destroyCity(city);
             else if (string.equals("raze")) CivilizationController.razeCity(city);
             UnitController.checkIfDefeated(city.getCivilization());
             popup.hide();

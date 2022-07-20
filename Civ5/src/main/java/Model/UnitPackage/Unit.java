@@ -17,8 +17,9 @@ public class Unit extends ImageView {
     protected UnitType type;
     @Expose
     protected Tile tile;
-    @Expose(deserialize = false, serialize = false)
+
     protected Civilization civilization;
+
     @Expose
     protected int MP;
     @Expose

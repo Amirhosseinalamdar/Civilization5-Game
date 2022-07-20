@@ -65,7 +65,8 @@ public class UnitController {
             if (unit.hasRemainingMoves()) {
                 if (canAttackTo(Game.getInstance().getTiles()[x][y])) return attack(Game.getInstance().getTiles()[x][y]);
                 else return GameMenu.invalidTileForAttack();
-            } else return GameMenu.notEnoughMoves();
+            }
+            else return GameMenu.notEnoughMoves();
         }
         else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
@@ -717,6 +718,8 @@ public class UnitController {
             if (tile.getMilitary() != null && !unit.getType().isCivilian()) return true;
             if (tile.getCivilian() != null && unit.getType().isCivilian()) return true;
         }
+        if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity()))
+            return true;
         return tile.getType().equals(TerrainType.OCEAN) ||
                 tile.getType().equals(TerrainType.MOUNTAIN) ||
                 tile.getFeature().equals(TerrainFeature.ICE);

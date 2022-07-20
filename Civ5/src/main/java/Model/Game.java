@@ -161,8 +161,10 @@ public class Game {
                 }
                 for (Citizen citizen : city.getCitizens()) {
                     citizen.setCity(city);
-                    tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
-                    citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
+                    if (citizen.getTile() != null) {
+                        tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()].setWorkingCitizen(citizen);
+                        citizen.changeWorkingTile(tiles[citizen.getTile().getIndexInMapI()][citizen.getTile().getIndexInMapJ()]);
+                    }
                 }
             }
         }
