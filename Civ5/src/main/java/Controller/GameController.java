@@ -613,13 +613,14 @@ public class GameController {
     }
 
     public static void saveGameToJson() {
+        if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1) return;
         System.out.println("bruh saving");
         String json = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
         try {
             FileWriter fileWriter = new FileWriter("Game" + Game.getInstance().getSaveFileNum() + ".json");
             fileWriter.write(json);
             fileWriter.close();
-            System.out.println("fuuuuuuuuuuuuuuuuuuuck");
+            System.out.println("file written");
         }
         catch (IOException io) {
             io.printStackTrace();

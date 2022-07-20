@@ -167,8 +167,6 @@ public class MapController {
     }
 
     public void showCity(Tile tile, int i, int j) {
-        System.out.println("city = " + (tile.getCity() == null));
-        System.out.println("isCenter = " + tile.isCenterOfCity(tile.getCity()));
         if (tile.getCity() != null)
         if (tile.getCity() != null && tile.isCenterOfCity(tile.getCity())) {
             ImageView imageView = new ImageView(getCityImage(tile.getCity()));

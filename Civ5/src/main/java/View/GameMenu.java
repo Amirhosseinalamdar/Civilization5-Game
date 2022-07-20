@@ -55,7 +55,6 @@ public class GameMenu {
             System.out.println("reading " + saveCode);
             Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
             System.out.println("loaded");
-            System.out.println("fuuuuuuuuuuuuuuuuuuuuuuck");
             Game.getInstance().createRelations();
         }
         catch (Exception e){

@@ -295,10 +295,6 @@ public class Tile extends ImageView {
     }
 
     public boolean isCenterOfCity(City city) {
-        System.out.println("1: " + (this.city == null));
-        if (this.city == null) return false;
-        System.out.println("2: " + (this.city.equals(city)));
-        System.out.println("3: " + this.city.getTiles().get(0).equals(this));
         return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
     }
 
