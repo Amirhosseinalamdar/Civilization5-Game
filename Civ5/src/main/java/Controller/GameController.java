@@ -3,9 +3,7 @@ package Controller;
 import Model.Civilization;
 import Model.Game;
 import Model.Map.Building;
-import Model.Map.Citizen;
 import Model.Map.City;
-import Model.Map.Tile;
 import Model.UnitPackage.Military;
 import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitStatus;
@@ -323,7 +321,7 @@ public class GameController {
 
         if (Game.getInstance().getAutoSaveDuration() != 0)
             if (Game.getInstance().getTime() % Game.getInstance().getAutoSaveDuration() == 0)
-                saveGameToJson();
+                saveGameToJson(false);
 
         return "";
     }
@@ -613,8 +611,8 @@ public class GameController {
         return rank;
     }
 
-    public static void saveGameToJson() {
-        if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1) return;
+    public static void saveGameToJson (boolean forceSave) {
+        if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1 && !forceSave) return;
         System.out.println("bruh saving");
         String json = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
         try {

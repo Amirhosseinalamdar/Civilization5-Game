@@ -9,7 +9,6 @@ import Model.UnitPackage.UnitStatus;
 import Model.UnitPackage.UnitType;
 import Transiton.NavigationTransition;
 import View.Commands;
-import View.GameMenu;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,7 +35,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -45,7 +43,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 
@@ -1423,34 +1420,41 @@ public class MapController {
     public void showStatusBar() {//TODO ADD TEXT BOXES
         ImageView imageView = new ImageView(ImageBase.STATUSBAR_BOX.getImage());
         backgroundPane.getChildren().add(imageView);
-        ImageView[] imageViews = new ImageView[5];
+        ImageView[] imageViews = new ImageView[6];
         imageViews[0] = new ImageView(ImageBase.SCIENCE_ICON.getImage());
         imageViews[1] = new ImageView(ImageBase.GOLD_ICON.getImage());
         imageViews[2] = new ImageView(ImageBase.HAPPINESS_ICON.getImage());
         imageViews[3] = new ImageView(ImageBase.TURN_ICON.getImage());
         imageViews[4] = new ImageView(ImageBase.SAVE_ICON.getImage());
         imageViews[4].setCursor(Cursor.HAND);
-        imageViews[4].setOnMouseClicked(mouseEvent -> GameController.saveGameToJson());
+        imageViews[4].setOnMouseClicked(mouseEvent -> GameController.saveGameToJson(true));
+        imageViews[5] = new ImageView(ImageBase.HOME_ICON.getImage());
+        imageViews[5].setCursor(Cursor.HAND);
+        imageViews[5].setOnMouseClicked(mouseEvent -> {
+            GameController.saveGameToJson(true);
+            Main.changeScene("GamePage");
+        });
         for (int i = 0; i < imageViews.length; i++) {
             imageViews[i].setFitHeight(40);
             imageViews[i].setFitWidth(40);
             imageViews[i].setY(10);
             imageViews[i].setX(40 + 140 * i);
-            if (i >= 3) imageViews[i].setX(imageViews[i].getX() + 700);
+            if (i >= 3) imageViews[i].setX(imageViews[i].getX() + 600);
             backgroundPane.getChildren().add(imageViews[i]);
         }
 
-        Label[] labels = new Label[5];
+        Label[] labels = new Label[6];
         labels[0] = new Label(String.valueOf(GameController.getCivilization().getScience()));
         labels[1] = new Label(String.valueOf(GameController.getCivilization().getTotalGold()));
         labels[2] = new Label(String.valueOf(GameController.getCivilization().getHappiness()));
         labels[3] = new Label(String.valueOf(Game.getInstance().getTime()));
         labels[4] = new Label("Save");
+        labels[5] = new Label("Main Menu");
         for (int i = 0; i < labels.length; i++) {
             labels[i].setLayoutY(5);
             labels[i].setLayoutX(40 + 140 * i + 50);
             labels[i].setStyle("-fx-text-fill: white; -fx-font-size: 30; -fx-font-family: 'Tw Cen MT'");
-            if (i >= 3) labels[i].setLayoutX(labels[i].getLayoutX() + 700);
+            if (i >= 3) labels[i].setLayoutX(labels[i].getLayoutX() + 600);
             backgroundPane.getChildren().add(labels[i]);
         }
 
