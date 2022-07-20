@@ -9,7 +9,7 @@ public enum UnitStatus {
     ALERT(ImageBase.ALERT_ICON.getImage()),
     FORTIFY(ImageBase.FORTIFY_ICON.getImage()),
     HEAL(ImageBase.HEAL_ICON.getImage()),
-    SETTLE(null),//TODO IN CHIE
+    SETTLE(null),
     SIEGEPREP(ImageBase.SETUP_RANDED_ICON.getImage()),
     ATTACK(ImageBase.ATTACK_ICON.getImage()),
     RAID(null),

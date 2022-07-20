@@ -78,7 +78,7 @@ public class Game {
         turn++;
         turn %= players.size();
         if (getTurn() == 0) time++;
-        if(time >= 2050 && !GameMenu.getGameMapController().isEnded()){
+        if (time >= 2050 && !GameMenu.getGameMapController().isEnded()) {
             GameMenu.getGameMapController().setEnded(true);
             GameMenu.getGameMapController().showScores();
         }
@@ -120,11 +120,7 @@ public class Game {
                     tiles[randomX][randomY].getCivilian() != null);
             player.getCivilization().createSettlerAndWarriorOnTile(tiles[randomX][randomY]);
             Tile settlerTile = player.getCivilization().getUnits().get(0).getTile();
-            System.out.println("i am " + player.getUsername() + ", my first unit is on " +
-                    settlerTile.getIndexInMapI() + ", " + settlerTile.getIndexInMapJ());
             Tile warriorTile = player.getCivilization().getUnits().get(1).getTile();
-            System.out.println("my second unit is on " +
-                    warriorTile.getIndexInMapI() + ", " + warriorTile.getIndexInMapJ());
             makeFirstTilesVisible(player.getCivilization(), settlerTile, warriorTile);
         }
     }
@@ -134,9 +130,8 @@ public class Game {
     }
 
     public void createRelations() {
-        System.out.println("creating relations:");
         for (User player : players) {
-            ArrayList <Unit> unitsHolder = new ArrayList<>(player.getCivilization().getUnits());
+            ArrayList<Unit> unitsHolder = new ArrayList<>(player.getCivilization().getUnits());
             player.getCivilization().getUnits().clear();
             for (Unit unit : unitsHolder) {
                 unit.setCivilization(player.getCivilization());
@@ -150,8 +145,7 @@ public class Game {
                     civilian.setHealth(unit.getHealth());
                     player.getCivilization().getUnits().add(civilian);
                     tiles[unit.getTile().getIndexInMapI()][unit.getTile().getIndexInMapJ()].setCivilian(civilian);
-                }
-                else {
+                } else {
                     Military military = new Military(unit.getType());
                     military.setHealth(unit.getHealth());
                     military.initTile(unit.getTile());
@@ -186,7 +180,7 @@ public class Game {
         ArrayList<Tile> visibleTiles = settlerTile.getNeighbors();
         visibleTiles.addAll(warriorTile.getNeighbors());
         visibleTiles.add(warriorTile);
-        if(warriorTile != settlerTile) visibleTiles.add(settlerTile);
+        if (warriorTile != settlerTile) visibleTiles.add(settlerTile);
         for (Tile tile : visibleTiles)
             civilization.getTileVisionStatuses()[tile.getIndexInMapI()][tile.getIndexInMapJ()] = TileStatus.CLEAR;
     }
@@ -221,12 +215,11 @@ public class Game {
         for (int i = 0; i < mapSize; i++)
             for (int j = 0; j < mapSize; j++)
                 if (rand.nextInt(50) == 0 && canBeRuined(i, j)) {
-                    System.out.println("ruining " + i + " " + j);
                     tiles[i][j].setRuined(true);
                 }
     }
 
-    private boolean canBeRuined (int i, int j) {
+    private boolean canBeRuined(int i, int j) {
         return tiles[i][j].getType() != TerrainType.OCEAN && tiles[i][j].getType() != TerrainType.MOUNTAIN &&
                 tiles[i][j].getFeature() != TerrainFeature.ICE;
     }

@@ -13,10 +13,11 @@ public class PlayerListPageController {
     public VBox list;
     public Label ok;
 
-    private static ArrayList <User> players;
+    private static ArrayList<User> players;
+
     public void initialize() {
         players = new ArrayList<>();
-        ArrayList <User> allUsers = new ArrayList<>(UserController.getAllUsers());
+        ArrayList<User> allUsers = new ArrayList<>(UserController.getAllUsers());
         allUsers.remove(UserController.getLoggedInUser());
         for (User user : allUsers) {
             Label label = new Label();
@@ -40,11 +41,11 @@ public class PlayerListPageController {
         });
     }
 
-    private void changeUserPresence (User user) {
+    private void changeUserPresence(User user) {
         if (players.contains(user)) players.remove(user);
         else players.add(user);
         for (Node node : list.getChildren())
-            if (((Label)node).getText().equals(user.getUsername())) {
+            if (((Label) node).getText().equals(user.getUsername())) {
                 if (!players.contains(user)) node.setStyle("-fx-font-family: 'Tw Cen MT';" +
                         "-fx-text-fill: #dbdbb1;" +
                         "-fx-font-size: 30;" +

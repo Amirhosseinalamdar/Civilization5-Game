@@ -23,13 +23,14 @@ import javafx.scene.text.TextAlignment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 public class PrivateChatController {
     public Button sendButton;
     public TextField textField;
     public VBox chatBox;
     public Button backButton;
 
-    public PrivateChatController(){
+    public PrivateChatController() {
         chatBox = DataBase.getInstance().getCurrentPrivateChat().getChatBox();
         System.out.println("here");
     }
@@ -70,7 +71,6 @@ public class PrivateChatController {
         hBox.setTranslateX(20);
         hBox.setTranslateY(chatBox.getChildren().get(chatBox.getChildren().size() - 1).getTranslateY() +
                 chatBox.getChildren().get(chatBox.getChildren().size() - 1).getLayoutBounds().getHeight() - 10);
-        //TODO if sent
         Circle circle = new Circle();
         circle.setRadius(5);
         circle.setStyle("-fx-fill: orange;");

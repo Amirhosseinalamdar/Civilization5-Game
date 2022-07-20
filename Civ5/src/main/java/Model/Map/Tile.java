@@ -157,7 +157,7 @@ public class Tile extends ImageView {
         this.indexInMapJ = indexInMapJ;
     }
 
-    public void setMilitary (Military military) {
+    public void setMilitary(Military military) {
         this.military = military;
     }
 
@@ -298,11 +298,11 @@ public class Tile extends ImageView {
         return this.city != null && this.city.equals(city) && this.city.getTiles().get(0).equals(this);
     }
 
-    public void setRuined (boolean isRuined) {
+    public void setRuined(boolean isRuined) {
         this.isRuined = isRuined;
     }
 
-    public boolean isPurchasableFor (City buyer) {
+    public boolean isPurchasableFor(City buyer) {
         return type != TerrainType.OCEAN && type != TerrainType.MOUNTAIN && feature != TerrainFeature.ICE &&
                 city == null && (civilian == null ||
                 civilian.getCivilization().equals(buyer.getCivilization())) && (military == null ||

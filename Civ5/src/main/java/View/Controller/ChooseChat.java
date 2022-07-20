@@ -22,14 +22,14 @@ public class ChooseChat {
     public Pane pane;
 
     public void startChat(MouseEvent mouseEvent) throws IOException {
-        for(User user: UserController.getAllUsers()){
-            if(user.getUsername().equals(textField.getText())){
-                if(DataBase.getInstance().getPrivateChatByUsers(user.getUsername(),
-                        Game.getInstance().getLoggedInUser().getUsername())!=null){
+        for (User user : UserController.getAllUsers()) {
+            if (user.getUsername().equals(textField.getText())) {
+                if (DataBase.getInstance().getPrivateChatByUsers(user.getUsername(),
+                        Game.getInstance().getLoggedInUser().getUsername()) != null) {
                     DataBase.getInstance().setCurrentPrivateChat(
                             (DataBase.getInstance().getPrivateChatByUsers
                                     (textField.getText(), Game.getInstance().getLoggedInUser().getUsername())));
-                }else{
+                } else {
                     PrivateChat privateChat = new PrivateChat(textField.getText(),
                             Game.getInstance().getLoggedInUser().getUsername());
                     DataBase.getInstance().getPrivateChats().add(privateChat);

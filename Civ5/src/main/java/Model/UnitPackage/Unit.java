@@ -55,21 +55,15 @@ public class Unit extends ImageView {
             setStyle("-fx-cursor: hand;");
         });
         setOnMouseClicked(event -> {
-            System.out.println("clicked duh");
             MapController mapController = GameMenu.getGameMapController();
-            if(!(mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK)) {
-                try {
-                    System.out.println("my type = " + type + ", chosen type = " + mapController.getChosenUnit().getType());
-                } catch (Exception e) {
-                    System.out.println("my type only = " + type);
-                }
+            if (!(mapController.getChosenUnit() != null && mapController.getChosenUnit().getStatus() == UnitStatus.ATTACK)) {
                 if (mapController.getChosenUnit() == null) {
                     mapController.setChosenUnit(this);
                     if (!civilization.equals(GameController.getCivilization()))
                         mapController.setChosenUnit(null);
 
                     if (mapController.getChosenUnit() != null) {
-                        Main.unitActionsSound("select"+new Random().nextInt(5));
+                        Main.unitActionsSound("select" + new Random().nextInt(5));
                         mapController.showUserPanelDownLeft();
                         mapController.showUnitAvatar();
                         if (type.isCivilian()) mapController.showCivilianOptions();
@@ -81,8 +75,7 @@ public class Unit extends ImageView {
                         mapController.hideUnitAvatar();
                         mapController.hideUnitOptions();
                         mapController.showMap();
-                    }
-                    else if (civilization.equals(GameController.getCivilization())) {
+                    } else if (civilization.equals(GameController.getCivilization())) {
                         mapController.setChosenUnit(this);
                         mapController.hideUnitAvatar();
                         mapController.hideUnitOptions();
@@ -105,20 +98,18 @@ public class Unit extends ImageView {
         return this.path;
     }
 
-    public void setTile (Tile tile) {
+    public void setTile(Tile tile) {
         this.tile = tile;
-        System.out.println("ok tile is set, " + tile.getX() + ", " + tile.getY());
         if (type.isCivilian()) {
             this.setX(tile.getX() + 65);
             this.setY(tile.getY() + 40);
-        }
-        else {
+        } else {
             this.setX(tile.getX() + 10);
             this.setY(tile.getY() + 40);
         }
     }
 
-    public void initTile (Tile tile) {
+    public void initTile(Tile tile) {
         this.tile = tile;
         System.out.println("tile initialized");
     }
@@ -175,7 +166,7 @@ public class Unit extends ImageView {
         path = null;
     }
 
-    public void realSetStatus(UnitStatus unitStatus){
+    public void realSetStatus(UnitStatus unitStatus) {
         this.status = unitStatus;
     }
 

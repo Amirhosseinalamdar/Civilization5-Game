@@ -28,14 +28,14 @@ public class PublicChatController {
     public Button sendButton;
     public Button backButton;
 
-    public PublicChatController(){
+    public PublicChatController() {
         this.chatBox = PublicChat.getInstance().getChatBox();
         System.out.println(chatBox);
         System.out.println("here");
     }
 
     public void sendMsg(MouseEvent mouseEvent) {
-        if(textField.getText().length() == 0) return;
+        if (textField.getText().length() == 0) return;
         Text text = new Text(textField.getText());
         text.setTextAlignment(TextAlignment.valueOf("CENTER"));
         text.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 30;");
@@ -49,18 +49,19 @@ public class PublicChatController {
         addMsgInfo();
 
     }
-    private void addMsgInfo(){
+
+    private void addMsgInfo() {
         String sender;
-        if(Game.getInstance().getLoggedInUser() == null) sender = "Null";
+        if (Game.getInstance().getLoggedInUser() == null) sender = "Null";
         else sender = Game.getInstance().getLoggedInUser().getUsername();
-        if(sender.length() > 10){
-            sender = sender.substring(0,7);
+        if (sender.length() > 10) {
+            sender = sender.substring(0, 7);
             sender.concat("...");
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
-        String time = formatter.format(date).toString().substring(11,16);
-        String info = sender + " " + time +"  ";
+        String time = formatter.format(date).toString().substring(11, 16);
+        String info = sender + " " + time + "  ";
         Text text = new Text(info);
         text.setTextAlignment(TextAlignment.valueOf("CENTER"));
         text.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 17;");
@@ -68,13 +69,12 @@ public class PublicChatController {
         hBox.setMaxWidth(text.getLayoutBounds().getWidth() + 30);
         hBox.setStyle("-fx-background-color: lightBlue; -fx-background-radius: 0 0 7 7;");
         hBox.setTranslateX(20);
-        hBox.setTranslateY(chatBox.getChildren().get(chatBox.getChildren().size()-1).getTranslateY() +
-                chatBox.getChildren().get(chatBox.getChildren().size()-1).getLayoutBounds().getHeight() - 10);
-        //TODO if sent
+        hBox.setTranslateY(chatBox.getChildren().get(chatBox.getChildren().size() - 1).getTranslateY() +
+                chatBox.getChildren().get(chatBox.getChildren().size() - 1).getLayoutBounds().getHeight() - 10);
         Circle circle = new Circle();
         circle.setRadius(5);
         circle.setStyle("-fx-fill: orange;");
-        circle.setTranslateY(hBox.getLayoutY() + hBox.getLayoutBounds().getHeight()/2 + 5);
+        circle.setTranslateY(hBox.getLayoutY() + hBox.getLayoutBounds().getHeight() / 2 + 5);
         hBox.getChildren().add(circle);
         chatBox.getChildren().add(hBox);
         PublicChat.getInstance().setChatBox(this.chatBox);

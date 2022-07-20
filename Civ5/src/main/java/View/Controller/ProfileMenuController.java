@@ -55,7 +55,7 @@ public class ProfileMenuController {
             invalidPassword.setText("current password is invalid");
             invalidPassword.setVisible(true);
             currentPassword.setStyle("-fx-border-color: red");
-        } else if (UserController.changePassword(currentPassword.getText(), newPassword.getText()).startsWith("error new")){
+        } else if (UserController.changePassword(currentPassword.getText(), newPassword.getText()).startsWith("error new")) {
             invalidPassword.setText("please enter a new password");
             invalidPassword.setVisible(true);
             newPassword.setStyle("-fx-border-color: red");
@@ -95,11 +95,16 @@ public class ProfileMenuController {
 
     public void changeIcon(MouseEvent mouseEvent) {
         ImageView imageView = (ImageView) mouseEvent.getTarget();
-        if (imageView.getId().equals("icon1")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/0.png").toExternalForm());
-        else if (imageView.getId().equals("icon2")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/2.png").toExternalForm());
-        else if (imageView.getId().equals("icon3")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/1.png").toExternalForm());
-        else if (imageView.getId().equals("icon4")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/3.png").toExternalForm());
-        else if (imageView.getId().equals("icon5")) UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/4.png").toExternalForm());
+        if (imageView.getId().equals("icon1"))
+            UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/0.png").toExternalForm());
+        else if (imageView.getId().equals("icon2"))
+            UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/2.png").toExternalForm());
+        else if (imageView.getId().equals("icon3"))
+            UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/1.png").toExternalForm());
+        else if (imageView.getId().equals("icon4"))
+            UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/3.png").toExternalForm());
+        else if (imageView.getId().equals("icon5"))
+            UserController.getLoggedInUser().setIconAddress(this.getClass().getResource("/pictures/Icons/4.png").toExternalForm());
         icon0.setImage(new Image(UserController.getLoggedInUser().getIconAddress()));
         iconChanged.setText("icon changed successfully!");
         iconChanged.setStyle("-fx-text-fill: #017301");

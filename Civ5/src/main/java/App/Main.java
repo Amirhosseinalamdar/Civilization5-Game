@@ -48,7 +48,6 @@ public class Main extends Application {
     }
 
 
-
     public static void clickSound() {
         Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -71,8 +70,9 @@ public class Main extends Application {
             System.out.println("wrong fxml");
         }
     }
-    public static void unitActionsSound(String string){
-        Media media = new Media(Main.class.getResource("/sounds/"+string+".wav").toExternalForm());
+
+    public static void unitActionsSound(String string) {
+        Media media = new Media(Main.class.getResource("/sounds/" + string + ".wav").toExternalForm());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
     }

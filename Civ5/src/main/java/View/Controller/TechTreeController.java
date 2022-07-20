@@ -130,7 +130,7 @@ public class TechTreeController {
     private void chooseResearch() {
         for (Node child : anchorPane.getChildren()) {
             if (!(child instanceof ImageView)) continue;
-            ImageView imageView = (ImageView)child;
+            ImageView imageView = (ImageView) child;
             if (imageView.getFitWidth() != 80 || imageView.getFitHeight() != 80) continue;
             imageView.setStyle("-fx-cursor: hand");
             Technology technology = getTechFromImageView(imageView);
@@ -149,14 +149,14 @@ public class TechTreeController {
         }
     }
 
-    private Technology getTechFromImageView (ImageView imageView) {
+    private Technology getTechFromImageView(ImageView imageView) {
         for (Technology tech : Technology.values())
             if (imagesAreSame(imageView.getImage(), tech.getImage()))
                 return tech;
         return null;
     }
 
-    private boolean imagesAreSame (Image i1, Image i2) {
+    private boolean imagesAreSame(Image i1, Image i2) {
         for (int i = 0; i < i1.getWidth(); i++)
             for (int j = 0; j < i1.getHeight(); j++)
                 if (!colorsAreTheSame(i1.getPixelReader().getColor(i, j), i2.getPixelReader().getColor(i, j)))
@@ -164,7 +164,7 @@ public class TechTreeController {
         return true;
     }
 
-    private boolean colorsAreTheSame (Color c1, Color c2) {
+    private boolean colorsAreTheSame(Color c1, Color c2) {
         return c1.getRed() == c2.getRed() && c1.getGreen() == c2.getGreen() && c1.getBlue() == c2.getBlue();
     }
 

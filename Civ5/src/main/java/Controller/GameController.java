@@ -72,15 +72,12 @@ public class GameController {
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_UNIT2)) != null) {
             Unit chosenUnit = getUnitFromCommand(matcher);
             if (chosenUnit == null) return;
-            System.out.println("calling from here");
             UnitController.setUnit(chosenUnit, "");
             UnitController.handleUnitOptions();
         } else if ((matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY1)) != null ||
                 (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
             City chosenCity = getCityFromCommand(matcher);
             if (chosenCity == null) return;
-            System.out.println("name: " + chosenCity.getName());
-//            CityController.setCity(chosenCity);
             CityController.handleCityOptions();
         } else if (Commands.getMatcher(command, Commands.MANAGE_CIVILIZATION) != null) {
             CivilizationController.handleCivilizationOptions();
@@ -144,7 +141,6 @@ public class GameController {
             checkControllersCivilization();
             CivilizationController.updateCivilization();
         }
-        System.out.println("turn: " + Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername());
         for (Unit unit : Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getCivilization().getUnits()) {
             unit.setMovesInTurn(0);
             UnitController.setUnit(unit, "");
@@ -237,7 +233,6 @@ public class GameController {
 
     private static Unit getUnitFromCommand(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-        System.out.println(matcher.group("unitType") + ", " + x + ", " + y);
         if (invalidPos(x, y)) {
             GameMenu.indexOutOfArray();
             return null;
@@ -308,16 +303,12 @@ public class GameController {
         checkMyCivilization();
         checkControllersCivilization();
         User player = Game.getInstance().getPlayers().get(Game.getInstance().getTurn());
-        System.out.println("turn: " + player.getUsername());
         for (Unit unit : player.getCivilization().getUnits()) {
             unit.setMovesInTurn(0);
             UnitController.setUnit(unit, "");
             UnitController.doRemainingMissions();
         }
         CivilizationController.updateCivilization();
-
-        System.out.println("time = " + Game.getInstance().getTime() + ", dur = " + Game.getInstance().getAutoSaveDuration() +
-                ", file = " + Game.getInstance().getSaveFileNum());
 
         if (Game.getInstance().getAutoSaveDuration() != 0)
             if (Game.getInstance().getTime() % Game.getInstance().getAutoSaveDuration() == 0)
@@ -353,7 +344,6 @@ public class GameController {
 
     public static void handleBanner() {
         if (civilization.getCities().isEmpty()) {
-            System.out.println("civilization doesn't have any cities");
         } else {
             int i = 0;
             CityController.updateCityInfos(civilization.getCities().get(i));
@@ -407,8 +397,6 @@ public class GameController {
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
                 City chosenCity = getCityFromCommand(matcher);
                 if (chosenCity != null) {
-                    System.out.println("name: " + chosenCity.getName());
-//                    CityController.setCity(chosenCity);
                     CityController.handleCityOptions();
                 }
                 break;
@@ -433,8 +421,6 @@ public class GameController {
                     (matcher = Commands.getMatcher(command, Commands.CHOOSE_CITY2)) != null) {
                 City chosenCity = getCityFromCommand(matcher);
                 if (chosenCity != null) {
-                    System.out.println("name: " + chosenCity.getName());
-//                    CityController.setCity(chosenCity);
                     CityController.handleCityOptions();
                 }
                 break;
@@ -613,13 +599,11 @@ public class GameController {
 
     public static void saveGameToJson (boolean forceSave) {
         if (Game.getInstance().getTurn() < Game.getInstance().getPlayers().size() - 1 && !forceSave) return;
-        System.out.println("bruh saving");
         String json = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
         try {
             FileWriter fileWriter = new FileWriter("Game" + Game.getInstance().getSaveFileNum() + ".json");
             fileWriter.write(json);
             fileWriter.close();
-            System.out.println("file written");
         }
         catch (IOException io) {
             io.printStackTrace();

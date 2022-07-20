@@ -24,13 +24,14 @@ public class ChooseResearchPageController {
     public VBox bigBox;
 
     private final Civilization civilization = GameController.getCivilization();
+
     public void initialize() {
         Label head = new Label("Technologies");
         head.setPrefSize(400, 40);
         head.setAlignment(Pos.CENTER);
         head.setStyle("-fx-font-size: 35; -fx-font-family: 'Tw Cen MT'; -fx-text-fill: #040457; -fx-alignment: center;");
         bigBox.getChildren().add(head);
-        ArrayList <Technology> availableTechs = new ArrayList<>();
+        ArrayList<Technology> availableTechs = new ArrayList<>();
         if (civilization.getInProgressTech() != null) availableTechs.add(civilization.getInProgressTech());
         for (Technology technology : Technology.values())
             if (!civilization.hasReachedTech(technology) && civilization.hasPrerequisitesOf(technology))
@@ -57,7 +58,7 @@ public class ChooseResearchPageController {
         bigBox.setStyle("-fx-background-color: none; -fx-fill: none;");
     }
 
-    private VBox getVBoxForTech (Technology tech) {
+    private VBox getVBoxForTech(Technology tech) {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setBrightness(-0.2);
         VBox box = new VBox();

@@ -23,12 +23,8 @@ public class LoginMenu {
                     (matcher = Commands.getMatcher(command, Commands.REGISTER4)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.REGISTER5)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.REGISTER6)) != null) {
-//                System.out.println(UserController.registerUser(matcher));
             } else if ((matcher = Commands.getMatcher(command, Commands.LOGIN1)) != null ||
                     (matcher = Commands.getMatcher(command, Commands.LOGIN2)) != null) {
-//                output = UserController.logUserIn(matcher);
-//                System.out.println(output);
-//                if (output.equals("user logged in successfully!")) return 0;
             } else if (Commands.getMatcher(command, Commands.ENTER_MENU) != null) {
                 System.out.println("please login first");
             } else {

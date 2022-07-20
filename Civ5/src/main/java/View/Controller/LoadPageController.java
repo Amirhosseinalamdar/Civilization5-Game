@@ -70,14 +70,13 @@ public class LoadPageController {
                         GameMenu.startGame(null, new Scanner(System.in), finalI);
                     });
                     box.getChildren().add(label);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
     }
 
-    private boolean iAmAmong (ArrayList <User> users) {
+    private boolean iAmAmong(ArrayList<User> users) {
         for (User user : users)
             if (user.getUsername().equals(UserController.getLoggedInUser().getUsername()) &&
                     user.getNickname().equals(UserController.getLoggedInUser().getNickname()) &&

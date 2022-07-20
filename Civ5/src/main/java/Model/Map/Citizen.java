@@ -7,12 +7,12 @@ public class Citizen {
     private Tile tile;
     private City city;
 
-    public Citizen (City city, Tile tile) {
+    public Citizen(City city, Tile tile) {
         this.city = city;
         this.tile = tile;
     }
 
-    public void changeWorkingTile (Tile newTile) {
+    public void changeWorkingTile(Tile newTile) {
         this.tile = newTile;
     }
 
@@ -24,7 +24,7 @@ public class Citizen {
         return tile;
     }
 
-    public void setCity (City city) {
+    public void setCity(City city) {
         this.city = city;
     }
 }

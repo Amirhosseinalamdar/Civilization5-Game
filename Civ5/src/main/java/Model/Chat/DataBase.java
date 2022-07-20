@@ -63,13 +63,12 @@ public class DataBase {
         }
         return null;
     }
-    public void writeDataToJson(){
+
+    public void writeDataToJson() {
         try {
             FileWriter fileWriter = new FileWriter("ChatDataBase.json");
             fileWriter.write(new Gson().toJson(privateChats));
-//            fileWriter.write(new Gson().toJson(rooms));
             fileWriter.write(new Gson().toJson(currentPrivateChat));
-//            fileWriter.write(new Gson().toJson(currentRoom));
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

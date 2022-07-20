@@ -89,13 +89,13 @@ public class MapController {
         this.chosenUnit = chosenUnit;
     }
 
-    public void setChosenCity (City chosenCity) {
+    public void setChosenCity(City chosenCity) {
         tileImageViews.clear();
         citizenImageViews.clear();
         this.chosenCity = chosenCity;
     }
 
-    public void setHoveredTile (Tile tile) {
+    public void setHoveredTile(Tile tile) {
         this.hoveredTile = tile;
     }
 
@@ -116,9 +116,6 @@ public class MapController {
     }
 
     public void initialize() {
-        backgroundPane.setOnMouseClicked(event -> {
-            System.out.println(event.getX() + " " + event.getY());
-        });
         showMap();
     }
 
@@ -322,7 +319,7 @@ public class MapController {
         backgroundPane.getChildren().add(openTechTree);
     }
 
-    private void setUpperRightButton (ImageView imageView, Rectangle clip) {
+    private void setUpperRightButton(ImageView imageView, Rectangle clip) {
         imageView.setStyle("-fx-cursor:hand; -fx-font-family: 'Tw Cen MT'; -fx-font-size: 17;");
         imageView.setOnMouseEntered(mouseEvent -> {
             imageView.setX(imageView.getX() - 4);
@@ -1150,31 +1147,6 @@ public class MapController {
         });
     }
 
-//    public void showCities(Tile tile, int i, int j) {
-//        if (tile.getCity() != null && tile.getCity().getTiles().get(0).equals(tile)) {
-//            ImageView imageView1 = new ImageView(ImageBase.CITY_0.getImage());
-//            imageView1.setFitWidth(100);
-//            imageView1.setFitHeight(100);
-//            imageView1.setX(tile.getX() + 20);
-//            imageView1.setY(tile.getY() + 30);
-//            Button openCityPanelButton = new Button(tile.getCity().getName().toUpperCase());
-//            openCityPanelButton.setLayoutX(tile.getX() + 18);
-//            openCityPanelButton.setLayoutY(tile.getY() - 5);
-//            openCityPanelButton.getStylesheets().add("css/MapStyle.css");
-//            openCityPanelButton.getStyleClass().add("openCityPanelButton");
-//            openCityPanelButton.setOnMouseClicked(mouseEvent -> {
-//                if (tile.getCity().equals(chosenCity))
-//                    setChosenCity(null);
-//
-//                else if (tile.getCity().getCivilization().equals(GameController.getCivilization()))
-//                    chosenCity = tile.getCity();
-//                showMap();
-//            });
-//            backgroundPane.getChildren().add(imageView1);
-//            backgroundPane.getChildren().add(openCityPanelButton);
-//        }
-//    }
-
     public void showTileContentIfNeeded() {
         if (tileImageViews.size() > 0) {//not tested
             showTilesFoodProductionGold();
@@ -1190,12 +1162,6 @@ public class MapController {
         imageView.setX(0);
         imageView.setY(900 - imageView.getLayoutBounds().getHeight());
         backgroundPane.getChildren().add(imageView);
-//        if (chosenUnit != null) {
-//            showUnitAvatar();
-//            if (chosenUnit.getType().isCivilian()) showCivilianOptions();
-//            else showMilitaryOptions();
-//        }
-        System.out.println(imageView.getLayoutBounds().getWidth());
     }
 
     public void showUnitAvatar() {
@@ -1305,7 +1271,7 @@ public class MapController {
             ImageView imageView2 = new ImageView(image);
             imageView2.setX(120 * (j - yStartingIndex) + (i % 2) * 60);
             imageView2.setY(105 * (i - xStartingIndex));
-            setDiscoveredTileBrightness(tile,i,j,colorAdjust);
+            setDiscoveredTileBrightness(tile, i, j, colorAdjust);
             backgroundPane.getChildren().add(imageView2);
         }
     }
@@ -1320,9 +1286,9 @@ public class MapController {
             imageView1.setY(105 * (i - xStartingIndex) + 10);
             backgroundPane.getChildren().add(imageView1);
         }
-        if(tile.getRouteInProgress() != null){
+        if (tile.getRouteInProgress() != null) {
             ImageView imageView;
-            if(tile.getRouteInProgress().equals("road")) imageView = new ImageView(ImageBase.ROAD_ICON.getImage());
+            if (tile.getRouteInProgress().equals("road")) imageView = new ImageView(ImageBase.ROAD_ICON.getImage());
             else imageView = new ImageView(ImageBase.RAIL_ROAD_ICON.getImage());
             imageView.setFitHeight(60);
             imageView.setFitWidth(60);
@@ -1339,7 +1305,7 @@ public class MapController {
             backgroundPane.getChildren().add(improvementImage);
         }
         if ((tile.getImprovementInProgress() != null && tile.getImprovementInProgress().getValue() != 0)
-                ||(tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() != 0)) {
+                || (tile.getRouteInProgress() != null && tile.getRouteInProgress().getValue() != 0)) {
             ImageView improvementImage = new ImageView(ImageBase.IN_PROGRESS_IMPROVEMENT.getImage());
             improvementImage.setFitHeight(20);
             improvementImage.setFitWidth(20);
@@ -1386,9 +1352,12 @@ public class MapController {
     }
 
     private int getCityMaxHealth(City city) {
-        if (city.getBuildings().containsKey(Building.MILITARY_BASE) && city.getBuildings().get(Building.MILITARY_BASE) <= 0) return 45;
-        else if (city.getBuildings().containsKey(Building.CASTLE) && city.getBuildings().get(Building.CASTLE) <= 0) return 33;
-        else if (city.getBuildings().containsKey(Building.WALLS) && city.getBuildings().get(Building.WALLS) <= 0) return 25;
+        if (city.getBuildings().containsKey(Building.MILITARY_BASE) && city.getBuildings().get(Building.MILITARY_BASE) <= 0)
+            return 45;
+        else if (city.getBuildings().containsKey(Building.CASTLE) && city.getBuildings().get(Building.CASTLE) <= 0)
+            return 33;
+        else if (city.getBuildings().containsKey(Building.WALLS) && city.getBuildings().get(Building.WALLS) <= 0)
+            return 25;
         return 20;
     }
 
@@ -1778,20 +1747,14 @@ public class MapController {
                 request.getParams().entrySet()) {
             String[] args = set.getKey().split(" ");
             if (set.getKey().startsWith("Get")) {
-                System.out.println(args[1]);
                 if (args[1].equals("Gold")) {
-                    System.out.println("total gold = " + GameController.getCivilization().getTotalGold());
-                    System.out.println("need gold = " + set.getValue());
                     if (GameController.getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
                 } else if (hashmap.containsKey(Resource.valueOf(args[1]))) {
-                    System.out.println("total resource = " + hashmap.get(Resource.valueOf(args[1])));
-                    System.out.println("need resource = " + set.getValue());
                     if (hashmap.get(Resource.valueOf(args[1])) < (Integer) set.getValue()) {
                         return false;
                     }
                 } else return false;
             } else {
-                System.out.println(args[1]);
                 if (args[1].equals("Gold")) {
                     if (user.getCivilization().getTotalGold() < (Integer) set.getValue()) return false;
                 } else if (hashmap1.containsKey(Resource.valueOf(args[1]))) {
@@ -1883,7 +1846,7 @@ public class MapController {
                         showMap();
                     } else
                         showPopup(event, message.toUpperCase() + "!");
-                } else System.out.println("clear nakardam (giga chad)");
+                }
             }
         });
     }
@@ -2075,7 +2038,7 @@ public class MapController {
                     doUnitOptions("SLEEP_UNIT", event);
                 }
             } else {
-                if(string.equals("DELETE")) Main.unitActionsSound("unitKill");
+                if (string.equals("DELETE")) Main.unitActionsSound("unitKill");
                 doUnitOptions(string, event);
             }
         });

@@ -296,7 +296,7 @@ public class City {
         return citizens.size();
     }
 
-    public void setCanAttack (boolean b) {
+    public void setCanAttack(boolean b) {
         this.canAttack = b;
     }
 

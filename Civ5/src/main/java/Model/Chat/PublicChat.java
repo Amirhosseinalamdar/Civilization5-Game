@@ -6,7 +6,6 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 
 public class PublicChat {
-    //private ArrayList<Message> messages = new ArrayList<>();
     private VBox chatBox;
     private static PublicChat publicChat;
 
@@ -14,10 +13,11 @@ public class PublicChat {
         return chatBox;
     }
 
-    private PublicChat(){
+    private PublicChat() {
     }
-    public static PublicChat getInstance(){
-        if(publicChat == null) publicChat = new PublicChat();
+
+    public static PublicChat getInstance() {
+        if (publicChat == null) publicChat = new PublicChat();
         return publicChat;
     }
 

@@ -23,18 +23,18 @@ public class ChooseProductionPageController {
     @FXML
     private VBox buildingBox;
 
-    public static void setCity (City city) {
+    public static void setCity(City city) {
         ChooseProductionPageController.city = city;
         CityController.setCity(city, "");
     }
 
-    public void initialize() { //TODO... emphasize inProgressUnit
+    public void initialize() {
         setUnitBox();
         setBuildingBox();
     }
 
     private void setUnitBox() {
-        ArrayList <UnitType> availableUnits = new ArrayList<>();
+        ArrayList<UnitType> availableUnits = new ArrayList<>();
         for (UnitType unitType : UnitType.values())
             if (CityController.canCreateUnit(unitType))
                 availableUnits.add(unitType);
@@ -63,13 +63,11 @@ public class ChooseProductionPageController {
 
     }
 
-    private ImageView getVboxForUnit (UnitType unitType) {
+    private ImageView getVboxForUnit(UnitType unitType) {
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setSaturation(-1);
         Tooltip tooltip = new Tooltip(unitType.toString());
         ImageView unitImgView = new ImageView(new Image("/Pictures/units/" + unitType + ".png"));
-        double width = unitImgView.getImage().getWidth(), height = unitImgView.getImage().getHeight();
-        System.out.println("w = " + width + ", h = " + height);
         unitImgView.setFitWidth(130);
         unitImgView.setFitHeight(130);
         unitImgView.setEffect(colorAdjust);

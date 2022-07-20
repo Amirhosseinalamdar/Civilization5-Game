@@ -64,7 +64,6 @@ public class CityController {
         }
         else if (matcher.pattern().toString().equals(Commands.ATTACK.getRegex())) {
             int x = Integer.parseInt(matcher.group("x")), y = Integer.parseInt(matcher.group("y"));
-            //TODO... handle options (canCityAttackTo()) from graphic side
             return rangeAttackToUnit(Game.getInstance().getTiles()[x][y].getMilitary());
         }
         else if (matcher.pattern().toString().equals(Commands.SHOW_CITY_OUTPUT.getRegex())) {
@@ -115,7 +114,6 @@ public class CityController {
             return false;
         }
         try {
-            System.out.println(city.getBuildings());
             int remainingCost = city.getBuildings().get(building);
             return remainingCost != 0;
         }
@@ -172,7 +170,7 @@ public class CityController {
 
         if (city.getBuildings().get(building) != null) {
             int remainingCost = city.getBuildings().get(building);
-            if (remainingCost <= 0) System.out.println("this building is already built");
+            if (remainingCost <= 0);
             else {
                 civilization.setTotalGold(civilization.getTotalGold() - buildingGoldCost);
                 city.getBuildings().replace(building, 0);
@@ -225,7 +223,6 @@ public class CityController {
 
             if ((matcher = Commands.getMatcher(command, Commands.CREATE_BUILDING)) != null || (matcher = Commands.getMatcher(command, Commands.PURCHASE_BUILDING)) != null)
                 return matcher;
-            System.out.println("city decision wasn't valid");
         }
     }
 
@@ -298,22 +295,6 @@ public class CityController {
     private static Citizen getWorkingCitizen() {
         if (city.getCitizens().size() > 1) return city.getCitizens().get(city.getCitizens().size() - 1);
         return null;
-//        String[] args = GameMenu.nextCommand().split(" ");
-//        try {
-//            int x = Integer.parseInt(args[0]), y = Integer.parseInt(args[1]);
-//            if (GameController.invalidPos(x, y)) {
-//                GameMenu.indexOutOfArray();
-//                return null;
-//            }
-//            Citizen citizen = Game.getInstance().getTiles()[x][y].getWorkingCitizen();
-//            if (citizen == null) return null;
-//            if (citizen.getCity().equals(city)) return citizen;
-//            GameMenu.citizenNotYours();
-//            return null;
-//        } catch (Exception e) {
-//            GameMenu.invalidPosForCitizen();
-//            return null;
-//        }
     }
 
     public static void lockCitizenOnTile(Citizen citizen, Tile tile) {

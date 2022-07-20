@@ -148,8 +148,7 @@ public class UserController {
             String json = new String(Files.readAllBytes(Paths.get("json.json")));
             allUsers = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, new TypeToken<List<User>>() {
             }.getType());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

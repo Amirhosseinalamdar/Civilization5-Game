@@ -20,9 +20,12 @@ public class SendInvitationPageController {
     private User chosenUser;
 
     public void initialize() {
-        send = new Label("Send"); send.setLayoutX(165); send.setLayoutY(540); send.getStylesheets().add("css/GamePageStyle.css");
+        send = new Label("Send");
+        send.setLayoutX(165);
+        send.setLayoutY(540);
+        send.getStylesheets().add("css/GamePageStyle.css");
         send.getStyleClass().add("startGameButton");
-        ArrayList <User> allUsers = UserController.getAllUsers();
+        ArrayList<User> allUsers = UserController.getAllUsers();
         allUsers.remove(UserController.getLoggedInUser());
         for (User user : allUsers) {
             Label label = new Label();
@@ -45,10 +48,9 @@ public class SendInvitationPageController {
             list.getChildren().add(label);
         }
         send.setOnMouseClicked(event -> {
-            //TODO send invitation to chosen user
             for (Node child : list.getChildren()) {
                 if (!(child instanceof Label)) continue;
-                Label label = (Label)child;
+                Label label = (Label) child;
                 label.setStyle("-fx-font-family: 'Tw Cen MT';" +
                         "-fx-text-fill: #dbdbb1;" +
                         "-fx-font-size: 30;" +
@@ -61,7 +63,7 @@ public class SendInvitationPageController {
         });
     }
 
-    private void changeUserLabel (Label label) {
+    private void changeUserLabel(Label label) {
         label.setStyle("-fx-font-family: 'Tw Cen MT';" +
                 "-fx-text-fill: #508e96;" +
                 "-fx-font-size: 30;" +

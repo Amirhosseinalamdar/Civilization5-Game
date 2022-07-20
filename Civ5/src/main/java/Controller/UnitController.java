@@ -32,7 +32,7 @@ public class UnitController {
         UnitController.civilization = civilization;
     }
 
-    public static void setUnit (Unit unit, String command) {
+    public static void setUnit(Unit unit, String command) {
         UnitController.unit = unit;
         UnitController.command = command;
     }
@@ -51,131 +51,108 @@ public class UnitController {
 
             if (unit.hasRemainingMoves()) return moveUnit(destCenterX, destCenterY);
             else return "unit doesn't have enough moves";
-        }
-        else if (unit.getStatus().equals(UnitStatus.ATTACK)) { //TODO... holy shit
+        } else if (unit.getStatus().equals(UnitStatus.ATTACK)) {
             int x = Integer.parseInt(matcher.group("x"));
             int y = Integer.parseInt(matcher.group("y"));
             if (unit.hasRemainingMoves()) {
-                if (canAttackTo(Game.getInstance().getTiles()[x][y])) return attack(Game.getInstance().getTiles()[x][y]);
+                if (canAttackTo(Game.getInstance().getTiles()[x][y]))
+                    return attack(Game.getInstance().getTiles()[x][y]);
                 else return GameMenu.invalidTileForAttack();
-            }
-            else return GameMenu.notEnoughMoves();
-        }
-        else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
+            } else return GameMenu.notEnoughMoves();
+        } else if (unit.getStatus().equals(UnitStatus.FOUND_CITY)) {
             if (canFoundCityHere()) {
                 if (unit.hasRemainingMoves()) return foundCity();
                 else return "unit doesn't have enough moves";
             }
             return "can't found city here";
-        }
-        else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
+        } else if (unit.getStatus().equals(UnitStatus.BUILD_IMPROVEMENT)) {
             try {
                 Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
                 if (canBuildImprovementHere(improvement).length() == 0) {
                     if (unit.hasRemainingMoves()) return buildImprovement(improvement);
                     else return "unit doesn't have enough moves";
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 if (matcher.group("improvement").equals("ROAD")) {
                     if (canBuildRoadHere()) {
                         if (unit.hasRemainingMoves()) return buildRoute("road");
                         else return "unit doesn't have enough moves";
-                    }
-                    else return "can't build road here";
-                }
-                else if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
+                    } else return "can't build road here";
+                } else if (matcher.group("improvement").equals("RAILROAD") && canBuildRailroadHere()) {
                     if (canBuildRailroadHere()) {
                         if (unit.hasRemainingMoves()) return buildRoute("railroad");
                         else return "unit doesn't have enough moves";
-                    }
-                    else if (civilization.hasReachedTech(Technology.RAILROAD)) return "can't build railroad here";
+                    } else if (civilization.hasReachedTech(Technology.RAILROAD)) return "can't build railroad here";
                     else return "you haven't reached " + Technology.RAILROAD + " yet";
                 }
-//                else GameMenu.noSuchImprovement();
             }
-        }
-        else if (unit.getStatus().equals(UnitStatus.PILLAGE)) {
+        } else if (unit.getStatus().equals(UnitStatus.PILLAGE)) {
             if (matcher.group("improvement").equals("road") || matcher.group("improvement").equals("railroad")) {
                 if (canPillageRoute(matcher.group("improvement"))) {
                     if (unit.hasRemainingMoves()) return pillageRoute(matcher.group("improvement"));
                     else return "unit doesn't have enough moves";
                 }
-            }
-            else {
+            } else {
                 try {
                     Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
                     if (canPillageImprovement(improvement)) {
                         if (unit.hasRemainingMoves()) return pillageImprovement();
                         else return "unit doesn't have enough moves";
                     }
-                }
-                catch (Exception e) {
-                    GameMenu.noSuchImprovement(); //TODO... handled? @amirholmd
+                } catch (Exception e) {
+                    GameMenu.noSuchImprovement();
                 }
             }
-        }
-        else if (unit.getStatus().equals(UnitStatus.REPAIR)) {
+        } else if (unit.getStatus().equals(UnitStatus.REPAIR)) {
             if (matcher.group("improvement").equals("road") || matcher.group("improvement").equals("railroad")) {
                 if (canRepairRoute(matcher.group("improvement"))) {
                     if (unit.hasRemainingMoves()) return repairRoute();
                     else return "unit doesn't have enough moves";
                 }
-            }
-            else {
+            } else {
                 try {
                     Improvement improvement = Improvement.valueOf(matcher.group("improvement"));
                     if (canRepairImprovement(improvement)) {
                         if (unit.hasRemainingMoves()) return repairImprovement();
                         else return "unit doesn't have enough moves";
                     }
-                }
-                catch (Exception e) {
-                    GameMenu.noSuchImprovement(); //@amirholmd
+                } catch (Exception e) {
+                    GameMenu.noSuchImprovement();
                 }
             }
-        }
-        else if (unit.getStatus().equals(UnitStatus.GARRISON)) {
+        } else if (unit.getStatus().equals(UnitStatus.GARRISON)) {
             if (canGarrison()) {
                 if (unit.hasRemainingMoves()) return garrison();
                 else return "unit doesn't have enough moves";
             }
-        }
-        else if (unit.getStatus().equals(UnitStatus.CLEAR_LAND)) {
+        } else if (unit.getStatus().equals(UnitStatus.CLEAR_LAND)) {
             String clearingTarget = matcher.group("clearable");
             if (unit.getTile().hasClearable(clearingTarget)) {
                 if (unit.hasRemainingMoves()) return clearTileFrom(clearingTarget);
                 else return "unit doesn't have enough moves";
-            }
-            else {
+            } else {
                 unit.setStatus("active");
                 return "tile doesn't have this feature to be cleared";
             }
-        }
-        else if (unit.getStatus().equals(UnitStatus.HEAL)) {
+        } else if (unit.getStatus().equals(UnitStatus.HEAL)) {
             unit.setHealth(unit.getHealth() + Unit.healRate);
             if (unit.getHealth() >= Unit.MAX_HEALTH) {
                 unit.setHealth(Unit.MAX_HEALTH);
                 unit.setStatus("active");
             }
-        }
-
-        else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
+        } else if (unit.getStatus().equals(UnitStatus.CANCEL_MISSION))
             unit.setStatus("active");
 
         else if (unit.getStatus().equals(UnitStatus.DO_NOTHING))
             System.out.println("doing nothing");
-        else if (matcher.pattern().toString().equals("delete")) return ""; //TODO
-        else System.out.println("unit controller, status: " + unit.getStatus());
-        return ""; //TODO
+        else if (matcher.pattern().toString().equals("delete")) return "";
+        return "";
     }
 
     private static Matcher getUnitDecision() {
         Matcher matcher;
 
         while (true) {
-//            String command = GameMenu.nextCommand();
-
             if (command.equals("back")) {
                 matcher = Pattern.compile(command).matcher(command);
                 matcher.find();
@@ -282,8 +259,6 @@ public class UnitController {
                     return matcher;
                 GameMenu.unitIsNot("worker");
             }
-
-            System.out.println("unit decision wasn't valid");
         }
     }
 
@@ -344,7 +319,7 @@ public class UnitController {
                 unit.getTile().getImprovementInProgress().getKey().equals(improvement);
     }
 
-    private static String  pillageImprovement() {
+    private static String pillageImprovement() {
         Pair<Improvement, Integer> pair =
                 new Pair<>(unit.getTile().getImprovementInProgress().getKey(), -3);
         unit.getTile().setImprovementInProgress(pair);
@@ -417,9 +392,7 @@ public class UnitController {
             if (!tileIsValidForImprovement(unit.getTile(), improvement))
                 return "can't build chosen improvement on this tile";
             return "";
-        }
-
-        else return "can't build chosen improvement on this tile";
+        } else return "can't build chosen improvement on this tile";
     }
 
     public static boolean canBuildRoadHere() {
@@ -605,8 +578,7 @@ public class UnitController {
         if (chosenPath.tiles.size() > 0) {
             unit.setStatus("has path");
             unit.setPath(chosenPath);
-        }
-        else {
+        } else {
             if (unit.getTile().isRuined())
                 handleRuinTile();
             unit.setStatus("active");
@@ -625,7 +597,7 @@ public class UnitController {
         switch (rand) {
             case 0:
                 civilization.setTotalGold(unit.getCivilization().getTotalGold() + 20);
-                label.setTextFill(Color.rgb(194,142,1,1));
+                label.setTextFill(Color.rgb(194, 142, 1, 1));
                 label.setText("You Found 20 Golds in the Ruins!");
                 break;
             case 1:
@@ -638,7 +610,7 @@ public class UnitController {
                     }
                 if (discover.equals(Technology.AGRICULTURE))
                     return;
-                label.setTextFill(Color.rgb(5,5,150,1));
+                label.setTextFill(Color.rgb(5, 5, 150, 1));
                 label.setText("You Discovered " + discover + " Technology in the Ruins!");
                 break;
             case 2:
@@ -652,12 +624,12 @@ public class UnitController {
                         }
                     if (counter == 0) break;
                 }
-                label.setTextFill(Color.rgb(0,0,0,1));
+                label.setTextFill(Color.rgb(0, 0, 0, 1));
                 label.setText("You Unlocked New Tiles' Visibility in the Ruins!");
                 break;
             case 3:
-                ArrayList <City> allCities = new ArrayList<>(civilization.getCities());
-                Comparator <City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
+                ArrayList<City> allCities = new ArrayList<>(civilization.getCities());
+                Comparator<City> cmp = Comparator.comparing(City::getCitizensNumber).reversed();
                 allCities.sort(cmp);
                 City city = allCities.get(0);
                 for (int i = 0; i < 2; i++) {
@@ -667,7 +639,7 @@ public class UnitController {
                 city.setCitizenNecessityFood((int) (city.getCitizenNecessityFood() * 2.25));
                 city.setGainCitizenLastFood(city.getCitizenNecessityFood());
                 civilization.getNotifications().add("The " + city.getName() + "'s population is increased (from ruins)     time: " + Game.getInstance().getTime());
-                label.setTextFill(Color.rgb(0,100,0,1));
+                label.setTextFill(Color.rgb(0, 100, 0, 1));
                 label.setText("You Found Survivors in the Ruins!");
                 break;
             case 4:
@@ -793,18 +765,16 @@ public class UnitController {
         });
         nameField.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                //TODO
                 if (!popup.isShowing())
                     popup.show(Main.stage);
                 else if (!cityNameAlreadyExists(nameField.getText())) {
                     popup.hide();
                     new City(civilization, unit.getTile(), nameField.getText());
                     unit.kill();
-                    civilization.getNotifications().add(nameField.getText()+" was founded!");
+                    civilization.getNotifications().add(nameField.getText() + " was founded!");
                     GameMenu.getGameMapController().setChosenUnit(null);
                     GameMenu.getGameMapController().showMap();
-                }
-                else
+                } else
                     nameField.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 30;" +
                             "-fx-border-color: red; -fx-border-width: 3; -fx-border-radius: 10;" +
                             "-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 10;");
@@ -836,8 +806,7 @@ public class UnitController {
                 return rangedAttackToCity(targetTile.getCity());
             if (unit.getType().isMeleeCombat())
                 return meleeAttackToCity(targetTile.getCity());
-        }
-        else {
+        } else {
             if (unit.getType().isRangeCombat())
                 return rangedAttackToUnit(targetTile);
             if (unit.getType().isMeleeCombat())
@@ -854,9 +823,9 @@ public class UnitController {
             return "done";
         }
         Civilization civilization = targetTile.getMilitary().getCivilization();
-        Military me = (Military)unit;
+        Military me = (Military) unit;
         targetTile.getMilitary().setHealth(targetTile.getMilitary().getHealth() - me.getRangedCombatStrength() / 4);
-        if (targetTile.getMilitary().getHealth() <= 0){
+        if (targetTile.getMilitary().getHealth() <= 0) {
             Main.unitActionsSound("unitDeath");
             targetTile.getMilitary().kill();
             checkIfDefeated(civilization);
@@ -871,8 +840,6 @@ public class UnitController {
             return GameMenu.cityOutOfUnitRange();
         }
         Military military = (Military) unit;
-        System.out.println(unit.getStatus());
-        System.out.println(unit.getType());
         city.setHP(city.getHP() - military.getRangedCombatStrength() / 4);
         if (city.getHP() < 0) city.setHP(0);
         GameMenu.rangedAttackToCitySuccessfully(city);
@@ -911,9 +878,9 @@ public class UnitController {
         return "done";
     }
 
-    private static String meleeAttackToUnit (Tile targetTile) {
+    private static String meleeAttackToUnit(Tile targetTile) {
         if (targetTile.getMilitary() == null) {
-        Civilization civilization = targetTile.getCivilian().getCivilization();
+            Civilization civilization = targetTile.getCivilian().getCivilization();
             targetTile.getCivilian().setCivilization(unit.getCivilization());
             unit.getCivilization().addUnit(targetTile.getCivilian());
             checkIfDefeated(civilization);
@@ -921,7 +888,7 @@ public class UnitController {
         }
         Civilization civilization = targetTile.getMilitary().getCivilization();
         Military enemy = targetTile.getMilitary();
-        Military me = (Military)unit;
+        Military me = (Military) unit;
 
         me.setHealth(me.getHealth() - enemy.getCombatStrength() / 4);
         enemy.setHealth(enemy.getHealth() - me.getCombatStrength() / 4);
@@ -943,7 +910,7 @@ public class UnitController {
     }
 
     public static void checkIfDefeated(Civilization civilization) {
-        if(civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
+        if (civilization.getCities().size() == 0 && civilization.getUnits().size() == 0) {
             Game.getInstance().getPlayerScores().put(civilization.getUsername(), civilization.getScore());
             Game.getInstance().getPlayers().removeIf(player -> player.getCivilization().equals(civilization));
             for (User player : Game.getInstance().getPlayers()) {

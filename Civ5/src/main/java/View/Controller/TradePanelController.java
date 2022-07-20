@@ -223,15 +223,17 @@ public class TradePanelController {
             request.setAction("Trade");
             for (int i = 0; i < list1.getChildren().size(); i++) {
                 if (list1.getChildren().get(i).getStyle().contains("508e96")) {
-                    if (Integer.parseInt(((TextField)list2.getChildren().get(i)).getText()) <= 0) throw new Exception();
-                    request.getParams().put("Give: " + ((Label)list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField)list2.getChildren().get(i)).getText()));
+                    if (Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()) <= 0)
+                        throw new Exception();
+                    request.getParams().put("Give: " + ((Label) list1.getChildren().get(i)).getText(), Integer.parseInt(((TextField) list2.getChildren().get(i)).getText()));
                     isGive = true;
                 }
             }
             for (int i = 0; i < list3.getChildren().size(); i++) {
                 if (list3.getChildren().get(i).getStyle().contains("508e96")) {
-                    if (Integer.parseInt(((TextField)list4.getChildren().get(i)).getText()) <= 0) throw new Exception();
-                    request.getParams().put("Get: " + ((Label)list3.getChildren().get(i)).getText(), Integer.parseInt(((TextField)list4.getChildren().get(i)).getText()));
+                    if (Integer.parseInt(((TextField) list4.getChildren().get(i)).getText()) <= 0)
+                        throw new Exception();
+                    request.getParams().put("Get: " + ((Label) list3.getChildren().get(i)).getText(), Integer.parseInt(((TextField) list4.getChildren().get(i)).getText()));
                     isGet = true;
                 }
             }

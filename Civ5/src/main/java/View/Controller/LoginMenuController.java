@@ -40,7 +40,7 @@ public class LoginMenuController {
             invalidRegister.setText("user with username " + usernameRegister.getText() + " already exists");
             invalidRegister.setVisible(true);
             usernameRegister.setStyle("-fx-border-color: red");
-        } else if (UserController.registerUser(usernameRegister.getText(), nicknameRegister.getText(), passwordRegister.getText()).startsWith("error nickname")){
+        } else if (UserController.registerUser(usernameRegister.getText(), nicknameRegister.getText(), passwordRegister.getText()).startsWith("error nickname")) {
             invalidRegister.setText("user with nickname " + nicknameRegister.getText() + " already exists");
             invalidRegister.setVisible(true);
             nicknameRegister.setStyle("-fx-border-color: red");

@@ -38,11 +38,8 @@ public class DiplomacyPanelController {
     private static User player;
 
     public void initialize() {
-        System.out.println(Game.getInstance().getPlayers());
         ArrayList<User> allPlayers = new ArrayList<>(Game.getInstance().getPlayers());
-        System.out.println(allPlayers);
         allPlayers.remove(Game.getInstance().getPlayers().get(Game.getInstance().getTurn()));
-        System.out.println(allPlayers);
         for (User user : allPlayers) {
             Label label = new Label();
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +

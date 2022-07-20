@@ -24,11 +24,12 @@ public class GamePageController {
 
     private int autoSave;
     private final String[] labels = {"Off", "Each Turn", "Each 5 Turns", "Each 10 Turns"};
+
     public void initialize() {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
         newGame.setOnMouseClicked(event -> {
-            ArrayList <User> players = PlayerListPageController.getPlayers();
+            ArrayList<User> players = PlayerListPageController.getPlayers();
             if (players == null) {
                 Popup popup = new Popup();
                 Label label = new Label("Choose at least One Opponent to Start the Game!");
@@ -37,8 +38,7 @@ public class GamePageController {
                 popup.getContent().add(label);
                 popup.setAutoHide(true);
                 popup.show(background.getScene().getWindow());
-            }
-            else {
+            } else {
                 if (Main.music.isPlaying()) Main.playSound("Game.mp3");
                 GameMenu.setMapSize(mapSize);
                 GameMenu.setAutoSaveDuration(autoSave);
@@ -48,12 +48,14 @@ public class GamePageController {
         mapSizeLabel.setText(Integer.toString(mapSize));
         mapSizeLabel.setOnMouseClicked(mouseEvent -> changeMapSize());
     }
+
     public void next() {
         Main.clickSound();
         autoSave++;
         autoSave %= 4;
         autoSaveDuration.setText(labels[autoSave]);
     }
+
     public void choosePlayers() {
         Main.clickSound();
         try {
@@ -63,11 +65,11 @@ public class GamePageController {
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void loadGame() {
         Main.clickSound();
         try {
@@ -77,16 +79,17 @@ public class GamePageController {
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("failed to load LoadPage");
             e.printStackTrace();
         }
     }
+
     public void back() {
         Main.clickSound();
         Main.changeScene("MainMenu");
     }
+
     public void sendInvitation() {
         Main.clickSound();
         try {
@@ -96,12 +99,12 @@ public class GamePageController {
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("failed to load inv page");
             e.printStackTrace();
         }
     }
+
     public void changeMapSize() {
         Main.clickSound();
         mapSize++;

@@ -8,6 +8,7 @@ import Model.UnitPackage.Unit;
 import Model.UnitPackage.UnitType;
 import View.Commands;
 import View.GameMenu;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -97,7 +98,6 @@ public class CivilizationController {
     private static void updateHappiness() {
         int unhappiness = 2 * civilization.getCities().size();
         for (City city : civilization.getCities()) {
-//            if (city.getCityStatus().equals(CityStatus.PUPPET)) unhappiness++;
             unhappiness += city.getCitizens().size();
             for (Map.Entry<Building, Integer> set : city.getBuildings().entrySet()) {
                 if (set.getValue() <= 0) {
@@ -189,8 +189,6 @@ public class CivilizationController {
     }
 
     public static void destroyCity(City city) {
-//        city.setCityStatus(CityStatus.PUPPET);
-//        civilization.addCity(city);
         city.getCivilization().getCities().remove(city);
     }
 

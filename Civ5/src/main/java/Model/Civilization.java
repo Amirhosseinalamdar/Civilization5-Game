@@ -150,23 +150,22 @@ public class Civilization {
     }
 
     private Color initCivSymbol() {
-        if (!CivSymbol.BLUE.isTaken()){
+        if (!CivSymbol.BLUE.isTaken()) {
             CivSymbol.BLUE.setTaken(true);
             return CivSymbol.BLUE.getColor();
-        } else if (!CivSymbol.RED.isTaken()){
+        } else if (!CivSymbol.RED.isTaken()) {
             CivSymbol.RED.setTaken(true);
             return CivSymbol.RED.getColor();
-        } else if (!CivSymbol.GREEN.isTaken()){
+        } else if (!CivSymbol.GREEN.isTaken()) {
             CivSymbol.GREEN.setTaken(true);
             return CivSymbol.GREEN.getColor();
         } else if (!CivSymbol.WHITE.isTaken()) {
             CivSymbol.WHITE.setTaken(true);
             return CivSymbol.WHITE.getColor();
-        }else if (!CivSymbol.BLACK.isTaken()) {
+        } else if (!CivSymbol.BLACK.isTaken()) {
             CivSymbol.BLACK.setTaken(true);
             return CivSymbol.BLACK.getColor();
-        }else {
-            System.out.println("not enough symbols");
+        } else {
             return null;
         }
     }
@@ -245,7 +244,7 @@ public class Civilization {
         }
     }
 
-    public boolean hasPrerequisitesOf (Technology tech) {
+    public boolean hasPrerequisitesOf(Technology tech) {
         if (tech.getParents() == null) return true;
         for (Technology parent : tech.getParents())
             if (!this.hasReachedTech(parent)) return false;

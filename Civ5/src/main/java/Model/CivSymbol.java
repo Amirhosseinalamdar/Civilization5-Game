@@ -3,11 +3,11 @@ package Model;
 import javafx.scene.paint.Color;
 
 public enum CivSymbol {
-    BLUE(null,Color.rgb(0,0,255)),
-    RED(null,Color.rgb(255,0,0)),
-    BLACK(null,Color.rgb(0,0,0)),
-    WHITE(null,Color.rgb(255,255,255)),
-    GREEN(null,Color.rgb(0,255,0));
+    BLUE(null, Color.rgb(0, 0, 255)),
+    RED(null, Color.rgb(255, 0, 0)),
+    BLACK(null, Color.rgb(0, 0, 0)),
+    WHITE(null, Color.rgb(255, 255, 255)),
+    GREEN(null, Color.rgb(0, 255, 0));
 
     public Color getColor() {
         return color;
@@ -16,6 +16,7 @@ public enum CivSymbol {
     private String symbol;
     private boolean isTaken;
     private Color color;
+
     CivSymbol(String symbol, Color color) {
         this.symbol = symbol;
         this.isTaken = false;
