@@ -9,7 +9,7 @@
 <?import java.net.URL?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.MapController"
+      fx:controller="Client.View.Controller.MapController"
       prefHeight="900.0" prefWidth="1600.0"
       fx:id="backgroundPane">
 <!--    <Button text="Next Turn" fx:id="nextTurn" layoutX="1450" layoutY="820" styleClass="nextTurn" onMouseClicked="#nextTurn"/>-->

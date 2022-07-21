@@ -6,7 +6,7 @@
 
 <?import javafx.scene.shape.Box?>
 <Pane prefHeight="900" prefWidth="1600" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="View.Controller.PublicChatController" styleClass="Pane">
+      fx:controller="Client.View.Controller.PublicChatController" styleClass="Pane">
     <ScrollPane layoutX="-1" >
         <VBox prefWidth="1600" fx:id="chatBox" prefHeight="847" spacing="10"
               styleClass="Pane"/>

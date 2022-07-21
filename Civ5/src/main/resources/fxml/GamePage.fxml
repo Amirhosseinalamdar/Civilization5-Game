@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.GamePageController"
+      fx:controller="Client.View.Controller.GamePageController"
       prefHeight="900.0" prefWidth="1600.0">
     <ImageView fitWidth="1600" fitHeight="900">
         <Image url="@../Pictures/GamePage/background.jpg"/>
