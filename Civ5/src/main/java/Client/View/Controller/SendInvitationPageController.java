@@ -21,10 +21,12 @@ public class SendInvitationPageController {
     public VBox list;
 
     private Label send;
+    private Label clickedLabel;
 
     private User chosenUser;
 
     public void initialize() {
+        clickedLabel = null;
         send = new Label("Send");
         send.setLayoutX(165);
         send.setLayoutY(540);
@@ -32,10 +34,10 @@ public class SendInvitationPageController {
         send.getStyleClass().add("startGameButton");
 
         String json = NetworkController.send(new ArrayList<>(Arrays.asList("global","get all users")));
-        ArrayList<User> allUsers = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
-                .fromJson(json, new TypeToken<List<String>>() {}.getType());
-//        allUsers.remove(UserController.getLoggedInUser());
-        for (User user : allUsers) {
+        ArrayList<String> allUsers = new Gson().fromJson(json, new TypeToken<List<String>>() {
+        }.getType());
+        allUsers.removeIf(u -> u.equals(Main.username));
+        for (String username : allUsers) {
             Label label = new Label();
             label.setStyle("-fx-font-family: 'Tw Cen MT';" +
                     "-fx-text-fill: #dbdbb1;" +
@@ -46,12 +48,22 @@ public class SendInvitationPageController {
                     "-fx-arc-width: 5;" +
                     "-fx-text-alignment: center;");
             label.setPrefWidth(370);
-            label.setText(user.getUsername());
+            label.setText(username);
             label.setOnMouseClicked(event -> {
+                if (clickedLabel != null) {
+                    clickedLabel.setStyle("-fx-font-family: 'Tw Cen MT';" +
+                            "-fx-text-fill: #dbdbb1;" +
+                            "-fx-font-size: 30;" +
+                            "-fx-background-color: transparent;" +
+                            "-fx-background-radius: 10;" +
+                            "-fx-arc-height: 5;" +
+                            "-fx-arc-width: 5;" +
+                            "-fx-text-alignment: center;");
+                }
+                clickedLabel = label;
                 Main.clickSound();
-                chosenUser = user;
                 changeUserLabel(label);
-                pane.getChildren().add(send);
+                if (!pane.getChildren().contains(send)) pane.getChildren().add(send);
             });
             list.getChildren().add(label);
         }
@@ -66,6 +78,10 @@ public class SendInvitationPageController {
                         "-fx-background-radius: 10;" +
                         "-fx-arc-height: 5;" +
                         "-fx-arc-width: 5;");
+                if (clickedLabel == null) continue;
+                for (String username : allUsers)
+                    if (clickedLabel.getText().equals(username))
+                        NetworkController.send(new ArrayList<>(Arrays.asList("game menu", "invite", Main.username, username)));
             }
             pane.getChildren().remove(send);
         });

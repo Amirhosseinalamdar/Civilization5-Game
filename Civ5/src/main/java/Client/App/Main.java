@@ -50,11 +50,11 @@ public class Main extends Application {
     }
 
     public static void playSound(String name) {
-        if (music != null) music.stop();
-        URL url = Main.class.getResource("/sounds/" + name);
-        music = new AudioClip(url.toExternalForm());
-        music.setVolume(0.3f);
-        music.play();
+//        if (music != null) music.stop();
+//        URL url = Main.class.getResource("/sounds/" + name);
+//        music = new AudioClip(url.toExternalForm());
+//        music.setVolume(0.3f);
+//        music.play();
     }
 
     public static void changeScene(String name) {

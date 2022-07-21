@@ -1,12 +1,21 @@
 package Server;
 
+import Client.App.Main;
+import Client.Model.User;
+import com.google.gson.Gson;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameMenuController {
-    public static String run(ArrayList<String > args){
+    public static String run(ArrayList<String > args) {
         String command = args.get(1);
-        if(command.equals(Request.INVITE.getString())) return invitePlayer(args);
+        if(command.equals(Request.INVITE.getString())) return invite(args);
         else if(command.equals(Request.START.getString())) return startGame(args);
+        else if (command.equals(Request.ANSWER.getString())) return answerToInvite(args);
         return "typo";
     }
 
@@ -15,8 +24,37 @@ public class GameMenuController {
         return "";
     }
 
-    private static String invitePlayer(ArrayList<String> args) {
-        //TODO be hashmap ezafe she
-        return "";
+    private static String invite (ArrayList <String> args) {
+        String sender = args.get(2), receiver = args.get(3);
+        try {
+            for (User user : GameDatabase.getAllUsers()) {
+                if (!user.isLoggedIn()) continue;
+                DataOutputStream outputStream = new DataOutputStream(GameDatabase.getPlayerReaderSockets().get(receiver).getOutputStream());
+                outputStream.writeUTF(new Gson().toJson(new ArrayList<>(Arrays.asList("game menu", "invite", sender)))); //receive invite, sender
+                outputStream.flush();
+                return "invitation sent successfully";
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "nafrestadam ding ding ding";
+    }
+
+    private static String answerToInvite (ArrayList <String> args) {
+        String inviter = args.get(2);
+        try {
+            for (User user : GameDatabase.getAllUsers()) {
+                if (!user.getUsername().equals(inviter)) continue;
+                DataOutputStream outputStream = new DataOutputStream(GameDatabase.getPlayerReaderSockets().get(inviter).getOutputStream());
+                outputStream.writeUTF(args.get(3));
+                outputStream.flush();
+                return "answer sent successfully";
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "nafrestadam";
     }
 }
