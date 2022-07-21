@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="450.0" prefWidth="800.0" stylesheets="@../css/DiplomacyPanel.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.DiplomacyPanelController">
+<AnchorPane prefHeight="450.0" prefWidth="800.0" stylesheets="@../css/DiplomacyPanel.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.DiplomacyPanelController">
    <children>
       <Button fx:id="warButton" disable="true" layoutX="601.0" layoutY="240.0" mnemonicParsing="false" onMouseClicked="#declareWar" prefHeight="50.0" prefWidth="165.0" text="Declare War" textFill="WHITE" visible="false">
          <font>
