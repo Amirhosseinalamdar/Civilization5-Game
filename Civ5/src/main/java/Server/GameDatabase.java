@@ -28,7 +28,7 @@ public class GameDatabase {
         return "";
     }
     public static String allUsersToJson(){
-        return new GsonBuilder().create().toJson(allUsers);
+        return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(allUsers);
     }
     public static String runGlobal(ArrayList<String> args){
         if(args.get(1).equals("get all users")) return allUsersToJson();

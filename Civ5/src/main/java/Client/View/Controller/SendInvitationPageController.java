@@ -5,6 +5,7 @@ import Client.Controller.NetworkController;
 import Client.Controller.UserController;
 import Client.Model.User;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -31,8 +32,8 @@ public class SendInvitationPageController {
         send.getStyleClass().add("startGameButton");
 
         String json = NetworkController.send(new ArrayList<>(Arrays.asList("global","get all users")));
-        ArrayList<User> allUsers = new Gson().fromJson(json, new TypeToken<List<String>>() {
-        }.getType());
+        ArrayList<User> allUsers = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+                .fromJson(json, new TypeToken<List<String>>() {}.getType());
 //        allUsers.remove(UserController.getLoggedInUser());
         for (User user : allUsers) {
             Label label = new Label();
