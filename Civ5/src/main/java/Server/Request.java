@@ -5,13 +5,15 @@ public enum Request {
     LOGIN("login"),
     START("start"),
     LOGOUT("logout"),
-    INVITE("invite");
+    INVITE("invite"),
+    ANSWER("answer"),
+    LISTENER("listener");
 
     public String getString() {
         return request;
     }
 
-    private String request;
+    private final String request;
 
     Request(String request) {
         this.request = request;

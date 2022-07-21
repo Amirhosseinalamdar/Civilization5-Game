@@ -23,15 +23,17 @@ public class SocketHandler extends Thread{
             while (true) {
                 ArrayList<String> input = new Gson().fromJson(dataInputStream.readUTF(), new TypeToken<List<String>>() {
                 }.getType());
-                String output = "typo";
-                if (input.get(0).equals(Menu.LOGIN_MENU.getMenuName())) output = UserController.run(input);
+                String output = "raw output";
+                if (input.get(0).equals(Menu.LOGIN_MENU.getMenuName())) output = UserController.run(input, socket);
                 else if(input.get(0).equals(Menu.MAIN_MENU.getMenuName())) output = MainMenuController.run(input);
                 else if (input.get(0).equals(Menu.GAME_MENU.getMenuName())) output = GameMenuController.run(input);
                 else if (input.get(0).equals(Menu.GAME.getMenuName())) output = GameDatabase.run(input);
-                else if(input.get(0).equals(Menu.GLOBAL.getMenuName())) output = GameDatabase.runGlobal(input);
-                dataOutputStream.writeUTF(output);
-                dataOutputStream.flush();
-                System.out.println("sifoono bekesh");
+                else if(input.get(0).equals(Menu.GLOBAL.getMenuName())) output = GameDatabase.runGlobal(input, socket);
+//                if (output != null) {
+                    dataOutputStream.writeUTF(output);
+                    dataOutputStream.flush();
+                    System.out.println("sifoono bekesh");
+//                }
             }
         }catch (IOException e){
 

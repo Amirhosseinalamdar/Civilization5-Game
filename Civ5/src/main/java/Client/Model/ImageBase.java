@@ -12,7 +12,7 @@ public enum ImageBase {
     CITY_4(new Image("Pictures/tiles/City4.png")),
     CLOUD(new Image("Pictures/tiles/cloud.png")),
     DELTA(new Image("Pictures/tiles/DELTA.png")),
-    DESERT(new Image("Pictures/tiles/DESERT.png")),
+    DESERT(new Image("Pictures/tiles/desert.png")),
     FOREST(new Image("Pictures/tiles/FOREST.png")),
     GRASS(new Image("Pictures/tiles/GRASS.png")),
     GRASS_MARSH(new Image("Pictures/tiles/GRASS_MARSH.png")),

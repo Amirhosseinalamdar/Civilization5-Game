@@ -1,6 +1,7 @@
 package Client.View.Controller;
 
 import Client.App.Main;
+import Client.Controller.NetworkController;
 import Client.Transiton.NavigationTransition;
 import Client.Controller.UserController;
 import javafx.fxml.FXML;
@@ -9,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+
+import java.io.IOException;
 
 public class LoginMenuController {
 
@@ -66,6 +69,12 @@ public class LoginMenuController {
             usernameLogin.setStyle("-fx-border-color: red");
             passwordLogin.setStyle("-fx-border-color: red");
         } else {
+            try {
+                NetworkController.listenForUpdates();
+            }
+            catch (IOException io) {
+                io.printStackTrace();
+            }
             NavigationTransition.fadeTransition(login, "MainMenu");
         }
     }

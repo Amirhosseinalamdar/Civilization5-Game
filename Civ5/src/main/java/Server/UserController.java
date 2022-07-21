@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -15,22 +16,24 @@ import java.util.List;
 
 public class UserController {
 
-    public static String run(ArrayList<String> args) {
+    public static String run(ArrayList<String> args, Socket socket) {
         String request = args.get(1);
-        if (request.equals(Request.LOGIN.getString())) return logUserIn(args);
+        if (request.equals(Request.LOGIN.getString())) return logUserIn(args, socket);
         else if (request.equals(Request.REGISTER.getString())) return registerUser(args);
         return "typo in register or login";
     }
 
-    private static String logUserIn(ArrayList<String> args) {// 2 username 3 password
+    private static String logUserIn(ArrayList<String> args, Socket socket) {// 2 username 3 password
         String username = args.get(2);
         String password = args.get(3);
         for (User allUser : GameDatabase.getAllUsers()) {
             if (allUser.getUsername().equals(username) && allUser.getPassword().equals(password)) {
+                if (allUser.isLoggedIn()) return "error: already logged in!";
                 allUser.setLoggedIn(true);
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
                 allUser.setTime(dtf.format(now));
+                GameDatabase.getPlayerSockets().put(allUser.getUsername(), socket);
                 return "user logged in successfully!";
             }
         }
@@ -88,6 +91,7 @@ public class UserController {
         User user;
         if((user = getUserByUsername(username)) != null) {
             user.setLoggedIn(false);
+            GameDatabase.getPlayerSockets().remove(username);
             return "user logged out successfully!";
         }
         return "couldn't find the user";
