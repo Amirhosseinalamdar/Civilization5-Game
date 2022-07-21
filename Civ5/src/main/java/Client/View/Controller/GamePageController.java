@@ -1,8 +1,14 @@
 package Client.View.Controller;
 
 import Client.App.Main;
+import Client.Controller.NetworkController;
+import Client.Controller.UserController;
 import Client.View.GameMenu;
 import Client.Model.User;
+import Server.Menu;
+import Server.Request;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -12,6 +18,8 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class GamePageController {
@@ -29,8 +37,14 @@ public class GamePageController {
         autoSave = 0;
         autoSaveDuration.setText(labels[0]);
         newGame.setOnMouseClicked(event -> {
-            ArrayList<User> players = PlayerListPageController.getPlayers();
-            if (players == null) {
+//            String json = NetworkController.send(new ArrayList<>(Arrays.asList
+//                    (Menu.GAME.getMenuName(),Request.GET_PLAYERS.getString())));
+//            ArrayList<User> players = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson
+//                    (json, new TypeToken<List<User>>(){}.getType());
+//            ArrayList<User> players = PlayerListPageController.getPlayers();
+            String response = NetworkController.send(new ArrayList<>(Arrays.asList
+                    (Menu.GAME.getMenuName(),Request.START_GAME.getString())));
+            if (response.equals("no selected players")) {
                 Popup popup = new Popup();
                 Label label = new Label("Choose at least One Opponent to Start the Game!");
                 label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 27; -fx-font-weight: bold;" +
@@ -39,10 +53,10 @@ public class GamePageController {
                 popup.setAutoHide(true);
                 popup.show(background.getScene().getWindow());
             } else {
-                if (Main.music.isPlaying()) Main.playSound("Game.mp3");
-                GameMenu.setMapSize(mapSize);
-                GameMenu.setAutoSaveDuration(autoSave);
-                GameMenu.startGame(players, new Scanner(System.in), -1);
+//                if (Main.music.isPlaying()) Main.playSound("Game.mp3");
+//                GameMenu.setMapSize(mapSize);
+//                GameMenu.setAutoSaveDuration(autoSave);
+//                GameMenu.startGame(players, new Scanner(System.in), -1);
             }
         });
         mapSizeLabel.setText(Integer.toString(mapSize));

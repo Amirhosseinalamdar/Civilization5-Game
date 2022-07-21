@@ -68,7 +68,8 @@ public class NetworkController {
             ArrayList<String> args = new Gson().fromJson(response, new TypeToken<List<String>>() {
             }.getType());
             if (args.get(1).equals(Request.INVITE.getString())) {
-                dataOutputStream.writeUTF(new Gson().toJson(new ArrayList<>(Arrays.asList("game menu", "answer", args.get(2), "yes")))); //TODO
+                dataOutputStream.writeUTF(new Gson().toJson(new ArrayList<>(Arrays.asList("game menu", "answer",
+                        args.get(2),Main.username, "yes")))); //TODO
                 dataOutputStream.flush();
                 System.out.println(dataInputStream.readUTF());
             }

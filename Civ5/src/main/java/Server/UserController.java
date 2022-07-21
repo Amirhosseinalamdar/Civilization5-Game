@@ -33,7 +33,6 @@ public class UserController {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
                 allUser.setTime(dtf.format(now));
-                GameDatabase.getPlayerSockets().put(allUser.getUsername(), socket);
                 return "user logged in successfully!";
             }
         }
@@ -91,7 +90,7 @@ public class UserController {
         User user;
         if((user = getUserByUsername(username)) != null) {
             user.setLoggedIn(false);
-            GameDatabase.getPlayerSockets().remove(username);
+            GameDatabase.getPlayerReaderSockets().remove(username);
             return "user logged out successfully!";
         }
         return "couldn't find the user";

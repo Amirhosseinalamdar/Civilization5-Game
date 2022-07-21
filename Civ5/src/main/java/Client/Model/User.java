@@ -2,6 +2,7 @@ package Client.Model;
 
 import com.google.gson.annotations.Expose;
 
+import java.beans.Transient;
 import java.util.Random;
 
 public class User {

@@ -1,6 +1,7 @@
 package Server;
 
 import Client.App.Main;
+import Client.Model.Chat.DataBase;
 import Client.Model.User;
 import com.google.gson.Gson;
 
@@ -41,12 +42,17 @@ public class GameMenuController {
         return "nafrestadam ding ding ding";
     }
 
-    private static String answerToInvite (ArrayList <String> args) {
+    private static String answerToInvite (ArrayList <String> args) {//game menu //answer //inviter //invited //<answer>
         String inviter = args.get(2);
+        String invited = args.get(3);
         try {
             for (User user : GameDatabase.getAllUsers()) {
                 if (!user.getUsername().equals(inviter)) continue;
                 DataOutputStream outputStream = new DataOutputStream(GameDatabase.getPlayerReaderSockets().get(inviter).getOutputStream());
+                if(args.get(4).equals(Request.YES.getString())){
+                    GameDatabase.getPlayerSockets().put(inviter,GameDatabase.getPlayerReaderSockets().get(inviter));
+                    GameDatabase.getPlayerSockets().put(invited,GameDatabase.getPlayerReaderSockets().get(invited));
+                }
                 outputStream.writeUTF(args.get(3));
                 outputStream.flush();
                 return "answer sent successfully";

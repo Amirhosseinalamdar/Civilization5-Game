@@ -7,6 +7,10 @@ public enum Request {
     LOGOUT("logout"),
     INVITE("invite"),
     ANSWER("answer"),
+    YES("yes"),
+    START_GAME("start"),
+    NO("no"),
+    GET_PLAYERS("get players"),
     LISTENER("listener");
 
     public String getString() {
