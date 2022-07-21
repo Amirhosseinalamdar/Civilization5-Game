@@ -1,15 +1,12 @@
 package View;
 
-import Controller.UserController;
-import View.MainMenu;
-import org.junit.jupiter.api.Assertions;
+import Client.Controller.UserController;
+import Client.View.MainMenu;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MainMenuTest {
 

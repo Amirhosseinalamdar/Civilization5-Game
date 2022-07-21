@@ -6,7 +6,7 @@
 <?import javafx.scene.image.Image?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.ChooseResearchPageController"
+      fx:controller="Client.View.Controller.ChooseResearchPageController"
       prefHeight="600.0" prefWidth="400.0">
     <ImageView fitWidth="400" fitHeight="600">
         <Image url="@../Pictures/TechIcons/background.jpg"/>

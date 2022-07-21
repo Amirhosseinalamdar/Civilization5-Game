@@ -5,7 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.ChooseProductionPageController"
+      fx:controller="Client.View.Controller.ChooseProductionPageController"
       prefHeight="600.0" prefWidth="400.0">
 <!--    <ScrollPane>-->
         <VBox fx:id="unitBox" prefWidth="400" prefHeight="600"/>

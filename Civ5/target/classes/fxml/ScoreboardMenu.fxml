@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Controller.ScoreboardMenuController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.View.Controller.ScoreboardMenuController">
    <children>
       <Label id="button" fx:id="back" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="782.0" onMouseClicked="#back" prefHeight="42.0" prefWidth="193.0" text="Back" textFill="#7c5d1e">
          <font>

@@ -6,7 +6,7 @@
 <?import javafx.scene.image.Image?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.LoadPageController"
+      fx:controller="Client.View.Controller.LoadPageController"
       prefHeight="600.0" prefWidth="400.0">
     <ImageView fitHeight="600" fitWidth="400">
         <Image url="@../Pictures/GamePage/playerlist.jpg"/>

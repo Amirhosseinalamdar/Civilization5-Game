@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Text?>
 <Pane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="View.Controller.ChooseChat"
+      fx:controller="Client.View.Controller.ChooseChat"
       prefHeight="900.0" prefWidth="1600.0"
 fx:id="pane">
 
