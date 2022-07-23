@@ -49,12 +49,11 @@ public class GameDatabase {
 
     private static String initGame(ArrayList<String> args) {
         try{
-            ArrayList<String> keys = new ArrayList<>(playerSockets.keySet());
             for (String s : playerSockets.keySet()) {
-                if(s.equals(keys.get(0))) continue;
+                if(s.equals(args.get(2))) continue;
                 DataOutputStream dataOutputStream = new DataOutputStream(playerSockets.get(s).getOutputStream());
                 ArrayList<String> response = new ArrayList<>(Arrays.asList(Menu.GAME.getMenuName()
-                        ,Request.INIT_GAME.getString(),args.get(2)));
+                        ,Request.INIT_GAME.getString(),args.get(3)));
                 String json = new Gson().toJson(response);
                 SocketHandler.send(json,dataOutputStream);
             }

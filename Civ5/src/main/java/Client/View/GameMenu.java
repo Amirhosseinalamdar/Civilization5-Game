@@ -108,7 +108,7 @@ public class GameMenu {
             if(saveCode<0) {
                 String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
                 String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
-                        , Server.Request.INIT_GAME.getString(), jsonSave)));
+                        , Server.Request.INIT_GAME.getString(),Main.username, jsonSave)));
                 System.out.println(response);
             }
         } catch (IOException e) {
