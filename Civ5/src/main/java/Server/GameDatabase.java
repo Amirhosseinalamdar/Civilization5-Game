@@ -36,13 +36,11 @@ public class GameDatabase {
         return playerSockets;
     }
 
-    public static String run(ArrayList<String> args){
-        if(args.get(1).equals(Request.GET_PLAYERS.getString())) return getGamePlayers();
-        else if(args.get(1).equals(Request.START_GAME.getString())) return startNewGame();
-        else if(args.get(1).equals(Request.INIT_GAME.getString())){
-            System.out.println("hemlo");
-            return initGame(args);
-        }
+    public static String run(ArrayList<String> args) throws IOException {
+        if (args.get(1).equals(Request.GET_PLAYERS.getString())) return getGamePlayers();
+        else if (args.get(1).equals(Request.START_GAME.getString())) return startNewGame();
+        else if (args.get(1).equals(Request.INIT_GAME.getString())) return initGame(args);
+        else if (args.get(1).equals(Request.NEXT_TURN.getString())) return nextTurn(args);
         return "listo nadadam";
     }
 
@@ -82,9 +80,11 @@ public class GameDatabase {
 
 
     private static String getGamePlayers() {//username //password //nickname //score
+        ArrayList <User> realUsers = new ArrayList<>();
+        for (String s : playerSockets.keySet()) realUsers.add(UserController.getUserByUsername(s));
+        realUsers.sort(Comparator.comparing(User::getUsername).thenComparing(User::getNickname));
         ArrayList<String> users = new ArrayList<>();
-        for (String s : playerSockets.keySet()) {
-            User u = UserController.getUserByUsername(s);
+        for (User u : realUsers) {
             users.add(u.getUsername());
             users.add(u.getPassword());
             users.add(u.getNickname());
@@ -109,4 +109,28 @@ public class GameDatabase {
         return "global typo";
     }
 
+    private static String nextTurn (ArrayList <String> args) throws IOException {
+        System.out.println(args.get(2) + " has nexted turn");
+        String lastPlayer = args.get(2), gameJson = args.get(3), firstUsername = "null";
+        boolean haveFound = false;
+        for (String s : playerSockets.keySet()) {
+            System.out.println("checking if next is " + s);
+            if (firstUsername.equals("null")) firstUsername = s;
+            if (haveFound) {
+                System.out.println("giving turn to " + s);
+                DataOutputStream outputStream = new DataOutputStream(playerSockets.get(s).getOutputStream());
+                SocketHandler.send(new Gson().toJson(new ArrayList<>(Arrays.asList("game", "your turn", gameJson))),outputStream);
+                return "";
+            }
+            if (s.equals(lastPlayer)) haveFound = true;
+        }
+        if (haveFound) {
+            System.out.println("couldn't find easily lol, sending to " + firstUsername);
+            DataOutputStream outputStream = new DataOutputStream(playerSockets.get(firstUsername).getOutputStream());
+            SocketHandler.send(new Gson().toJson(new ArrayList<>(Arrays.asList("game", "your turn", gameJson))), outputStream);
+            return "";
+        }
+        System.out.println("returning next turn invalid...");
+        return "next turn invalid";
+    }
 }

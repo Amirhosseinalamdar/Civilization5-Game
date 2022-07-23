@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -84,39 +85,47 @@ public class GameMenu {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
-                    Parent root = fxmlLoader.load();
-                    MapController mapController = fxmlLoader.getController();
-                    gameMapController = mapController;
-                    Main.scene.setRoot(root);
-                    KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-                    Runnable rn = () -> {
-                        try {
-                            FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
-                            Parent root1 = fxmlLoader1.load();
-                            Stage stage1 = new Stage();
-                            Scene scene1 = new Scene(root1);
-                            stage1.setTitle("Cheat Box");
-                            stage1.setScene(scene1);
-                            stage1.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                System.out.println("my username is : " + Main.username);
+                Popup popup = new Popup();
+                if (!Game.getInstance().getPlayers().get(Game.getInstance().getTurn()).getUsername().equals(Main.username)) {
+                    popup.show(Main.stage);
+                }
+                else {
+                    popup.hide();
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
+                        Parent root = fxmlLoader.load();
+                        MapController mapController = fxmlLoader.getController();
+                        gameMapController = mapController;
+                        Main.scene.setRoot(root);
+                        KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+                        Runnable rn = () -> {
+                            try {
+                                FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
+                                Parent root1 = fxmlLoader1.load();
+                                Stage stage1 = new Stage();
+                                Scene scene1 = new Scene(root1);
+                                stage1.setTitle("Cheat Box");
+                                stage1.setScene(scene1);
+                                stage1.show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        };
+                        Main.scene.getAccelerators().put(kc, rn);
+                        setMapNavigation(Main.scene, mapController);
+                        setUnitMovement(mapController);
+                        Main.stage.setScene(Main.scene);
+                        Main.stage.show();
+                        if (saveCode < 0) {
+                            String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+                            String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
+                                    , Server.Request.INIT_GAME.getString(), Main.username, jsonSave)));
+                            System.out.println("generating game: " + response);
                         }
-                    };
-                    Main.scene.getAccelerators().put(kc, rn);
-                    setMapNavigation(Main.scene, mapController);
-                    setUnitMovement(mapController);
-                    Main.stage.setScene(Main.scene);
-                    Main.stage.show();
-                    if(saveCode<0) {
-                        String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
-                        String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
-                                , Server.Request.INIT_GAME.getString(),Main.username, jsonSave)));
-                        System.out.println(response);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });

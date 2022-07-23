@@ -12,7 +12,9 @@ public enum Request {
     INIT_GAME("init game"),
     NO("no"),
     GET_PLAYERS("get players"),
-    LISTENER("listener");
+    LISTENER("listener"),
+    NEXT_TURN("next turn"),
+    YOUR_TURN("your turn");
 
     public String getString() {
         return request;

@@ -12,6 +12,9 @@ import Client.Model.UnitPackage.Unit;
 import Client.Model.UnitPackage.UnitStatus;
 import Client.Model.UnitPackage.UnitType;
 import Client.Transiton.NavigationTransition;
+import Client.View.GameMenu;
+import Server.Menu;
+import com.google.gson.GsonBuilder;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -1546,7 +1549,16 @@ public class MapController {
         hideUnitAvatar();
         hideUnitOptions();
         chosenUnit = null;
-        showMap();
+        if (message.length() == 0) {
+            String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+            String response = NetworkController.send(new ArrayList<>(Arrays.asList(Menu.GAME.getMenuName()
+                    , Server.Request.NEXT_TURN.getString(), Main.username, jsonSave)));
+            System.out.println("i said next turn, response was : " + response);
+            backgroundPane.getChildren().clear();
+        }
+        else {
+            showMap();
+        }
     }
 
     private void showRequests() {

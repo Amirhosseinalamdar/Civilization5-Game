@@ -109,6 +109,9 @@ public class NetworkController {
             }else if(args.get(1).equals(Request.INIT_GAME.getString())){
                 String json = args.get(2);
                 GameMenu.receiveGame(json);
+            }else if (args.get(1).equals(Request.YOUR_TURN.getString())) {
+                String json = args.get(2);
+                GameMenu.receiveGame(json);
             }
         }
         catch (Exception e) {
