@@ -14,6 +14,7 @@ import Client.Model.UnitPackage.UnitType;
 import Client.View.Controller.MapController;
 import Server.Menu;
 import com.google.gson.GsonBuilder;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,40 +81,46 @@ public class GameMenu {
         }
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
-            Parent root = fxmlLoader.load();
-            MapController mapController = fxmlLoader.getController();
-            gameMapController = mapController;
-            Main.scene.setRoot(root);
-            KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-            Runnable rn = () -> {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
-                    Parent root1 = fxmlLoader1.load();
-                    Stage stage1 = new Stage();
-                    Scene scene1 = new Scene(root1);
-                    stage1.setTitle("Cheat Box");
-                    stage1.setScene(scene1);
-                    stage1.show();
+                    FXMLLoader fxmlLoader = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Map.fxml"));
+                    Parent root = fxmlLoader.load();
+                    MapController mapController = fxmlLoader.getController();
+                    gameMapController = mapController;
+                    Main.scene.setRoot(root);
+                    KeyCombination kc = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+                    Runnable rn = () -> {
+                        try {
+                            FXMLLoader fxmlLoader1 = new FXMLLoader(Game.getInstance().getClass().getResource("/fxml/Cheat.fxml"));
+                            Parent root1 = fxmlLoader1.load();
+                            Stage stage1 = new Stage();
+                            Scene scene1 = new Scene(root1);
+                            stage1.setTitle("Cheat Box");
+                            stage1.setScene(scene1);
+                            stage1.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    };
+                    Main.scene.getAccelerators().put(kc, rn);
+                    setMapNavigation(Main.scene, mapController);
+                    setUnitMovement(mapController);
+                    Main.stage.setScene(Main.scene);
+                    Main.stage.show();
+                    if(saveCode<0) {
+                        String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+                        String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
+                                , Server.Request.INIT_GAME.getString(),Main.username, jsonSave)));
+                        System.out.println(response);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            };
-            Main.scene.getAccelerators().put(kc, rn);
-            setMapNavigation(Main.scene, mapController);
-            setUnitMovement(mapController);
-            Main.stage.setScene(Main.scene);
-            Main.stage.show();
-            if(saveCode<0) {
-                String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
-                String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
-                        , Server.Request.INIT_GAME.getString(),Main.username, jsonSave)));
-                System.out.println(response);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
+
 
     }
 
