@@ -68,14 +68,16 @@ public class GameMenu {
         Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
         System.out.println("loaded");
         Game.getInstance().createRelations();
-
         GameMenu.setMapSize(mapSize);
         GameMenu.startGame(new ArrayList<>(), new Scanner(System.in), 1,json);
     }
 
     public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode,String json) {
-        if (saveCode < 0){
+        if (saveCode < 0) {
             Game.getInstance().generateGame(players, mapSize, autoSaveDuration);
+        }else if(saveCode == 0){
+            loadGame(saveCode,json);
+        }
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         try {
@@ -106,13 +108,10 @@ public class GameMenu {
             String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
             String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
                     , Server.Request.INIT_GAME.getString(), jsonSave)));
-            System.out.println(response);
         } catch (IOException e) {
             e.printStackTrace();
-        }}
-        else {
-            loadGame(saveCode,json);
         }
+
     }
 
     public static void setMapNavigation(Scene scene, MapController mapController) {
