@@ -67,7 +67,7 @@ public class LoadPageController {
                         Stage stage = (Stage) source.getScene().getWindow();
                         stage.close();
                         if (Main.music.isPlaying()) Main.playSound("Game.mp3");
-                        GameMenu.startGame(null, new Scanner(System.in), finalI);
+//                        GameMenu.startGame(null, new Scanner(System.in), finalI);
                     });
                     box.getChildren().add(label);
                 } catch (IOException e) {

@@ -9,6 +9,7 @@ public enum Request {
     ANSWER("answer"),
     YES("yes"),
     START_GAME("start"),
+    INIT_GAME("init game"),
     NO("no"),
     GET_PLAYERS("get players"),
     LISTENER("listener");

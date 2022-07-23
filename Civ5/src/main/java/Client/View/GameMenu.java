@@ -3,9 +3,8 @@ package Client.View;
 import Client.App.Main;
 import Client.Controller.CityController;
 import Client.Controller.GameController;
+import Client.Controller.NetworkController;
 import Client.Controller.UnitController;
-import Client.Model.*;
-import Client.Model.Map.*;
 import Client.Model.*;
 import Client.Model.Map.*;
 import Client.Model.UnitPackage.Military;
@@ -13,6 +12,7 @@ import Client.Model.UnitPackage.Unit;
 import Client.Model.UnitPackage.UnitStatus;
 import Client.Model.UnitPackage.UnitType;
 import Client.View.Controller.MapController;
+import Server.Menu;
 import com.google.gson.GsonBuilder;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameMenu {
@@ -51,9 +52,9 @@ public class GameMenu {
         GameMenu.scanner = scanner;
     }
 
-    private static void loadGame(int saveCode) {
+    private static void loadGame(int saveCode,String json) {
         try {
-            String json = new String(Files.readAllBytes(Paths.get("Game" + saveCode + ".json")));
+//            String json = new String(Files.readAllBytes(Paths.get("Game" + saveCode + ".json")));
             Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
             System.out.println("loaded");
             Game.getInstance().createRelations();
@@ -63,12 +64,18 @@ public class GameMenu {
         }
     }
 
-    public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode) {
-        if (saveCode < 0)
+    public static void receiveGame(String json) {
+        Game.loadInstance(new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, Game.class));
+        System.out.println("loaded");
+        Game.getInstance().createRelations();
+
+        GameMenu.setMapSize(mapSize);
+        GameMenu.startGame(new ArrayList<>(), new Scanner(System.in), 1,json);
+    }
+
+    public static void startGame(ArrayList<User> players, Scanner scanner, int saveCode,String json) {
+        if (saveCode < 0){
             Game.getInstance().generateGame(players, mapSize, autoSaveDuration);
-        else {
-            loadGame(saveCode);
-        }
         GameMenu.scanner = scanner;
         GameController.checkMyCivilization();
         try {
@@ -96,8 +103,15 @@ public class GameMenu {
             setUnitMovement(mapController);
             Main.stage.setScene(Main.scene);
             Main.stage.show();
+            String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+            String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
+                    , Server.Request.INIT_GAME.getString(), jsonSave)));
+            System.out.println(response);
         } catch (IOException e) {
             e.printStackTrace();
+        }}
+        else {
+            loadGame(saveCode,json);
         }
     }
 

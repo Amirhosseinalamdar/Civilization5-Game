@@ -8,10 +8,12 @@ import Client.View.GameMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class GameDatabase {
     private static ArrayList<User> allUsers = new ArrayList<>();
@@ -37,7 +39,30 @@ public class GameDatabase {
     public static String run(ArrayList<String> args){
         if(args.get(1).equals(Request.GET_PLAYERS.getString())) return getGamePlayers();
         else if(args.get(1).equals(Request.START_GAME.getString())) return startNewGame();
+        else if(args.get(1).equals(Request.INIT_GAME.getString())){
+            System.out.println("hemlo");
+            return initGame(args);
+        }
         return "listo nadadam";
+    }
+
+
+    private static String initGame(ArrayList<String> args) {
+        try{
+            ArrayList<String> keys = new ArrayList<>(playerSockets.keySet());
+            for (String s : playerSockets.keySet()) {
+                if(s.equals(keys.get(0))) continue;
+                DataOutputStream dataOutputStream = new DataOutputStream(playerSockets.get(s).getOutputStream());
+                ArrayList<String> response = new ArrayList<>(Arrays.asList(Menu.GAME.getMenuName()
+                        ,Request.INIT_GAME.getString(),args.get(2)));
+                String json = new Gson().toJson(response);
+                SocketHandler.send(json,dataOutputStream);
+            }
+            return "init sent";
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return "nafrestadam";
     }
 
     private static String startNewGame() {
@@ -51,17 +76,20 @@ public class GameDatabase {
 //            if (Main.music.isPlaying()) Main.playSound("Game.mp3");//todo
             GameMenu.setMapSize(20);//todo
             GameMenu.setAutoSaveDuration(1);//todo
-            GameMenu.startGame(users, new Scanner(System.in), -1);
+            GameMenu.startGame(users, new Scanner(System.in), -1,"");
             return "game started";
         }
     }
 
 
-    private static String getGamePlayers() {
-        ArrayList<User> users = new ArrayList<>();
+    private static String getGamePlayers() {//username //password //nickname //score
+        ArrayList<String> users = new ArrayList<>();
         for (String s : playerSockets.keySet()) {
-            UserController.getUserByUsername(s).setCivilization(null);
-            users.add(UserController.getUserByUsername(s));
+            User u = UserController.getUserByUsername(s);
+            users.add(u.getUsername());
+            users.add(u.getPassword());
+            users.add(u.getNickname());
+            users.add(u.getScore()+"");
         }
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(users);
     }

@@ -7,6 +7,7 @@ import Client.View.GameMenu;
 import Client.Model.User;
 import Server.Menu;
 import Server.Request;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXMLLoader;
@@ -43,8 +44,14 @@ public class GamePageController {
 //                    (json, new TypeToken<List<User>>(){}.getType());
 //            ArrayList<User> players = PlayerListPageController.getPlayers();
             String response = NetworkController.send(new ArrayList<>(Arrays.asList
-                    (Menu.GAME.getMenuName(),Request.START_GAME.getString())));
-            if (response.equals("no selected players")) {
+                    (Menu.GAME.getMenuName(),Request.GET_PLAYERS.getString())));
+            ArrayList<String> data = new Gson().fromJson(response,new TypeToken<List<String>>(){}.getType());
+            ArrayList<User> players = new ArrayList<>();
+            for(int i=0;i<data.size();i+=4){
+                User user = new User(data.get(i),data.get(i+1),data.get(i+2),true,Integer.parseInt(data.get(i+3)));
+                players.add(user);
+            }
+            if (players.size()<=1) {
                 Popup popup = new Popup();
                 Label label = new Label("Choose at least One Opponent to Start the Game!");
                 label.setStyle("-fx-font-family: 'Tw Cen MT'; -fx-font-size: 27; -fx-font-weight: bold;" +
@@ -54,9 +61,9 @@ public class GamePageController {
                 popup.show(background.getScene().getWindow());
             } else {
 //                if (Main.music.isPlaying()) Main.playSound("Game.mp3");
-//                GameMenu.setMapSize(mapSize);
-//                GameMenu.setAutoSaveDuration(autoSave);
-//                GameMenu.startGame(players, new Scanner(System.in), -1);
+                GameMenu.setMapSize(mapSize);
+                GameMenu.setAutoSaveDuration(autoSave);
+                GameMenu.startGame(players, new Scanner(System.in), -1,"");
             }
         });
         mapSizeLabel.setText(Integer.toString(mapSize));

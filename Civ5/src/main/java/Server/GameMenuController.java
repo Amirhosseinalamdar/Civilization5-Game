@@ -31,8 +31,7 @@ public class GameMenuController {
             for (User user : GameDatabase.getAllUsers()) {
                 if (!user.isLoggedIn()) continue;
                 DataOutputStream outputStream = new DataOutputStream(GameDatabase.getPlayerReaderSockets().get(receiver).getOutputStream());
-                outputStream.writeUTF(new Gson().toJson(new ArrayList<>(Arrays.asList("game menu", "invite", sender)))); //receive invite, sender
-                outputStream.flush();
+                SocketHandler.send(new Gson().toJson(new ArrayList<>(Arrays.asList("game menu", "invite", sender))),outputStream);
                 return "invitation sent successfully";
             }
         }
@@ -53,8 +52,7 @@ public class GameMenuController {
                     GameDatabase.getPlayerSockets().put(inviter,GameDatabase.getPlayerReaderSockets().get(inviter));
                     GameDatabase.getPlayerSockets().put(invited,GameDatabase.getPlayerReaderSockets().get(invited));
                 }
-                outputStream.writeUTF(args.get(3));
-                outputStream.flush();
+                SocketHandler.send(args.get(3),outputStream);
                 return "answer sent successfully";
             }
         }

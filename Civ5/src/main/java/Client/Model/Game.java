@@ -1,12 +1,11 @@
 package Client.Model;
 
-import Client.Model.Map.*;
-import Client.View.GameMenu;
 import Client.Controller.UnitController;
 import Client.Controller.UserController;
 import Client.Model.Map.*;
 import Client.Model.UnitPackage.Military;
 import Client.Model.UnitPackage.Unit;
+import Client.View.GameMenu;
 import com.google.gson.annotations.Expose;
 
 import java.io.File;
