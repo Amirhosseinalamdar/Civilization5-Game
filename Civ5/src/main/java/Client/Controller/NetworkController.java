@@ -113,6 +113,7 @@ public class NetworkController {
         }
         catch (Exception e) {
             System.out.println("response is not arrayList");
+            System.out.println(response);
             e.printStackTrace();
         }
     }

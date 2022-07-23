@@ -105,9 +105,12 @@ public class GameMenu {
             setUnitMovement(mapController);
             Main.stage.setScene(Main.scene);
             Main.stage.show();
-            String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
-            String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
-                    , Server.Request.INIT_GAME.getString(), jsonSave)));
+            if(saveCode<0) {
+                String jsonSave = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(Game.getInstance());
+                String response = NetworkController.send(new ArrayList<String>(Arrays.asList(Menu.GAME.getMenuName()
+                        , Server.Request.INIT_GAME.getString(), jsonSave)));
+                System.out.println(response);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
