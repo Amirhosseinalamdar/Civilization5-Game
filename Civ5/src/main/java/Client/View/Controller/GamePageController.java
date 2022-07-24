@@ -2,13 +2,11 @@ package Client.View.Controller;
 
 import Client.App.Main;
 import Client.Controller.NetworkController;
-import Client.Controller.UserController;
 import Client.View.GameMenu;
 import Client.Model.User;
 import Server.Menu;
 import Server.Request;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -114,7 +112,7 @@ public class GamePageController {
     public void sendInvitation() {
         Main.clickSound();
         try {
-            Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/SendInvitaionPage.fxml")));
+            Scene scene = new Scene(FXMLLoader.load(this.getClass().getResource("/fxml/SendInvitationPage.fxml")));
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(scene);
