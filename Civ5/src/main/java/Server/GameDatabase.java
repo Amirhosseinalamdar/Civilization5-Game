@@ -94,7 +94,6 @@ public class GameDatabase {
     }
 
     public static String allUsersToJson(){
-        System.out.println("json-ing...");
         ArrayList <String> usernames = new ArrayList<>();
         for (User user : allUsers)
             if (user.isLoggedIn()) usernames.add(user.getUsername());
@@ -110,14 +109,11 @@ public class GameDatabase {
     }
 
     private static String nextTurn (ArrayList <String> args) throws IOException {
-        System.out.println(args.get(2) + " has nexted turn");
         String lastPlayer = args.get(2), gameJson = args.get(3), firstUsername = "null";
         boolean haveFound = false;
         for (String s : playerSockets.keySet()) {
-            System.out.println("checking if next is " + s);
             if (firstUsername.equals("null")) firstUsername = s;
             if (haveFound) {
-                System.out.println("giving turn to " + s);
                 DataOutputStream outputStream = new DataOutputStream(playerSockets.get(s).getOutputStream());
                 SocketHandler.send(new Gson().toJson(new ArrayList<>(Arrays.asList("game", "your turn", gameJson))),outputStream);
                 return "";
@@ -125,12 +121,10 @@ public class GameDatabase {
             if (s.equals(lastPlayer)) haveFound = true;
         }
         if (haveFound) {
-            System.out.println("couldn't find easily lol, sending to " + firstUsername);
             DataOutputStream outputStream = new DataOutputStream(playerSockets.get(firstUsername).getOutputStream());
             SocketHandler.send(new Gson().toJson(new ArrayList<>(Arrays.asList("game", "your turn", gameJson))), outputStream);
             return "";
         }
-        System.out.println("returning next turn invalid...");
         return "next turn invalid";
     }
 }

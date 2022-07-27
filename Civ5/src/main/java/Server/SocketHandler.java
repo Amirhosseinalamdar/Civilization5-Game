@@ -34,11 +34,9 @@ public class SocketHandler extends Thread {
                 else if (input.get(0).equals(Menu.GAME.getMenuName())) output = GameDatabase.run(input);
                 else if (input.get(0).equals(Menu.GLOBAL.getMenuName())) output = GameDatabase.runGlobal(input, socket);
                 send(output,dataOutputStream);
-                System.out.println("sifoono bekesh");
             }
         } catch (IOException e) {
-
-            e.printStackTrace();
+            System.out.println("client disconnected");
         }
 
     }

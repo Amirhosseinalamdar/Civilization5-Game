@@ -19,6 +19,7 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -36,7 +37,7 @@ public class NetworkController {
             dataOutputStream = new DataOutputStream(socket.getOutputStream());
             return true;
         } catch (IOException e) {
-            System.out.println("Connection to server is refused");
+            System.out.println("connection to server is refused");
             return false;
         }
     }
@@ -50,9 +51,9 @@ public class NetworkController {
             byte[] data2 = new byte[length];
             dataInputStream.readFully(data2);
             return new String(data2,StandardCharsets.UTF_8);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println("connection reset");
-            e.printStackTrace();
+            System.exit(0);
         }
         return "no response from server";
     }

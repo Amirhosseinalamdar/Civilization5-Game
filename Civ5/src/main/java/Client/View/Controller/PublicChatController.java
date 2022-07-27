@@ -29,8 +29,6 @@ public class PublicChatController {
 
     public PublicChatController() {
         this.chatBox = PublicChat.getInstance().getChatBox();
-        System.out.println(chatBox);
-        System.out.println("here");
     }
 
     public void sendMsg(MouseEvent mouseEvent) {

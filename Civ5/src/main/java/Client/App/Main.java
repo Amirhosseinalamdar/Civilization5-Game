@@ -22,9 +22,14 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 //        UserController.readDataFromJson();
-        if(!NetworkController.connect()) System.out.println("connection failed");
-        else launch();
-        UserController.logUserOut();
+        if(!NetworkController.connect()) {
+            System.out.println("connection failed");
+            System.exit(0);
+        }
+        else {
+            launch();
+            UserController.logUserOut();
+        }
 //        UserController.writeDataToJson();
     }
 
@@ -42,7 +47,6 @@ public class Main extends Application {
         playSound("Menu.mp3");
     }
 
-
     public static void clickSound() {
         Media media = new Media(Main.class.getResource("/sounds/click.wav").toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -50,11 +54,11 @@ public class Main extends Application {
     }
 
     public static void playSound(String name) {
-//        if (music != null) music.stop();
-//        URL url = Main.class.getResource("/sounds/" + name);
-//        music = new AudioClip(url.toExternalForm());
-//        music.setVolume(0.3f);
-//        music.play();
+        if (music != null) music.stop();
+        URL url = Main.class.getResource("/sounds/" + name);
+        music = new AudioClip(url.toExternalForm());
+        music.setVolume(0.3f);
+        music.play();
     }
 
     public static void changeScene(String name) {
