@@ -1,5 +1,5 @@
 # project-group-10
-We implemented [Civilization 5](https://en.wikipedia.org/wiki/Civilization_V) using object oriented programming in java ([phase 1 UML chart](https://github.com/Amirhosseinalamdar/Civilization5-Game/blob/main/UML.jpg)) and we used javafx for graphics.
+We implemented [Civilization 5](https://en.wikipedia.org/wiki/Civilization_V) using object oriented programming and MVC model in java ([phase 1 UML chart](https://github.com/Amirhosseinalamdar/Civilization5-Game/blob/main/UML.jpg)) and we used javafx for graphics.
 In the third phase, we divided our project to server and client using Socket Programming in Java.
 
 <!-- ![alt text](https://venturebeat.com/wp-content/uploads/2013/07/civilizationv_dx11-2013-07-01-20-35-41-57.jpg?w=1200&strip=all) -->
